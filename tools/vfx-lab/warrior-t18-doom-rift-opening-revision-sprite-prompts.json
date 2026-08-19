@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "파멸의 검 transparent opening and late-contact corrective regeneration",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "tools/vfx-lab/custom-assets/warrior-sword-master-04-20-late-impact-revisions",
+  "settings": { "type": "spritesheet", "model": "gpt-5.6-sol", "mode": "detailed", "frameWidth": 361, "frameHeight": 160, "frameCount": 16, "columns": 4, "rows": 4, "preset": "attack", "fps": 16, "loop": false, "autoReview": true, "qualityTarget": 96, "maxPasses": 4, "useReference": false },
+  "commonPrompt": "Create exactly 16 chronological Detailed frames in a strict 4-column by 4-row row-major transparent RGBA spritesheet, 361x160 per sealed cell and 1444x640 total. Regenerate from scratch; do not imitate the rejected sheet that exposed a sword in F02-F04. F01-F04 have zero visible pixels and zero alpha. F05 contains only one tiny crimson anticipation glint at P0=(24%,24%), never a sword fragment. The one connected obsidian greatsword first appears in F06 and remains geometrically identical through F16. F06-F09 restrained preparation, F10-F12 fast down-right traversal without damage, F13 first target contact, F14 compression, F15 unique maximum, F16 held final contact at 80% energy. Keep every visible pixel inside x=18..343,y=14..146; outer 10px exactly transparent. One fixed camera, sword design, diagonal angle and scale. Detailed Korean action-RPG painting, clean smooth alpha, no pixel art.",
+  "negativePrompt": "visible F01, visible F02, visible F03, visible F04, sword in F01, sword in F02, sword in F03, sword in F04, weapon fragment before F06, target before F13, stone before F13, crack before F13, debris before F13, spark before F13, sword redesign, sword direction reversal, wobble, shake, two swords, duplicate sword, detached blade, detached hilt, demon, skull, blood, portal, circle, black hole, wings, pentagram, opaque darkness, smoke wall, background, scenery, ground line, character, hand, body, enemy, UI, text, grid, border, cell edge touching, horizontal image band, adjacent cell leakage, F16 fade, F16 empty, pixel art, jagged alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t18_c02",
+      "level": 90,
+      "name": "파멸의 검",
+      "grammar": "CLEAN_OBSIDIAN_DOOM_RIFT_CUT",
+      "generationPrompt": "Regenerate 파멸의 검 as one connected obsidian greatsword edged in restrained crimson, following the immutable path P0=(24%,24%) to contact P=(72%,70%). F05 is only a 12px crimson glint at P0. F06-F09 show the same full sword gathering three thin broken crimson pressure plates along its back. F10-F12 drive it down-right and leave narrow black-red seams behind it, with no target material. F13 first contact strikes a compact pale stone-and-steel seal at P. F14 compresses the seal into one jagged slit. F15 cleaves it into two asymmetric plates with nine obsidian fragments, one dense ivory-red edge core and three disconnected doom seams escaping right and downward. F16 holds the identical greatsword inside the open slit at reduced surrounding energy. Preserve generous transparent gaps; no early weapon, no radial portal and no screen-filling darkness."
+    }
+  ]
+}

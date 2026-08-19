@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "scope": "warrior charge revision: full-screen peaks, natural proportions, and tier-20 finale",
+  "gateway": "http://127.0.0.1:4317",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 90,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for AlarmQuest. Create exactly 16 chronological animation frames in a strict 4-column by 4-row, row-major sprite sheet. Every cell is a wide 361:160 combat viewport with the same fixed camera, scale, ground line, and central target point. Use CENTER_BREAKTHROUGH perspective, never side-scrolling motion: pressure, armored-force silhouettes, sparks, debris, dust, and perspective streaks converge toward the vanishing point at x=50% and y=55%, pierce straight through it toward the viewer, and then expand naturally past the viewport edges. This revision must solve insufficient screen coverage without scaling or stretching a single object. During F06-F12, build coverage from multiple physically distinct depth layers: a sharp central leading point, near-field pressure planes, curved shock rims, large foreground fragments, ground dust, and radial wakes. At F08-F10, the combined VFX must occupy at least 90% of the frame width and 82% of the frame height, with some foreground fragments or shock layers intentionally cropped by all four viewport edges. Preserve the natural local proportions and thickness of every wedge, rim, shard, and pressure front; achieve the wide composition by perspective placement and overlapping depth layers, never by horizontal scaling, smearing, mirroring, or flattening. Maximum impact density and screen coverage take priority across the center; no clean channel is required for skill labels or damage numbers. Visual effect only: no warrior body and no enemy body. Detailed premium Korean fantasy action-RPG VFX, hand-painted high-resolution 2D rendering, smooth tonal shading, crisp silhouettes, rich material detail, controlled bloom, and clean alpha. Frame choreography: F01 nearly transparent distant pressure; F02-F03 perspective lines and small depth layers gather; F04-F05 the leading core and separate mid-depth planes accelerate; F06-F07 near-field layers grow and begin reaching the viewport edges; F08 main center contact at full-screen coverage; F09 peak head-on breakthrough with the strongest depth expansion; F10-F12 large foreground fragments, curved shock rims, dust, and speed wakes rush from center past the outer edges; F13-F14 a broad but proportionally natural central tunnel and layered afterimages remain; F15-F16 clean fade to transparent. Each frame must be distinct yet continuous, with no camera pan, no camera rotation, and no loop reset. Transparent RGBA background. F01 and F16 must be mostly transparent. Do not render grid guides, frame labels, captions, or borders.",
+  "negativePrompt": "pixel art, pixels, low resolution, retro sprite, nearest-neighbor edges, tiny effect, miniature effect, small isolated center icon, narrow effect surrounded by empty space, empty corners at peak, effect occupying less than eighty percent of peak frame, character, warrior, human body, face, hands, legs, enemy, monster, background scenery, battlefield illustration, landscape, floor tile, user interface, HUD, health bar, text, Korean letters, English letters, numbers, logo, signature, watermark, frame number, caption, grid line, border, gutter, padding, opaque background, black background, white background, checkerboard background, horizontal stretch, horizontally scaled object, elongated smear, panorama blur, flattened shape, rubber distortion, warped proportions, mirrored butterfly silhouette, copy-pasted symmetry, single flat pressure strip, side-scrolling motion, left-to-right translation, right-to-left translation, lateral slash, horizontal projectile, off-center impact, circular explosion with no penetration axis, magic circle, rune, spell glyph, portal, galaxy, rainbow palette, multiple unrelated attacks, repeated identical frames, duplicated frame, missing frame, wrong frame order, inconsistent camera, inconsistent scale, excessive whiteout, excessive bloom, foggy silhouette, muddy colors, motion blur that hides material detail, jagged alpha, haloed alpha, cropped center impact",
+  "skills": [
+    {
+      "catalogId": "warrior_t03_c03",
+      "level": 15,
+      "name": "맹진 찌르기",
+      "generationPrompt": "Revise ‘맹진 찌르기’ as a full-screen CENTER_BREAKTHROUGH thrust while keeping a precise narrow penetration identity. A long ivory-white steel needle with a restrained crimson core races from the vanishing point toward the viewer. Do not leave it as a small central star: surround the narrow point with four large converging steel wake-blades, a deep crimson vacuum tunnel, and near-camera metallic shards that crop through every edge at F08-F11. The central needle stays thin and accurate, but its perspective tunnel and foreground wakes fill at least 90% width and 82% height. Palette: ivory, polished steel gray, deep restrained crimson. Power stage 3 of 20. No literal wielder, no tiny icon-like impact, no text."
+    },
+    {
+      "catalogId": "warrior_t08_c03",
+      "level": 40,
+      "name": "전차 충돌",
+      "generationPrompt": "Revise ‘전차 충돌’ into a brutal full-screen armored momentum collision. Two thick bronze-steel pressure rims and a dense ivory impact face advance from deep center with natural curved thickness, followed by rolling ground dust. At F07-F10 the near rims rise beyond the top and bottom edges while stone and metal fragments cross the left and right edges, creating overwhelming chariot weight without depicting a vehicle. Use several separate depth planes rather than enlarging one flat ring. Palette: burnished bronze, iron blue, ivory, warm dust. Power stage 8 of 20. No wheels, vehicle, character, horizontally stretched rim, or text."
+    },
+    {
+      "catalogId": "warrior_t10_c03",
+      "level": 50,
+      "name": "선봉 쇄도",
+      "generationPrompt": "Revise ‘선봉 쇄도’ into an elegant formation-scale full-screen breakthrough. A bright golden-white vanguard point leads three distinct steel-blue echo wedges placed at different depths. The wedges retain compact natural spearhead proportions, but perspective lanes, gold edge sparks, and foreground wake planes fan across the full viewport. At F08-F10 the leading point penetrates center while the nearest echo wedges and formation wakes crop all four edges. It must read as disciplined military depth, not a small star and not a stretched wing. Palette: pale gold, ivory, steel blue, subtle orange. Power stage 10 of 20. No soldiers, flags, insignia, mirrored butterfly, or text."
+    },
+    {
+      "catalogId": "warrior_t13_c03",
+      "level": 65,
+      "name": "철혈 관통",
+      "generationPrompt": "Revise ‘철혈 관통’ so the surgically narrow black-steel axis remains centered while its surrounding vacuum tunnel fills the entire combat viewport. A razor-thin crimson-lit penetration point drives forward; around it, six large black-steel shard planes spiral through depth, a crimson pressure cavity opens wide, and near-camera fragments cross every edge at F08-F11. Let the dense central impact cover the full target point when needed and eliminate empty outer space. Palette: black steel, deep crimson, ivory-white. Power stage 13 of 20. No gore, no small isolated red star, no flat radial smear, no character or text."
+    },
+    {
+      "catalogId": "warrior_t14_c03",
+      "level": 70,
+      "name": "군단 대돌파",
+      "generationPrompt": "Regenerate ‘군단 대돌파’ specifically to remove the horizontally stretched appearance. Build a legion-scale formation from three separate compact pressure wedges at far, middle, and near depth, each with believable thickness and natural spearhead proportions. They converge at center and overlap in perspective rather than becoming one wide smeared image. At F08-F10 the nearest wedge, disciplined crimson lanes, steel fragments, gold sparks, and dust occupy the full viewport, but each local form remains sharp and proportionate. Show clear depth gaps between the formation layers and a centered ivory-gold penetration front. Palette: ivory-gold, dark steel, disciplined crimson, warm dust. Power stage 14 of 20. No flat panorama strip, no stretched texture, no butterfly symmetry, no character, flag, emblem, or text."
+    },
+    {
+      "catalogId": "warrior_t15_c03",
+      "level": 75,
+      "name": "군왕 돌진",
+      "generationPrompt": "Revise ‘군왕 돌진’ into a regal full-screen CENTER_BREAKTHROUGH. A naturally proportioned royal-gold cutting point leads three deep crimson armored pressure waves and black-steel wake planes. At F07-F10 the nearest pressure waves extend beyond the top and bottom while gold rails, dust, and large foreground fragments cross both side edges. Drive the gold center axis through the entire target point with maximum impact density; remove all empty outer space at peak without horizontally scaling the point. Palette: royal gold, ivory, deep crimson, dark steel. Power stage 15 of 20. No king, crown, banner, stretched wing shape, or text."
+    },
+    {
+      "catalogId": "warrior_t16_c03",
+      "level": 80,
+      "name": "성채 대돌파",
+      "generationPrompt": "Revise ‘성채 대돌파’ into a viewport-filling fortress-pressure breach with natural mass. A thick beveled black-steel pressure face with gold seams approaches center in three separate armor-block layers. At F07-F10 the nearest layer occupies almost the full frame height, fractures into large angular blocks that cross every edge, and releases dense stone dust behind the centered gold rupture axis. Use deep foreshortening and discrete blocks, not one horizontally stretched wall. Palette: black steel, antique gold, hot ivory, dark stone, warm dust. Power stage 16 of 20. No literal fortress scenery, flat wall strip, character, or text."
+    },
+    {
+      "catalogId": "warrior_t17_c03",
+      "level": 85,
+      "name": "용살 쇄도",
+      "generationPrompt": "Revise ‘용살 쇄도’ into a full-screen predatory depth charge. A naturally proportioned ivory dragon-fang-shaped point emerges from center, wrapped by three dark-crimson and gold elliptical speed wakes at distinct depths. At F08-F10 the fang stays sharp and compact while the nearest wake, scale-like steel fragments, dust, and gold clawing streaks crop all four edges. Fill the viewport through tunnel depth and foreground fragments, not by enlarging the fang into an icon. Palette: ivory, dark crimson, antique gold, steel gray. Power stage 17 of 20. No dragon creature, no small isolated fang, no stretched wing silhouette, no character or text."
+    },
+    {
+      "catalogId": "warrior_t18_c03",
+      "level": 90,
+      "name": "패왕 대진군",
+      "generationPrompt": "Regenerate ‘패왕 대진군’ specifically to remove the elongated horizontal smear. A massive but naturally proportioned black-gold armored pressure prow advances from deep center, followed by two curved domed shock fronts at different depths and a restrained crimson undertow. Keep every front thick, faceted, and visibly foreshortened. At F08-F10 the full screen is occupied by the near shock front, large black-gold fragments, inward-bending dust, and radial gold rails, while the central white-hot point remains clear. Coverage comes from layered perspective and foreground debris, never horizontal scaling. Palette: black steel, sovereign gold, ivory-white, restrained crimson. Power stage 18 of 20. No flat panorama, stretched texture, butterfly symmetry, ruler, army, emblem, character, or text."
+    },
+    {
+      "catalogId": "warrior_t20_c03",
+      "level": 100,
+      "name": "천하무패 돌격",
+      "generationPrompt": "Create the ultimate stage-20 skill ‘천하무패 돌격’ with a unique SOVEREIGN_FINAL_BREAKTHROUGH grammar: the most spectacular, forceful, and luxurious head-on charge in the entire warrior branch, visibly one full tier beyond 불퇴 대돌파. F01-F03: the wide battlefield pressure darkens and collapses from every edge into a tiny white-gold sovereign spear point at the exact center, with black-steel dust and four restrained crimson compression rings. F04-F06: three naturally proportioned armored breakthrough prows appear at far, middle, and near depth, each edged in royal gold and accelerating straight toward the viewer. F07: a momentary dark pressure vacuum frames the centered point. F08: the first full-screen ivory-gold contact cleaves directly through the entire central pressure plane with no reserved text channel. F09: the supreme breakthrough—three fronts merge into one white-hot central lance while two thick black-gold shock crowns, crimson force bands, huge steel fragments, sparks, and ground dust explode in extreme perspective through all four edges; occupy at least 96% width and 88% height. F10-F12: a second and third sovereign shock front overtake the camera, with separate near-field fragments and curved gold rails creating immense depth, never a flat circular explosion. F13-F14: a monumental gold-white tunnel scar remains from the center to infinity, bordered by black steel and disciplined crimson afterimages. F15-F16: sparks and pressure fade cleanly to transparency. Keep every prow and shock front naturally proportioned and richly faceted; fill the viewport through overlapping depths and intentional edge cropping, never horizontal stretch. Palette: white-hot ivory, sovereign royal gold, black steel, deep disciplined crimson, sparse orange sparks. Power stage 20 of 20. No crown object, ruler, army, flag, emblem, magic circle, rainbow, galaxy, world-ending whiteout, character, or text."
+    }
+  ]
+}

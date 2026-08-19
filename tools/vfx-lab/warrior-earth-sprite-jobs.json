@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/warrior-earth-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/warrior-earth",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "warrior_t01_c04",
+      "level": 5,
+      "name": "지면 발구르기",
+      "jobId": "abf76e40-c70e-42ad-8b2e-5a3ffbbfe850",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t02_c04",
+      "level": 10,
+      "name": "땅울림 강타",
+      "jobId": "c97aa15c-1e75-409c-a09d-40c4dd45a299",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t03_c04",
+      "level": 15,
+      "name": "암반 쪼개기",
+      "jobId": "b078ee0b-8a4d-4af7-acf7-366cd3f2727f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t04_c04",
+      "level": 20,
+      "name": "바위기둥 솟구침",
+      "jobId": "87356c86-ec4e-46a4-b2bb-c69fdf941343",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t05_c04",
+      "level": 25,
+      "name": "지반 내려찍기",
+      "jobId": "e731f6f5-44fe-4a3c-b941-3d7c8a55c413",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t06_c04",
+      "level": 30,
+      "name": "단층 깨뜨리기",
+      "jobId": "8742ec89-b984-4b32-b7c9-5318972c31ed",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t07_c04",
+      "level": 35,
+      "name": "대지 뒤엎기",
+      "jobId": "b8cbfd57-c89b-418b-83e0-9c74f74dbb0e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t08_c04",
+      "level": 40,
+      "name": "지축 파쇄타",
+      "jobId": "8038d460-167c-4927-a659-f73b5c682d31",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t09_c04",
+      "level": 45,
+      "name": "균열 폭쇄",
+      "jobId": "7a47243c-dd2f-446d-91eb-3c394228c015",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t10_c04",
+      "level": 50,
+      "name": "지층 솟구침",
+      "jobId": "fa1444da-6c8e-4284-aeb3-7d7f4377aa65",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t11_c04",
+      "level": 55,
+      "name": "협곡 균열타",
+      "jobId": "a1dd0a1c-e071-47cb-9058-424cb05f16aa",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t12_c04",
+      "level": 60,
+      "name": "산맥 붕괴타",
+      "jobId": "23a10134-4ae6-43a9-8bad-5449beb14db2",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t13_c04",
+      "level": 65,
+      "name": "전장 지반격파",
+      "jobId": "9ce59c2d-b32d-4d3e-a99a-1918d2c56fcd",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t14_c04",
+      "level": 70,
+      "name": "지각 대폭쇄",
+      "jobId": "a95a5bf6-0440-4b1b-a1bd-6ac130e73a30",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t15_c04",
+      "level": 75,
+      "name": "거산 함몰타",
+      "jobId": "4441ab1f-9499-4907-be4c-5ee43321de55",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t16_c04",
+      "level": 80,
+      "name": "철옹성 지반붕쇄",
+      "jobId": "1b74adfb-85bd-45b4-ab9f-901cee718f87",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t17_c04",
+      "level": 85,
+      "name": "산하 대파쇄",
+      "jobId": "a3dea213-980b-4f76-acdf-afd55b168601",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t18_c04",
+      "level": 90,
+      "name": "만산 대붕괴",
+      "jobId": "322d2d90-6874-411d-a3e6-3510593d67a6",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t19_c04",
+      "level": 95,
+      "name": "대륙 대붕쇄",
+      "jobId": "c8790297-8909-46a8-9045-4bfb26a988d2",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t20_c04",
+      "level": 100,
+      "name": "천하붕쇄",
+      "jobId": "eeafd7a1-a11f-4e75-b20c-8ee0458b11ff",
+      "status": "queued"
+    }
+  ]
+}

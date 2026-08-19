@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NULL PLAYING 스킬 연출 랩</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="lab-shell">
+    <aside class="catalog-panel panel">
+      <header class="panel-header">
+        <div>
+          <p class="eyebrow">SOURCE-BACKED VFX LAB</p>
+          <h1>스킬 연출 랩</h1>
+        </div>
+        <span id="skillCount" class="count-badge">600</span>
+      </header>
+
+      <div id="classTabs" class="class-tabs" role="tablist" aria-label="직업 선택"></div>
+      <label class="search-box">
+        <span>스킬 검색</span>
+        <input id="searchInput" type="search" placeholder="이름 또는 catalogId" autocomplete="off">
+      </label>
+      <div id="skillList" class="skill-list" aria-label="스킬 목록"></div>
+    </aside>
+
+    <section class="stage-column">
+      <div class="stage-topbar">
+        <div>
+          <p class="eyebrow">ANDROID COMBAT PANEL · 218DP</p>
+          <strong id="selectedSummary">Lv.5 칼날 베기</strong>
+        </div>
+        <div class="stage-actions">
+          <span id="syncStatus" class="sync-status">실제 리소스 연결</span>
+          <div class="zoom-control" role="group" aria-label="미리보기 배율">
+            <span>보기</span>
+            <button class="zoom-button selected" type="button" data-zoom="1" aria-pressed="true">1×</button>
+            <button class="zoom-button" type="button" data-zoom="2" aria-pressed="false">2×</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="previewViewport" class="preview-viewport" aria-label="확대 가능한 모바일 전투 화면 미리보기">
+        <div id="previewCanvas" class="preview-canvas">
+      <div id="phoneFrame" class="phone-frame">
+        <div class="phone-header">
+          <div class="level-block">
+            <span>LV</span>
+            <strong id="heroLevel">5</strong>
+          </div>
+          <div class="hero-block">
+            <strong>별빛을 걷는 검은새벽의기사</strong>
+            <div><span id="heroClass">전사</span><span>전투력 <b id="combatPower">128</b></span></div>
+          </div>
+        </div>
+
+        <article id="combatCard" class="combat-card">
+          <div id="cameraPlane" class="camera-plane">
+            <img class="battle-bg" src="/assets/battle_background.png" alt="">
+            <div class="battle-shade"></div>
+            <div id="elementBackdrop" class="element-backdrop"></div>
+          </div>
+
+          <header class="monster-header">
+            <div class="monster-line"><strong>연출 확인용 허수아비</strong><span>정예</span></div>
+            <div class="energy-track"><div id="energyFill" class="energy-fill"></div></div>
+          </header>
+
+          <div id="vfxViewport" class="vfx-viewport">
+            <div id="androidFrameLayers" class="android-frame-layers" aria-hidden="true"></div>
+            <canvas id="chargeSprite" class="charge-sprite" width="361" height="160" aria-hidden="true"></canvas>
+            <canvas id="oceanSeverSprite" class="ocean-sever-sprite" width="384" height="384" aria-hidden="true"></canvas>
+            <div id="skillLabel" class="skill-label"></div>
+            <div id="damageNumber" class="damage-number"></div>
+          </div>
+        </article>
+
+        <div class="mobile-meta">
+          <div><span>스킬</span><strong id="mobileSkillName">칼날 베기</strong></div>
+          <div><span>연출 문법</span><strong id="mobileAction">CUT · LEFT_TO_RIGHT</strong></div>
+        </div>
+      </div>
+        </div>
+      </div>
+
+      <section class="transport panel">
+        <div class="transport-row">
+          <button id="playButton" class="primary-button" type="button">일시정지</button>
+          <button id="replayButton" type="button">처음부터</button>
+          <button id="backFrameButton" type="button">−16ms</button>
+          <button id="nextFrameButton" type="button">+16ms</button>
+          <label class="motion-toggle">
+            <input id="reducedMotionToggle" type="checkbox">
+            <span>모션 줄이기</span>
+          </label>
+          <label class="speed-control">속도
+            <select id="speedSelect">
+              <option value="0.25">0.25×</option>
+              <option value="0.5">0.5×</option>
+              <option value="1" selected>1×</option>
+              <option value="1.5">1.5×</option>
+            </select>
+          </label>
+        </div>
+        <div class="timeline-row">
+          <input id="timeline" type="range" min="0" max="1350" value="0" step="1" aria-label="연출 시간">
+          <output id="timeOutput">0ms</output>
+        </div>
+        <div id="hitMarkers" class="hit-markers" aria-label="타격 시점"></div>
+        <div id="phaseMarkers" class="phase-markers" aria-label="연출 단계 고정"></div>
+      </section>
+    </section>
+
+    <aside class="inspector-panel panel">
+      <header class="panel-header compact">
+        <div>
+          <p class="eyebrow">LAYER INSPECTOR</p>
+          <h2>레이어 검수</h2>
+        </div>
+        <span id="layerCount" class="count-badge">4층</span>
+      </header>
+
+      <section class="role-focus-section" aria-labelledby="roleFocusTitle">
+        <div class="role-focus-heading">
+          <h3 id="roleFocusTitle">역할 단독 보기</h3>
+          <span>한 장처럼 뭉치는지 분리 검수</span>
+        </div>
+        <div id="roleFocusControls" class="role-focus-controls" role="group" aria-label="연출 역할 단독 보기"></div>
+      </section>
+
+      <div id="layerToggles" class="layer-toggles"></div>
+
+      <section class="inspector-section">
+        <h3>현재 스킬</h3>
+        <dl id="skillDetails" class="skill-details"></dl>
+      </section>
+
+      <section class="inspector-section">
+        <h3>검수 기준</h3>
+        <ul class="audit-rules">
+          <li>공격 방향과 이미지 축이 일치하는지</li>
+          <li>피해 숫자 가림과 무관하게 중심 충격 밀도가 충분한지</li>
+          <li>마지막 연출이 1,300ms 전에 끝나는지</li>
+          <li>저레벨에서 고레벨로 층과 잔광이 성장하는지</li>
+        </ul>
+      </section>
+
+      <section class="source-note">
+        <strong>Android 원본 직접 참조</strong>
+        <span>drawable-nodpi · Android frame planner</span>
+      </section>
+    </aside>
+  </main>
+  <script src="app.js?v=warrior-t03-shatter-strike-1"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/warrior-t18-decay-revision-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/warrior-t18-decay-revision",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "warrior_t18_c04",
+      "level": 90,
+      "name": "만산 대붕괴",
+      "jobId": "63d2d84a-5e4f-4ada-8193-b0595c5c7cca",
+      "status": "queued"
+    }
+  ]
+}

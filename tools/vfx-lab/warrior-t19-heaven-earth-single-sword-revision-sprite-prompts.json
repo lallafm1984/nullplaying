@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "천지 가르기 single-sword and top-band cleanup corrective regeneration",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "tools/vfx-lab/custom-assets/warrior-sword-master-04-20-late-impact-revisions",
+  "settings": { "type": "spritesheet", "model": "gpt-5.6-sol", "mode": "detailed", "frameWidth": 361, "frameHeight": 160, "frameCount": 16, "columns": 4, "rows": 4, "preset": "attack", "fps": 16, "loop": false, "autoReview": true, "qualityTarget": 96, "maxPasses": 4, "useReference": false },
+  "commonPrompt": "Create exactly 16 chronological Detailed frames in a strict 4-column by 4-row row-major transparent RGBA spritesheet, 361x160 per sealed cell and 1444x640 total. Regenerate from scratch; reject the prior result with a floating second blade and top horizontal residue. F01-F04 zero alpha. F05 one tiny ivory glint. Exactly ONE connected straight greatsword appears from F06 through F16; no other long straight, pointed or weapon-like object may exist. F06-F09 restrained high preparation, F10-F12 rapid downward path with no target damage, F13 first contact, F14 compression, F15 unique maximum, F16 held final contact at 80% energy. Keep all alpha inside x=16..345,y=14..146. Outer 10px, top 14px and bottom 14px exactly transparent in every cell. Never paint a strip parallel to any cell edge. Fixed camera, scale, near-vertical angle and sword design. Detailed Korean action-RPG painting, clean smooth alpha, no pixel art.",
+  "negativePrompt": "second sword, duplicate sword, floating sword, short sword, blade-shaped pressure field, long pointed pressure shape, detached blade, detached hilt, top horizontal strip, top image band, bottom image band, edge residue, cell leakage, visible F01, visible F02, visible F03, visible F04, target before F13, debris before F13, crack before F13, sword touching edge, field touching edge, sky, clouds, horizon, landscape, ground plane, planet, magic circle, vertical beam without sword, symmetric wings, radial burst, character, hand, body, enemy, UI, text, grid, border, camera shake, wobble, reverse motion, F16 fade, F16 empty, opaque panel, pixel art, jagged alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t19_c02",
+      "level": 95,
+      "name": "천지 가르기",
+      "grammar": "SINGLE_SWORD_HEAVEN_EARTH_SEVER",
+      "generationPrompt": "Regenerate 천지 가르기 with one monumental connected silver greatsword following a fixed near-vertical diagonal from P0=(44%,14%) to contact P=(57%,74%). F06-F08 show only the complete sword high in the cell with a small cold-blue crescent pressure chip above-left and a small ochre angular chip below-right; both are blunt abstract fragments, each under 15% of cell width, never long or pointed. F09-F12 drive the same sword downward through a wide transparent corridor; the two color groups stretch into short curved wakes that cannot resemble blades. F13 the sword tip first touches one compact ochre-black seal at P. F14 compresses it while a compact cold-blue pressure cap forms above the sword, fully inset. F15 opens one tall asymmetrical transparent sever corridor: five short cold-blue vanes peel toward upper-left and six ochre stone-steel slabs break toward lower-right around the visible sword. F16 holds the same sword and split fields with reduced glow. All vanes and slabs remain at least 14px from every edge; no top or bottom strip, no second weapon and no full-screen beam."
+    }
+  ]
+}

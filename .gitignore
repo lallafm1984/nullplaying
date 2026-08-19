@@ -1,0 +1,38 @@
+.gradle/
+.kotlin/
+.idea/
+build/
+**/build/
+local.properties
+*.iml
+
+# Local OS/editor state
+.DS_Store
+.aq-ui.xml
+.codex-*.png
+
+# Local secrets and dependency caches
+.env
+.env.*
+!.env.example
+node_modules/
+__pycache__/
+*.py[cod]
+
+# Reproducible packages, device state, and QA captures
+*.apk
+*.aab
+*.ap_
+*.db
+*.db-*
+*.log
+tmp/
+artifacts/
+design-audits/
+tools/vfx-lab/evidence/
+tools/vfx-lab/temp-assets/
+tools/vfx-lab/data/android-export.backup-*/
+tools/vfx-lab/data/android-export.checkpoint-*/
+tools/vfx-lab/data/android-export.failed-*/
+tools/vfx-lab/data/android-export-current/
+tools/vfx-lab/data/android-export-final/

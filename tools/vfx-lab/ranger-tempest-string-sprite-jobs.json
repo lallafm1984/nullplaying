@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/ranger-tempest-string-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/ranger-tempest-string",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "ranger_t01_c03",
+      "level": 5,
+      "name": "산들 화살",
+      "jobId": "cfec86d6-bd3d-451f-9169-323ff228b12f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t02_c03",
+      "level": 10,
+      "name": "돌풍 시위",
+      "jobId": "60f4a5f5-6973-4bf9-807f-3d9dd12b15f9",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t03_c03",
+      "level": 15,
+      "name": "바람 가르기",
+      "jobId": "781dadd2-f1bf-42f4-80cc-61691384ee9e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t04_c03",
+      "level": 20,
+      "name": "회오리 화살",
+      "jobId": "4e78b406-64e4-4c5e-a14e-d0c692e17002",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t05_c03",
+      "level": 25,
+      "name": "질풍 관통",
+      "jobId": "c399087a-c715-4460-a7e7-1593b45a16b9",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t06_c03",
+      "level": 30,
+      "name": "폭풍 시위",
+      "jobId": "6851aa93-994b-4828-92dd-b202d95cd2ff",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t07_c03",
+      "level": 35,
+      "name": "청풍 난사",
+      "jobId": "9da1ccd8-887e-4f84-a834-9ef144013ae9",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t08_c03",
+      "level": 40,
+      "name": "회오리 관통",
+      "jobId": "4a6d1929-8aac-49d0-8c7a-49bee54eb798",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t09_c03",
+      "level": 45,
+      "name": "폭풍 화살",
+      "jobId": "ad4da15c-846b-45ca-9487-0039e085c247",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t10_c03",
+      "level": 50,
+      "name": "태풍 시위",
+      "jobId": "6a1c2ebd-89cf-44fa-aedf-df7ccbaedc81",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t11_c03",
+      "level": 55,
+      "name": "질풍 폭발",
+      "jobId": "2aaa9b0d-503e-4cbe-9e23-6f2694937abf",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t12_c03",
+      "level": 60,
+      "name": "폭풍왕의 화살",
+      "jobId": "4e3f07f9-aded-4267-b2fb-0de0ed9f230e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t13_c03",
+      "level": 65,
+      "name": "천공 회오리",
+      "jobId": "ef6e6177-8a0c-4705-8645-7e144de30000",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t14_c03",
+      "level": 70,
+      "name": "대기의 칼날",
+      "jobId": "acd528b7-09a4-4869-a7ed-0af759132ba2",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t15_c03",
+      "level": 75,
+      "name": "폭풍신의 시위",
+      "jobId": "4dba2457-e074-4444-b2d1-fc6b122138cb",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t16_c03",
+      "level": 80,
+      "name": "하늘 가르기",
+      "jobId": "a24e5d6a-e5aa-4ad0-bb4e-23b46127062f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t17_c03",
+      "level": 85,
+      "name": "창공 붕괴",
+      "jobId": "f87a07b7-55f1-4f07-b7cd-478beda422a9",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t18_c03",
+      "level": 90,
+      "name": "태풍 종결",
+      "jobId": "8ed6da9e-ab2d-43c2-a379-5219fe9ac3d2",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t19_c03",
+      "level": 95,
+      "name": "세계풍 관통",
+      "jobId": "f0d58808-31c3-44f8-83a0-5192bda6839b",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t20_c03",
+      "level": 100,
+      "name": "창세의 바람",
+      "jobId": "7250c936-6900-4eb0-9df0-3347015f6e27",
+      "status": "queued"
+    }
+  ]
+}

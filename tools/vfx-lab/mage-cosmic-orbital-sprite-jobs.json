@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/mage-cosmic-orbital-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/mage-cosmic-orbital",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "mage_t01_c05",
+      "level": 5,
+      "name": "별가루 폭발",
+      "jobId": "5fa48ad8-3687-479f-825d-a4ed5d99512c",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t02_c05",
+      "level": 10,
+      "name": "유성 조각",
+      "jobId": "8dec7f51-48ef-4980-a38d-545abee71d67",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t03_c05",
+      "level": 15,
+      "name": "달빛 폭발",
+      "jobId": "69be5ced-1910-47fb-b71b-1f96f66978f5",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t04_c05",
+      "level": 20,
+      "name": "작은 유성우",
+      "jobId": "956e5ff7-fbcd-4415-9b46-2ab40ed145c8",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t05_c05",
+      "level": 25,
+      "name": "성운 파동",
+      "jobId": "45f3a56d-dde3-443d-8830-7dd60918b1d7",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t06_c05",
+      "level": 30,
+      "name": "혜성 낙하",
+      "jobId": "2cdf7249-6e9d-4349-9834-403383d409e4",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t07_c05",
+      "level": 35,
+      "name": "별무리 폭격",
+      "jobId": "e898a31b-e0f7-4f3e-876a-4d877aa331de",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t08_c05",
+      "level": 40,
+      "name": "월식 파동",
+      "jobId": "013e5b5c-54e0-4484-99d5-c71da817a095",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t09_c05",
+      "level": 45,
+      "name": "유성우",
+      "jobId": "59cdd29c-2a7f-470b-b6f1-ee3736f8b0f6",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t10_c05",
+      "level": 50,
+      "name": "성좌 폭발",
+      "jobId": "72898bb5-9828-46a7-9fe9-d39afdd7e7cd",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t11_c05",
+      "level": 55,
+      "name": "혜성 충돌",
+      "jobId": "18ecc5a0-15d0-4fdd-adbe-8a18a4f5669f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t12_c05",
+      "level": 60,
+      "name": "은하 파동",
+      "jobId": "1efaf402-aab9-4b39-8099-fe4be7163c06",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t13_c05",
+      "level": 65,
+      "name": "별바다 폭격",
+      "jobId": "b58724b1-42ce-435e-becd-d8373227a05c",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t14_c05",
+      "level": 70,
+      "name": "초신성 파편",
+      "jobId": "79064344-1f3d-49ee-9c35-651e001d6e73",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t15_c05",
+      "level": 75,
+      "name": "성운 붕괴",
+      "jobId": "d41f1fb0-3a47-46f8-a7aa-1d3904fc4d29",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t16_c05",
+      "level": 80,
+      "name": "행성 낙하",
+      "jobId": "77173deb-3bc8-43c0-984c-5b2ddcd87de6",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t17_c05",
+      "level": 85,
+      "name": "별자리 붕괴",
+      "jobId": "f64fa7a4-6c72-4b7b-b141-c192b8ae1905",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t18_c05",
+      "level": 90,
+      "name": "은하 충돌",
+      "jobId": "fd56985f-3d23-462d-a08f-ba7f9457237e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t19_c05",
+      "level": 95,
+      "name": "초신성",
+      "jobId": "a414c79f-57e9-4c4d-9486-9381bac1bd27",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t20_c05",
+      "level": 100,
+      "name": "우주 종말",
+      "jobId": "708f5f44-f548-494e-8396-b641ba2f7675",
+      "status": "queued"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "Warrior 전투도끼 낙하 흔들림 제거와 후반 타격 종료 수정본",
+  "sourcePolicy": {
+    "catalogIdStable": true,
+    "existingVfxUsedForDiagnosisOnly": true,
+    "rejectedRevisionNotUsedAsVisualReference": true,
+    "jitterDiagnosis": "기존 시트는 F09 이후 밝은 타격핵의 X 중심이 프레임마다 좌우로 되튕기고 낙하 곡선의 두께와 접점이 다시 그려져 흔들려 보였다.",
+    "userTemporalOverride": "기존 공통 F08-F09 타격과 F16 소실 규칙을 이 스킬에만 사용하지 않는다. 첫 접촉은 F13으로 늦추고 F15가 최대 타격, F16은 타격 이펙트가 남은 상태에서 종료한다."
+  },
+  "gateway": "http://127.0.0.1:4317",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 94,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for AlarmQuest. Create exactly 16 chronological animation frames in a strict 4-column by 4-row, row-major sprite sheet. Every cell is one independent wide 361:160 combat viewport; final sheet 1444:640; Detailed hand-painted high-resolution 2D rendering; transparent RGBA; clean antialiased alpha; image-rendering auto; no pixel art. Keep the camera, crop, scale, contact point, perspective, blade-pressure thickness, and trajectory mathematically fixed for all sixteen cells. Motion grammar: LOCKED_AXE_SPLINE_LATE_IMPACT. Define one immutable upper-right to lower-middle axe-pressure path with center samples F07=(68%,16%), F08=(65%,28%), F09=(62%,40%), F10=(59%,52%), F11=(56%,64%), F12=(53%,73%), and fixed contact P=(52%,77%). The samples must progress monotonically downward and slightly left with no reversal, overshoot, sideways recoil, rotation, rescaling, or independently redrawn silhouette. Reuse one broad chipped crescent profile at the same angle and curvature; animate only its continuous translation along the locked path, compressed motion wake, contact deformation, and attached fragments. User-specific late-hit choreography overrides the normal early-impact/fade contract: F01 nearly transparent. F02-F06 show restrained weight gathering only in the upper-right start zone, never a complete attack. F07-F11 descend through the exact locked samples with steadily increasing speed and weight. F12 stops a hair above the fixed contact point with compressed air but no collision spark, crack, or damage burst. F13 is the first physical contact at P. F14 expands the same attached contact wedge and short pressure tear. F15 is the unique maximum hit: one heavy asymmetric ochre-white impact flare, one low wide broken steel-pressure fan, five to seven short gunmetal chips, and a compact dustless compression fold, all rooted at P. F16 remains a readable impact ending tableau at 75-85% of F15 energy: keep the same contact wedge, the same flare core, and slightly separated attached chips; do not fade to transparent, recover, retract, or create a second finisher. The animation must end on the hit effect and then disappear only because playback ends at 1,000ms. Use cold gunmetal, desaturated blue-gray steel pressure, ivory edge light, and restrained ochre impact accents. Keep transparent corridors and avoid an opaque full-cell wash. Treat every cell as separately clipped with no adjacent-frame residue. Render VFX only: no character, enemy, hands, complete axe, handle, weapon body, scenery, ground plane, UI, text, labels, frame numbers, grid, borders, gutters, padding, or opaque background.",
+  "negativePrompt": "frame-to-frame wobble, jitter, shake, swimming silhouette, boiling edge, random redraw, changing crescent curvature, changing blade thickness, changing contact point, changing camera, changing crop, changing scale, changing perspective, angle reversal, left-right oscillation, vertical bounce, overshoot, sideways recoil, non-monotonic path, fragment teleportation, early contact before F13, impact spark before F13, crater before F13, maximum impact before F15, F08 impact, F09 impact, post-impact fade, transparent F16, empty F16, recovery pose, retracting effect, second hit, second attack, repeated explosion, ornate finisher, finishing ring, full circular shockwave, concentric rings, radial flower, butterfly, mirrored wings, feather wings, pinwheel, vortex, spiral, closed glowing loop, permanent central orb, black hole, starburst, giant X-shaped peak, cross-shaped peak, full-screen explosion, excessive bloom, excessive sparks, smoke covering the full cell, dust cloud covering the full cell, magical spell circle, runes, pixel art, retro sprite, low resolution, nearest-neighbor edges, character, warrior body, face, hands, enemy, monster, literal axe, complete axe, axe handle, complete weapon, scenery, battlefield, ground illustration, UI, HUD, text, Korean letters, English letters, numbers, logo, signature, watermark, frame labels, grid lines, borders, gutters, padding, opaque background, black background, white background, checkerboard background, duplicated frame, missing frame, wrong frame order, adjacent frame residue, horizontal image band, top image band, bottom image band, rectangular alpha panel, muddy colors, jagged alpha, haloed alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t05_c02",
+      "level": 25,
+      "name": "전투도끼 낙하",
+      "grammar": "LOCKED_AXE_SPLINE_LATE_IMPACT",
+      "generationPrompt": "Regenerate '전투도끼 낙하' from scratch as one heavy axe-pressure crescent that follows the locked upper-right-to-lower-middle path without any visual shake. The current rejected version may be used only as defect diagnosis; do not imitate its frame shapes. Preserve one immutable crescent silhouette, chipped outer edge, broad weight, 24-degree downward-left angle, and fixed lower-middle contact point. During F07-F12, move the same crescent through the exact declared samples with smooth monotonic acceleration; its bright core may advance along the path but must never jump backward or sideways. F12 must visibly suspend the edge just above contact so the viewer anticipates the hit. Start the hit only on F13, build the attached contact wedge on F14, deliver the strongest compact impact on F15, and end F16 on the same impact rather than on a fade. In F15-F16 lock the brightest core inside x=50%-54%, y=74%-80%; keep all chips and pressure folds physically rooted there. F16 is not a new explosion: it is the F15 impact held and opened slightly, still 75-85% as strong. Make the result weighty and satisfying through one broad steel-pressure edge, a short ochre-white contact flare, a broken low fan, and a few chunky gunmetal chips—not through camera shake, a literal axe, a magical circle, or a huge radial blast."
+    }
+  ]
+}

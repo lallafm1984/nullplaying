@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/mage-arcane-geometry-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/mage-arcane-geometry",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "mage_t01_c04",
+      "level": 5,
+      "name": "마력탄",
+      "jobId": "12555f08-331a-422b-a387-fe8d25081164",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t02_c04",
+      "level": 10,
+      "name": "비전 파동",
+      "jobId": "a49cd10b-1433-49c3-9875-6339efffef47",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t03_c04",
+      "level": 15,
+      "name": "마력 칼날",
+      "jobId": "6f1975e4-20f8-4a8e-8d69-ddf78ba6e26e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t04_c04",
+      "level": 20,
+      "name": "비전 충격",
+      "jobId": "56283ff0-69ce-4202-b500-259bfd57b75b",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t05_c04",
+      "level": 25,
+      "name": "마력 회오리",
+      "jobId": "29278f27-9819-4d4a-b6e1-0cc37aa1e3c1",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t06_c04",
+      "level": 30,
+      "name": "공간 절단",
+      "jobId": "befb8124-a756-4d48-87f6-5dc28dbd88bf",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t07_c04",
+      "level": 35,
+      "name": "비전 연탄",
+      "jobId": "6fa4a428-98be-43d5-bbb1-320205c7b161",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t08_c04",
+      "level": 40,
+      "name": "차원 칼날",
+      "jobId": "6ffc64e4-ca45-4a80-8451-0567f20471a1",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t09_c04",
+      "level": 45,
+      "name": "마력 붕괴",
+      "jobId": "2226274b-0425-48e4-a69e-90168498ad31",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t10_c04",
+      "level": 50,
+      "name": "공간 왜곡파",
+      "jobId": "a8a88b91-627b-4554-924e-004a12d8c417",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t11_c04",
+      "level": 55,
+      "name": "비전 폭풍",
+      "jobId": "5c00af60-882d-44dd-bd43-ef1b6718f242",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t12_c04",
+      "level": 60,
+      "name": "차원 붕괴",
+      "jobId": "8252294a-f7ca-4a57-b94d-7d8eb9cc20b2",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t13_c04",
+      "level": 65,
+      "name": "마력 핵폭발",
+      "jobId": "55de5606-24e9-4f6b-8e1f-bfc3d00da406",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t14_c04",
+      "level": 70,
+      "name": "공허 칼날",
+      "jobId": "30488167-b8f8-4d41-8de1-d14796b927d9",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t15_c04",
+      "level": 75,
+      "name": "차원 연쇄",
+      "jobId": "d9088746-67a1-4be1-8598-1458b6c323e0",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t16_c04",
+      "level": 80,
+      "name": "공간 소멸",
+      "jobId": "d1999ce6-c715-4d81-a632-8d4c3ea9f266",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t17_c04",
+      "level": 85,
+      "name": "비전 특이점",
+      "jobId": "df473551-4930-499a-985d-0176c8b0e56b",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t18_c04",
+      "level": 90,
+      "name": "공허 폭발",
+      "jobId": "0ed67b74-147f-4cc1-a570-86d5260a2ec2",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t19_c04",
+      "level": 95,
+      "name": "차원 종단",
+      "jobId": "b6caee90-4194-42ba-b112-701865433ab9",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t20_c04",
+      "level": 100,
+      "name": "무한 특이점 붕괴",
+      "jobId": "5d6569ac-977a-4e20-887b-d8c3b1521b75",
+      "status": "queued"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "섬광 일섬 immutable left-to-right sword orientation corrective regeneration",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "tools/vfx-lab/custom-assets/warrior-sword-master-04-20-late-impact-revisions",
+  "settings": { "type": "spritesheet", "model": "gpt-5.6-sol", "mode": "detailed", "frameWidth": 361, "frameHeight": 160, "frameCount": 16, "columns": 4, "rows": 4, "preset": "attack", "fps": 16, "loop": false, "autoReview": true, "qualityTarget": 96, "maxPasses": 4, "useReference": false },
+  "commonPrompt": "Create exactly 16 chronological Detailed frames in a strict 4-column by 4-row row-major transparent RGBA spritesheet, 361x160 per sealed cell and 1444x640 total. Regenerate from scratch. F01-F04 zero visible pixels, F05 tiny glint, F06-F09 preparation, F10-F12 instant horizontal travel, F13 first contact, F14 compression, F15 unique maximum separation, F16 held contact at 80% energy. CRITICAL immutable orientation in every visible cell: pommel at far left, wrapped grip left of crossguard, crossguard left of blade, tapered blade point always at far right. The sword never flips, mirrors, reverses, rotates 180 degrees or swaps its blade and hilt. It translates only from left to right on y=52%. One fixed camera, scale, perspective, sword length and design. All alpha stays inside x=22..339,y=20..138; outer 12px transparent and no cell leakage. Detailed Korean action-RPG painting with clean smooth alpha, no pixel art.",
+  "negativePrompt": "reversed sword, flipped sword, mirrored sword, blade pointing left, hilt on right, grip on right, pommel on right, orientation change, 180 degree rotation, backward motion, rebound, wobble, changing perspective, two swords, duplicate sword, detached blade, detached hilt, visible F01, visible F02, visible F03, visible F04, edge touching, cell band, bottom strip, adjacent cell leakage, target before F13, contact before F13, debris before F13, character, hand, body, enemy, scenery, background, ground, UI, text, grid, border, huge bloom, radial starburst, magic circle, lightning network, F16 fade, F16 empty, pixel art, jagged alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t12_c04",
+      "level": 60,
+      "name": "섬광 일섬",
+      "grammar": "IMMUTABLE_RIGHT_POINTING_FLASH_IASSEN",
+      "generationPrompt": "Regenerate 섬광 일섬 with one slim plain katana-like sword. In every visible frame its black wrapped hilt and pommel are on the LEFT and its long straight tapered blade point is on the RIGHT. F05 tiny glint at x=21%,y=52%. F06-F09 keep the sword center between x=26%-35%. F10 center x=43%, F11 x=58%, F12 x=72%, all at y=52% and identical orientation. A thin ivory wake trails behind the hilt toward the left; it never becomes a second sword. F13 the right-pointing tip first touches a tiny dark-steel slit at P=(82%,52%). F14 compresses the slit. F15 separates it into two clean unequal offset halves with one narrow white flash and three silver chips, while the sword remains right-pointing beyond the slit. F16 holds the exact same tableau. Prioritize instantaneous direction readability and silence, no sword flip, no giant bloom or ornate magic."
+    }
+  ]
+}

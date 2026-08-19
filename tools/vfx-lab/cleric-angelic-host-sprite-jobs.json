@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/cleric-angelic-host-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/cleric-angelic-host",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "cleric_t01_c05",
+      "level": 5,
+      "name": "수호령 돌진",
+      "jobId": "f15fb9d2-1600-46f3-9bf3-8714c1349598",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t02_c05",
+      "level": 10,
+      "name": "천사의 깃날",
+      "jobId": "7190f268-6d84-4b8f-b878-c1711a220142",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t03_c05",
+      "level": 15,
+      "name": "영혼의 파동",
+      "jobId": "36decc3f-c6a8-4ea6-9385-1d576303683c",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t04_c05",
+      "level": 20,
+      "name": "천익 연격",
+      "jobId": "2dac7974-e7b1-4765-8bdb-3cef200b469b",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t05_c05",
+      "level": 25,
+      "name": "수호천사 강하",
+      "jobId": "71e33239-4e01-499e-9d0c-dde9810de226",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t06_c05",
+      "level": 30,
+      "name": "영혼 군세",
+      "jobId": "cf383326-6b1c-4a51-96b1-df3b49bf2e7e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t07_c05",
+      "level": 35,
+      "name": "천사의 검무",
+      "jobId": "2efa30bc-886b-4ef4-95b6-1e22ee562b6e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t08_c05",
+      "level": 40,
+      "name": "성령 포화",
+      "jobId": "b5d34eb8-d92b-4751-a9c3-936d8db0afbf",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t09_c05",
+      "level": 45,
+      "name": "대천사 돌진",
+      "jobId": "cd5fd625-955b-46c7-aaf4-0d2c6c9aa723",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t10_c05",
+      "level": 50,
+      "name": "영혼 심판",
+      "jobId": "7213ba25-c84a-4267-a563-07c483a24a03",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t11_c05",
+      "level": 55,
+      "name": "천익 폭격",
+      "jobId": "132fde71-fd83-48b6-bff0-057d2bae1757",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t12_c05",
+      "level": 60,
+      "name": "대천사 검무",
+      "jobId": "2887e61a-010a-41ea-8b31-d06ebed5d4d6",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t13_c05",
+      "level": 65,
+      "name": "성령 군단",
+      "jobId": "da6a6450-2a65-40aa-8955-7fc6d184fae8",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t14_c05",
+      "level": 70,
+      "name": "천군 강하",
+      "jobId": "f4f75c0a-679f-491a-ba98-b42fa5c60e9d",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t15_c05",
+      "level": 75,
+      "name": "영혼왕 연격",
+      "jobId": "07c0c80e-cabc-4b7b-b7a1-de4fd4d750ff",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t16_c05",
+      "level": 80,
+      "name": "대천사 연무",
+      "jobId": "aeb3c599-386f-4d8c-9cf3-d4f4722051f7",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t17_c05",
+      "level": 85,
+      "name": "천군 포화",
+      "jobId": "c21693cc-1362-4902-8b4c-5bcd4d377e64",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t18_c05",
+      "level": 90,
+      "name": "성령 폭격",
+      "jobId": "d9659cc7-5c05-4c42-89dc-1bc46e2d9631",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t19_c05",
+      "level": 95,
+      "name": "만천사 돌격",
+      "jobId": "8edc9021-bd1b-4c32-a94a-54070f9d2022",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t20_c05",
+      "level": 100,
+      "name": "천국문 폭격",
+      "jobId": "d486815e-0086-4750-8369-f1f61725eedc",
+      "status": "queued"
+    }
+  ]
+}

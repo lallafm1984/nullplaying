@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "전장의 돌격 sealed-edge and anticipation corrective regeneration",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "tools/vfx-lab/custom-assets/warrior-sword-master-04-20-late-impact-revisions",
+  "settings": { "type": "spritesheet", "model": "gpt-5.6-sol", "mode": "detailed", "frameWidth": 361, "frameHeight": 160, "frameCount": 16, "columns": 4, "rows": 4, "preset": "attack", "fps": 16, "loop": false, "autoReview": true, "qualityTarget": 96, "maxPasses": 4, "useReference": false },
+  "commonPrompt": "Create exactly 16 chronological Detailed Korean action-RPG VFX frames in a strict 4-column by 4-row row-major transparent RGBA spritesheet, 361x160 per sealed cell and 1444x640 total. Regenerate from scratch; do not imitate the rejected edge-touching sheet. F01-F04 have zero visible pixels. F05 has one tiny gold-blue glint only. F06-F09 prepare one connected sword fully inside the cell. F10-F12 one fast low rightward rush, F13 first contact, F14 compression, F15 unique maximum shear, F16 held final contact at 80% energy. Every non-transparent pixel in every frame must remain inside the safe rectangle x=28..332 and y=22..136. The outer 12 pixels on all four sides are exactly transparent, including faint antialias haze. No object, streak, smoke, shadow, spark or fragment may touch a cell boundary. One fixed camera and exact sword design, no redraw wobble. Detailed smooth alpha, not pixel art.",
+  "negativePrompt": "any alpha in outer 12 pixels, edge touching, cropped weapon, cropped wake, adjacent cell leakage, top band, bottom band, side band, faint full-cell haze, visible F01, visible F02, visible F03, visible F04, full sword in F05, two swords, duplicate sword, detached weapon, spear, shield, hammer, axe, target before F13, spark before F13, debris before F13, character, body, hand, enemy, scenery, ground, background, UI, text, grid, border, camera shake, wobble, reverse motion, tunnel, ring, radial explosion, F16 fade, F16 empty, pixel art, jagged alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t08_c02",
+      "level": 40,
+      "name": "전장의 돌격",
+      "grammar": "INSET_LOW_BATTLEFIELD_SWORD_RUSH",
+      "generationPrompt": "Regenerate 전장의 돌격 with one medium-length single-edged war sword, compact gold crossguard, connected blue grip and pommel. Keep it smaller than 62% of cell width so it can move without touching edges. Use a horizontal lane y=58%, from sword center x=31% to final contact P=(74%,58%). F05 tiny glint. F06-F09 show the sword compressed at the left, fully inside x=28..56%, with two short blue-steel speed blocks behind the hilt. F10 center x=43%, F11 x=56%, F12 x=67%. F13 first contact shears a narrow bronze armor edge that appears only at P. F14 folds it rightward. F15 opens it into two unequal right-facing fragments, one low asymmetric ivory-gold pressure wedge and four restrained sparks. F16 holds the sword past the sheared plate. Preserve large transparent space above and below and keep all fragments inside the safe rectangle. No spear silhouette, giant long sword crossing boundaries, charge tunnel or explosion."
+    }
+  ]
+}

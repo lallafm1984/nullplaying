@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/rogue-heartseal-execution-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/rogue-heartseal-execution",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "rogue_t01_c05",
+      "level": 5,
+      "name": "급소 베기",
+      "jobId": "3d1e708a-327e-4b39-9f83-71b2a66409e3",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t02_c05",
+      "level": 10,
+      "name": "숨통 끊기",
+      "jobId": "8a623d41-4e64-49c1-ba9b-5d4ac6544561",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t03_c05",
+      "level": 15,
+      "name": "심장 찌르기",
+      "jobId": "c6728baf-51d9-4e26-8b37-719cbe668140",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t04_c05",
+      "level": 20,
+      "name": "무음 처형",
+      "jobId": "c05d1ff8-6b30-40fe-8037-f95304361328",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t05_c05",
+      "level": 25,
+      "name": "붉은 급소",
+      "jobId": "ea1ff34f-42c4-4356-9505-4d0b516065c1",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t06_c05",
+      "level": 30,
+      "name": "사각 일격",
+      "jobId": "98c68718-eb22-4459-a418-2a9d19b159d2",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t07_c05",
+      "level": 35,
+      "name": "치명 절단",
+      "jobId": "b6897d9f-de05-467e-a4ec-d5a7587d7171",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t08_c05",
+      "level": 40,
+      "name": "영혼 찌르기",
+      "jobId": "a15d0ddc-0bd9-4db9-98af-28da5196c826",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t09_c05",
+      "level": 45,
+      "name": "한밤의 급소",
+      "jobId": "bf91a45a-36c1-417c-95e8-9a02c85d7d75",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t10_c05",
+      "level": 50,
+      "name": "절명 일격",
+      "jobId": "1cff3e99-1181-4857-8b08-c855444d8cfc",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t11_c05",
+      "level": 55,
+      "name": "목숨 베기",
+      "jobId": "90926f4e-a8c0-4e84-8f94-c8081133863a",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t12_c05",
+      "level": 60,
+      "name": "침묵의 처형",
+      "jobId": "b741b905-da15-4d28-b1eb-1784c207ab02",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t13_c05",
+      "level": 65,
+      "name": "운명 절단",
+      "jobId": "a2685b1a-828b-4ff5-a046-fe2e3d35982c",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t14_c05",
+      "level": 70,
+      "name": "사신의 급소",
+      "jobId": "c40a0f2b-9d79-4da2-af17-5caf164e9838",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t15_c05",
+      "level": 75,
+      "name": "영혼 처형",
+      "jobId": "999d396b-5a0a-4960-8200-1fc708f2db03",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t16_c05",
+      "level": 80,
+      "name": "존재 절단",
+      "jobId": "98ded1ea-3927-44b6-941b-971891c4a132",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t17_c05",
+      "level": 85,
+      "name": "왕의 숨통",
+      "jobId": "61539e65-3fb8-4e21-977c-4f358da826c5",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t18_c05",
+      "level": 90,
+      "name": "절대 급소",
+      "jobId": "07456ad4-00e0-424f-a782-e6121eba8ba1",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t19_c05",
+      "level": 95,
+      "name": "찰나 처형",
+      "jobId": "eaefdac5-7c97-456a-9b15-cd24d8be4a01",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t20_c05",
+      "level": 100,
+      "name": "죽음의 한 점",
+      "jobId": "fe1f9a1b-9f0c-4147-92b7-ba754520559a",
+      "status": "queued"
+    }
+  ]
+}

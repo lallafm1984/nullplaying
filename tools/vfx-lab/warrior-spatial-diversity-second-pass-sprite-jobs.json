@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/warrior-spatial-diversity-second-pass-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/warrior-spatial-diversity-second-pass",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "warrior_t01_c05",
+      "level": 5,
+      "name": "거친 연속참",
+      "jobId": "d10cecad-f2d4-4d71-ab79-3ff57fdfcc89",
+      "status": "running"
+    },
+    {
+      "catalogId": "warrior_t05_c04",
+      "level": 25,
+      "name": "지반 내려찍기",
+      "jobId": "5e55a017-700d-4d48-916a-92e36f983892",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t08_c04",
+      "level": 40,
+      "name": "지축 파쇄타",
+      "jobId": "c1a0285f-770f-4e9f-90c0-bcbbc00553f5",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t10_c01",
+      "level": 50,
+      "name": "성벽 양단",
+      "jobId": "003a659f-239e-4472-a004-e4ec5458fb34",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t14_c04",
+      "level": 70,
+      "name": "지각 대폭쇄",
+      "jobId": "eda0aa32-0210-4404-98ac-df822df03eef",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t16_c02",
+      "level": 80,
+      "name": "패왕 대강타",
+      "jobId": "fa9749a4-a791-4441-aa8a-46fd8e4ecb25",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t17_c05",
+      "level": 85,
+      "name": "전쟁왕 광란",
+      "jobId": "4f8f0bfb-4ba8-44e5-98b0-216d13210e2c",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t18_c04",
+      "level": 90,
+      "name": "만산 대붕괴",
+      "jobId": "50902212-a9d1-4ca3-a2f6-86e2cee42127",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t20_c02",
+      "level": 100,
+      "name": "무쌍 대분쇄",
+      "jobId": "37469363-3ab6-4bd5-9eb0-8ae3789f167b",
+      "status": "queued"
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/ranger-skyburst-volley-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/ranger-skyburst-volley",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "ranger_t01_c02",
+      "level": 5,
+      "name": "세 갈래 화살",
+      "jobId": "2c7f2d44-2c00-40a5-b6cc-62c1cc88808b",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t02_c02",
+      "level": 10,
+      "name": "연속 사격",
+      "jobId": "c5c62ae8-7208-47e8-89e0-3e06b8bd79b5",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t03_c02",
+      "level": 15,
+      "name": "오연사",
+      "jobId": "95869ea4-4ddc-4bab-ac2c-0c783bfc8407",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t04_c02",
+      "level": 20,
+      "name": "부채꼴 사격",
+      "jobId": "ed2ea073-0216-4d5b-9e34-76961af247b4",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t05_c02",
+      "level": 25,
+      "name": "유성 화살비",
+      "jobId": "4191a179-8f61-4f97-b4a3-362bab4cf7ee",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t06_c02",
+      "level": 30,
+      "name": "매의 깃 연사",
+      "jobId": "8f6522af-3845-4524-a908-84f47266bfd1",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t07_c02",
+      "level": 35,
+      "name": "일곱 화살",
+      "jobId": "4578a3c9-f9f3-4da6-8cf0-bb9365a48fa0",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t08_c02",
+      "level": 40,
+      "name": "비익 연사",
+      "jobId": "9edbcf56-2501-4181-b21d-5f684f685749",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t09_c02",
+      "level": 45,
+      "name": "폭우 사격",
+      "jobId": "82d24b15-8410-4137-8062-dd14a689e8fa",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t10_c02",
+      "level": 50,
+      "name": "천공 화살비",
+      "jobId": "2a8fe50b-7fc2-4f65-93b0-ea8a927dacd8",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t11_c02",
+      "level": 55,
+      "name": "백발백중 연사",
+      "jobId": "eeb8553e-be77-4036-8020-f05f475c6294",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t12_c02",
+      "level": 60,
+      "name": "군집 화살",
+      "jobId": "f611ef56-b3fc-4cea-826c-678178de2a87",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t13_c02",
+      "level": 65,
+      "name": "빛살 난무",
+      "jobId": "4c5a1394-22d5-4e1c-badb-bd8ccc200c05",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t14_c02",
+      "level": 70,
+      "name": "만화살 폭우",
+      "jobId": "0f687b5a-a063-4631-8401-a0e6fd5ecce7",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t15_c02",
+      "level": 75,
+      "name": "유성우 연사",
+      "jobId": "58171085-cd49-4e4f-8921-fe1861d65fa5",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t16_c02",
+      "level": 80,
+      "name": "무한 화살진",
+      "jobId": "00042990-df3c-4cb7-97ec-f79cb1ce20a1",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t17_c02",
+      "level": 85,
+      "name": "천익 난사",
+      "jobId": "303ac33a-f29b-4a9b-9168-631daa078503",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t18_c02",
+      "level": 90,
+      "name": "종말의 화살비",
+      "jobId": "b040d899-1e71-4b36-8000-5662f9cb5275",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t19_c02",
+      "level": 95,
+      "name": "백만 화살",
+      "jobId": "8d3a6ec1-3e1c-4e6a-a4e2-16b0624e34b4",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t20_c02",
+      "level": 100,
+      "name": "무한성우",
+      "jobId": "e167a2e1-0389-453c-a75f-2a433fe84855",
+      "status": "queued"
+    }
+  ]
+}

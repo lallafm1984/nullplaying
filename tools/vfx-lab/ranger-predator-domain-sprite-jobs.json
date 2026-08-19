@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/ranger-predator-domain-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/ranger-predator-domain",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "ranger_t01_c04",
+      "level": 5,
+      "name": "가시 덫",
+      "jobId": "c79a5229-3cb4-407f-b976-3f3a6ab1162d",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t02_c04",
+      "level": 10,
+      "name": "늑대 엄니",
+      "jobId": "bbe51445-2f06-468c-85b5-2c6ea92d6321",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t03_c04",
+      "level": 15,
+      "name": "올가미 화살",
+      "jobId": "1fc179b5-e005-47a4-ac72-d2d89084d2ac",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t04_c04",
+      "level": 20,
+      "name": "맹수 덫",
+      "jobId": "ca7665b2-804c-46e6-90bc-53bcd2190630",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t05_c04",
+      "level": 25,
+      "name": "독가시 덫",
+      "jobId": "cb501668-e47d-496b-9f9c-764277eebb55",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t06_c04",
+      "level": 30,
+      "name": "곰발톱 강타",
+      "jobId": "a2b300e2-0d9f-4b3f-9f69-f13f8daf5309",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t07_c04",
+      "level": 35,
+      "name": "사슬 올가미",
+      "jobId": "49b67413-8da2-4855-8535-1bf2bf1d19fc",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t08_c04",
+      "level": 40,
+      "name": "송곳니 덫",
+      "jobId": "3f6b5bd9-99b4-4852-bd6b-4533133b1a02",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t09_c04",
+      "level": 45,
+      "name": "매의 급강하",
+      "jobId": "0bbaa389-ef7f-4b23-b2dd-c27dea544d26",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t10_c04",
+      "level": 50,
+      "name": "야수의 협공",
+      "jobId": "90cc7706-564c-4e42-b8a8-a5064daa4707",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t11_c04",
+      "level": 55,
+      "name": "거대 가시 덫",
+      "jobId": "e69eae55-1820-40f7-a66c-e5451f409491",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t12_c04",
+      "level": 60,
+      "name": "그리핀 급습",
+      "jobId": "737f0824-397e-4e74-9ac1-f7e013702729",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t13_c04",
+      "level": 65,
+      "name": "와이번 발톱",
+      "jobId": "5085f8f9-aeb8-44ef-aef1-3a210e0e6409",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t14_c04",
+      "level": 70,
+      "name": "고대 야수 덫",
+      "jobId": "fd84d517-1480-4991-aa0a-139f3274e762",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t15_c04",
+      "level": 75,
+      "name": "왕의 사냥개",
+      "jobId": "1a87f369-0604-4424-98b8-6d3184708fc2",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t16_c04",
+      "level": 80,
+      "name": "신수의 엄니",
+      "jobId": "8ac27b1b-8c65-4b28-9f41-4d0fa377a51d",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t17_c04",
+      "level": 85,
+      "name": "별짐승 급습",
+      "jobId": "44ccb4f6-6a65-475b-b115-b7dfdb753105",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t18_c04",
+      "level": 90,
+      "name": "신화의 덫",
+      "jobId": "8df3eedb-1a03-4e64-87ce-f6e585b6e41d",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t19_c04",
+      "level": 95,
+      "name": "사냥신 강습",
+      "jobId": "4799016d-36aa-4e12-b6ac-c363ef74ec72",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t20_c04",
+      "level": 100,
+      "name": "야생의 종언",
+      "jobId": "46db87ac-6f29-4713-8b6f-f40c893cf73f",
+      "status": "queued"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "섬광 일섬 second correction with immutable right-facing sword",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "tools/vfx-lab/custom-assets/warrior-sword-master-04-20-late-impact-revisions-2",
+  "settings": { "type": "spritesheet", "model": "gpt-5.6-sol", "mode": "detailed", "frameWidth": 361, "frameHeight": 160, "frameCount": 16, "columns": 4, "rows": 4, "preset": "attack", "fps": 16, "loop": false, "autoReview": true, "qualityTarget": 96, "maxPasses": 4, "useReference": false },
+  "commonPrompt": "Create a new 16-frame Detailed transparent RGBA spritesheet in strict 4x4 row-major layout, 361x160 per sealed cell and 1444x640 total. F01-F04 alpha=0 everywhere. F05 only one tiny white glint. From F06 through F16, show exactly one connected long sword with an immutable right-facing orientation: in every frame the pommel is the leftmost weapon point, the grip and guard are left of the blade, and the blade tip is the rightmost weapon point. Numeric direction test for every F06-F16: bladeTipX > guardX > pommelX. Never flip, mirror, rotate 180 degrees or place the blade left of the hilt. F06-F09 prepare, F10-F12 snap right without target damage, F13 first contact on the right, F14 compression, F15 unique maximum, F16 hold. Fixed camera, horizontal axis and scale. Keep all pixels inside x=18..343,y=18..142, outer 12px transparent.",
+  "negativePrompt": "left-facing sword, blade left of hilt, reversed sword, mirrored sword, direction flip, orientation flip at F13, orientation flip at F14, orientation flip at F15, orientation flip at F16, dagger, short knife, two swords, duplicate sword, detached blade, visible F01, visible F02, visible F03, visible F04, target before F13, spark before F13, debris before F13, edge touching, cell leakage, horizontal band, background, character, hand, body, enemy, UI, text, grid, border, wobble, shake, F16 fade, F16 empty, opaque panel, pixel art, jagged alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t12_c04",
+      "level": 60,
+      "name": "섬광 일섬",
+      "grammar": "RIGHT_FACING_FLASH_IASSEN",
+      "generationPrompt": "Build 섬광 일섬 with one connected long silver katana-like sword, black grip and small gold guard, pointing strictly right in every visible frame. F05 only a 10px white glint at P0=(18%,52%). F06-F09 reveal the right-facing sword with a thin compressed ivory wake behind its left-side pommel. F10-F12 translate the same sword rapidly rightward along y=52% without target, loose particles or contact light. F13 the rightmost blade tip first touches a compact vertical pearl-steel seal at P=(78%,52%). F14 compresses it forward. F15 splits the seal into two unequal pale plates with a razor-thin horizontal white flash continuing to the right. F16 holds the same right-facing sword through the split at reduced energy. At no time may the blade point left or the grip appear on the right."
+    }
+  ]
+}

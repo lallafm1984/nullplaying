@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/paladin-aurora-vow-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/paladin-aurora-vow",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "paladin_t01_c04",
+      "level": 5,
+      "name": "새벽 파동",
+      "jobId": "0bfd5996-5c6b-4735-b056-2e7574f7d474",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t02_c04",
+      "level": 10,
+      "name": "여명 베기",
+      "jobId": "ef60133e-486c-47f6-a07c-9a5453b8f4cc",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t03_c04",
+      "level": 15,
+      "name": "새벽 연격",
+      "jobId": "a4e7e60e-c33c-4079-b357-b5f063c1ee40",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t04_c04",
+      "level": 20,
+      "name": "여명 폭발",
+      "jobId": "1dd59600-a2f7-4ee8-b44f-fbd60b7aa63b",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t05_c04",
+      "level": 25,
+      "name": "새벽의 칼날",
+      "jobId": "f51643e0-dd11-485d-ba0f-4e1909c557ae",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t06_c04",
+      "level": 30,
+      "name": "여명 파동진",
+      "jobId": "be8fc08f-b4a8-4f6a-80a7-05ab43247492",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t07_c04",
+      "level": 35,
+      "name": "찬란한 연격",
+      "jobId": "098b836e-f42f-42f1-9a6d-e6dc39518c77",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t08_c04",
+      "level": 40,
+      "name": "새벽 폭풍",
+      "jobId": "18ea6ef4-47ee-4336-8d74-2e3094addccf",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t09_c04",
+      "level": 45,
+      "name": "여명 폭발진",
+      "jobId": "6fb7d576-8356-41df-8a4c-637d2555d990",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t10_c04",
+      "level": 50,
+      "name": "태양 파동",
+      "jobId": "653b4161-a5a1-4a16-96ee-cd47bde1cb94",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t11_c04",
+      "level": 55,
+      "name": "여명 검무",
+      "jobId": "1699be3b-8e00-4ae9-bb27-ae5df54e9a86",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t12_c04",
+      "level": 60,
+      "name": "찬란한 검풍",
+      "jobId": "53de9eaf-5419-4396-966f-2950c3045ec6",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t13_c04",
+      "level": 65,
+      "name": "새벽의 군무",
+      "jobId": "50db15cb-bd29-4695-b1e4-93bcae9be69e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t14_c04",
+      "level": 70,
+      "name": "여명 해일",
+      "jobId": "09edb136-9475-44fb-9508-9ed61a4ac342",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t15_c04",
+      "level": 75,
+      "name": "황금 새벽광",
+      "jobId": "1656b5ef-0974-437b-850a-f575077c3a33",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t16_c04",
+      "level": 80,
+      "name": "여명 종결진",
+      "jobId": "359d5086-ff5f-48ab-b33d-a79c1722e90f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t17_c04",
+      "level": 85,
+      "name": "창세 새벽광",
+      "jobId": "fc6afcb4-0866-4ebf-bcd3-77412c647748",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t18_c04",
+      "level": 90,
+      "name": "태양 종말",
+      "jobId": "fa904789-6240-470d-8dbe-93b43685fc83",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t19_c04",
+      "level": 95,
+      "name": "영원 여명광",
+      "jobId": "a41d4397-0373-4694-a02f-0908aa3dcb85",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t20_c04",
+      "level": 100,
+      "name": "첫 빛의 종언",
+      "jobId": "f341f120-1315-49dc-8830-d1820d3cdb77",
+      "status": "queued"
+    }
+  ]
+}

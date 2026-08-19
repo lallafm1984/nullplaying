@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/paladin-consecrated-rift-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/paladin-consecrated-rift",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "paladin_t01_c01",
+      "level": 5,
+      "name": "빛의 베기",
+      "jobId": "a18cedbb-d139-4c1d-acd9-1e7204953d23",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t02_c01",
+      "level": 10,
+      "name": "성검 가르기",
+      "jobId": "c155aae1-b1f6-4c14-9317-c4ff1bf74a77",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t03_c01",
+      "level": 15,
+      "name": "삼중 성검",
+      "jobId": "54ef1d5d-3157-47b1-bd8a-d463ca0560ee",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t04_c01",
+      "level": 20,
+      "name": "십자 베기",
+      "jobId": "d8a0056a-9d0a-4a62-a0a5-6884f410e255",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t05_c01",
+      "level": 25,
+      "name": "축성 검광",
+      "jobId": "72c92dc6-78cc-47ea-9201-6c3f35082057",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t06_c01",
+      "level": 30,
+      "name": "성검 회오리",
+      "jobId": "1d7eef35-da08-4635-9190-c2e27d640919",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t07_c01",
+      "level": 35,
+      "name": "백은 가르기",
+      "jobId": "0fc9dedb-7001-4fda-846f-d646d6a0639d",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t08_c01",
+      "level": 40,
+      "name": "태양 십자참",
+      "jobId": "3fa22ce0-3d71-45a0-a03a-a5260cdd9b88",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t09_c01",
+      "level": 45,
+      "name": "성광 검무",
+      "jobId": "e6c1cccc-c299-49f9-bef2-d3a22d6bea07",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t10_c01",
+      "level": 50,
+      "name": "왕국의 성검",
+      "jobId": "086a9a7d-ec71-4b40-84c2-d7d51a43f3c4",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t11_c01",
+      "level": 55,
+      "name": "구원 가르기",
+      "jobId": "8478d0e7-ebcf-4dcd-b83f-558475a4511b",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t12_c01",
+      "level": 60,
+      "name": "대천사 성검",
+      "jobId": "534c9f90-c771-476e-9206-2130b4c03233",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t13_c01",
+      "level": 65,
+      "name": "용살 성검",
+      "jobId": "4104c9e0-d7ea-450a-9a28-ee254e36f1fd",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t14_c01",
+      "level": 70,
+      "name": "천상 십자참",
+      "jobId": "df6436bc-198d-4eeb-8acc-ed3243f48b0e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t15_c01",
+      "level": 75,
+      "name": "태양왕의 검격",
+      "jobId": "6780fe78-a01c-48b6-8877-8af3295eac60",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t16_c01",
+      "level": 80,
+      "name": "세계수 성검",
+      "jobId": "5bd1f4c7-ce75-4602-833b-194e02e999b1",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t17_c01",
+      "level": 85,
+      "name": "신살 가르기",
+      "jobId": "cd530616-6593-40f1-acfa-5197ecaa372e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t18_c01",
+      "level": 90,
+      "name": "종말 십자참",
+      "jobId": "173664c8-746e-482f-b1e0-b48b5b1eaa88",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t19_c01",
+      "level": 95,
+      "name": "별을 가르는 성검",
+      "jobId": "6acbed63-3d6c-4698-91ae-a94f3acc78ac",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t20_c01",
+      "level": 100,
+      "name": "창세의 성검",
+      "jobId": "be974cc7-aab8-4054-98d2-548f86ab8660",
+      "status": "queued"
+    }
+  ]
+}

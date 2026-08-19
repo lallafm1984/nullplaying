@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "무영 연참 transparent opening and sealed multi-route corrective regeneration",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "tools/vfx-lab/custom-assets/warrior-sword-master-04-20-late-impact-revisions",
+  "settings": { "type": "spritesheet", "model": "gpt-5.6-sol", "mode": "detailed", "frameWidth": 361, "frameHeight": 160, "frameCount": 16, "columns": 4, "rows": 4, "preset": "attack", "fps": 16, "loop": false, "autoReview": true, "qualityTarget": 96, "maxPasses": 4, "useReference": false },
+  "commonPrompt": "Create exactly 16 chronological Detailed frames in a strict 4-column by 4-row row-major transparent RGBA spritesheet, 361x160 per sealed cell and 1444x640 total. Regenerate from scratch; do not imitate the rejected early-visible or bottom-leaking sheet. F01-F04 zero visible pixels. F05 one tiny gray glint only. F06-F09 prepare one matte-black connected sword. F10-F12 make three fast separated path changes with exactly one full sword per cell and short subordinate wakes. F13 first physical contact, F14 compression, F15 unique maximum break, F16 held final contact at 80% energy. Keep all alpha inside x=24..337,y=18..137; top 12px and bottom 20px exactly transparent. No partial neighboring sword or wake along bottom. Camera and sword design remain fixed; intentional route angle changes occur only between F10,F11,F12 and never redraw or duplicate the sword. Detailed Korean action-RPG style, clean alpha, no pixel art.",
+  "negativePrompt": "visible F01, visible F02, visible F03, visible F04, early sword route, bottom strip, bottom partial sword, bottom wake, horizontal image band, adjacent cell leakage, edge touching, cropped effect, two swords in one frame, duplicate sword, detached blade, detached hilt, sword clone, target before F13, damage before F13, spark before F13, debris before F13, central X, crossing long slashes, closed orbit, ring, flower, magic geometry, character, hand, body, enemy, scenery, background, ground, UI, text, grid, border, camera shake, random wobble, F16 fade, F16 empty, opaque panel, pixel art, jagged alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t13_c03",
+      "level": 65,
+      "name": "무영 연참",
+      "grammar": "SEALED_SHADOWLESS_NOMADIC_COMBO",
+      "generationPrompt": "Regenerate 무영 연참 with one matte-black short longsword, connected black grip, plain crossguard and thin ivory edge. F06-F09 keep it at lower-left P0=(30%,68%) with a fixed shallow rising angle. F10 move the one sword along a short lower-left to center lane. F11 move the same sword along a separated upper-middle lane; previous lane remains only a thin 25% alpha wake. F12 move it along a right-middle lane toward final P=(73%,68%); no two complete weapons. F13 first contact strikes one compact black-steel plate at P. F14 compresses it and leaves three separated short gray wake scars around the outer perimeter, none intersecting. F15 splits the plate into five dark angular fragments with one thin white edge core; the visible sword stays at the lower-right terminus. F16 holds the same sword and fragments. Keep all wake scars short and separate, never an X, ring or closed route, and leave the lower 20 pixels empty."
+    }
+  ]
+}

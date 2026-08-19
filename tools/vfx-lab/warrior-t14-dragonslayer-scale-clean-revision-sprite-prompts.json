@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "용살검 safe dragon-scale placement and late-contact corrective regeneration",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "tools/vfx-lab/custom-assets/warrior-sword-master-04-20-late-impact-revisions",
+  "settings": { "type": "spritesheet", "model": "gpt-5.6-sol", "mode": "detailed", "frameWidth": 361, "frameHeight": 160, "frameCount": 16, "columns": 4, "rows": 4, "preset": "attack", "fps": 16, "loop": false, "autoReview": true, "qualityTarget": 96, "maxPasses": 4, "useReference": false },
+  "commonPrompt": "Create exactly 16 chronological Detailed frames in a strict 4-column by 4-row row-major transparent RGBA spritesheet, 361x160 per sealed cell and 1444x640 total. Regenerate from scratch; do not imitate the rejected bottom-scale or early-debris sheet. F01-F04 zero visible pixels. F05 one tiny ivory glint only, no sword and no scale. F06-F09 prepare one connected greatsword; intact scale plates may be visible only inside the upper-right target box x=61..79%,y=22..42%. F10-F12 the sword rises toward the plates with no cracks, sparks or fragments. F13 first physical contact, F14 compression, F15 unique maximum scale break, F16 held final contact at 80% energy. Every visible pixel stays inside x=24..337,y=18..137. Top 12px and bottom 22px exactly transparent. Absolutely no scale, shard, glow, shadow or partial object in the bottom quarter before F15. One fixed sword design, camera, scale and rising lane. Detailed Korean action-RPG painting, smooth alpha, no pixel art.",
+  "negativePrompt": "bottom scale, lower scale plate, scale at bottom, cropped scale, bottom strip, bottom fragment, horizontal image band, adjacent cell leakage, visible F01, visible F02, visible F03, visible F04, sword in F05, scale in F05, crack before F13, spark before F13, debris before F13, explosion before F13, two swords, duplicate sword, detached weapon, dragon body, dragon head, wings, claw, monster, flame breath, character, hand, body, enemy, scenery, background, ground, UI, text, grid, border, edge touching, camera shake, wobble, radial emblem, circle, F16 fade, F16 empty, opaque panel, pixel art, jagged alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t14_c03",
+      "level": 70,
+      "name": "용살검",
+      "grammar": "SEALED_DRAGON_SCALE_ASCENDING_BREAK",
+      "generationPrompt": "Regenerate 용살검 with one massive silver greatsword, connected dark grip, plain crossguard and a subtle non-glowing scale fuller. Fixed rising path from P0=(34%,74%) to contact P=(68%,31%). F06-F09 hold the sword low-left while three intact overlapping dark crimson scale-shaped steel plates remain fully contained in the upper-right target box; there are no plates anywhere else. F10 center=(45%,61%), F11=(54%,49%), F12=(63%,37%), stopping before P with no contact. F13 the sword tip first touches the lowest plate. F14 buckles all three inward without detaching them. F15 splits the top plate and tears the lower two into eight heavy crimson-steel fragments, one narrow ivory-gold rising core and a restrained crimson pressure plume. F16 holds the greatsword high among fragments, all inside the safe rectangle. No lower-row scale, living dragon, early shatter, radial aura or bottom residue."
+    }
+  ]
+}

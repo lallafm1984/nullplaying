@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/mage-thunder-circuit-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/mage-thunder-circuit",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "mage_t01_c03",
+      "level": 5,
+      "name": "전격",
+      "jobId": "a704b7d1-45eb-4f5b-80c6-f63ec36739d1",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t02_c03",
+      "level": 10,
+      "name": "연쇄 번개",
+      "jobId": "7c14e7f7-c817-4b14-9b2c-9197a95fafc2",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t03_c03",
+      "level": 15,
+      "name": "삼중 낙뢰",
+      "jobId": "7285dcd5-dfa7-48d0-9a45-d61b3209ec10",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t04_c03",
+      "level": 20,
+      "name": "뇌광 구체",
+      "jobId": "6d483ecb-5b98-41e4-90d3-2d47fd33b96a",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t05_c03",
+      "level": 25,
+      "name": "번개 사슬",
+      "jobId": "df778cfa-4aa1-45e4-a3cd-6a1f9f131aa9",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t06_c03",
+      "level": 30,
+      "name": "폭뢰",
+      "jobId": "793042eb-8190-484f-af2c-52178d73dd1f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t07_c03",
+      "level": 35,
+      "name": "천둥 구체",
+      "jobId": "d1b52542-53e9-4b8a-9bf7-022f98e11663",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t08_c03",
+      "level": 40,
+      "name": "사방 낙뢰",
+      "jobId": "92fa64b1-ba04-42bb-b42e-a8fa4ef27d86",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t09_c03",
+      "level": 45,
+      "name": "뇌전 폭발",
+      "jobId": "57c9803a-3646-4a46-bcf3-45719bde3833",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t10_c03",
+      "level": 50,
+      "name": "폭풍 번개",
+      "jobId": "f06df9de-b964-412d-b8bd-708224a4f7f9",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t11_c03",
+      "level": 55,
+      "name": "청뢰 연쇄",
+      "jobId": "66c860b6-1c10-4d48-b8af-68eef3474e3e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t12_c03",
+      "level": 60,
+      "name": "천뢰",
+      "jobId": "4f6392c6-5702-4233-ad5a-8081d5503862",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t13_c03",
+      "level": 65,
+      "name": "뇌신의 사슬",
+      "jobId": "897878a2-f9ca-455e-9dd6-6490a39b03e0",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t14_c03",
+      "level": 70,
+      "name": "만뢰",
+      "jobId": "c978c1fa-d377-40b0-8a69-4f55f0f9641a",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t15_c03",
+      "level": 75,
+      "name": "폭풍신의 낙뢰",
+      "jobId": "f5d63df1-ef0d-48a6-9892-eda135119acf",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t16_c03",
+      "level": 80,
+      "name": "천둥 종말",
+      "jobId": "834aacc7-c2f5-4d2c-80ca-180e103d3d3e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t17_c03",
+      "level": 85,
+      "name": "신격 뇌전 연격",
+      "jobId": "2c8d8aed-5cfa-4854-89da-c250c40f1e7f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t18_c03",
+      "level": 90,
+      "name": "세계뇌전",
+      "jobId": "1d7f515e-2814-4edb-a00c-d00862a58c45",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t19_c03",
+      "level": 95,
+      "name": "천벌의 만뢰",
+      "jobId": "907bf9de-9103-48c8-8487-0e7125bea9f7",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t20_c03",
+      "level": 100,
+      "name": "신들의 뇌폭",
+      "jobId": "6e6be41e-3196-425c-af65-b003858077b8",
+      "status": "queued"
+    }
+  ]
+}

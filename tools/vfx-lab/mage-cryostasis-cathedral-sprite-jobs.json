@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/mage-cryostasis-cathedral-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/mage-cryostasis-cathedral",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "mage_t01_c02",
+      "level": 5,
+      "name": "서리 파편",
+      "jobId": "7e9c5257-c376-42b6-918c-0fd5d82495fc",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t02_c02",
+      "level": 10,
+      "name": "얼음 창",
+      "jobId": "9f42662b-e911-4a4d-bc57-190ffd431b53",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t03_c02",
+      "level": 15,
+      "name": "동결 파열",
+      "jobId": "adf908cd-ef22-4b36-ba89-0b0a1a2dde0c",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t04_c02",
+      "level": 20,
+      "name": "서리 연창",
+      "jobId": "9f08c23f-507b-40a6-be8e-1d8c862746a7",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t05_c02",
+      "level": 25,
+      "name": "얼음 송곳비",
+      "jobId": "59badac3-1863-46ae-bd78-2e4392fe4a02",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t06_c02",
+      "level": 30,
+      "name": "빙결 창벽",
+      "jobId": "c1b92b47-dad8-4b48-a1ed-16f09f6d2a9f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t07_c02",
+      "level": 35,
+      "name": "서리 폭풍",
+      "jobId": "ec7c7817-851f-4fce-b030-56f4d2e1a66e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t08_c02",
+      "level": 40,
+      "name": "빙하 파열",
+      "jobId": "38879f7d-f5f0-4b6e-bb7c-14054bf43ca3",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t09_c02",
+      "level": 45,
+      "name": "눈보라",
+      "jobId": "c3dccbeb-0118-498a-893d-f418da895a60",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t10_c02",
+      "level": 50,
+      "name": "영구빙창",
+      "jobId": "abccf144-b2a1-4321-83ca-570be359e489",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t11_c02",
+      "level": 55,
+      "name": "빙산 낙하",
+      "jobId": "95804016-5c88-40d4-b328-d80385e4e490",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t12_c02",
+      "level": 60,
+      "name": "절대영도 파열",
+      "jobId": "37a78e73-878b-4dea-b1dc-f543439d1cf6",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t13_c02",
+      "level": 65,
+      "name": "서리왕의 창",
+      "jobId": "d28debe0-c394-43f5-8d40-325228e45065",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t14_c02",
+      "level": 70,
+      "name": "빙하 폭풍",
+      "jobId": "9b8b1440-8626-4067-8636-bf9003eb1a95",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t15_c02",
+      "level": 75,
+      "name": "영겁빙쇄",
+      "jobId": "65c1707a-92d0-4c89-8fc2-95461ee07efe",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t16_c02",
+      "level": 80,
+      "name": "세계빙벽 붕괴",
+      "jobId": "c08842fa-af4f-4dee-bb5b-146f9c903e05",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t17_c02",
+      "level": 85,
+      "name": "빙신의 심판",
+      "jobId": "143c1541-a913-4e60-a637-c7bf781f2f86",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t18_c02",
+      "level": 90,
+      "name": "절대빙옥 파쇄",
+      "jobId": "d76662a1-4278-49c4-963f-dcb6ab72cf1c",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t19_c02",
+      "level": 95,
+      "name": "시간을 얼리는 창",
+      "jobId": "059992fa-6ce3-4abd-ba2b-108e6ef07cd3",
+      "status": "queued"
+    },
+    {
+      "catalogId": "mage_t20_c02",
+      "level": 100,
+      "name": "영원빙설 폭발",
+      "jobId": "1d1457a4-e84f-48c3-a58d-65dfa446892f",
+      "status": "queued"
+    }
+  ]
+}

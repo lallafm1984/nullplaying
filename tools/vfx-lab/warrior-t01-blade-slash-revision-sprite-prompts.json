@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "Warrior first skill revision: restrained Blade Slash that reaches contact at one second without a finisher",
+  "sourcePolicy": {
+    "catalogIdStable": true,
+    "referencedSession": "01a00925-7677-73a0-8f21-0e25944c803e",
+    "existingVfxIgnored": true,
+    "userTemporalOverride": "The final authored frame is the modest contact itself; there is no post-impact or finisher phase."
+  },
+  "gateway": "http://127.0.0.1:4317",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 90,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for AlarmQuest. Create exactly 16 chronological animation frames in a strict 4-column by 4-row, row-major sprite sheet. Every cell is an independent wide 361:160 combat viewport; final sheet 1444:640; Detailed hand-painted high-resolution 2D rendering; transparent RGBA; fixed camera, scale, ground line, and target point; clean antialiased alpha; image-rendering auto; no pixel art. This is the warrior's first and weakest skill, so keep the effect deliberately restrained and readable: one narrow steel pressure edge, a small contact notch, and at most four tiny sparks. The motion grammar is BASIC_BLADE_SLASH_TO_CONTACT. The slash begins near x=27%, y=66%, travels on one shallow rising diagonal, and reaches a fixed contact at x=68%, y=42%. Temporal choreography is a user-requested exception to the usual post-hit fade: F01 is nearly transparent; F02-F04 show only a faint short draw line; F05-F08 extend the thin steel edge without impact; F09-F12 advance the single slash toward the contact point; F13-F15 tighten and brighten locally while still remaining pre-contact; F16 at 937.5-1000ms is the one modest maximum contact. Stop on that contact. There are no frames after impact and no finisher phase. At F16 keep the combined alpha bounding box about 58-72% of viewport width and 42-58% of height, with broad transparent margins and no full-screen coverage. Palette: subdued cold steel gray, a thin ivory-white edge, a faint desaturated blue fringe, and one tiny muted amber contact pin. Every cell is separately clipped with no neighboring-frame residue. Do not render a character, enemy, weapon body, scenery, UI, text, frame labels, grid, border, gutter, padding, or opaque background.",
+  "negativePrompt": "pixel art, retro sprite, low resolution, nearest-neighbor edges, character, warrior body, face, hands, enemy, monster, sword body, complete weapon, scenery, battlefield, background illustration, UI, HUD, text, Korean letters, English letters, numbers, logo, signature, watermark, frame label, grid line, border, gutter, padding, opaque background, black background, white background, checkerboard background, huge slash, giant blade, full-screen impact, ultimate skill, ornate magic, excessive bloom, explosive burst, shockwave ring, circular ring, radial flower, starburst, X-shaped crossing, mirrored wings, vortex, spiral, energy dome, ground crater, plate split, four-way rift, multiple attacks, combo, second hit, debris burst, large rocks, many sparks, smoke cloud, post-impact aftermath, residual phase, finisher, finishing pose, finisher ring, finisher echo, fade-after-hit frames, impact before F16, F16 transparent, late reconstruction, duplicated frame, missing frame, wrong frame order, camera motion, inconsistent scale, adjacent frame residue, top image band, bottom image band, muddy colors, jagged alpha, haloed alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t01_c01",
+      "level": 5,
+      "name": "칼날 베기",
+      "grammar": "BASIC_BLADE_SLASH_TO_CONTACT",
+      "generationPrompt": "Create a completely new low-tier interpretation of ‘칼날 베기’. It is the warrior's first basic attack skill, not a spectacular signature move. Show only one compact rising diagonal blade-pressure trace from lower-left toward the off-center upper-right contact. Build the thin line gradually across F01-F15 and place the single modest hit on F16 at the end of the one-second sheet. The final contact is a small ivory steel notch with a faint cool-blue rim and two to four tiny amber sparks; it must remain much less intense and much less expansive than later warrior skills. Stop exactly at contact: do not show an explosion, expanding fragments, residual glow, recovery, or any finisher after the hit. Preserve wide transparent breathing room and a fixed contact point. Visual effect only; do not render the skill name, a character, an enemy, scenery, UI, or a complete sword."
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/warrior-t08-battle-rush-no-early-debris-revision2-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/warrior-sword-master-04-20-late-impact-revisions-2",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "warrior_t08_c02",
+      "level": 40,
+      "name": "전장의 돌격",
+      "jobId": "1709eb33-09d6-4d68-b9fa-860fd6883eb0",
+      "status": "queued"
+    }
+  ]
+}

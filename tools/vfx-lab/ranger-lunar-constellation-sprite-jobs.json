@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/ranger-lunar-constellation-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/ranger-lunar-constellation",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "ranger_t01_c05",
+      "level": 5,
+      "name": "달빛 화살",
+      "jobId": "50b962ee-c009-4188-84ae-dbd4521e1f11",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t02_c05",
+      "level": 10,
+      "name": "별가루 사격",
+      "jobId": "915a7b09-043a-4334-924f-fc6124924b6f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t03_c05",
+      "level": 15,
+      "name": "초승달 관통",
+      "jobId": "fb77d13a-7e7f-48ed-8c5a-8231c9bddd82",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t04_c05",
+      "level": 20,
+      "name": "별빛 연사",
+      "jobId": "fc41226d-5eb5-4c9a-b67c-b1dc222c1b89",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t05_c05",
+      "level": 25,
+      "name": "월광 저격",
+      "jobId": "3681cbbe-7a9b-49dd-aadb-dd2ee44b6685",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t06_c05",
+      "level": 30,
+      "name": "혜성 화살",
+      "jobId": "bb5bbcdd-77cd-4f4b-bc99-22eca242f093",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t07_c05",
+      "level": 35,
+      "name": "은하 사격",
+      "jobId": "9b278852-55ec-413e-9845-db1f89048911",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t08_c05",
+      "level": 40,
+      "name": "보름달 일격",
+      "jobId": "fdc333b0-2d5e-4bba-a4c1-9419e6acb6f6",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t09_c05",
+      "level": 45,
+      "name": "별무리 연사",
+      "jobId": "c3071a25-d0e5-4df1-8c92-4d37e0cc23b7",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t10_c05",
+      "level": 50,
+      "name": "유성 관통",
+      "jobId": "0c7c7f13-5294-4a6e-ac59-f3d6d2d0927f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t11_c05",
+      "level": 55,
+      "name": "월식 사격",
+      "jobId": "33bc5847-5cd3-46ef-bd72-fcb919fd463a",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t12_c05",
+      "level": 60,
+      "name": "성좌의 화살",
+      "jobId": "b49145d4-15b5-41f7-b4cb-25292605367f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t13_c05",
+      "level": 65,
+      "name": "은하수 관통",
+      "jobId": "35e43c6d-7bfa-4589-8d22-2e0dcc584920",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t14_c05",
+      "level": 70,
+      "name": "별의 추적자",
+      "jobId": "2ecf724b-9215-41d1-b38d-52837ca7fd68",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t15_c05",
+      "level": 75,
+      "name": "만월 파열",
+      "jobId": "bbbfc894-2451-4433-8995-93e4738c54d1",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t16_c05",
+      "level": 80,
+      "name": "성운 폭격",
+      "jobId": "46cbb398-a3bf-4810-82ab-5fdb6c2af025",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t17_c05",
+      "level": 85,
+      "name": "별자리 관통",
+      "jobId": "715c00c9-1f97-4ff6-8c00-99f2d0c726f7",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t18_c05",
+      "level": 90,
+      "name": "월신의 일격",
+      "jobId": "538fabad-4afe-4ade-9ed7-6d26cf7db355",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t19_c05",
+      "level": 95,
+      "name": "은하 종단",
+      "jobId": "b61ca72a-7481-4f5c-af16-9267d67d4436",
+      "status": "queued"
+    },
+    {
+      "catalogId": "ranger_t20_c05",
+      "level": 100,
+      "name": "별을 꿰는 화살",
+      "jobId": "74123aa8-7ba8-4d8b-9428-baff1af0392e",
+      "status": "queued"
+    }
+  ]
+}

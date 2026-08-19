@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "Warrior 방패 돌파 온전한 실루엣·우측 단방향 잔상 재생성",
+  "sourcePolicy": {
+    "catalogIdStable": true,
+    "previousAssetUsedForDefectDiagnosisOnly": true,
+    "regenerateFromScratch": true,
+    "rejectedAssetDefect": "알파 마스킹 수정본은 예고 프레임의 방패가 수직 직선으로 잘려 보이며, 원본은 방패 오른쪽에 선행 잔상이 있어 좌측 이동처럼 읽힌다.",
+    "correctionGoal": "모든 표시 프레임에서 완전한 방패 외곽선을 유지하고, 예고 구간에는 잔상을 두지 않으며, 실제 우측 돌진이 시작된 뒤 방패 뒤쪽인 왼쪽에만 짧은 잔상을 둔다.",
+    "webEndingPolicy": "F16을 1099ms까지 완전 유지하고 1100-1350ms 동안 웹 렌더러가 선형 페이드아웃한다."
+  },
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "tools/vfx-lab/custom-assets/warrior-t02-shield-break-rightward-clean-regeneration",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 96,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for AlarmQuest. Create exactly 16 chronological animation frames in a strict 4-column by 4-row row-major sprite sheet. Each cell is one independently clipped 361x160 combat viewport; final sheet is exactly 1444x640. Detailed hand-painted high-resolution 2D rendering, transparent RGBA, clean antialiased alpha, image-rendering auto, no pixel art. Motion grammar: COMPLETE_SHIELD_RIGHTWARD_RAM_LATE_IMPACT. Use one fixed camera, one fixed scale, one horizontal attack lane at y=58%, and one contact point P=(74%,58%). The only equipment is ONE unmistakable heavy battle shield: a broad asymmetric convex dark-gunmetal kite/heater shield, complete closed outer contour, thick chipped rim, reinforced central spine, two shallow dents, and muted steel-blue painted face. It is the same rigid object in every visible frame. Preserve exactly the same silhouette, height, width, perspective, rim thickness, dents, face details, and horizontal angle. Translate it only from left to right; never rotate, redraw, squash, stretch, bob, rebound, or reverse. CRITICAL SILHOUETTE RULE: whenever the shield is visible, its entire closed outline must fit inside its own cell with transparent breathing room on all four sides. Never place any part of the shield beyond a cell boundary. Never crop, mask, truncate, erase, flatten, or cut the shield along a straight vertical, horizontal, or diagonal line. F01-F05 are completely transparent anticipation frames: no shield, no ghost, no afterimage, no streak, no light, no dust, no object. F06 shows the complete shield stationary near x=15%, with no trail or glow. F07 shows the same complete shield near x=20%, still with absolutely no trail or afterimage. The rightward burst begins only at F08. F08 shield center=(28%,58%), F09=(38%,58%), F10=(49%,58%), F11=(60%,58%), F12=(67%,58%) with its front rim just before P. In F08-F12, add only two to four short tapered translucent cold blue-gray speed streaks ATTACHED BEHIND the shield. Because the shield moves right, every streak begins at the shield's LEFT/rear edge and extends farther LEFT; no streak, glow, wedge, blur, flare, or ghost may appear in front of or to the right of the shield. Streaks remain separated by transparent gaps and never form a rectangle or full-width band. F13 is the FIRST CONTACT: the shield's front/right rim hits P against one narrow dark steel resistance plate, with one compact ivory-white notch flash and two tiny amber sparks at P. There is no contact, target plate, crack, debris, spark, or explosion before F13. F14 is COMPRESSION: the same complete shield stops and stays braced at P; the narrow plate buckles, two short cracks appear, and three chunky fragments start moving right. F15 is the UNIQUE MAXIMUM IMPACT: keep the complete shield clearly readable and planted at P while one decisive low-tier physical breach erupts from its front/right rim toward the right—one compact ivory-white pressure core, restrained amber-ochre burst, one broken forward wedge, six to eight chunky fragments, and two narrow blue-gray air tears. Keep the breach narrower than half the cell height with transparent corridors; it is not a magical or screen-filling explosion. F16 holds the same braced shield and same breach at 75-85% of F15 energy, fragments only slightly farther on the same trajectories. F16 is a hold frame, not recovery or fade. The web renderer handles the 1100-1350ms fade. Keep the top and bottom six pixels of every cell fully transparent. Treat every cell independently so no pixel leaks into adjacent cells. Palette: dark gunmetal, muted steel blue, cold blue-gray air, ivory-white contact core, restrained amber and burnt ochre. Render only the shield and attached physical VFX: no character, arm, enemy, scenery, ground plane, UI, text, grid, border, gutter, padding, checkerboard, white, black, or opaque background.",
+  "negativePrompt": "cropped shield, clipped shield, truncated shield, half shield, partial shield, straight-cut shield, vertical cut edge, horizontal cut edge, diagonal cut edge, erased shield edge, masked shield edge, shield touching cell boundary, shield outside frame, incomplete silhouette, open shield contour, right-side anticipation trail, trail in front of shield, speed line to the right of shield, forward ghost, forward afterimage, forward blur, leftward motion, reverse motion, rebound, anticipation afterimage, anticipation streak, anticipation glow, F01 content, F02 content, F03 content, F04 content, F05 content, trail in F06, trail in F07, two shields, second shield, duplicate shield, shield ghost, translucent duplicate shield, changing shield design, changing shield scale, changing shield perspective, shield rotation, vertical bob, frame-to-frame wobble, jitter, shake, swimming silhouette, boiling edge, random redraw, left-right oscillation, camera shake, camera movement, camera zoom, character, warrior body, face, head, torso, legs, arm, hand, fingers, enemy, monster, sword, axe, hammer, spear, contact before F13, target plate before F13, crack before F13, debris before F13, spark before F13, explosion before F13, maximum impact before F15, maximum impact after F15, F16 fade, F16 empty, recovery frame, second hit, second explosion, repeated detonation, full-screen explosion, circular magical explosion, shockwave ring, concentric rings, radial flower, starburst, mirrored wings, pinwheel, vortex, spiral, giant X, cross-shaped peak, magic circle, runes, ornate emblem, glowing rune shield, holy barrier, bubble shield, dome, excessive smoke, opaque dust cloud, full-cell color wash, manga speed-line panel, rectangular alpha panel, horizontal image band, top image band, bottom image band, cell boundary residue, adjacent cell leakage, opaque background, black background, white background, checkerboard background, pixel art, retro sprite, low resolution, nearest-neighbor edges, scenery, battlefield, sky, horizon, illustrated ground plane, UI, HUD, text, letters, numbers, logo, signature, watermark, frame labels, grid lines, borders, gutters, padding, duplicated frame, missing frame, wrong frame order, muddy colors, jagged alpha, haloed alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t02_c03",
+      "level": 10,
+      "name": "방패 돌파",
+      "grammar": "COMPLETE_SHIELD_RIGHTWARD_RAM_LATE_IMPACT",
+      "generationPrompt": "Regenerate 방패 돌파 from scratch. Solve the two diagnosed defects: no shield may be cut into a straight-sided partial shape, and no anticipation wake may suggest leftward motion. F01-F05 must be truly empty. In F06-F07 show the complete, fully enclosed, stable shield inside the cell with no wake at all. Starting only at F08, snap that same rigid shield quickly to the right and put short tapered air streaks solely behind its left/rear edge. Keep the entire shield contour visible and unchanged in every frame. Delay first contact until F13, compress at F14, make F15 the single strongest forward breach, and hold the same impact in F16 for the renderer fade. This is a fast, weighty level-10 warrior ram: readable physical direction and one solid PAK impact, not an ornate ultimate."
+    }
+  ]
+}

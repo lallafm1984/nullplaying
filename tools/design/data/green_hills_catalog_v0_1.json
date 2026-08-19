@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": "green_hills_v0_1",
+  "statOrder": ["STR", "DEX", "CON", "INT", "WIS", "CHA"],
+  "classes": [
+    {"id": "warrior", "nameKo": "전사", "primaryStat": "STR", "skills": ["내려찍기", "방패치기", "전투 함성"]},
+    {"id": "paladin", "nameKo": "성기사", "primaryStat": "STR", "skills": ["성광", "방패 인사", "규정 준수 강타"]},
+    {"id": "rogue", "nameKo": "도적", "primaryStat": "DEX", "skills": ["기습", "잽싼 베기", "동전 던지기"]},
+    {"id": "ranger", "nameKo": "사냥꾼", "primaryStat": "DEX", "skills": ["속사", "길잡이 화살", "매의 신호"]},
+    {"id": "mage", "nameKo": "마법사", "primaryStat": "INT", "skills": ["화염구", "얼음 화살", "논리적 폭발"]},
+    {"id": "cleric", "nameKo": "성직자", "primaryStat": "WIS", "skills": ["신성한 빛", "훈계", "축복의 종"]}
+  ],
+  "monsterModifierWeights": {"none": 25, "scene": 50, "mechanical": 23, "rare": 2},
+  "monsterBases": [
+    {"id": "meadow_slime", "nameKo": "초원 슬라임", "tags": ["PHYSICAL", "LIQUID"], "lootIds": ["slime_gel", "empty_bottle"]},
+    {"id": "temporary_goblin", "nameKo": "임시직 고블린", "tags": ["PHYSICAL"], "lootIds": ["goblin_pass", "old_badge"]},
+    {"id": "guide_rat", "nameKo": "길잡이 들쥐", "tags": ["PHYSICAL", "BEAST_PART"], "lootIds": ["rat_whisker", "bread"]},
+    {"id": "mine_bat", "nameKo": "광산 박쥐", "tags": ["PHYSICAL", "BEAST_PART", "LEATHER"], "lootIds": ["bat_wing", "old_badge"]},
+    {"id": "lost_armor", "nameKo": "떠도는 갑옷", "tags": ["PHYSICAL", "METAL", "ARMOR"], "lootIds": ["old_badge", "empty_bottle"]},
+    {"id": "receipt_mimic", "nameKo": "영수증 미믹", "tags": ["PHYSICAL", "DOCUMENT"], "lootIds": ["goblin_pass", "wooden_spoon"]},
+    {"id": "picnic_crow", "nameKo": "소풍 까마귀", "tags": ["PHYSICAL", "BEAST_PART"], "lootIds": ["bread", "umbrella_cloth"]},
+    {"id": "faint_ghost", "nameKo": "희미한 유령", "tags": ["ETHEREAL"], "lootIds": ["ghost_fragment"]}
+  ],
+  "lootBases": [
+    {"id": "slime_gel", "nameKo": "슬라임 젤", "basePrice": 10, "tags": ["PHYSICAL", "LIQUID"]},
+    {"id": "goblin_pass", "nameKo": "고블린 통행증", "basePrice": 12, "tags": ["PHYSICAL", "DOCUMENT"]},
+    {"id": "rat_whisker", "nameKo": "들쥐 수염", "basePrice": 9, "tags": ["PHYSICAL", "BEAST_PART"]},
+    {"id": "bat_wing", "nameKo": "박쥐날개", "basePrice": 11, "tags": ["PHYSICAL", "BEAST_PART", "LEATHER"]},
+    {"id": "old_badge", "nameKo": "낡은 휘장", "basePrice": 15, "tags": ["PHYSICAL", "METAL", "ACCESSORY"]},
+    {"id": "bread", "nameKo": "식은 빵", "basePrice": 7, "tags": ["PHYSICAL", "FOOD"]},
+    {"id": "umbrella_cloth", "nameKo": "우산 천", "basePrice": 13, "tags": ["PHYSICAL", "CLOTH"]},
+    {"id": "empty_bottle", "nameKo": "빈 병", "basePrice": 8, "tags": ["PHYSICAL", "BREAKABLE"]},
+    {"id": "wooden_spoon", "nameKo": "나무 숟가락", "basePrice": 6, "tags": ["PHYSICAL", "WOOD"]},
+    {"id": "ghost_fragment", "nameKo": "유령 조각", "basePrice": 18, "tags": ["ETHEREAL"]}
+  ],
+  "equipmentBases": [
+    {"id": "practice_shield", "nameKo": "훈련용 방패", "slot": "OFF_HAND", "tags": ["PHYSICAL", "METAL", "ARMOR"]},
+    {"id": "travel_boots", "nameKo": "여행 장화", "slot": "FEET", "tags": ["PHYSICAL", "LEATHER", "ARMOR"]},
+    {"id": "apprentice_cloak", "nameKo": "견습기사 망토", "slot": "BACK", "tags": ["PHYSICAL", "CLOTH", "ARMOR"]},
+    {"id": "oath_scroll", "nameKo": "서약서 목걸이", "slot": "NECK", "tags": ["PHYSICAL", "DOCUMENT", "ACCESSORY"]}
+  ],
+  "representativeLoadout": [
+    {"equipmentId": "practice_shield", "modifierIds": ["equip_stat_str_2"]},
+    {"equipmentId": "travel_boots", "modifierIds": ["equip_progress_move"]},
+    {"equipmentId": "apprentice_cloak", "modifierIds": ["equip_trade_shiny"]}
+  ],
+  "modifiers": {
+    "monsterScene": [
+      {"id": "monster_scene_polite", "displayKo": "정중한"},
+      {"id": "monster_scene_umbrella", "displayKo": "우산을 든"},
+      {"id": "monster_scene_missed_lunch", "displayKo": "점심을 놓친"},
+      {"id": "monster_scene_asking_way", "displayKo": "길을 물어보려던"},
+      {"id": "monster_scene_confident", "displayKo": "어쩐지 당당한"},
+      {"id": "monster_scene_rule_abiding", "displayKo": "규정을 잘 지키는"},
+      {"id": "monster_scene_sleepy", "displayKo": "잠이 덜 깬"},
+      {"id": "monster_scene_picnic", "displayKo": "소풍 바구니를 본"},
+      {"id": "monster_scene_kept_receipt", "displayKo": "영수증을 보관한"},
+      {"id": "monster_scene_sure_direction", "displayKo": "방향을 확신하는"},
+      {"id": "monster_scene_late_meeting", "displayKo": "회의에 늦은"},
+      {"id": "monster_scene_name_tag", "displayKo": "이름표를 단"},
+      {"id": "monster_scene_in_line", "displayKo": "줄을 서 있던"},
+      {"id": "monster_scene_waiting_applause", "displayKo": "박수를 기다리는"},
+      {"id": "monster_scene_upside_map", "displayKo": "지도를 거꾸로 든"},
+      {"id": "monster_scene_hidden_snack", "displayKo": "간식을 숨긴"},
+      {"id": "monster_scene_on_vacation", "displayKo": "휴가 중인"},
+      {"id": "monster_scene_interview", "displayKo": "면접을 보러 온"},
+      {"id": "monster_scene_overtime", "displayKo": "야근을 마친"},
+      {"id": "monster_scene_believed_rumor", "displayKo": "소문을 믿은"},
+      {"id": "monster_scene_fixed_hat", "displayKo": "모자를 고쳐 쓴"},
+      {"id": "monster_scene_apology", "displayKo": "반성문을 쓰는"},
+      {"id": "monster_scene_avoiding_rain", "displayKo": "비를 피하던"},
+      {"id": "monster_scene_yielded_turn", "displayKo": "순서를 양보한"}
+    ],
+    "monsterMechanical": [
+      {"id": "monster_mech_hasty", "displayKo": "성급한", "effects": {"combatTimeBps": -1500, "rewardBps": -1500, "attackDelta": -1}},
+      {"id": "monster_mech_relaxed", "displayKo": "느긋한", "effects": {"combatTimeBps": 2000, "rewardBps": 2000, "attackDelta": 1}},
+      {"id": "monster_mech_collector", "displayKo": "수집가", "effects": {"combatTimeBps": 1000, "extraLoot": 1, "goldCompensationBps": -1000}},
+      {"id": "monster_mech_famous", "displayKo": "유명한", "effects": {"combatTimeBps": 1500, "discoveryBps": 5000}},
+      {"id": "monster_mech_lost", "displayKo": "길 잃은", "effects": {"moveTimeBps": 2500, "questBps": 2500}},
+      {"id": "monster_mech_stubborn", "displayKo": "고집 센", "effects": {"combatTimeBps": 2000, "rewardBps": 2500, "goldCompensationBps": -500, "attackDelta": 2}}
+    ],
+    "monsterRare": [
+      {"id": "monster_rare_auditor", "displayKo": "감사관 추천의", "effects": {"combatTimeBps": 1000, "rewardBps": 1000, "narrativeCandidate": 1}}
+    ],
+    "equipmentStat": [
+      {"id": "equip_stat_str_1", "displayKo": "억센", "effects": {"stat": "STR", "delta": 1}},
+      {"id": "equip_stat_str_2", "displayKo": "거인의", "effects": {"stat": "STR", "delta": 2}},
+      {"id": "equip_stat_dex_1", "displayKo": "가벼운", "effects": {"stat": "DEX", "delta": 1}},
+      {"id": "equip_stat_dex_2", "displayKo": "바람의", "effects": {"stat": "DEX", "delta": 2}},
+      {"id": "equip_stat_con_1", "displayKo": "질긴", "effects": {"stat": "CON", "delta": 1}},
+      {"id": "equip_stat_con_2", "displayKo": "지치지 않는", "effects": {"stat": "CON", "delta": 2}},
+      {"id": "equip_stat_int_1", "displayKo": "영리한", "effects": {"stat": "INT", "delta": 1}},
+      {"id": "equip_stat_int_2", "displayKo": "현자의", "effects": {"stat": "INT", "delta": 2}},
+      {"id": "equip_stat_wis_1", "displayKo": "눈 밝은", "effects": {"stat": "WIS", "delta": 1}},
+      {"id": "equip_stat_wis_2", "displayKo": "예언자의", "effects": {"stat": "WIS", "delta": 2}},
+      {"id": "equip_stat_cha_1", "displayKo": "값나가는", "effects": {"stat": "CHA", "delta": 1}},
+      {"id": "equip_stat_cha_2", "displayKo": "왕실의", "effects": {"stat": "CHA", "delta": 2}}
+    ],
+    "equipmentProgress": [
+      {"id": "equip_progress_bag", "displayKo": "넉넉한", "effects": {"bagSlots": 2}},
+      {"id": "equip_progress_move", "displayKo": "재빠른", "effects": {"moveSpeedBps": 300}},
+      {"id": "equip_progress_combat", "displayKo": "꾸준한", "effects": {"combatSpeedBps": 300}},
+      {"id": "equip_progress_quest", "displayKo": "치밀한", "effects": {"questBps": 300}},
+      {"id": "equip_progress_discovery", "displayKo": "수상한", "effects": {"discoveryBps": 500}},
+      {"id": "equip_progress_sale", "displayKo": "금빛", "effects": {"saleBps": 500}}
+    ],
+    "equipmentTrade": [
+      {"id": "equip_trade_heavy", "displayKo": "쓸데없이 무거운", "effects": {"statDeltas": {"STR": 2, "DEX": -1}}, "forbiddenTags": []},
+      {"id": "equip_trade_paper", "displayKo": "종이로 만든", "effects": {"statDeltas": {"DEX": 2, "CON": -1}}, "forbiddenTags": ["LIQUID", "ETHEREAL"]},
+      {"id": "equip_trade_talking", "displayKo": "말하는", "effects": {"statDeltas": {"WIS": 2, "CHA": -1}}, "allowedTags": ["DOCUMENT", "ETHEREAL"]},
+      {"id": "equip_trade_shiny", "displayKo": "지나치게 반짝이는", "effects": {"statDeltas": {"CHA": 2}, "discoveryBps": -300}, "forbiddenTags": []},
+      {"id": "equip_trade_intricate", "displayKo": "지나치게 정교한", "effects": {"statDeltas": {"INT": 2}, "combatSpeedBps": -200}, "forbiddenTags": []},
+      {"id": "equip_trade_stubborn", "displayKo": "고집 센", "effects": {"statDeltas": {"CON": 2}, "moveSpeedBps": -200}, "forbiddenTags": []}
+    ],
+    "equipmentScene": [
+      {"id": "equip_scene_worn", "displayKo": "닳은"},
+      {"id": "equip_scene_polished", "displayKo": "잘 닦인"},
+      {"id": "equip_scene_warm", "displayKo": "어쩐지 따뜻한"},
+      {"id": "equip_scene_extra_pocket", "displayKo": "주머니가 하나 더 있는"},
+      {"id": "equip_scene_previous_hurry", "displayKo": "전 주인이 급했던"},
+      {"id": "equip_scene_manual", "displayKo": "설명서가 붙은"},
+      {"id": "equip_scene_rain", "displayKo": "비 오는 날 주운"},
+      {"id": "equip_scene_price_tag", "displayKo": "정가표가 남은"},
+      {"id": "equip_scene_grand_name", "displayKo": "이름만 거창한"},
+      {"id": "equip_scene_overdue", "displayKo": "반납 기한이 지난"},
+      {"id": "equip_scene_left_shiny", "displayKo": "왼쪽만 반짝이는"},
+      {"id": "equip_scene_overpacked", "displayKo": "포장이 과한"}
+    ],
+    "loot": [
+      {"id": "loot_wet", "displayKo": "젖은", "effects": {"priceBps": 8000}, "forbiddenTags": ["ETHEREAL"]},
+      {"id": "loot_intact", "displayKo": "온전한", "effects": {"priceBps": 10000}, "forbiddenTags": []},
+      {"id": "loot_wrapped", "displayKo": "잘 포장된", "effects": {"priceBps": 11500}, "forbiddenTags": ["ETHEREAL", "LIQUID"]},
+      {"id": "loot_signed", "displayKo": "서명받은", "effects": {"priceBps": 12500, "narrativeCandidate": 1}, "forbiddenTags": []},
+      {"id": "loot_royal_delivery", "displayKo": "왕실 납품용", "effects": {"priceBps": 14000, "socialCandidate": 1}, "forbiddenTags": [], "rareOnlyTags": ["BEAST_PART"]},
+      {"id": "loot_suspicious", "displayKo": "의심스러운", "effects": {"priceBps": 9000, "discoveryBps": 1000}, "forbiddenTags": []},
+      {"id": "loot_pair", "displayKo": "한 쌍의", "effects": {"priceBps": 17000, "bagSlots": 2}, "forbiddenTags": ["LIQUID", "ETHEREAL"]},
+      {"id": "loot_seeking_owner", "displayKo": "주인을 찾는", "effects": {"priceBps": 11000, "curiosityChanceBps": 1000}, "forbiddenTags": ["FOOD", "LIQUID"]},
+      {"id": "loot_dusty", "displayKo": "먼지가 묻은", "effects": {"priceBps": 9000, "questBps": 500}, "forbiddenTags": ["LIQUID", "ETHEREAL"]},
+      {"id": "loot_like_new", "displayKo": "새것 같은", "effects": {"priceBps": 12000}, "forbiddenTags": ["BEAST_PART"]},
+      {"id": "loot_half", "displayKo": "반쪽짜리", "effects": {"priceBps": 6500, "bagSlots": 1}, "forbiddenTags": ["LIQUID", "ETHEREAL"]},
+      {"id": "loot_invoice", "displayKo": "세금계산서가 따른", "effects": {"priceBps": 12000, "socialCandidate": 1}, "forbiddenTags": ["FOOD", "LIQUID"]},
+      {"id": "loot_limited", "displayKo": "기념일 한정", "effects": {"priceBps": 13000, "collectionCandidate": 1}, "forbiddenTags": []},
+      {"id": "loot_erased_name", "displayKo": "이름이 지워진", "effects": {"priceBps": 8500, "discoveryBps": 500}, "forbiddenTags": ["LIQUID"]},
+      {"id": "loot_counted_twice", "displayKo": "두 번 세어 본", "effects": {"priceBps": 11000, "settlementCandidate": 1}, "forbiddenTags": []},
+      {"id": "loot_coupon", "displayKo": "교환권이 붙은", "effects": {"priceBps": 11500, "nextSaleBps": 200}, "forbiddenTags": ["LIQUID", "ETHEREAL"]}
+    ],
+    "skill": [
+      {"id": "skill_quick", "displayKo": "재빠른", "effects": {"combatTimeBps": -200}},
+      {"id": "skill_focused", "displayKo": "집중한", "effects": {"rewardBps": 300}},
+      {"id": "skill_inquisitive", "displayKo": "탐구하는", "effects": {"questBps": 300}},
+      {"id": "skill_observant", "displayKo": "눈 밝은", "effects": {"discoveryBps": 500}},
+      {"id": "skill_golden", "displayKo": "황금빛", "effects": {"saleBps": 500}},
+      {"id": "skill_roomy", "displayKo": "넉넉한", "effects": {"extraLootGaugeBps": 500}},
+      {"id": "skill_heavy", "displayKo": "묵직한", "effects": {"displayDamageBps": 1500}},
+      {"id": "skill_flashy", "displayKo": "화려한", "effects": {"narrativeCandidate": 1}}
+    ],
+    "curiosity": [
+      {"id": "curiosity_talking", "displayKo": "말하는"},
+      {"id": "curiosity_sleeping", "displayKo": "잠든"},
+      {"id": "curiosity_reversed", "displayKo": "뒤집힌"},
+      {"id": "curiosity_whistling", "displayKo": "휘파람 부는"},
+      {"id": "curiosity_lost_time", "displayKo": "시간을 잃은"},
+      {"id": "curiosity_unused", "displayKo": "한 번도 쓰이지 않은"},
+      {"id": "curiosity_seeking_owner", "displayKo": "주인을 찾는"},
+      {"id": "curiosity_grand", "displayKo": "쓸데없이 장엄한"},
+      {"id": "curiosity_self_rolling", "displayKo": "혼자 굴러가는"},
+      {"id": "curiosity_grows_in_rain", "displayKo": "비가 오면 커지는"},
+      {"id": "curiosity_yesterday", "displayKo": "어제의 날짜를 가리키는"},
+      {"id": "curiosity_unordered", "displayKo": "아무도 주문하지 않은"}
+    ]
+  }
+}

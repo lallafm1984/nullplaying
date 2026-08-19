@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/warrior-t12-flash-iassen-direction-lock-revision2-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/warrior-sword-master-04-20-late-impact-revisions-2",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "warrior_t12_c04",
+      "level": 60,
+      "name": "섬광 일섬",
+      "jobId": "bc649c95-2731-47b1-8398-1dcdc0a3bf33",
+      "status": "queued"
+    }
+  ]
+}

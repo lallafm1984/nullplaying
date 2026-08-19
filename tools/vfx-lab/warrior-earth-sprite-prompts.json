@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "Warrior non-charge candidate 4 reinvention: twenty original tectonic rebirth attacks",
+  "sourcePolicy": {
+    "existingVfxIgnored": true,
+    "identityInputs": [
+      "catalogId",
+      "Korean skill name",
+      "level",
+      "power stage",
+      "hit count for flurry only"
+    ]
+  },
+  "gateway": "http://127.0.0.1:4317",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 90,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for AlarmQuest. Invent this family from scratch using only the Korean skill name, level, power stage, and requested hit rhythm. Completely ignore and do not imitate, trace, remix, or preserve any existing AlarmQuest VFX image, asset, animation, action tag, direction tag, palette, silhouette, or timing. Create exactly 16 chronological animation frames in a strict 4-column by 4-row, row-major sprite sheet. Every cell is a wide 361:160 combat viewport with the same fixed camera, ground line, scale, and central target at x=50%, y=55%. Detailed premium Korean fantasy action-RPG VFX, hand-painted high-resolution 2D rendering, smooth tonal shading, crisp silhouettes, rich material facets, controlled bloom, and clean alpha. Maximum visual impact and screen coverage take priority across the center; no clean channel is required for skill labels or damage numbers. Use TECTONIC_REBIRTH: the entire ground-pressure plane first draws inward beneath the central target, then fractures into multiple naturally proportioned terrain plates, vertical stone-energy ribs, curved seismic rims, and near-camera rubble. This is neither a circular explosion nor a single enlarged rock. Show compression, fault opening, violent multi-depth uplift or collapse, then a deep residual scar. At F08-F10, combined near, middle, and far depth layers must occupy at least 90% of frame width and 82% of frame height, with natural foreground fragments intentionally cropped by all four edges. Fill the viewport through perspective, overlapping depth, and edge cropping, never by scaling or stretching one object. F01 is nearly transparent anticipation. F02-F04 gather force. F05-F07 accelerate. F08 is main contact. F09 is maximum impact. F10-F12 release fragments, shock fronts, and wakes through the viewer. F13-F14 retain a large readable afterimage. F15-F16 fade cleanly to transparency. Every frame must be distinct and continuous. No camera pan, camera zoom, camera rotation, or loop reset. Transparent RGBA background. F01 and F16 must be mostly transparent. Visual effect only: no warrior body and no enemy body. Do not render grid guides, frame labels, captions, borders, or padding.",
+  "negativePrompt": "pixel art, pixels, retro sprite, low resolution, nearest-neighbor edges, existing AlarmQuest VFX, copied game asset, traced reference, reused silhouette, character, warrior, human body, face, hands, legs, enemy, monster, fully rendered weapon object, background scenery, battlefield illustration, landscape, floor tile, user interface, HUD, health bar, text, Korean letters, English letters, numbers, logo, signature, watermark, frame number, caption, grid line, border, gutter, padding, opaque background, black background, white background, checkerboard background, tiny effect, miniature effect, small isolated center icon, empty peak corners, effect occupying less than eighty percent of peak frame, horizontal stretch, vertically stretched object, flat panorama smear, rubber distortion, warped proportions, mirrored butterfly silhouette, copy-pasted symmetry, single flat pressure strip, one giant scaled object, repeated identical frames, duplicated frame, missing frame, wrong frame order, inconsistent camera, inconsistent scale, unrelated secondary attack, excessive whiteout, excessive bloom, foggy silhouette, muddy colors, motion blur hiding material detail, jagged alpha, haloed alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t01_c04",
+      "level": 5,
+      "name": "지면 발구르기",
+      "generationPrompt": "Create a completely new interpretation of ‘지면 발구르기’ using TECTONIC_REBIRTH. Signature motif: a compact amber footfall crater expanding into four small beveled earth plates. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 1 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: ochre stone, dark umber, restrained amber fault light, sparse ivory dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t02_c04",
+      "level": 10,
+      "name": "땅울림 강타",
+      "generationPrompt": "Create a completely new interpretation of ‘땅울림 강타’ using TECTONIC_REBIRTH. Signature motif: two low seismic rims and a broken ochre ground seam. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 2 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: ochre stone, dark umber, restrained amber fault light, sparse ivory dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t03_c04",
+      "level": 15,
+      "name": "암반 쪼개기",
+      "generationPrompt": "Create a completely new interpretation of ‘암반 쪼개기’ using TECTONIC_REBIRTH. Signature motif: a dark central rock tooth surrounded by six ivory-lit fault lines. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 3 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: ochre stone, dark umber, restrained amber fault light, sparse ivory dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t04_c04",
+      "level": 20,
+      "name": "바위기둥 솟구침",
+      "generationPrompt": "Create a completely new interpretation of ‘바위기둥 솟구침’ using TECTONIC_REBIRTH. Signature motif: three narrow stone pillars rising at different depths through a dusty pressure basin. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 4 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: ochre stone, dark umber, restrained amber fault light, sparse ivory dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t05_c04",
+      "level": 25,
+      "name": "지반 내려찍기",
+      "generationPrompt": "Create a completely new interpretation of ‘지반 내려찍기’ using TECTONIC_REBIRTH. Signature motif: a wide ground compression bowl that snaps into thick angular plates. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 5 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: ochre stone, dark umber, restrained amber fault light, sparse ivory dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t06_c04",
+      "level": 30,
+      "name": "단층 깨뜨리기",
+      "generationPrompt": "Create a completely new interpretation of ‘단층 깨뜨리기’ using TECTONIC_REBIRTH. Signature motif: a stepped fault line with separate near and far rock shelves. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 6 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: iron-brown strata, burnished gold faults, deep rust-red accents, ivory dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t07_c04",
+      "level": 35,
+      "name": "대지 뒤엎기",
+      "generationPrompt": "Create a completely new interpretation of ‘대지 뒤엎기’ using TECTONIC_REBIRTH. Signature motif: two enormous earth plates peeling upward like pages with amber cores. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 7 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: iron-brown strata, burnished gold faults, deep rust-red accents, ivory dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t08_c04",
+      "level": 40,
+      "name": "지축 파쇄타",
+      "generationPrompt": "Create a completely new interpretation of ‘지축 파쇄타’ using TECTONIC_REBIRTH. Signature motif: a deep-axis shatter sending black-brown strata and gold dust through every edge. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 8 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: iron-brown strata, burnished gold faults, deep rust-red accents, ivory dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t09_c04",
+      "level": 45,
+      "name": "균열 폭쇄",
+      "generationPrompt": "Create a completely new interpretation of ‘균열 폭쇄’ using TECTONIC_REBIRTH. Signature motif: a crimson-lit fracture web collapsing inward before an ivory stone burst. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 9 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: iron-brown strata, burnished gold faults, deep rust-red accents, ivory dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t10_c04",
+      "level": 50,
+      "name": "지층 솟구침",
+      "generationPrompt": "Create a completely new interpretation of ‘지층 솟구침’ using TECTONIC_REBIRTH. Signature motif: four layered strata ribs erupting from a deep central trench. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 10 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: iron-brown strata, burnished gold faults, deep rust-red accents, ivory dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t11_c04",
+      "level": 55,
+      "name": "협곡 균열타",
+      "generationPrompt": "Create a completely new interpretation of ‘협곡 균열타’ using TECTONIC_REBIRTH. Signature motif: a canyon-length black seam with opposing gold-edged terrain plates. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 11 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: black steel or basalt, royal gold, disciplined deep crimson, ivory-white impact light. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t12_c04",
+      "level": 60,
+      "name": "산맥 붕괴타",
+      "generationPrompt": "Create a completely new interpretation of ‘산맥 붕괴타’ using TECTONIC_REBIRTH. Signature motif: a mountain-base pressure dome collapsing into a dense rubble vortex. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 12 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: black steel or basalt, royal gold, disciplined deep crimson, ivory-white impact light. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t13_c04",
+      "level": 65,
+      "name": "전장 지반격파",
+      "generationPrompt": "Create a completely new interpretation of ‘전장 지반격파’ using TECTONIC_REBIRTH. Signature motif: a battlefield-scale fractured ground lattice with disciplined dark-red energy veins. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 13 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: black steel or basalt, royal gold, disciplined deep crimson, ivory-white impact light. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t14_c04",
+      "level": 70,
+      "name": "지각 대폭쇄",
+      "generationPrompt": "Create a completely new interpretation of ‘지각 대폭쇄’ using TECTONIC_REBIRTH. Signature motif: a continental crust bloom of eight thick natural rock plates. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 14 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: black steel or basalt, royal gold, disciplined deep crimson, ivory-white impact light. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t15_c04",
+      "level": 75,
+      "name": "거산 함몰타",
+      "generationPrompt": "Create a completely new interpretation of ‘거산 함몰타’ using TECTONIC_REBIRTH. Signature motif: a giant basin implosion followed by two rising rings of broken strata. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 15 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: black steel or basalt, royal gold, disciplined deep crimson, ivory-white impact light. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t16_c04",
+      "level": 80,
+      "name": "철옹성 지반붕쇄",
+      "generationPrompt": "Create a completely new interpretation of ‘철옹성 지반붕쇄’ using TECTONIC_REBIRTH. Signature motif: a fortress-foundation collapse with black basalt blocks and royal-gold fault light. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 16 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: white-hot ivory, sovereign royal gold, black steel or obsidian, deep disciplined crimson, sparse orange sparks. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t17_c04",
+      "level": 85,
+      "name": "산하 대파쇄",
+      "generationPrompt": "Create a completely new interpretation of ‘산하 대파쇄’ using TECTONIC_REBIRTH. Signature motif: a nation-splitting rupture of three staggered chasms and huge foreground slabs. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 17 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: white-hot ivory, sovereign royal gold, black steel or obsidian, deep disciplined crimson, sparse orange sparks. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t18_c04",
+      "level": 90,
+      "name": "만산 대붕괴",
+      "generationPrompt": "Create a completely new interpretation of ‘만산 대붕괴’ using TECTONIC_REBIRTH. Signature motif: a ten-mountain collapse illusion built from separate domed pressure fronts. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 18 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: white-hot ivory, sovereign royal gold, black steel or obsidian, deep disciplined crimson, sparse orange sparks. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t19_c04",
+      "level": 95,
+      "name": "대륙 대붕쇄",
+      "generationPrompt": "Create a completely new interpretation of ‘대륙 대붕쇄’ using TECTONIC_REBIRTH. Signature motif: a continent-wide central scar bordered by monumental obsidian strata. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. Power stage 19 of 20; make the silhouette, layer count, foreground fragment size, and residual duration grow naturally with this stage. Palette: white-hot ivory, sovereign royal gold, black steel or obsidian, deep disciplined crimson, sparse orange sparks. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "warrior_t20_c04",
+      "level": 100,
+      "name": "천하붕쇄",
+      "generationPrompt": "Create a completely new interpretation of ‘천하붕쇄’ using TECTONIC_REBIRTH. Signature motif: the ultimate world fracture: white-hot deep core, black-gold tectonic crown, crimson mantle bands, giant plates through all edges, and three successive seismic fronts. Deliver one decisive authored impact, with secondary shock fronts reading as consequences rather than extra attacks. This is the stage-20 final skill and must visibly exceed stage 19 through a denser third shock front, more luxurious material detail, and a larger residual scar without becoming a whiteout. Palette: white-hot ivory, sovereign royal gold, black steel or obsidian, deep disciplined crimson, sparse orange sparks. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Do not render the skill name, a character, an enemy, or UI text."
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/charge-sprite-revision-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/warrior-charge-revision",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "warrior_t03_c03",
+      "level": 15,
+      "name": "맹진 찌르기",
+      "jobId": "23f99262-de8b-4c58-a59f-fd129cca5cc4",
+      "status": "running"
+    },
+    {
+      "catalogId": "warrior_t08_c03",
+      "level": 40,
+      "name": "전차 충돌",
+      "jobId": "319e2f2d-7af7-4cfc-9d00-9f214708d241",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t10_c03",
+      "level": 50,
+      "name": "선봉 쇄도",
+      "jobId": "83728c39-8d31-4916-90fe-99ffe0827eb0",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t13_c03",
+      "level": 65,
+      "name": "철혈 관통",
+      "jobId": "e12214b1-8ad5-46ad-a549-6b129b4f0f98",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t14_c03",
+      "level": 70,
+      "name": "군단 대돌파",
+      "jobId": "94ceeef7-ca18-447a-9173-5659465fd69e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t15_c03",
+      "level": 75,
+      "name": "군왕 돌진",
+      "jobId": "1e4b92a4-d540-41a4-ace1-04e78bd27e44",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t16_c03",
+      "level": 80,
+      "name": "성채 대돌파",
+      "jobId": "e6652a72-1eee-4896-8cc8-70ce87c7788e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t17_c03",
+      "level": 85,
+      "name": "용살 쇄도",
+      "jobId": "1c79a61c-00f8-44f4-9b70-3f51de8ad25a",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t18_c03",
+      "level": 90,
+      "name": "패왕 대진군",
+      "jobId": "f8d39150-dd6e-4d4f-92bb-2c196f88ba42",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t20_c03",
+      "level": 100,
+      "name": "천하무패 돌격",
+      "jobId": "4aed795a-eafb-4e29-a720-7912250dbdb6",
+      "status": "queued"
+    }
+  ]
+}

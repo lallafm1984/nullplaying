@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "멸천 일섬 transparent opening and inset vertical contact corrective regeneration",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "tools/vfx-lab/custom-assets/warrior-sword-master-04-20-late-impact-revisions",
+  "settings": { "type": "spritesheet", "model": "gpt-5.6-sol", "mode": "detailed", "frameWidth": 361, "frameHeight": 160, "frameCount": 16, "columns": 4, "rows": 4, "preset": "attack", "fps": 16, "loop": false, "autoReview": true, "qualityTarget": 96, "maxPasses": 4, "useReference": false },
+  "commonPrompt": "Create exactly 16 chronological Detailed frames in a strict 4-column by 4-row row-major transparent RGBA spritesheet, 361x160 per sealed cell and 1444x640 total. Regenerate from scratch; do not imitate the rejected bottom-cropped vertical sheet. F01-F04 zero visible pixels. F05 one tiny pale-gold glint near upper-center only. F06-F09 prepare one connected sword high inside the cell. F10-F12 one fast descending vertical cut, F13 first contact, F14 compression, F15 unique maximum sever, F16 held final contact at 80% energy. Keep all alpha inside x=38..323,y=16..132. The outer 14px and especially bottom 28px are exactly transparent. The contact shelf is centered at y=72%, never a ground line at the bottom. No sword tip, shelf, glow, fragment or shadow may touch the lower edge. One fixed camera, sword design, vertical angle, scale and x=55% axis. Detailed Korean action-RPG painting, clean smooth alpha, no pixel art.",
+  "negativePrompt": "visible F01, visible F02, visible F03, visible F04, small sword at bottom, bottom sword, bottom tip, bottom shelf, bottom glow, ground line, cropped contact, cell edge touching, horizontal image band, adjacent cell leakage, full-cell vertical beam, two swords, duplicate sword, detached weapon, target before F13, crack before F13, debris before F13, spark before F13, character, hand, body, enemy, scenery, sky, clouds, landscape, background, UI, text, grid, border, camera shake, wobble, meteor, halo, circle, cross symbol, whiteout, F16 fade, F16 empty, opaque panel, pixel art, jagged alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t15_c01",
+      "level": 75,
+      "name": "멸천 일섬",
+      "grammar": "INSET_SKYFALL_SINGLE_VERTICAL_SEVER",
+      "generationPrompt": "Regenerate 멸천 일섬 with one long white-steel nodachi, connected black-gold grip and compact crossguard. Keep the blade completely inside the safe rectangle on a slightly off-center vertical axis x=55%. F06-F09 hold the sword high with its full tip above y=63% and two narrow pale-gold compression strips behind it. F10 center y=35%, F11 y=48%, F12 y=61%, stopping before contact P=(55%,72%). F13 the tip first touches a short horizontal obsidian pressure shelf fully contained from x=39% to 71%,y=72%. F14 dents the shelf. F15 cleaves it into unequal halves with one tall but inset ivory-gold sever wedge and six black chips ejecting sideways. F16 holds the sword at the split, with all content ending above y=82%. No illustrated sky, ground, bottom crop, meteor, beam without sword or circular halo."
+    }
+  ]
+}

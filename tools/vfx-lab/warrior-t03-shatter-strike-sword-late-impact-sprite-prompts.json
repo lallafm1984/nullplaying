@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "Warrior 3번 파쇄격 검술 전면 재제작과 전사 표준 후반 타격 종료",
+  "sourcePolicy": {
+    "catalogIdStable": true,
+    "previousAssetUsedForDefectDiagnosisOnly": true,
+    "regenerateFromScratch": true,
+    "rejectedAssetDefect": "기존 warrior_t03_c02는 암석·철제 중량 블록의 수직 낙하로 읽혀 검을 사용하는 파쇄격 정체성과 맞지 않는다.",
+    "correctionGoal": "한 자루의 대검이 고정된 좌상단-우하단 경로를 빠르게 내려베고, 마지막 구간에서 갑주판을 깨뜨리는 단일 파쇄 타격으로 만든다.",
+    "webEndingPolicy": "F16을 1099ms까지 완전 유지하고 1100-1350ms 동안 웹 렌더러가 선형 페이드아웃한다."
+  },
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "tools/vfx-lab/custom-assets/warrior-t03-shatter-strike-sword-late-impact",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 96,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for AlarmQuest. Create exactly 16 chronological frames in a strict 4-column by 4-row row-major sprite sheet. Every cell is an independent 361x160 combat viewport; final sheet exactly 1444x640. Detailed hand-painted high-resolution Korean fantasy action-RPG rendering, transparent RGBA, clean antialiased alpha, image-rendering auto, no pixel art. Motion grammar: LOCKED_GREATSWORD_SHATTER_CUT_LATE_IMPACT. User-specific late-impact choreography overrides the normal early F08/F09 hit contract. Use one fixed camera, one fixed scale, one immutable descending diagonal sword path from upper-left toward lower-right, and one contact point P=(65%,72%). The only weapon is ONE connected rigid two-handed greatsword: a long straight double-edged dark-gunmetal blade, clearly tapered point, reinforced central fuller, short wide crossguard, and connected wrapped hilt. Keep exactly the same sword design, scale, perspective, blade width, edge angle, crossguard, and hilt connection in every visible frame. The sword moves as one rigid object along the same path with no rotation, redraw wobble, rescaling, bending, reverse motion, rebound, or duplicated weapon. Show no wielder, hand, arm, character, or enemy. F01-F04 are completely transparent. F05 shows only one faint narrow cold-steel glint near the upper-left start, no sword body and no debris. F06-F08 reveal the same connected greatsword in restrained preparation near the upper-left quadrant, fully inside the cell, with no impact, target, crack, spark, or explosion. F09 tightens one short blue-gray air fold behind the blade but remains far from P. The actual visible attack happens as one abrupt accelerating cut only across F10-F12. F10 sword center=(35%,28%). F11 center=(48%,47%). F12 center=(59%,64%), with the blade edge stopping one hair before P. Preserve the same exact sword angle and silhouette in F10-F16; translate it monotonically down-right. Add only two to four short tapered cold blue-gray speed streaks behind the sword in F10-F12, parallel to the blade travel, with wide transparent gaps. F13 is FIRST CONTACT: the sword edge strikes one compact dark-steel armor plate at P, producing one small ivory-white edge flash and two restrained amber sparks. There must be no earlier contact or damage burst. F14 is COMPRESSION: the greatsword stops dead and remains planted at P; the armor plate caves inward along one short diagonal fault, with three small angular chips beginning to separate toward the right. F15 is the UNIQUE MAXIMUM SHATTER HIT: the same recognizable greatsword stays braced at P while the armor plate splits into two unequal sections and six to eight angular gunmetal fragments burst mostly rightward and downward-right from the blade edge. Add one compact ivory-white pressure core, a restrained burnt-ochre friction flare, one short broken steel-pressure fan, and two narrow air tears. Keep the shatter physical, asymmetric, smaller than half the viewport height, and punctured by transparent corridors. This is an early level-15 sword technique, stronger than a basic cut but not an ultimate or screen-filling explosion. F16 HOLDS the exact same planted greatsword and shattered contact tableau at 75-85% of F15 energy, with fragments only slightly farther on their existing trajectories. F16 is not recovery or image fade; the web renderer handles fade from 1100ms to 1350ms. Keep the top and bottom six pixels of every cell fully transparent. Keep all sword and fragment parts away from cell boundaries, especially the bottom edge. Treat every cell as sealed so no adjacent-frame residue or horizontal image strip appears. Palette: dark gunmetal, cold steel blue, ivory-white razor light, restrained amber and burnt ochre. Render only the connected sword and attached physical VFX: no scenery, ground plane, sky, UI, text, grid, border, gutter, padding, checkerboard, black, white, or opaque background.",
+  "negativePrompt": "hammer, mace, maul, axe, spear, shield, rock column, falling boulder, meteor, stone block, iron block stack, vertical weight mass, ground crater, earthquake, terrain slab, two swords, second sword, duplicate sword, detached blade, detached hilt, disconnected crossguard, floating handle, broken weapon assembly, changing sword design, changing sword scale, changing sword perspective, sword rotation, sword bend, wavy blade, frame-to-frame wobble, jitter, shake, swimming silhouette, boiling edge, random redraw, reverse motion, rebound, recovery, camera shake, camera movement, camera zoom, slow visible attack before F10, contact before F13, armor plate before F13, crack before F13, spark before F13, debris before F13, explosion before F13, maximum impact before F15, second hit, second explosion, repeated detonation, F16 fade, F16 empty, full-screen explosion, circular explosion, shockwave ring, concentric rings, radial flower, starburst, mirrored wings, pinwheel, vortex, spiral, giant X, cross-shaped peak, magic circle, runes, ornate ultimate aura, excessive smoke, opaque dust cloud, full-cell color wash, manga speed-line panel, rectangular alpha panel, horizontal image band, top image band, bottom image band, cell boundary residue, adjacent cell leakage, weapon touching bottom edge, fragment touching bottom edge, opaque background, black background, white background, checkerboard background, pixel art, retro sprite, low resolution, nearest-neighbor edges, character, warrior body, face, head, torso, legs, arm, hands, fingers, enemy, monster, battlefield, scenery, horizon, illustrated ground plane, UI, HUD, text, letters, numbers, logo, signature, watermark, frame labels, grid lines, borders, gutters, padding, duplicated frame, missing frame, wrong frame order, muddy colors, jagged alpha, haloed alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t03_c02",
+      "level": 15,
+      "name": "파쇄격",
+      "grammar": "LOCKED_GREATSWORD_SHATTER_CUT_LATE_IMPACT",
+      "generationPrompt": "Regenerate 파쇄격 from scratch as one fast heavy greatsword shatter strike. The previous falling block or maul-like effect is diagnosis only and must not be imitated. Make one connected greatsword instantly readable by its long straight double edge, tapered point, central fuller, short crossguard, and attached wrapped hilt. Hold preparation through F09, then snap the same rigid sword down-right through F10-F12 without changing angle or shape. F13 is the first edge contact against a compact armor plate, F14 compresses the plate, F15 delivers the one decisive physical shatter with unequal plate halves, six to eight angular fragments, a compact ivory pressure core, and restrained ochre friction. F16 holds that same impact for the renderer fade. Prioritize sharp sword identity, speed, weight, and one satisfying PAK break; no hammer, rocks, ground slam, magic circle, radial explosion, character, or second strike."
+    }
+  ]
+}

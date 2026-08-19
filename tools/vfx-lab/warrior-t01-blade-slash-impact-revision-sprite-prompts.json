@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "Warrior first skill second revision: a visibly traveling cutting edge with a compact final contact wedge",
+  "sourcePolicy": {
+    "catalogIdStable": true,
+    "referencedSession": "01a00925-7677-73a0-8f21-0e25944c803e",
+    "existingVfxIgnored": true,
+    "rejectedRevisionNotUsedAsReference": true,
+    "userTemporalOverride": "The final authored frame is the only impact; there is no post-impact or finisher phase."
+  },
+  "gateway": "http://127.0.0.1:4317",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 90,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for AlarmQuest. Create exactly 16 chronological animation frames in a strict 4-column by 4-row, row-major sprite sheet. Every cell is an independent wide 361:160 combat viewport; final sheet 1444:640; Detailed hand-painted high-resolution 2D rendering; transparent RGBA; fixed camera, scale, ground line, and target point; clean antialiased alpha; image-rendering auto; no pixel art. This is the warrior's first and weakest skill, so the effect must stay compact and restrained while clearly reading as a physical cut that hits resistance. Motion grammar: TRAVELING_EDGE_CONTACT_WEDGE. Animate a moving leading blade-pressure tip with a short tapered trailing edge. The leading tip must translate to new screen coordinates in every successive active frame; the old segment must shorten and fade behind it. Do not grow one stationary crescent in place and do not repeat the same full curved line in multiple frames. Frame choreography: F01 almost clear. F02-F04 show a short pre-swing pressure notch moving from x=18% to x=27%, y=68% to y=62%. F05-F08 move the leading tip from x=30% to x=43%, y=59% to y=53%, with a short tail only 15-22% of viewport width. F09-F12 move the leading tip from x=47% to x=58%, y=51% to y=46%; keep the tail short and optionally add no more than two thin tapered speed tears. F13-F15 move the tip from x=61% to x=66%, y=44% to y=42%, visibly compressing toward the contact plane but still showing no hit. F16 at 937.5-1000ms is the one and only contact at x=68%, y=42%: the traveling line must abruptly terminate, kink or deflect at the contact point, and thicken locally into one compact ivory V-notch or wedge 2.5-3 times the preceding line thickness. Add one short perpendicular resistance crack and four to six tiny triangular steel chips or muted amber sparks contained within an 18% radius. This discontinuity in shape, not bloom, must provide the impact. Stop on F16. There are no authored frames after contact and no finisher. At peak, keep the combined alpha bounding box about 58-68% of viewport width and 48-62% of height, with broad transparent margins and low overall alpha occupancy. Palette: subdued cold steel gray, an ivory-white cutting edge, a faint desaturated blue fringe, and tiny muted amber contact accents. Every cell is separately clipped with no neighboring-frame residue. Do not render a character, enemy, weapon body, scenery, UI, text, frame labels, grid, border, gutter, padding, or opaque background.",
+  "negativePrompt": "stationary crescent, same curved line repeated in place, lengthening-only animation, uniform glow, floating arc, blurred beam, laser beam, one unchanging slash, contact with sparks only, impact without line deformation, early impact, post-impact frame, aftermath, finisher, fade-after-hit frame, pixel art, retro sprite, low resolution, nearest-neighbor edges, character, warrior body, face, hands, enemy, monster, sword body, complete weapon, scenery, battlefield, background illustration, UI, HUD, text, Korean letters, English letters, numbers, logo, signature, watermark, frame label, grid line, border, gutter, padding, opaque background, black background, white background, checkerboard background, huge slash, giant blade, full-screen impact, ultimate skill, ornate magic, excessive bloom, explosion, shockwave ring, circular ring, radial flower, starburst, X-shaped crossing, mirrored wings, vortex, spiral, energy dome, ground crater, plate split, four-way rift, multiple attacks, combo, second hit, debris burst, large rocks, many sparks, smoke cloud, residual phase, finishing pose, finisher ring, finisher echo, impact before F16, F16 transparent, duplicated frame, missing frame, wrong frame order, camera motion, inconsistent scale, adjacent frame residue, top image band, bottom image band, muddy colors, jagged alpha, haloed alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t01_c01",
+      "level": 5,
+      "name": "칼날 베기",
+      "grammar": "TRAVELING_EDGE_CONTACT_WEDGE",
+      "generationPrompt": "Regenerate ‘칼날 베기’ from scratch without using the rejected glowing-crescent result as an image reference. The cut must be perceived through translation: a sharp leading tip travels from lower-left to the off-center upper-right while only a short tapered tail follows it, so viewers can track the blade-pressure edge crossing space rather than watching a line brighten in place. Preserve the explicit per-frame coordinates and tail lengths from the common prompt. On F16 alone, show collision through a sudden structural change: terminate and kink the line into a locally thicker compact V-shaped contact wedge, with one short opposing resistance crack and only four to six tiny chips or sparks. The wedge must read clearly at native 361x160 cell size, yet remain a low-tier first-skill hit with no explosion, ring, large bloom, screen shake drawing, second strike, aftermath, or finishing phase. Stop exactly on the contact frame. Visual effect only; no character, enemy, sword body, scenery, UI, or letters."
+    }
+  ]
+}

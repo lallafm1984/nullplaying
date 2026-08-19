@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "gateway": "http://127.0.0.1:4317",
+  "jobs": [
+    { "catalogId": "warrior_t01_c03", "name": "전열 돌진", "jobId": "66ca7d10-ca2e-472a-9def-abb26ca652a5" },
+    { "catalogId": "warrior_t02_c03", "name": "방패 돌파", "jobId": "62091cf2-8149-4084-bbc7-259c743be8d3" },
+    { "catalogId": "warrior_t03_c03", "name": "맹진 찌르기", "jobId": "31502661-f125-4f46-bf41-1b667f608bdf" },
+    { "catalogId": "warrior_t04_c03", "name": "공성 돌격", "jobId": "b88e1477-072f-4a1a-bb68-48e12b4a85d7" },
+    { "catalogId": "warrior_t05_c03", "name": "철쐐기 돌파", "jobId": "6258209a-aadf-41a3-9417-290db1fef34c" },
+    { "catalogId": "warrior_t06_c03", "name": "중갑 돌진", "jobId": "e66ba4a1-ab3c-4b2b-99e5-c8844b8f9232" },
+    { "catalogId": "warrior_t07_c03", "name": "돌격 분쇄", "jobId": "d99dfbb9-bb02-4ff7-a96d-24b1844c5078" },
+    { "catalogId": "warrior_t08_c03", "name": "전차 충돌", "jobId": "feb83807-c75b-435e-a93f-78dd9149ae50" },
+    { "catalogId": "warrior_t09_c03", "name": "불굴 진격", "jobId": "399e4b0a-caeb-4798-8d5f-11550f46af48" },
+    { "catalogId": "warrior_t10_c03", "name": "선봉 쇄도", "jobId": "22854db6-c87f-4b78-ade8-fd11d7f2fffa" },
+    { "catalogId": "warrior_t11_c03", "name": "불패 돌파", "jobId": "52fae38d-5ec1-457f-8fbf-75f6dec46799" },
+    { "catalogId": "warrior_t12_c03", "name": "군왕 진군", "jobId": "e449ae25-3bb5-49a5-a983-a602a1314e1b" },
+    { "catalogId": "warrior_t13_c03", "name": "철혈 관통", "jobId": "fca732f4-4967-4078-9635-95300dd081ef" },
+    { "catalogId": "warrior_t14_c03", "name": "군단 대돌파", "jobId": "b21d15d6-4f70-43d7-9ba0-b0743112103f" },
+    { "catalogId": "warrior_t15_c03", "name": "군왕 돌진", "jobId": "43ef7300-c88d-4471-948b-470f4c9f4b7e" },
+    { "catalogId": "warrior_t16_c03", "name": "성채 대돌파", "jobId": "df271c7c-06a8-4ec1-a2de-ec68fedc359a" },
+    { "catalogId": "warrior_t17_c03", "name": "용살 쇄도", "jobId": "8db1f17d-c565-4ee7-9fdf-2bf1cd80687d" },
+    { "catalogId": "warrior_t18_c03", "name": "패왕 대진군", "jobId": "0b4e7c50-1fb4-4337-88a6-c0445a7f7c5a" },
+    { "catalogId": "warrior_t19_c03", "name": "불퇴 대돌파", "jobId": "ed533dce-424f-404d-967a-270a9ba215c5" }
+  ]
+}

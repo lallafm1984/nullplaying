@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/warrior-signature-20-reinvention-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/warrior-signature-20-reinvention",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "warrior_t02_c03",
+      "level": 10,
+      "name": "방패 돌파",
+      "jobId": "7a82fbab-bf7c-40aa-bfdb-0f543fc04f1a",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T02:41:26.353Z",
+      "resultUrl": "/generated/7a82fbab-bf7c-40aa-bfdb-0f543fc04f1a/result.png"
+    },
+    {
+      "catalogId": "warrior_t03_c02",
+      "level": 15,
+      "name": "철퇴 강타",
+      "jobId": "a1fb46e2-22c7-4ee0-bb1a-8cdee9aa9d8d",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T02:45:27.653Z",
+      "resultUrl": "/generated/a1fb46e2-22c7-4ee0-bb1a-8cdee9aa9d8d/result.png"
+    },
+    {
+      "catalogId": "warrior_t04_c03",
+      "level": 20,
+      "name": "공성 돌격",
+      "jobId": "7ff43695-dc3d-4803-87b3-cc882cd1dd4e",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T02:51:21.143Z",
+      "resultUrl": "/generated/7ff43695-dc3d-4803-87b3-cc882cd1dd4e/result.png"
+    },
+    {
+      "catalogId": "warrior_t05_c02",
+      "level": 25,
+      "name": "전투도끼 낙하",
+      "jobId": "d556778f-003c-495c-ae31-e6eaf5872b3e",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T02:58:10.832Z",
+      "resultUrl": "/generated/d556778f-003c-495c-ae31-e6eaf5872b3e/result.png"
+    },
+    {
+      "catalogId": "warrior_t06_c05",
+      "level": 30,
+      "name": "광폭 연참",
+      "jobId": "14931224-23f5-4501-b8c0-894000600c1d",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T03:01:18.092Z",
+      "resultUrl": "/generated/14931224-23f5-4501-b8c0-894000600c1d/result.png"
+    },
+    {
+      "catalogId": "warrior_t07_c01",
+      "level": 35,
+      "name": "맹호 참격",
+      "jobId": "1c33dce6-96f1-4f4b-b1a8-8c2245dfbcbf",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T03:05:19.455Z",
+      "resultUrl": "/generated/1c33dce6-96f1-4f4b-b1a8-8c2245dfbcbf/result.png"
+    },
+    {
+      "catalogId": "warrior_t08_c02",
+      "level": 40,
+      "name": "성문 깨기",
+      "jobId": "6a1ba75e-eac9-4b34-ab0e-5ae967040618",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T03:09:07.744Z",
+      "resultUrl": "/generated/6a1ba75e-eac9-4b34-ab0e-5ae967040618/result.png"
+    },
+    {
+      "catalogId": "warrior_t09_c03",
+      "level": 45,
+      "name": "불굴 진격",
+      "jobId": "262687af-9f27-49cf-a70d-517a5d6168e0",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T03:16:18.884Z",
+      "resultUrl": "/generated/262687af-9f27-49cf-a70d-517a5d6168e0/result.png"
+    },
+    {
+      "catalogId": "warrior_t10_c01",
+      "level": 50,
+      "name": "성벽 양단",
+      "jobId": "b0b59743-b0ce-4ce0-88c5-3262863b58df",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T03:19:45.760Z",
+      "resultUrl": "/generated/b0b59743-b0ce-4ce0-88c5-3262863b58df/result.png"
+    },
+    {
+      "catalogId": "warrior_t11_c02",
+      "level": 55,
+      "name": "파성 철퇴",
+      "jobId": "e422888b-b4d4-46fb-95ea-a4b158c4a176",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T03:22:48.245Z",
+      "resultUrl": "/generated/e422888b-b4d4-46fb-95ea-a4b158c4a176/result.png"
+    },
+    {
+      "catalogId": "warrior_t12_c04",
+      "level": 60,
+      "name": "산맥 붕괴타",
+      "jobId": "9b457454-24e2-46b7-85e2-60266a0dec1c",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T03:28:37.115Z",
+      "resultUrl": "/generated/9b457454-24e2-46b7-85e2-60266a0dec1c/result.png"
+    },
+    {
+      "catalogId": "warrior_t13_c03",
+      "level": 65,
+      "name": "철혈 관통",
+      "jobId": "4b0c2185-02af-425f-9936-82c64fa74e0d",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T03:33:16.856Z",
+      "resultUrl": "/generated/4b0c2185-02af-425f-9936-82c64fa74e0d/result.png"
+    },
+    {
+      "catalogId": "warrior_t14_c03",
+      "level": 70,
+      "name": "군단 대돌파",
+      "jobId": "95db9f79-b8aa-48c0-87d7-7c9f54b27a22",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T03:38:54.771Z",
+      "resultUrl": "/generated/95db9f79-b8aa-48c0-87d7-7c9f54b27a22/result.png"
+    },
+    {
+      "catalogId": "warrior_t15_c01",
+      "level": 75,
+      "name": "군왕의 일도",
+      "jobId": "b955b83a-73b1-4a4f-af27-eb0a3743a0ee",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T03:45:54.915Z",
+      "resultUrl": "/generated/b955b83a-73b1-4a4f-af27-eb0a3743a0ee/result.png"
+    },
+    {
+      "catalogId": "warrior_t16_c05",
+      "level": 80,
+      "name": "용살 연속참",
+      "jobId": "4fcd5594-8d72-4bf2-b714-c495a5615cc9",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T04:00:03.755Z",
+      "resultUrl": "/generated/4fcd5594-8d72-4bf2-b714-c495a5615cc9/result.png"
+    },
+    {
+      "catalogId": "warrior_t17_c01",
+      "level": 85,
+      "name": "용살 대참",
+      "jobId": "61572ee0-ecca-4212-9ca0-e9268955290b",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T04:04:35.015Z",
+      "resultUrl": "/generated/61572ee0-ecca-4212-9ca0-e9268955290b/result.png"
+    },
+    {
+      "catalogId": "warrior_t18_c02",
+      "level": 90,
+      "name": "전쟁왕 대철퇴",
+      "jobId": "59ab1710-7389-4e64-bf27-c52222c899a0",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T04:08:32.314Z",
+      "resultUrl": "/generated/59ab1710-7389-4e64-bf27-c52222c899a0/result.png"
+    },
+    {
+      "catalogId": "warrior_t19_c02",
+      "level": 95,
+      "name": "대륙 파쇄타",
+      "jobId": "42254b23-a187-47ff-a033-7cb1c8df5152",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T04:11:54.795Z",
+      "resultUrl": "/generated/42254b23-a187-47ff-a033-7cb1c8df5152/result.png"
+    },
+    {
+      "catalogId": "warrior_t20_c01",
+      "level": 100,
+      "name": "천하대양단",
+      "jobId": "2a330151-b6b5-4f0c-8cd8-93bafbe4f836",
+      "status": "completed",
+      "progress": 100,
+      "completedAt": "2026-08-18T04:14:56.794Z",
+      "resultUrl": "/generated/2a330151-b6b5-4f0c-8cd8-93bafbe4f836/result.png"
+    }
+  ],
+  "refreshedAt": "2026-08-18T04:21:06.326Z"
+}

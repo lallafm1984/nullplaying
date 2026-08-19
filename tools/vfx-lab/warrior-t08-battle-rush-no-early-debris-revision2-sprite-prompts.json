@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "전장의 돌격 second correction without pre-contact debris",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "tools/vfx-lab/custom-assets/warrior-sword-master-04-20-late-impact-revisions-2",
+  "settings": { "type": "spritesheet", "model": "gpt-5.6-sol", "mode": "detailed", "frameWidth": 361, "frameHeight": 160, "frameCount": 16, "columns": 4, "rows": 4, "preset": "attack", "fps": 16, "loop": false, "autoReview": true, "qualityTarget": 96, "maxPasses": 4, "useReference": false },
+  "commonPrompt": "Create a new 16-frame Detailed transparent RGBA spritesheet in strict 4x4 row-major layout, 361x160 per sealed cell and 1444x640 total. F01-F04 completely transparent with alpha=0 everywhere. F05 only one tiny anticipation glint. F06-F12 may contain ONLY one connected sword and blue-white air wakes; no brown, gold, stone, metal target, chip, fragment, debris, spark, dust or contact flare is allowed in F06-F12. The target first exists in F13, which is the first physical contact. F14 compression, F15 unique maximum, F16 held final contact. Keep all pixels inside x=18..343,y=16..144 and outer 12px transparent. Fixed rightward path, camera, scale and sword design. No edge bands or cell leakage.",
+  "negativePrompt": "visible F01, visible F02, visible F03, visible F04, target before F13, debris before F13, fragment before F13, metal chip before F13, brown mark before F13, gold mark before F13, spark before F13, contact flash before F13, second sword, detached sword, leftward motion, reverse motion, wobble, shake, edge touching, bottom residue, top residue, horizontal band, cell leakage, character, hand, body, enemy, scenery, ground, UI, text, grid, border, F16 fade, F16 empty, opaque panel, pixel art, jagged alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t08_c02",
+      "level": 40,
+      "name": "전장의 돌격",
+      "grammar": "CLEAN_PRECONTACT_BATTLEFIELD_RUSH_CUT",
+      "generationPrompt": "Build 전장의 돌격 as one connected blue-steel cavalry saber rushing strictly left-to-right along y=58%, from P0=(22%,58%) to contact P=(76%,58%). F05 only one 10px glint at P0. F06-F09 reveal the same saber and two curved blue air wakes. F10-F12 snap it rightward with longer blue-white air wakes; these three cells contain nothing else and remain entirely free of target material and loose particles. F13 the saber tip first touches one compact vertical bronze armor seal at P and creates the first ivory-gold spark. F14 bends the seal. F15 splits it asymmetrically with six bronze fragments and a narrow forward flash. F16 holds the saber through the split at reduced energy. No shield, no wall, no early debris, no lower floating chips and no background."
+    }
+  ]
+}

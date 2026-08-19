@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "Rogue candidate 5 reinvention: twenty original single-beat heartseal executions",
+  "sourcePolicy": {
+    "existingVfxIgnored": true,
+    "identityInputs": [
+      "catalogId",
+      "Korean skill name",
+      "level",
+      "power stage",
+      "hit count"
+    ]
+  },
+  "gateway": "http://127.0.0.1:4317",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 90,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for AlarmQuest. Invent this rogue family entirely from scratch using only the stable catalogId, Korean skill name, level, power stage, and hit count. Completely ignore and do not imitate, trace, remix, or preserve any existing AlarmQuest VFX image, asset, animation, action tag, direction tag, palette, silhouette, or timing. Create exactly 16 chronological animation frames in a strict 4-column by 4-row, row-major sprite sheet. Every cell is a wide 361:160 combat viewport with the same fixed camera, ground line, scale, and central target at x=50%, y=55%. Detailed premium Korean fantasy action-RPG VFX, hand-painted high-resolution 2D rendering, smooth tonal shading, razor-clean silhouettes, rich translucent materials, controlled bloom, and clean alpha. The animation must read as supernatural rogue speed and precision without drawing a rogue body, weapon-holding hands, or an enemy. Maximum centered impact density and natural screen coverage take priority; damage-number visibility does not matter. Use HEARTSEAL_EXECUTION: deliver exactly one authored execution impact without gore, anatomy, a literal heart, or a character. An abstract black-glass seal forms around the fixed center from several unequal geometric pressure segments. F02-F07 remove sound and ambient light while the seal contracts. F08 is the single precise sever or puncture. F09 is the full-screen consequence: a sharp ivory-crimson fault through layered shadow glass. F10-F12 release large separated fragments and a deep residual void; never add a second attack. At F08-F10, combined near, middle, and far depth layers must occupy at least 90% of frame width and 82% of frame height, with naturally proportioned foreground fragments intentionally cropped by all four edges. Fill the viewport through perspective, overlapping depth, and edge cropping, never by scaling or stretching one object. F01 is nearly transparent anticipation. F02-F04 establish the concealed mechanism. F05-F07 accelerate and tighten around the fixed target. F08 is main contact. F09 is maximum impact. F10-F12 release fragments, pressure wakes, or severed energy through the viewer. F13-F14 retain a large readable afterimage. F15-F16 fade cleanly to transparency. Every frame must be distinct and continuous. No camera pan, camera zoom, camera rotation, camera shake, lateral target motion, or loop reset. Transparent RGBA background. F01 and F16 must be mostly transparent. Visual effect only: no rogue body and no enemy body. Do not render grid guides, frame labels, captions, borders, or padding.",
+  "negativePrompt": "pixel art, pixels, retro sprite, low resolution, nearest-neighbor edges, existing AlarmQuest VFX, copied game asset, traced reference, reused silhouette, character, rogue, assassin body, human body, face, hands, legs, enemy, monster, gore, blood splatter, literal snake, literal spider, fully rendered weapon object, background scenery, battlefield illustration, landscape, floor tile, user interface, HUD, health bar, text, Korean letters, English letters, numbers, logo, signature, watermark, frame number, caption, grid line, border, gutter, padding, opaque background, black background, white background, checkerboard background, tiny effect, miniature effect, small isolated center icon, empty peak corners, effect occupying less than eighty percent of peak frame, horizontal stretch, vertically stretched object, flat panorama smear, rubber distortion, warped proportions, mirrored butterfly silhouette, copy-pasted symmetry, one giant scaled object, repeated identical frames, duplicated frame, missing frame, wrong frame order, inconsistent camera, inconsistent scale, unrelated secondary attack, left-to-right sprite translation, drifting target, moving vanishing point, camera shake, excessive whiteout, excessive bloom, foggy silhouette, muddy colors, motion blur hiding material detail, jagged alpha, haloed alpha, adjacent frame residue, next-frame image, previous-frame image, cross-cell continuation, bottom image band",
+  "skills": [
+    {
+      "catalogId": "rogue_t01_c05",
+      "level": 5,
+      "name": "급소 베기",
+      "generationPrompt": "Create a completely new interpretation of ‘급소 베기’ using HEARTSEAL_EXECUTION. Signature motif: a narrow ivory fault cutting a small black-glass weak-point seal. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 1 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t02_c05",
+      "level": 10,
+      "name": "숨통 끊기",
+      "generationPrompt": "Create a completely new interpretation of ‘숨통 끊기’ using HEARTSEAL_EXECUTION. Signature motif: one silent dark throat-like aperture represented only by abstract pressure rings, no anatomy. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 2 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t03_c05",
+      "level": 15,
+      "name": "심장 찌르기",
+      "generationPrompt": "Create a completely new interpretation of ‘심장 찌르기’ using HEARTSEAL_EXECUTION. Signature motif: one crimson needle puncturing a faceted wine-black life seal without gore. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 3 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t04_c05",
+      "level": 20,
+      "name": "무음 처형",
+      "generationPrompt": "Create a completely new interpretation of ‘무음 처형’ using HEARTSEAL_EXECUTION. Signature motif: a nearly soundless obsidian execution seam with four fading silver corners. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 4 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t05_c05",
+      "level": 25,
+      "name": "붉은 급소",
+      "generationPrompt": "Create a completely new interpretation of ‘붉은 급소’ using HEARTSEAL_EXECUTION. Signature motif: one red weak-point star sealed inside three black glass plates, no blood. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 5 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t06_c05",
+      "level": 30,
+      "name": "사각 일격",
+      "generationPrompt": "Create a completely new interpretation of ‘사각 일격’ using HEARTSEAL_EXECUTION. Signature motif: a blind-angle strike expressed as a missing wedge in a violet pressure circle. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 6 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t07_c05",
+      "level": 35,
+      "name": "치명 절단",
+      "generationPrompt": "Create a completely new interpretation of ‘치명 절단’ using HEARTSEAL_EXECUTION. Signature motif: one fatal black-silver separation line splitting six disciplined facets. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 7 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t08_c05",
+      "level": 40,
+      "name": "영혼 찌르기",
+      "generationPrompt": "Create a completely new interpretation of ‘영혼 찌르기’ using HEARTSEAL_EXECUTION. Signature motif: a pale spirit needle piercing a deep indigo soul-like prism without a figure. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 8 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t09_c05",
+      "level": 45,
+      "name": "한밤의 급소",
+      "generationPrompt": "Create a completely new interpretation of ‘한밤의 급소’ using HEARTSEAL_EXECUTION. Signature motif: one midnight weak-point seal eclipsed by a thin moon-white fault. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 9 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t10_c05",
+      "level": 50,
+      "name": "절명 일격",
+      "generationPrompt": "Create a completely new interpretation of ‘절명 일격’ using HEARTSEAL_EXECUTION. Signature motif: a death-mark singular seam that fractures the entire shadow plane once. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 10 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t11_c05",
+      "level": 55,
+      "name": "목숨 베기",
+      "generationPrompt": "Create a completely new interpretation of ‘목숨 베기’ using HEARTSEAL_EXECUTION. Signature motif: one life-cutting ivory edge passing through layered black-red glass. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 11 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t12_c05",
+      "level": 60,
+      "name": "침묵의 처형",
+      "generationPrompt": "Create a completely new interpretation of ‘침묵의 처형’ using HEARTSEAL_EXECUTION. Signature motif: a silent execution seal collapsing before a single royal-purple puncture. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 12 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t13_c05",
+      "level": 65,
+      "name": "운명 절단",
+      "generationPrompt": "Create a completely new interpretation of ‘운명 절단’ using HEARTSEAL_EXECUTION. Signature motif: one fate sever line dividing a gold-threaded obsidian sigil without letters. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 13 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t14_c05",
+      "level": 70,
+      "name": "사신의 급소",
+      "generationPrompt": "Create a completely new interpretation of ‘사신의 급소’ using HEARTSEAL_EXECUTION. Signature motif: a reaper-like weak-point eclipse using only abstract dark crescents, no figure. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 14 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t15_c05",
+      "level": 75,
+      "name": "영혼 처형",
+      "generationPrompt": "Create a completely new interpretation of ‘영혼 처형’ using HEARTSEAL_EXECUTION. Signature motif: one spirit execution fault shattering a translucent violet core. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 15 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, pale ivory, muted wine red, deep indigo, sparse silver dust. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t16_c05",
+      "level": 80,
+      "name": "존재 절단",
+      "generationPrompt": "Create a completely new interpretation of ‘존재 절단’ using HEARTSEAL_EXECUTION. Signature motif: a single existence-sever plane deleting the middle depth layer into a black void. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 16 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, white-hot ivory, deep wine crimson, imperial violet, sparse royal gold. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t17_c05",
+      "level": 85,
+      "name": "왕의 숨통",
+      "generationPrompt": "Create a completely new interpretation of ‘왕의 숨통’ using HEARTSEAL_EXECUTION. Signature motif: one king-grade throat seal expressed as a royal crimson clasp without anatomy. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 17 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, white-hot ivory, deep wine crimson, imperial violet, sparse royal gold. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t18_c05",
+      "level": 90,
+      "name": "절대 급소",
+      "generationPrompt": "Create a completely new interpretation of ‘절대 급소’ using HEARTSEAL_EXECUTION. Signature motif: a perfect weak-point singularity surrounded by eight still black-glass facets. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 18 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, white-hot ivory, deep wine crimson, imperial violet, sparse royal gold. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t19_c05",
+      "level": 95,
+      "name": "찰나 처형",
+      "generationPrompt": "Create a completely new interpretation of ‘찰나 처형’ using HEARTSEAL_EXECUTION. Signature motif: one instant execution flash where all shadow layers align for a single frame. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. Power stage 19 of 20; increase the authored silhouette, layer count, foreground fragment size, and residual duration naturally with this stage. Palette: black glass, white-hot ivory, deep wine crimson, imperial violet, sparse royal gold. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    },
+    {
+      "catalogId": "rogue_t20_c05",
+      "level": 100,
+      "name": "죽음의 한 점",
+      "generationPrompt": "Create a completely new interpretation of ‘죽음의 한 점’ using HEARTSEAL_EXECUTION. Signature motif: the ultimate point of death: one microscopic white-red contact at exact center followed by three immense black-glass reality fractures filling every edge. Deliver exactly one decisive authored contact at F08, with F09-F12 reading only as its consequence; do not add a second attack. This stage-20 final skill must visibly exceed stage 19 through a third full-screen consequence layer, richer material separation, larger foreground fragments, and a longer clean residual without becoming a whiteout. Palette: black glass, white-hot ivory, deep wine crimson, imperial violet, sparse royal gold. Fill the combat viewport through multiple natural depth layers and intentional edge cropping. Keep the structural target, brightest contact core, and family-specific convergence point fixed at x=50%. Do not render the skill name, a character, an enemy, or UI text."
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/paladin-judgment-gravity-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/paladin-judgment-gravity",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "paladin_t01_c03",
+      "level": 5,
+      "name": "전투망치 강타",
+      "jobId": "50d1a1c7-e9df-4f9a-b2f6-189a76c9662b",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t02_c03",
+      "level": 10,
+      "name": "성추 강하",
+      "jobId": "6544f6e7-4434-46ef-8108-2318fe0ef546",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t03_c03",
+      "level": 15,
+      "name": "기사의 망치 강타",
+      "jobId": "6ac68ee5-2fe8-445a-8e97-9850d8e970db",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t04_c03",
+      "level": 20,
+      "name": "단죄 강타",
+      "jobId": "f10c21b5-d992-44a8-9407-fbf544d2a339",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t05_c03",
+      "level": 25,
+      "name": "황금 망치 강타",
+      "jobId": "12138b60-ca74-4937-a638-c31dd7710dc2",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t06_c03",
+      "level": 30,
+      "name": "심판의 성추",
+      "jobId": "1d777386-9e48-4fab-923f-54d11aac0cff",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t07_c03",
+      "level": 35,
+      "name": "신벌 망치",
+      "jobId": "ee7586dd-6285-48ba-ac4d-c4af6a3f2f52",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t08_c03",
+      "level": 40,
+      "name": "대성추 강하",
+      "jobId": "83a2d525-0c22-4b02-a1e9-db62694f6be8",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t09_c03",
+      "level": 45,
+      "name": "천벌 강타",
+      "jobId": "8c48e059-4217-4fb8-aaba-af9c671e0877",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t10_c03",
+      "level": 50,
+      "name": "정의의 대망치 강하",
+      "jobId": "b7003fc3-b44a-4c97-a5f0-ec120a71c9a3",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t11_c03",
+      "level": 55,
+      "name": "별철 성추 강타",
+      "jobId": "2fd3f818-2a6a-4532-9340-883304daa1b0",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t12_c03",
+      "level": 60,
+      "name": "혜성 망치",
+      "jobId": "f50e9e71-3967-4bba-81ce-fe6bbf2d1002",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t13_c03",
+      "level": 65,
+      "name": "용골 분쇄추",
+      "jobId": "01e23630-c33e-439e-9bbe-c5884a662df1",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t14_c03",
+      "level": 70,
+      "name": "천벌 대성추",
+      "jobId": "a82e4063-d10b-497c-815d-9ff885ae91b1",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t15_c03",
+      "level": 75,
+      "name": "심판왕의 망치",
+      "jobId": "7011a52d-de97-4e08-87bf-60b9ec02d33e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t16_c03",
+      "level": 80,
+      "name": "종말 성추",
+      "jobId": "97d02c70-398c-4aba-ae50-f3d604633b52",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t17_c03",
+      "level": 85,
+      "name": "신격 분쇄추",
+      "jobId": "8ddb30eb-b7bb-4e87-979d-2d931a1d1977",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t18_c03",
+      "level": 90,
+      "name": "최후의 망치",
+      "jobId": "732c1dcb-7620-4f63-a617-b031a4a6f9be",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t19_c03",
+      "level": 95,
+      "name": "운명 분쇄추",
+      "jobId": "df5f5e34-962c-454c-a5de-8004f07b2df9",
+      "status": "queued"
+    },
+    {
+      "catalogId": "paladin_t20_c03",
+      "level": 100,
+      "name": "신의 마지막 망치",
+      "jobId": "17b8b61b-e501-4633-941a-096fa5fd5c06",
+      "status": "queued"
+    }
+  ]
+}

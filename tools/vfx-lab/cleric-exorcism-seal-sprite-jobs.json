@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/cleric-exorcism-seal-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/cleric-exorcism-seal",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "cleric_t01_c03",
+      "level": 5,
+      "name": "정화의 일격",
+      "jobId": "0a7c01f3-10fb-4612-9b98-59dcf7f662f6",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t02_c03",
+      "level": 10,
+      "name": "악령 파쇄",
+      "jobId": "e28678b0-560a-44b0-8c0a-26a300e63bf9",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t03_c03",
+      "level": 15,
+      "name": "퇴마 연타",
+      "jobId": "6854900e-3380-4952-b3dc-25247045563a",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t04_c03",
+      "level": 20,
+      "name": "성수 파열",
+      "jobId": "80b6083d-d946-4357-94ed-1f137d59a83d",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t05_c03",
+      "level": 25,
+      "name": "악마 봉인격",
+      "jobId": "878a982e-cb5b-4fd1-b281-ef828e935322",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t06_c03",
+      "level": 30,
+      "name": "퇴마 사슬",
+      "jobId": "700da0fa-bb5b-4f89-85e6-80600d7430af",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t07_c03",
+      "level": 35,
+      "name": "정화 연격",
+      "jobId": "f23b42bd-3b76-4658-9e2c-def64c016c99",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t08_c03",
+      "level": 40,
+      "name": "파마의 인장",
+      "jobId": "b43bf162-bc47-4916-b7e3-c8c5fe2e7adb",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t09_c03",
+      "level": 45,
+      "name": "악령 소멸진",
+      "jobId": "260eb5cc-22b2-4137-8d10-63c3b8258189",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t10_c03",
+      "level": 50,
+      "name": "퇴마 광쇄",
+      "jobId": "98df80fe-eb24-4c00-a303-af71fcfc2882",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t11_c03",
+      "level": 55,
+      "name": "성수 연쇄",
+      "jobId": "9553d885-82cc-4200-b37d-2e1b5e9dc662",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t12_c03",
+      "level": 60,
+      "name": "파마 대연격",
+      "jobId": "ab40d8c8-c753-4995-92b3-e2be1e1bbcda",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t13_c03",
+      "level": 65,
+      "name": "악마 파쇄진",
+      "jobId": "598707b4-68a8-4b8c-b6c6-0a654e281bbf",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t14_c03",
+      "level": 70,
+      "name": "퇴마 성역폭진",
+      "jobId": "ce3b19be-b850-4249-afd4-631408989224",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t15_c03",
+      "level": 75,
+      "name": "지옥문 붕괴",
+      "jobId": "e8b7229a-ac3b-4c43-867b-e7d14cc889ec",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t16_c03",
+      "level": 80,
+      "name": "만마 퇴마격",
+      "jobId": "b1634264-f59f-4e23-949a-d996c6357bec",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t17_c03",
+      "level": 85,
+      "name": "악신 파쇄",
+      "jobId": "93ab45be-ba27-4a8c-b6a9-36ef0630c83f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t18_c03",
+      "level": 90,
+      "name": "세계 정화폭진",
+      "jobId": "3b75b1fb-9874-4123-86d4-65b2711f2f6a",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t19_c03",
+      "level": 95,
+      "name": "천지 퇴마광",
+      "jobId": "8bd92edf-dd0e-40b5-a468-347943b38cac",
+      "status": "queued"
+    },
+    {
+      "catalogId": "cleric_t20_c03",
+      "level": 100,
+      "name": "만악 종결광",
+      "jobId": "842a2457-1cbd-47f3-845b-464f9aa7e9ee",
+      "status": "queued"
+    }
+  ]
+}

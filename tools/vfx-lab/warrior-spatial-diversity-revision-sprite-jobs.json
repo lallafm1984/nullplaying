@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/warrior-spatial-diversity-revision-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/warrior-spatial-diversity-revision",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "warrior_t01_c05",
+      "level": 5,
+      "name": "거친 연속참",
+      "jobId": "e1415c91-e2dc-4226-a35f-426b1584659e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t05_c04",
+      "level": 25,
+      "name": "지반 내려찍기",
+      "jobId": "251b2c46-5f0d-45b6-9218-a0147a6d6d26",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t06_c02",
+      "level": 30,
+      "name": "거인철퇴",
+      "jobId": "c6d69020-b84a-41ee-9c13-727b7a68d096",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t08_c04",
+      "level": 40,
+      "name": "지축 파쇄타",
+      "jobId": "2d7248d2-75c7-45d9-8497-5707e5bc7bc0",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t10_c01",
+      "level": 50,
+      "name": "성벽 양단",
+      "jobId": "5b720c3a-fdbc-47dd-9d50-5d4a74381c64",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t14_c04",
+      "level": 70,
+      "name": "지각 대폭쇄",
+      "jobId": "d70682dc-f567-49f6-b23a-d1d7f3d7b9de",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t16_c02",
+      "level": 80,
+      "name": "패왕 대강타",
+      "jobId": "95fd01de-9789-4d4b-92b3-27967d6a8792",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t17_c05",
+      "level": 85,
+      "name": "전쟁왕 광란",
+      "jobId": "a69be5f3-e69e-4079-b1e8-fd28a3a344af",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t18_c04",
+      "level": 90,
+      "name": "만산 대붕괴",
+      "jobId": "0b13f7df-11a6-442a-95d5-efd61d85b036",
+      "status": "queued"
+    },
+    {
+      "catalogId": "warrior_t20_c02",
+      "level": 100,
+      "name": "무쌍 대분쇄",
+      "jobId": "79c01ed0-9b1e-4567-b272-26cffece7ea8",
+      "status": "queued"
+    }
+  ]
+}

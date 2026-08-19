@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "sourceManifest": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/rogue-needle-crown-sprite-prompts.json",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "/Users/lim/Desktop/프로젝트/AlarmQuest/tools/vfx-lab/custom-assets/rogue-needle-crown",
+  "expected": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false
+  },
+  "jobs": [
+    {
+      "catalogId": "rogue_t01_c01",
+      "level": 5,
+      "name": "빠른 찌르기",
+      "jobId": "a1114724-e0cb-4b7d-b33c-305c2b8f1f17",
+      "status": "running"
+    },
+    {
+      "catalogId": "rogue_t02_c01",
+      "level": 10,
+      "name": "쌍아 연격",
+      "jobId": "9b586ce5-a3e6-4222-bc38-2826b33d5234",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t03_c01",
+      "level": 15,
+      "name": "삼연 찌르기",
+      "jobId": "bc459456-7f79-48ad-873c-70754489127f",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t04_c01",
+      "level": 20,
+      "name": "비수 난무",
+      "jobId": "ba1d768e-2e09-4bb8-a055-0b1c13f89e2e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t05_c01",
+      "level": 25,
+      "name": "초승달 단검",
+      "jobId": "b7a6c635-e57c-4861-84e1-066d96e6e32d",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t06_c01",
+      "level": 30,
+      "name": "질풍 쌍검",
+      "jobId": "19dabef1-f625-447b-a05f-9eff8739d816",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t07_c01",
+      "level": 35,
+      "name": "네 갈래 비수",
+      "jobId": "af4c0a20-72cf-4908-afe1-1b8aa04adc5a",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t08_c01",
+      "level": 40,
+      "name": "유령 난도",
+      "jobId": "42163bd7-de82-493a-9b86-1027bd81b583",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t09_c01",
+      "level": 45,
+      "name": "핏빛 쌍아",
+      "jobId": "0043db10-dd0b-46f4-8be1-72c911a26fe6",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t10_c01",
+      "level": 50,
+      "name": "폭풍 비수",
+      "jobId": "6b7204c7-648f-4e2c-bf71-251e016b50d2",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t11_c01",
+      "level": 55,
+      "name": "환영 연격",
+      "jobId": "9f02ab69-70d4-48d8-a180-c7b38a21463d",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t12_c01",
+      "level": 60,
+      "name": "백야 쌍검",
+      "jobId": "ade34098-88f0-4e9a-8944-6c857fadbdcf",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t13_c01",
+      "level": 65,
+      "name": "악몽 비수",
+      "jobId": "3b5a291a-bc0a-4497-8473-8e971037488d",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t14_c01",
+      "level": 70,
+      "name": "천공 단검무",
+      "jobId": "c15660f4-1e49-4c06-8953-0229d50835f0",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t15_c01",
+      "level": 75,
+      "name": "별빛 쌍아",
+      "jobId": "5dfb6e03-c777-4ab3-ad04-f147c9fd73a4",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t16_c01",
+      "level": 80,
+      "name": "무한 비수",
+      "jobId": "c034b957-b790-4e22-92d3-29d40c062533",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t17_c01",
+      "level": 85,
+      "name": "신살 쌍검",
+      "jobId": "43a9bdd7-d419-4125-a1f3-82adf25c6046",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t18_c01",
+      "level": 90,
+      "name": "종말의 단검무",
+      "jobId": "592f1e76-fde1-4907-9a64-a3fa6bc9d16e",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t19_c01",
+      "level": 95,
+      "name": "천야백련",
+      "jobId": "54ae8574-a794-48b5-b3c3-7f86ee689b34",
+      "status": "queued"
+    },
+    {
+      "catalogId": "rogue_t20_c01",
+      "level": 100,
+      "name": "무영천살",
+      "jobId": "315911b2-b6d8-47b1-962b-cbeb3ab6c6ca",
+      "status": "queued"
+    }
+  ]
+}

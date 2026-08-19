@@ -1,0 +1,3 @@
+AlarmQuest is now NULL PLAYING.
+Introduces the new title wordmark and brand language.
+Existing characters and save data remain compatible.

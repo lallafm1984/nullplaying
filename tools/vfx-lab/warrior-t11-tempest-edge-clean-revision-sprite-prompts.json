@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "폭풍검 transparent anticipation and cell-band corrective regeneration",
+  "gateway": "http://127.0.0.1:4317",
+  "outputDir": "tools/vfx-lab/custom-assets/warrior-sword-master-04-20-late-impact-revisions",
+  "settings": { "type": "spritesheet", "model": "gpt-5.6-sol", "mode": "detailed", "frameWidth": 361, "frameHeight": 160, "frameCount": 16, "columns": 4, "rows": 4, "preset": "attack", "fps": 16, "loop": false, "autoReview": true, "qualityTarget": 96, "maxPasses": 4, "useReference": false },
+  "commonPrompt": "Create exactly 16 chronological Detailed frames in a strict 4-column by 4-row row-major transparent RGBA spritesheet, 361x160 per sealed cell and 1444x640 total. Regenerate from scratch and never imitate the rejected early-sword or lower-band sheet. F01-F04 contain zero non-transparent pixels. F05 has one tiny pale-cyan glint at x=26%,y=71% only. F06-F09 prepare one connected sword, F10-F12 one fast rising diagonal cut, F13 first contact, F14 compression, F15 unique maximum gale sever, F16 holds the final contact at 80% energy for the web fade. Keep every pixel inside x=24..337 and y=18..137. Top 12px and bottom 20px exactly transparent in every cell. No partial wake, glint, fragment, shadow or image strip at the bottom. One immutable sword design, camera, scale, angle and diagonal lane. Detailed Korean action-RPG painting, smooth antialiased alpha, no pixel art.",
+  "negativePrompt": "visible F01, visible F02, visible F03, visible F04, sword before F06, bottom strip, bottom blade, bottom reflection, horizontal image band, adjacent cell leakage, partial neighboring frame, cropped sword, edge touching, full-cell haze, two swords, duplicate sword, detached blade, hammer, axe, spear, shield, target before F13, contact before F13, spark before F13, debris before F13, character, hand, body, enemy, scenery, sky, ground, background, UI, text, grid, border, camera shake, wobble, reverse motion, tornado, vortex, ring, lightning network, radial flower, F16 fade, F16 empty, opaque panel, pixel art, jagged alpha",
+  "skills": [
+    {
+      "catalogId": "warrior_t11_c02",
+      "level": 55,
+      "name": "폭풍검",
+      "grammar": "SEALED_LIGHTNING_GALE_SWORD_DIAGONAL",
+      "generationPrompt": "Regenerate 폭풍검 with one medium narrow tempest longsword, connected blue grip, plain crossguard and pale steel edge. Use the fixed rising path P0=(29%,72%) to final P=(72%,30%). F06-F09 hold the full sword near P0 with two short separated blue-gray wind folds along its spine. F10 center=(39%,62%), F11 center=(52%,49%), F12 center=(65%,36%), always the same angle and proportions. F13 first contact strikes one thin dark-steel pressure vane at P. F14 bends the vane backward. F15 slices it into three unequal long vanes and releases one sharp open gale wedge, a compact white-blue edge flash and five electric-blue specks. F16 holds the sword high at the exit with the separated vanes slightly farther. Keep all content within the safe rectangle. No bottom artifacts, thunder symbol, circular storm, duplicate weapon or screen-wide cloud."
+    }
+  ]
+}

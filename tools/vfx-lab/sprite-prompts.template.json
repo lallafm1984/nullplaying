@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": true,
+  "scope": "{{BATCH_SCOPE}}",
+  "gateway": "http://127.0.0.1:4317",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 90,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for NULL PLAYING. Create exactly 16 chronological animation frames in a strict 4-column by 4-row, row-major sprite sheet. Every frame is a wide 361:160 combat viewport with the same fixed camera, scale, ground line, and target point. {{SHARED_MOTION_GRAMMAR}} Detailed premium Korean fantasy action-RPG VFX, hand-painted high-resolution 2D rendering, smooth tonal shading, crisp silhouette, controlled bloom, and clean alpha. Frame choreography: F01 nearly transparent anticipation; F02-F04 motion gathers; F05-F07 rapid acceleration; F08 main contact; F09 peak impact; F10-F12 expanding fragments, shock, and wake; F13-F14 readable afterimage; F15-F16 clean fade to transparent. Each frame must be distinct yet continuous, with no camera pan, no camera rotation, and no loop reset. Transparent RGBA background. The first and last frame must be mostly transparent. Do not render grid guides, frame labels, captions, or borders.",
+  "negativePrompt": "pixel art, pixels, low resolution, retro sprite, nearest-neighbor edges, character, human body, face, hands, legs, enemy, monster, background scenery, battlefield illustration, landscape, user interface, HUD, health bar, text, Korean letters, English letters, numbers, logo, signature, watermark, frame number, caption, grid line, border, gutter, padding, opaque background, black background, white background, checkerboard background, multiple unrelated attacks, repeated identical frames, duplicated frame, missing frame, wrong frame order, inconsistent camera, inconsistent scale, excessive bloom, foggy silhouette, muddy colors, jagged alpha, haloed alpha, cropped impact",
+  "skills": [
+    {
+      "catalogId": "{{STABLE_CATALOG_ID}}",
+      "level": 1,
+      "name": "{{SKILL_NAME}}",
+      "generationPrompt": "Create ‘{{SKILL_NAME}}’ using {{MOTION_GRAMMAR_NAME}}. Describe the unique silhouette, impact behavior, depth, palette, relative power stage, and readability constraints for this skill. Do not render the skill name, a character, or UI text."
+    }
+  ]
+}
