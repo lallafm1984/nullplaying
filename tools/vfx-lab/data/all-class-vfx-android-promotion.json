@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "promotedAt": "2026-08-25",
+  "status": "built-installed-and-launch-verified",
+  "sourceManifest": "data/signature-skills.json",
+  "catalog": {
+    "totalSkills": 120,
+    "skillsPerClass": 20,
+    "classes": ["WARRIOR", "ROGUE", "RANGER", "MAGE", "CLERIC", "PALADIN"],
+    "remainingApexReviewSkills": 0
+  },
+  "finalization": {
+    "warrior": "twenty active confirmed sources; seven explicitly consolidated selections",
+    "rogue": "twenty finalized selections",
+    "ranger": "twenty original selections",
+    "mage": "nineteen original selections plus Absolute Ice Prison Break option 4",
+    "cleric": "twenty original selections",
+    "paladin": "twenty original selections"
+  },
+  "androidSprites": {
+    "directory": "app/src/simple/res/drawable-nodpi",
+    "resourcePattern": "vfx_sheet_<catalogId>.webp",
+    "resourceCount": 120,
+    "webpQuality": 85,
+    "webpAlphaQuality": 100,
+    "exactAlphaParity": true,
+    "fourByFourSheets": 119,
+    "approvedFourByThreeSheets": 1,
+    "kotlinMap": "app/src/simple/java/com/alarmquest/ui/DetailedSpriteAssets.kt",
+    "promotionScript": "tools/vfx-lab/sync_signature_sprites_to_android.py",
+    "verificationScript": "tools/vfx-lab/verify_android_parity.py"
+  },
+  "debugApk": {
+    "path": "app/build/outputs/apk/debug/app-debug.apk",
+    "sizeBytes": 79120117,
+    "sha256": "7fee90806d0b0b7cacea2a0aefa4e4aaa2ef31ac14318e7daca0af36f0808259",
+    "package": "com.alarmquest",
+    "activity": ".MainActivity",
+    "versionCode": 9,
+    "versionName": "0.4.0",
+    "signing": "Android Debug certificate; APK Signature Scheme v2 verified"
+  },
+  "wirelessDelivery": {
+    "deviceModel": "SM-S931N",
+    "installResult": "Success",
+    "launchStatus": "ok",
+    "launchState": "COLD",
+    "launchTotalTimeMillis": 532,
+    "topResumedActivityVerified": true,
+    "installedLastUpdateTime": "2026-08-25 16:29:34+09:00"
+  }
+}

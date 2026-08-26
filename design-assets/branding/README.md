@@ -4,13 +4,13 @@
 
 - Official brand: `NULL PLAYING`
 - Korean pronunciation: `널 플레이잉`
-- Title status line: `QUEST: ACTIVE`
+- Title status line: `THE ADVENTURE CONTINUES`
 - Palette: antique gold `#E1B95F`, shadow plum `#100C16`
 - Runtime wordmark: `app/src/simple/res/drawable-nodpi/title_logo_null_playing_v1.png`
 - Source master: `null-playing-wordmark-master-v1.png`
 - The launcher icon remains the existing text-free abstract star-and-ring mark.
 
-The wordmark is an image asset, while `QUEST: ACTIVE` remains live text for small-screen clarity, accessibility, and future localization. The Android package, database name, saved-state schema, and internal `Aq*` tokens remain unchanged for compatibility.
+The wordmark is an image asset, while `THE ADVENTURE CONTINUES` remains live text for small-screen clarity, accessibility, and future localization. The Android package, database name, saved-state schema, and internal `Aq*` tokens remain unchanged for compatibility.
 
 ## Final built-in ImageGen prompt
 

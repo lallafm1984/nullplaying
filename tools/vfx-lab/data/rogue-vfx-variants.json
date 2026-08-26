@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 6,
+  "status": "twenty-finalized",
+  "scope": "Finalized web sources promoted to Android Q85 WebP resources on 2026-08-25",
+  "fixedContract": {
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "rows": 4,
+    "sheetWidth": 1444,
+    "sheetHeight": 640,
+    "fps": 16,
+    "loop": false,
+    "ending": "All twenty finalized sheets preserve authored RGBA. The web runtime freezes F15 and applies the remaining fade; the finalized Lv55 sheet repeats F14 as F15 and clears F16."
+  },
+  "reviewSelections": {
+    "rogue_t01_c01": "1",
+    "rogue_t02_c02": "4",
+    "rogue_t03_c03": "1",
+    "rogue_t04_c04": "1",
+    "rogue_t05_c01": "1",
+    "rogue_t06_c05": "4",
+    "rogue_t07_c01": "1",
+    "rogue_t08_c02": "2",
+    "rogue_t09_c02": "1",
+    "rogue_t10_c04": "1",
+    "rogue_t11_c04": "1",
+    "rogue_t12_c05": "4",
+    "rogue_t13_c03": "1",
+    "rogue_t14_c04": "1",
+    "rogue_t15_c04": "2",
+    "rogue_t16_c04": "original",
+    "rogue_t17_c05": "original",
+    "rogue_t18_c01": "original",
+    "rogue_t19_c02": "original",
+    "rogue_t20_c05": "original"
+  },
+  "finalizedDirectory": "custom-assets/rogue-finalized-vfx",
+  "finalized": [
+    { "catalogId": "rogue_t01_c01", "variant": "1", "sha256": "67a735916b3803ce0a8e403c7e33a4cde2d70cac5f709336dccbe666760d52b4" },
+    { "catalogId": "rogue_t02_c02", "variant": "4", "sha256": "3a9e619f2fb095000a783bc8ec63a410862b2c5ada93014ed81099e3568adc5b" },
+    { "catalogId": "rogue_t03_c03", "variant": "1", "sha256": "c8c8d48d0a393cfaa4356539e5753528adafcf083cbe7b74b798598539fce540" },
+    { "catalogId": "rogue_t04_c04", "variant": "1", "sha256": "409790b5c245bcedfef2205cd0a166d2ede89421e86f73f4d3c90c9052871970" },
+    { "catalogId": "rogue_t05_c01", "variant": "1", "sha256": "6f802934f6b0e060c57e9a29ca23b9d109f1bfd3e1842ddfbb5ad6a78897a4da" },
+    { "catalogId": "rogue_t06_c05", "variant": "4", "sha256": "706d033c21460e183f1fdcbf3bbcacc1b2c80a2c29dedc2154cd3c24d724317f" },
+    { "catalogId": "rogue_t07_c01", "variant": "1", "sha256": "d8abb46d3f1a5e2cc3370d56fe33adf0f4485fc626100814c8a7885dac884f95" },
+    { "catalogId": "rogue_t08_c02", "variant": "2", "sha256": "90a191f901fdf6b8c494fd1a4a5ce5a58e660efbc03de126cdbf641c7183c483" },
+    { "catalogId": "rogue_t09_c02", "variant": "1", "sha256": "43aff9b2c5b042ebf4672ad42d056df44992756b828b21f8a69e685650ff7272" },
+    { "catalogId": "rogue_t10_c04", "variant": "1", "sha256": "de12d7b4ba73e2dc467ba33b356bbb48cc5b794c2921668ca90c31cfe871d96a" },
+    { "catalogId": "rogue_t11_c04", "variant": "1", "sha256": "caf009b89e14c0b9dab1226f25bdc915dabc767ac3d23eb96575752269d758a7" },
+    { "catalogId": "rogue_t12_c05", "variant": "4", "sha256": "31255d1423fe44b29f406362fde47b6b1edcea458ec050c83faf52b0eaca9e65" },
+    { "catalogId": "rogue_t13_c03", "variant": "1", "sha256": "db45420dd186b093e6a8532d30b28654cb9dfe2a23f8cf281d1101a0cfded775" },
+    { "catalogId": "rogue_t14_c04", "variant": "1", "sha256": "c260dcdb829a5b23c8db0ccf6d9e1e4c02c7abf3ada41c3c4ed7c08891bdac0c" },
+    { "catalogId": "rogue_t15_c04", "variant": "2", "sha256": "787712cd14d7987f183aa03440de039cda1a888e2cba61db3b0b177e4f497341" },
+    { "catalogId": "rogue_t16_c04", "variant": "original", "sha256": "a860f363407b386188945804b40e345cb20c9fe2c6c2541aaefec9245e03c0c4" },
+    { "catalogId": "rogue_t17_c05", "variant": "original", "sha256": "529fe866454055e97b233efb69bbdc0cf10ac462ba7422cc6cc23ed4d64f79c4" },
+    { "catalogId": "rogue_t18_c01", "variant": "original", "sha256": "86483581ae06fd534b64308e7af1daa248c02e4b130105d61453101812186d77" },
+    { "catalogId": "rogue_t19_c02", "variant": "original", "sha256": "39a9c3a71f56cb100f7f127aec095a4b6530f5f13b7746a709f883ba224245e1" },
+    {
+      "catalogId": "rogue_t20_c05",
+      "variant": "original",
+      "sha256": "db694a96b06269d434689b166bbb35b0c556924441dd07ba57c882089c580ebc",
+      "provenance": "former rogue_t01_c01 original reassigned to Death Point before finalization"
+    }
+  ],
+  "lastFinalization": {
+    "finalizedAt": "2026-08-25",
+    "method": "live-web-selection-snapshot",
+    "forcedSelections": {
+      "rogue_t01_c01": "1"
+    },
+    "preservedCurrentOriginals": [
+      "rogue_t16_c04",
+      "rogue_t17_c05",
+      "rogue_t18_c01",
+      "rogue_t19_c02",
+      "rogue_t20_c05"
+    ],
+    "archivedFileCount": 240
+  },
+  "recovery": {
+    "policy": "Unselected and superseded Rogue resources are moved to dedicated macOS Trash folders, never permanently deleted.",
+    "archiveManifest": "data/rogue-vfx-recovery-archive.json",
+    "latestArchiveRoot": "/Users/lim/.Trash/AlarmQuest-rogue-vfx-final-cleanup-20260825-TibWdb"
+  }
+}

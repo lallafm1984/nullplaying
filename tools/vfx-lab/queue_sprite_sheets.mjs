@@ -14,7 +14,15 @@ if (promptManifest.templateOnly) {
   throw new Error("Copy the template, set templateOnly to false, and replace every {{PLACEHOLDER}} before queueing.");
 }
 
-const settings = promptManifest.settings ?? {};
+const generationStrategyOverride = process.env.SPRITE_GENERATION_STRATEGY?.trim();
+if (generationStrategyOverride && !["sequential", "single-sheet"].includes(generationStrategyOverride)) {
+  throw new Error("SPRITE_GENERATION_STRATEGY must be sequential or single-sheet.");
+}
+const settings = {
+  generationStrategy: "single-sheet",
+  ...(promptManifest.settings ?? {}),
+  ...(generationStrategyOverride ? { generationStrategy: generationStrategyOverride } : {}),
+};
 const expectedContract = {
   mode: "detailed",
   frameWidth: 361,
@@ -78,6 +86,21 @@ for (const skill of promptManifest.skills) {
   uniqueCatalogIds.add(skill.catalogId);
 }
 
+async function referenceDataUrlFor(skill) {
+  const input = skill.referencePath || promptManifest.referencePath;
+  if (!input) return null;
+  const referencePath = resolve(input);
+  const bytes = await readFile(referencePath);
+  const pngSignature = [137, 80, 78, 71, 13, 10, 26, 10];
+  if (bytes.length < 24 || !pngSignature.every((value, index) => bytes[index] === value)) {
+    throw new Error(`${skill.catalogId} referencePath must point to a PNG file.`);
+  }
+  return {
+    referencePath,
+    dataUrl: `data:image/png;base64,${bytes.toString("base64")}`,
+  };
+}
+
 let jobsManifest = {
   schemaVersion: 1,
   sourceManifest: promptManifestPath,
@@ -104,6 +127,7 @@ process.stdout.write(`${JSON.stringify({
   alreadyQueued: skills.length - queueCandidates.length,
   toQueue: queueCandidates.length,
   expected: expectedContract,
+  generationStrategy: settings.generationStrategy,
 })}\n`);
 if (dryRun) process.exit(0);
 
@@ -120,6 +144,7 @@ process.stdout.write(`${JSON.stringify({
 const { useReference: _useReference, rows: _rows, ...jobSettings } = settings;
 await mkdir(dirname(jobsOutputPath), { recursive: true });
 for (const skill of queueCandidates) {
+  const reference = await referenceDataUrlFor(skill);
   const response = await fetch(`${baseUrl}/api/jobs`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -128,7 +153,7 @@ for (const skill of queueCandidates) {
       commonPrompt: skill.commonPrompt?.trim() || promptManifest.commonPrompt,
       prompt: skill.generationPrompt,
       negativePrompt: promptManifest.negativePrompt,
-      referenceDataUrl: null,
+      referenceDataUrl: reference?.dataUrl ?? null,
     }),
   });
   const payload = await response.json();
@@ -141,6 +166,7 @@ for (const skill of queueCandidates) {
     name: skill.name,
     jobId: payload.job.id,
     status: payload.job.status,
+    referencePath: reference?.referencePath ?? null,
   };
   jobsManifest.jobs.push(queuedJob);
   await writeFile(jobsOutputPath, `${JSON.stringify(jobsManifest, null, 2)}\n`, "utf8");

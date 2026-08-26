@@ -15,6 +15,9 @@ local.properties
 .env
 .env.*
 !.env.example
+/keys/*.jks
+/keys/*.keystore
+/keys/*.pass
 node_modules/
 __pycache__/
 *.py[cod]
@@ -31,6 +34,7 @@ artifacts/
 design-audits/
 tools/vfx-lab/evidence/
 tools/vfx-lab/temp-assets/
+tools/vfx-lab/.runtime/
 tools/vfx-lab/data/android-export.backup-*/
 tools/vfx-lab/data/android-export.checkpoint-*/
 tools/vfx-lab/data/android-export.failed-*/

@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "skills": {
+    "warrior_t01_c01": {
+      "catalogId": "warrior_t01_c01",
+      "hitCount": 1,
+      "hitTimingsMillis": [
+        490
+      ],
+      "hitWeights": [
+        100
+      ],
+      "updatedAt": "2026-08-21T03:01:43Z"
+    },
+    "warrior_t02_c03": {
+      "catalogId": "warrior_t02_c03",
+      "hitCount": 1,
+      "hitTimingsMillis": [
+        529
+      ],
+      "hitWeights": [
+        100
+      ],
+      "updatedAt": "2026-08-21T03:01:57Z"
+    },
+    "warrior_t05_c02": {
+      "catalogId": "warrior_t05_c02",
+      "hitCount": 2,
+      "hitTimingsMillis": [
+        171,
+        507
+      ],
+      "hitWeights": [
+        48,
+        52
+      ],
+      "updatedAt": "2026-08-21T03:03:05Z"
+    },
+    "warrior_t06_c05": {
+      "catalogId": "warrior_t06_c05",
+      "hitCount": 3,
+      "hitTimingsMillis": [
+        185,
+        334,
+        504
+      ],
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "updatedAt": "2026-08-21T03:05:12Z"
+    },
+    "warrior_t08_c02": {
+      "catalogId": "warrior_t08_c02",
+      "hitCount": 5,
+      "hitTimingsMillis": [
+        125,
+        219,
+        313,
+        406,
+        500
+      ],
+      "hitWeights": [
+        15,
+        17,
+        18,
+        20,
+        30
+      ],
+      "updatedAt": "2026-08-21T03:05:29Z"
+    },
+    "warrior_t09_c03": {
+      "catalogId": "warrior_t09_c03",
+      "hitCount": 2,
+      "hitTimingsMillis": [
+        245,
+        543
+      ],
+      "hitWeights": [
+        48,
+        52
+      ],
+      "updatedAt": "2026-08-21T03:06:36Z"
+    },
+    "warrior_t10_c01": {
+      "catalogId": "warrior_t10_c01",
+      "hitCount": 2,
+      "hitTimingsMillis": [
+        227,
+        500
+      ],
+      "hitWeights": [
+        48,
+        52
+      ],
+      "updatedAt": "2026-08-21T07:19:10Z"
+    },
+    "warrior_t13_c03": {
+      "catalogId": "warrior_t13_c03",
+      "hitCount": 5,
+      "hitTimingsMillis": [
+        201,
+        255,
+        349,
+        479,
+        542
+      ],
+      "hitWeights": [
+        15,
+        17,
+        18,
+        20,
+        30
+      ],
+      "updatedAt": "2026-08-21T07:17:48Z"
+    },
+    "warrior_t14_c03": {
+      "catalogId": "warrior_t14_c03",
+      "hitCount": 1,
+      "hitTimingsMillis": [
+        800
+      ],
+      "hitWeights": [
+        100
+      ],
+      "updatedAt": "2026-08-21T05:40:13Z"
+    },
+    "warrior_t16_c05": {
+      "catalogId": "warrior_t16_c05",
+      "hitCount": 1,
+      "hitTimingsMillis": [
+        500
+      ],
+      "hitWeights": [
+        100
+      ],
+      "updatedAt": "2026-08-24T07:13:55Z"
+    }
+  },
+  "updatedAt": "2026-08-24T07:13:55Z"
+}

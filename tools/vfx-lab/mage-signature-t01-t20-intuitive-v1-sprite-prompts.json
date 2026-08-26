@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "mage signature t01-t20 intuitive-name batch v1",
+  "gateway": "http://127.0.0.1:4317",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 90,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for NULL PLAYING. Create exactly 16 chronological frames in a strict 4-column by 4-row, row-major sheet. Every cell is one independent wide 361x160 combat viewport with identical fixed camera and scale; final sheet is exactly 1444x640 transparent 8-bit RGBA. Treat every cell as a sealed hard crop with no adjacent-cell leakage. F01 is almost transparent anticipation, F02-F07 clearly build the named action, F08 completes the main action, F09 is the single unique maximum impact, F10 immediately loses at least 35% energy, F11-F15 fade monotonically, and F16 is almost fully transparent. Detailed premium Korean fantasy action-RPG VFX, high-resolution hand-painted rendering, crisp tapered edges, controlled bloom, readable silhouette, clean alpha and broad transparent channels. No character body, enemy body, landscape, UI, text, grid, labels, gutters, borders, or opaque background.",
+  "negativePrompt": "pixel art, low resolution, retro sprite, human body, face, hands, enemy, monster body, full background scene, battlefield, HUD, text, letters, numbers, logo, watermark, frame number, grid line, border, gutter, padding, opaque background, black background, white background, checkerboard background, cross-cell residue, adjacent-frame band, wrong frame count, duplicated frame, missing frame, wrong order, inconsistent camera, radial flower, butterfly, symmetrical wings, pinwheel, mandala, generic starburst, unrelated rings, closed circular loop, one stretched panorama stripe, opaque rectangle, whiteout, late energy regrowth, persistent final frame, muddy colors, jagged alpha, haloed alpha",
+  "skills": [
+    {
+      "catalogId": "mage_t01_c01",
+      "level": 5,
+      "name": "불씨 화살",
+      "generationPrompt": "Create ‘불씨 화살’ using EMBER_DART. The name must be immediately readable through this concrete action: a small orange ember dart travels left-to-right, gathers a tapered flame tail, and pops into one compact forked flame lick at the offset target. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t02_c02",
+      "level": 10,
+      "name": "얼음 창",
+      "generationPrompt": "Create ‘얼음 창’ using ICE_LANCE_PIERCE. The name must be immediately readable through this concrete action: one long cyan ice lance forms from separate shards, accelerates left-to-right, and pierces a frosted pressure pane into sharp forward-facing fragments. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t03_c03",
+      "level": 15,
+      "name": "삼중 낙뢰",
+      "generationPrompt": "Create ‘삼중 낙뢰’ using TRIPLE_LIGHTNING_DESCENT. The name must be immediately readable through this concrete action: exactly three violet-white lightning bolts descend on three separated x positions in quick sequence, the third bolt branching wider for the unique peak. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t04_c04",
+      "level": 20,
+      "name": "비전 충격",
+      "generationPrompt": "Create ‘비전 충격’ using ARCANE_IMPULSE. The name must be immediately readable through this concrete action: two skewed magenta pressure planes compress from opposite sides and release as a short horizontal arcane shock slab, never forming a circle or sigil. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t05_c01",
+      "level": 25,
+      "name": "용암 분출",
+      "generationPrompt": "Create ‘용암 분출’ using LAVA_GEYSER. The name must be immediately readable through this concrete action: a narrow molten crack rises from the lower edge into a tilted red-orange lava column, throwing dark crust plates upward before collapsing back down. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t06_c04",
+      "level": 30,
+      "name": "공간 절단",
+      "generationPrompt": "Create ‘공간 절단’ using SPACE_SEVER. The name must be immediately readable through this concrete action: a single black-violet diagonal seam opens across two translucent depth planes and pulls them apart into a clean transparent corridor with bright arcane edges. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t07_c02",
+      "level": 35,
+      "name": "서리 폭풍",
+      "generationPrompt": "Create ‘서리 폭풍’ using FROST_STORM_FRONT. The name must be immediately readable through this concrete action: three open sweeps of cyan snow and ice shards curl across the viewport as a moving storm front, with no closed vortex and a clear left-to-right travel direction. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t08_c03",
+      "level": 40,
+      "name": "사방 낙뢰",
+      "generationPrompt": "Create ‘사방 낙뢰’ using FOUR_QUADRANT_LIGHTNING. The name must be immediately readable through this concrete action: four lightning strikes hit four unequal quadrant points in clockwise order but never meet at the center, the fourth strike linking the previous scorch seams. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t09_c05",
+      "level": 45,
+      "name": "유성우",
+      "generationPrompt": "Create ‘유성우’ using METEOR_SHOWER. The name must be immediately readable through this concrete action: four small violet-orange meteors descend on staggered diagonals at different depths, followed by a fifth larger meteor that tears across the lower third. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t10_c04",
+      "level": 50,
+      "name": "공간 왜곡파",
+      "generationPrompt": "Create ‘공간 왜곡파’ using SPACE_DISTORTION_WAVE. The name must be immediately readable through this concrete action: three transparent vertical space sheets bend into offset S-curves and snap forward as a purple refraction wave, keeping wide transparent gaps. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t11_c01",
+      "level": 55,
+      "name": "지옥불 구체",
+      "generationPrompt": "Create ‘지옥불 구체’ using HELLFIRE_ORB_SHOT. The name must be immediately readable through this concrete action: a compact black-red fire mass with an irregular broken rim rushes left-to-right and bursts into directional flame tongues, never becoming a neat circular sun. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t12_c02",
+      "level": 60,
+      "name": "절대영도 파열",
+      "generationPrompt": "Create ‘절대영도 파열’ using ABSOLUTE_ZERO_SHATTER. The name must be immediately readable through this concrete action: blue-white frost races inward along four irregular straight planes, freezes an off-center rectangular volume, then shatters it into large translucent ice slabs. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t13_c03",
+      "level": 65,
+      "name": "뇌신의 사슬",
+      "generationPrompt": "Create ‘뇌신의 사슬’ using THUNDER_GOD_CHAIN. The name must be immediately readable through this concrete action: five jagged gold-violet lightning segments jump between six off-center points across the viewport, ending in one long downward judgment branch. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t14_c04",
+      "level": 70,
+      "name": "공허 칼날",
+      "generationPrompt": "Create ‘공허 칼날’ using VOID_BLADE. The name must be immediately readable through this concrete action: one broad black-violet blade-shaped absence cuts left-to-right through a pale arcane pressure sheet and leaves a thin transparent wound with luminous edges. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t15_c01",
+      "level": 75,
+      "name": "불사조 격돌",
+      "generationPrompt": "Create ‘불사조 격돌’ using PHOENIX_IMPACT. The name must be immediately readable through this concrete action: two red-gold flame-stream wings remain unequal and swept backward around a diving flame spear; the spear crashes diagonally without depicting a bird body. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t16_c05",
+      "level": 80,
+      "name": "행성 낙하",
+      "generationPrompt": "Create ‘행성 낙하’ using PLANET_FALL. The name must be immediately readable through this concrete action: a huge cropped violet-blue molten celestial slab enters from the upper-right edge and descends toward lower-left, crushing three depth layers without showing a full round planet. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t17_c04",
+      "level": 85,
+      "name": "비전 특이점",
+      "generationPrompt": "Create ‘비전 특이점’ using ARCANE_SINGULARITY. The name must be immediately readable through this concrete action: angular magenta debris and light rays collapse into one tiny black point offset right, then release as two opposing planar tears rather than a circular explosion. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t18_c02",
+      "level": 90,
+      "name": "절대빙옥 파쇄",
+      "generationPrompt": "Create ‘절대빙옥 파쇄’ using ABSOLUTE_ICE_PRISON_BREAK. The name must be immediately readable through this concrete action: six tall irregular ice walls thrust inward from different depths to form an open frozen prison, then fracture outward in large blue-white slabs. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t19_c05",
+      "level": 95,
+      "name": "초신성",
+      "generationPrompt": "Create ‘초신성’ using SUPERNOVA. The name must be immediately readable through this concrete action: four offset cosmic pressure layers compress into a tiny white-violet core, then burst asymmetrically into long stellar sheets reaching every edge, avoiding a round sun silhouette. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "mage_t20_c05",
+      "level": 100,
+      "name": "우주 종말",
+      "generationPrompt": "Create ‘우주 종말’ using COSMIC_END_COLLAPSE. The name must be immediately readable through this concrete action: multiple translucent galaxy strata shear toward a diagonal void corridor, collapse into it, and re-emerge only as sparse fading star fragments after the single peak. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: element-specific fire, ice, lightning, arcane violet, cosmic blue. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No wizard body, staff, spellbook, readable rune, generic magic circle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    }
+  ]
+}

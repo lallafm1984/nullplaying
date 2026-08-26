@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "cleric signature t01-t20 intuitive-name batch v1",
+  "gateway": "http://127.0.0.1:4317",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 90,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for NULL PLAYING. Create exactly 16 chronological frames in a strict 4-column by 4-row, row-major sheet. Every cell is one independent wide 361x160 combat viewport with identical fixed camera and scale; final sheet is exactly 1444x640 transparent 8-bit RGBA. Treat every cell as a sealed hard crop with no adjacent-cell leakage. F01 is almost transparent anticipation, F02-F07 clearly build the named action, F08 completes the main action, F09 is the single unique maximum impact, F10 immediately loses at least 35% energy, F11-F15 fade monotonically, and F16 is almost fully transparent. Detailed premium Korean fantasy action-RPG VFX, high-resolution hand-painted rendering, crisp tapered edges, controlled bloom, readable silhouette, clean alpha and broad transparent channels. No character body, enemy body, landscape, UI, text, grid, labels, gutters, borders, or opaque background.",
+  "negativePrompt": "pixel art, low resolution, retro sprite, human body, face, hands, enemy, monster body, full background scene, battlefield, HUD, text, letters, numbers, logo, watermark, frame number, grid line, border, gutter, padding, opaque background, black background, white background, checkerboard background, cross-cell residue, adjacent-frame band, wrong frame count, duplicated frame, missing frame, wrong order, inconsistent camera, radial flower, butterfly, symmetrical wings, pinwheel, mandala, generic starburst, unrelated rings, closed circular loop, one stretched panorama stripe, opaque rectangle, whiteout, late energy regrowth, persistent final frame, muddy colors, jagged alpha, haloed alpha",
+  "skills": [
+    {
+      "catalogId": "cleric_t01_c01",
+      "level": 5,
+      "name": "빛의 화살",
+      "generationPrompt": "Create ‘빛의 화살’ using HOLY_LIGHT_ARROW. The name must be immediately readable through this concrete action: one narrow ivory-gold light arrow travels left-to-right and punctures a dim violet stain, leaving two small cleansing rays beyond the target. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t02_c02",
+      "level": 10,
+      "name": "심판의 망치",
+      "generationPrompt": "Create ‘심판의 망치’ using JUDGMENT_HAMMER_DESCENT. The name must be immediately readable through this concrete action: a cropped gold-white hammer-shaped pressure mass descends vertically and stamps one rectangular judgment crack, without a handle, hand, or character. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t03_c03",
+      "level": 15,
+      "name": "퇴마 연타",
+      "generationPrompt": "Create ‘퇴마 연타’ using FOUR_EXORCISM_STRIKES. The name must be immediately readable through this concrete action: four countable ivory-blue exorcism strokes travel across four separate positions from left to right, the fourth tearing a dark spirit veil into strips. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t04_c04",
+      "level": 20,
+      "name": "성화 폭발",
+      "generationPrompt": "Create ‘성화 폭발’ using SACRED_FLAME_BURST. The name must be immediately readable through this concrete action: three white-gold flame tongues rise from an offset lower point and burst outward as a directional cleansing fan with blue cores and open gaps. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t05_c05",
+      "level": 25,
+      "name": "수호천사 강하",
+      "generationPrompt": "Create ‘수호천사 강하’ using GUARDIAN_ANGEL_DESCENT. The name must be immediately readable through this concrete action: a vertical ivory spear of light descends between two unequal trailing feather-like light ribbons and lands in a compact protective impact, with no angel body. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t06_c03",
+      "level": 30,
+      "name": "퇴마 사슬",
+      "generationPrompt": "Create ‘퇴마 사슬’ using EXORCISM_CHAIN. The name must be immediately readable through this concrete action: four broken gold-white chain segments lash from different edges across a violet corruption sheet, pull it apart, then dissolve without closing into a loop. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t07_c01",
+      "level": 35,
+      "name": "순백의 파동",
+      "generationPrompt": "Create ‘순백의 파동’ using PURE_WHITE_WAVE. The name must be immediately readable through this concrete action: a clean ivory-blue horizontal cleansing front advances left-to-right through three translucent dark layers and leaves clear transparent space behind it. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t08_c03",
+      "level": 40,
+      "name": "파마의 인장",
+      "generationPrompt": "Create ‘파마의 인장’ using BANISHING_SEAL_STRIKE. The name must be immediately readable through this concrete action: five disconnected scripture-like light bars form an irregular open containment shape around the target, snap inward, and erase a dark stain without readable text or a circle. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t09_c05",
+      "level": 45,
+      "name": "대천사 돌진",
+      "generationPrompt": "Create ‘대천사 돌진’ using ARCHANGEL_CHARGE. The name must be immediately readable through this concrete action: a long gold-white spearhead of light rushes left-to-right with two swept-back asymmetric feather trails, piercing through a broad shadow pressure wall. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t10_c04",
+      "level": 50,
+      "name": "정화의 불기둥",
+      "generationPrompt": "Create ‘정화의 불기둥’ using PURIFICATION_FLAME_PILLAR. The name must be immediately readable through this concrete action: a thin blue-white flame column erupts bottom-to-top, widens through three stacked tiers, and burns a dark corruption sheet into upward-drifting fragments. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t11_c02",
+      "level": 55,
+      "name": "천벌 분쇄",
+      "generationPrompt": "Create ‘천벌 분쇄’ using HEAVENLY_PUNISHMENT_CRUSH. The name must be immediately readable through this concrete action: three descending golden judgment slabs strike the same off-center point with increasing weight, the final slab splitting a black pressure floor into unequal plates. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t12_c05",
+      "level": 60,
+      "name": "대천사 검무",
+      "generationPrompt": "Create ‘대천사 검무’ using ARCHANGEL_SWORD_DANCE. The name must be immediately readable through this concrete action: four ivory-gold sword-light cuts roam across separate viewport positions and finish with one long descending seam, without swords, bodies, wings, or a radial pattern. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t13_c03",
+      "level": 65,
+      "name": "악마 파쇄진",
+      "generationPrompt": "Create ‘악마 파쇄진’ using DEMON_BREAKING_DOMAIN. The name must be immediately readable through this concrete action: six pale exorcism stakes enter from irregular perimeter points and puncture a dark-red corruption membrane in sequence, culminating in its asymmetric collapse. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t14_c04",
+      "level": 70,
+      "name": "성화 해일",
+      "generationPrompt": "Create ‘성화 해일’ using SACRED_FLAME_TIDE. The name must be immediately readable through this concrete action: a broad white-gold flame tide rises diagonally from lower-left to upper-right in three depth bands, washing a violet stain off the opposite edge. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t15_c03",
+      "level": 75,
+      "name": "지옥문 붕괴",
+      "generationPrompt": "Create ‘지옥문 붕괴’ using HELL_GATE_COLLAPSE. The name must be immediately readable through this concrete action: two tall black-violet gate-like pressure slabs stand apart, are crossed by gold cleansing seams, then collapse inward into broken stone-like shadow fragments. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t16_c01",
+      "level": 80,
+      "name": "세계수 성광포",
+      "generationPrompt": "Create ‘세계수 성광포’ using WORLD_TREE_HOLY_CANNON. The name must be immediately readable through this concrete action: a massive branching ivory-green light beam grows from left to right like a tree trunk with three directional branches and blasts through layered darkness without leaves. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t17_c05",
+      "level": 85,
+      "name": "천군 포화",
+      "generationPrompt": "Create ‘천군 포화’ using HEAVENLY_HOST_BARRAGE. The name must be immediately readable through this concrete action: five distinct gold-white lances descend from unequal top-edge positions, followed by many faint distant lance echoes and a wide final cleansing front. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t18_c03",
+      "level": 90,
+      "name": "세계 정화폭진",
+      "generationPrompt": "Create ‘세계 정화폭진’ using WORLD_PURIFICATION_BLAST. The name must be immediately readable through this concrete action: four dark corruption continents across the viewport ignite along gold-white fissures and break into transparent clean corridors at the unique peak. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t19_c02",
+      "level": 95,
+      "name": "신좌의 망치",
+      "generationPrompt": "Create ‘신좌의 망치’ using THRONE_HAMMER_VERDICT. The name must be immediately readable through this concrete action: an enormous cropped ivory-gold judgment mass descends from the upper edge and drives a narrow vertical holy fracture through three dark depth slabs. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "cleric_t20_c05",
+      "level": 100,
+      "name": "천국문 폭격",
+      "generationPrompt": "Create ‘천국문 폭격’ using HEAVEN_GATE_BOMBARDMENT. The name must be immediately readable through this concrete action: two towering open pillars of light suggest a gate at the far sides while seven lances bombard the transparent corridor between them, ending in one edge-to-edge holy shock front. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory, warm gold, pale blue, restrained violet corruption. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No cleric body, angel body, readable scripture, religious real-world symbol, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    }
+  ]
+}

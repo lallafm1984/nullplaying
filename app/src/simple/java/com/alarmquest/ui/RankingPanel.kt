@@ -3,7 +3,7 @@ package com.alarmquest.ui
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +18,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -30,13 +32,15 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -51,9 +55,10 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import com.alarmquest.remote.RemoteRankingSnapshot
+import kotlinx.coroutines.launch
 
 internal enum class RankingSnapshotSource {
-    MOCK,
     CACHE,
     REMOTE,
 }
@@ -71,6 +76,7 @@ internal data class RankingCandidate(
 
 internal data class RankingEntry(
     val rank: Int,
+    val listIndex: Int = -1,
     val characterId: String,
     val displayName: String,
     val heroClass: HeroClass,
@@ -90,6 +96,7 @@ internal data class RankingSnapshot(
     val totalParticipants: Int,
     val entries: List<RankingEntry>,
     val myEntry: RankingEntry,
+    val usesLocalPower: Boolean = false,
 )
 
 internal sealed interface RankingUiState {
@@ -111,14 +118,167 @@ internal data class RankingHeaderPresentation(
     val isRanked: Boolean,
 )
 
+internal const val MAX_DISPLAYED_RANK = 1_000
+internal const val OUTSIDE_DISPLAYED_RANK = MAX_DISPLAYED_RANK + 1
+
+internal fun shouldEnableMyRankingMove(
+    myRankingListIndex: Int?,
+    visibleIndices: Set<Int>,
+): Boolean = myRankingListIndex != null && myRankingListIndex !in visibleIndices
+
+internal fun RemoteRankingSnapshot.toUiSnapshot(
+    playerCharacterId: String,
+    playerName: String,
+    playerClass: HeroClass,
+    playerLevel: Long,
+    playerCombatPower: Long,
+): RankingSnapshot {
+    val mapped = entries.map { remote ->
+        RankingEntry(
+            rank = remote.rank,
+            listIndex = remote.listIndex,
+            characterId = remote.characterId,
+            displayName = remote.displayName,
+            heroClass = remote.heroClass,
+            level = remote.level,
+            combatPower = remote.combatPower,
+            honorific = honorificForRank(remote.rank),
+            achievedAtEpochMillis = remote.achievedAtEpochMillis,
+            verifiedAtEpochMillis = remote.updatedAtEpochMillis,
+            isMe = remote.characterId == playerCharacterId,
+        )
+    }
+    val myRemote = myEntry?.takeIf { it.characterId == playerCharacterId }
+    val serverMine = mapped.firstOrNull { it.characterId == playerCharacterId }
+        ?: myRemote?.let { remote ->
+            RankingEntry(
+                rank = remote.rank,
+                listIndex = remote.listIndex,
+                characterId = remote.characterId,
+                displayName = remote.displayName,
+                heroClass = remote.heroClass,
+                level = remote.level,
+                combatPower = remote.combatPower,
+                honorific = honorificForRank(remote.rank),
+                achievedAtEpochMillis = remote.achievedAtEpochMillis,
+                verifiedAtEpochMillis = remote.updatedAtEpochMillis,
+                isMe = true,
+            )
+        }
+    val mine = serverMine ?: RankingEntry(
+        rank = 0,
+        listIndex = -1,
+        characterId = playerCharacterId,
+        displayName = playerName,
+        heroClass = playerClass,
+        level = playerLevel,
+        combatPower = playerCombatPower,
+        honorific = if (playerLevel < 20L) "Lv.20부터 참가" else "순위 집계 중",
+        achievedAtEpochMillis = fetchedAtEpochMillis,
+        verifiedAtEpochMillis = fetchedAtEpochMillis,
+        isMe = true,
+    )
+    return RankingSnapshot(
+        snapshotId = "remote-$fetchedAtEpochMillis",
+        source = if (isFromCache) RankingSnapshotSource.CACHE else RankingSnapshotSource.REMOTE,
+        fetchedAtEpochMillis = fetchedAtEpochMillis,
+        formulaVersion = 1,
+        totalParticipants = totalParticipants,
+        entries = mapped,
+        myEntry = mine,
+        usesLocalPower = serverMine == null ||
+            serverMine.combatPower != playerCombatPower ||
+            serverMine.level != playerLevel,
+    )
+}
+
+internal fun RankingSnapshot.withLocalPlayerPower(
+    characterId: String,
+    displayName: String,
+    heroClass: HeroClass,
+    level: Long,
+    combatPower: Long,
+    now: Long,
+): RankingSnapshot {
+    if (level < 20L) {
+        return copy(
+            entries = entries.filterNot { it.characterId == characterId },
+            myEntry = myEntry.copy(
+                rank = 0,
+                listIndex = -1,
+                displayName = displayName,
+                heroClass = heroClass,
+                level = level,
+                combatPower = combatPower,
+                honorific = "Lv.20부터 참가",
+                verifiedAtEpochMillis = myEntry.verifiedAtEpochMillis,
+            ),
+            usesLocalPower = true,
+        )
+    }
+
+    val candidates = entries.filterNot { it.characterId == characterId }.map { entry ->
+        RankingCandidate(
+            characterId = entry.characterId,
+            displayName = entry.displayName,
+            heroClass = entry.heroClass,
+            level = entry.level,
+            score = entry.combatPower,
+            achievedAtEpochMillis = entry.achievedAtEpochMillis,
+            verifiedAtEpochMillis = entry.verifiedAtEpochMillis,
+            isMe = false,
+        )
+    }.toMutableList()
+    val powerIncreased = myEntry.rank <= 0 || combatPower > myEntry.combatPower
+    candidates += RankingCandidate(
+        characterId = characterId,
+        displayName = displayName,
+        heroClass = heroClass,
+        level = level,
+        score = combatPower,
+        achievedAtEpochMillis = if (powerIncreased) now else myEntry.achievedAtEpochMillis,
+        verifiedAtEpochMillis = myEntry.verifiedAtEpochMillis,
+        isMe = true,
+    )
+
+    val ranked = rankCandidates(candidates)
+    val calculatedMine = checkNotNull(ranked.firstOrNull { it.characterId == characterId })
+    val localMine = if (calculatedMine.rank > MAX_DISPLAYED_RANK) {
+        calculatedMine.copy(
+            rank = OUTSIDE_DISPLAYED_RANK,
+            listIndex = -1,
+            honorific = honorificForRank(OUTSIDE_DISPLAYED_RANK),
+        )
+    } else {
+        calculatedMine
+    }
+    return copy(
+        entries = ranked.filter { it.rank <= MAX_DISPLAYED_RANK },
+        myEntry = localMine,
+        usesLocalPower = usesLocalPower ||
+            combatPower != myEntry.combatPower ||
+            level != myEntry.level,
+    )
+}
+
 internal fun honorificForRank(rank: Int?): String = when {
     rank == null || rank <= 0 -> "순위 집계 중"
-    rank == 1 -> "왕좌의 모험가"
-    rank <= 3 -> "전설의 선봉"
-    rank <= 10 -> "황금 개척자"
+    rank == 1 -> "유일한 왕좌"
+    rank == 2 -> "왕좌에 닿은 자"
+    rank == 3 -> "천상의 수호자"
+    rank == 4 -> "전설의 선봉"
+    rank == 5 -> "별을 베는 자"
+    rank == 6 -> "불굴의 정복자"
+    rank == 7 -> "황금의 개척자"
+    rank == 8 -> "새벽의 추적자"
+    rank == 9 -> "은빛의 영웅"
+    rank == 10 -> "별빛의 계승자"
+    rank <= 25 -> "황금의 선구자"
     rank <= 50 -> "은빛 추적자"
     rank <= 100 -> "청동 길잡이"
-    else -> "여정의 도전자"
+    rank <= 300 -> "별빛의 도전자"
+    rank <= 1_000 -> "새벽의 모험가"
+    else -> "여정을 걷는 자"
 }
 
 internal fun rankCandidates(candidates: List<RankingCandidate>): List<RankingEntry> {
@@ -135,6 +295,7 @@ internal fun rankCandidates(candidates: List<RankingCandidate>): List<RankingEnt
         previousRank = rank
         RankingEntry(
             rank = rank,
+            listIndex = index,
             characterId = candidate.characterId,
             displayName = candidate.displayName,
             heroClass = candidate.heroClass,
@@ -148,27 +309,6 @@ internal fun rankCandidates(candidates: List<RankingCandidate>): List<RankingEnt
     }
 }
 
-internal fun initialRankingUiState(
-    showPreviewData: Boolean,
-    playerName: String,
-    playerClass: HeroClass,
-    playerLevel: Long,
-    playerCombatPower: Long,
-    fetchedAtEpochMillis: Long,
-): RankingUiState = if (showPreviewData) {
-    RankingUiState.Content(
-        previewRankingSnapshot(
-            playerName = playerName,
-            playerClass = playerClass,
-            playerLevel = playerLevel,
-            playerCombatPower = playerCombatPower,
-            fetchedAtEpochMillis = fetchedAtEpochMillis,
-        ),
-    )
-} else {
-    RankingUiState.Empty("아직 집계된 순위가 없습니다")
-}
-
 internal fun rankingHeaderPresentation(uiState: RankingUiState): RankingHeaderPresentation {
     val entry = when (uiState) {
         is RankingUiState.Content -> uiState.snapshot.myEntry
@@ -176,11 +316,11 @@ internal fun rankingHeaderPresentation(uiState: RankingUiState): RankingHeaderPr
         RankingUiState.Loading,
         is RankingUiState.Empty -> null
     }
-    if (entry != null) {
-        val rank = rankingNumber(entry.rank.toLong())
+    if (entry != null && entry.rank > 0) {
+        val rank = rankingPositionLabel(entry.rank)
         return RankingHeaderPresentation(
-            visualLabel = "전체 ${rank}위",
-            accessibilityLabel = "전체 순위 ${rank}위",
+            visualLabel = "전체 $rank",
+            accessibilityLabel = "전체 순위 $rank",
             isRanked = true,
         )
     }
@@ -193,141 +333,86 @@ internal fun rankingHeaderPresentation(uiState: RankingUiState): RankingHeaderPr
     )
 }
 
-internal fun previewRankingSnapshot(
-    playerName: String,
-    playerClass: HeroClass,
-    playerLevel: Long,
-    playerCombatPower: Long,
-    fetchedAtEpochMillis: Long,
-): RankingSnapshot {
-    val power = playerCombatPower.coerceAtLeast(0L)
-    val verifiedAt = fetchedAtEpochMillis
-    val candidates = listOf(
-        previewCandidate("mock-01", "잿빛왕관", HeroClass.PALADIN, playerLevel + 19L, powerAbove(power, 40), fetchedAtEpochMillis - 720_000L, verifiedAt),
-        previewCandidate("mock-02", "새벽의방패", HeroClass.WARRIOR, playerLevel + 15L, powerAbove(power, 31), fetchedAtEpochMillis - 650_000L, verifiedAt),
-        previewCandidate("mock-03", "북풍의서약", HeroClass.RANGER, playerLevel + 14L, powerAbove(power, 31), fetchedAtEpochMillis - 620_000L, verifiedAt),
-        previewCandidate("mock-04", "별을읽는자", HeroClass.MAGE, playerLevel + 12L, powerAbove(power, 23), fetchedAtEpochMillis - 560_000L, verifiedAt),
-        previewCandidate("mock-05", "유리숲을걷는긴이름의모험가", HeroClass.CLERIC, playerLevel + 9L, powerAbove(power, 17), fetchedAtEpochMillis - 500_000L, verifiedAt),
-        previewCandidate("mock-06", "검은실", HeroClass.ROGUE, playerLevel + 7L, powerAbove(power, 11), fetchedAtEpochMillis - 440_000L, verifiedAt),
-        previewCandidate("mock-07", "황혼나침반", HeroClass.RANGER, playerLevel + 4L, powerAbove(power, 5), fetchedAtEpochMillis - 380_000L, verifiedAt),
-        RankingCandidate(
-            characterId = "preview-me",
-            displayName = playerName.ifBlank { "나의 모험가" },
-            heroClass = playerClass,
-            level = playerLevel,
-            score = power,
-            achievedAtEpochMillis = fetchedAtEpochMillis - 320_000L,
-            verifiedAtEpochMillis = verifiedAt,
-            isMe = true,
-        ),
-        previewCandidate("mock-09", "고요한불씨", HeroClass.MAGE, (playerLevel - 2L).coerceAtLeast(1L), powerBelow(power, 4), fetchedAtEpochMillis - 260_000L, verifiedAt),
-        previewCandidate("mock-10", "철빛여우", HeroClass.ROGUE, (playerLevel - 4L).coerceAtLeast(1L), powerBelow(power, 9), fetchedAtEpochMillis - 200_000L, verifiedAt),
-        previewCandidate("mock-11", "작은성화", HeroClass.CLERIC, (playerLevel - 6L).coerceAtLeast(1L), powerBelow(power, 14), fetchedAtEpochMillis - 140_000L, verifiedAt),
-    )
-    val ranked = rankCandidates(candidates)
-    val myEntry = checkNotNull(ranked.singleOrNull { it.isMe })
-    return RankingSnapshot(
-        snapshotId = "preview-$fetchedAtEpochMillis",
-        source = RankingSnapshotSource.MOCK,
-        fetchedAtEpochMillis = fetchedAtEpochMillis,
-        formulaVersion = 0,
-        totalParticipants = 1_284,
-        entries = ranked.take(10),
-        myEntry = myEntry,
-    )
-}
-
-private fun previewCandidate(
-    characterId: String,
-    displayName: String,
-    heroClass: HeroClass,
-    level: Long,
-    score: Long,
-    achievedAtEpochMillis: Long,
-    verifiedAtEpochMillis: Long,
-): RankingCandidate = RankingCandidate(
-    characterId = characterId,
-    displayName = displayName,
-    heroClass = heroClass,
-    level = level.coerceAtLeast(1L),
-    score = score,
-    achievedAtEpochMillis = achievedAtEpochMillis,
-    verifiedAtEpochMillis = verifiedAtEpochMillis,
-)
-
-private fun powerAbove(base: Long, percent: Int): Long {
-    val delta = percentageDelta(base, percent).coerceAtLeast(1L)
-    return if (base > Long.MAX_VALUE - delta) Long.MAX_VALUE else base + delta
-}
-
-private fun powerBelow(base: Long, percent: Int): Long =
-    (base - percentageDelta(base, percent).coerceAtLeast(1L)).coerceAtLeast(0L)
-
-private fun percentageDelta(base: Long, percent: Int): Long {
-    val safeBase = base.coerceAtLeast(0L)
-    return (safeBase / 100L) * percent + ((safeBase % 100L) * percent) / 100L
-}
-
 @Composable
 internal fun RankingEntryMenu(
     uiState: RankingUiState,
     onClick: () -> Unit,
 ) {
     val myEntry = (uiState as? RankingUiState.Content)?.snapshot?.myEntry
-    val detail = if (myEntry == null) {
-        "순위 미집계"
-    } else {
-        "${myEntry.rank}위 · ${myEntry.honorific}"
-    }
-    Row(
+    val detail = rankingEntryMenuDetail(myEntry)
+    Button(
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 56.dp)
-            .clip(RoundedCornerShape(14.dp))
-            .background(AqSurfaceHigh)
-            .border(1.dp, Color(0xFF46394F), RoundedCornerShape(14.dp))
-            .clickable(
-                role = Role.Button,
-                onClickLabel = "모험가 랭킹 열기",
-                onClick = onClick,
-            )
+            .heightIn(min = 64.dp)
             .semantics(mergeDescendants = true) {
-                contentDescription = "모험가 랭킹, $detail"
-            }
-            .padding(horizontal = 14.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
+                contentDescription = localized("모험가 랭킹, $detail, 보기 버튼")
+            },
+        shape = RoundedCornerShape(14.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = AqGold.copy(alpha = 0.12f),
+            contentColor = AqText,
+        ),
+        border = BorderStroke(1.dp, AqGoldSoft),
+        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
     ) {
-        Icon(
-            imageVector = Icons.Filled.Leaderboard,
-            contentDescription = null,
-            tint = AqGold,
-            modifier = Modifier.size(24.dp),
-        )
-        Spacer(Modifier.width(10.dp))
-        Column(Modifier.weight(1f)) {
-            Text(
-                text = "모험가 랭킹",
-                color = AqText,
-                fontSize = 14.sp,
-                lineHeight = 18.sp,
-                fontWeight = FontWeight.Bold,
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Leaderboard,
+                contentDescription = null,
+                tint = AqGold,
+                modifier = Modifier.size(26.dp),
             )
+            Spacer(Modifier.width(10.dp))
+            Column(Modifier.weight(1f)) {
+                Text(
+                    text = "모험가 랭킹",
+                    color = AqText,
+                    fontSize = 15.sp,
+                    lineHeight = 19.sp,
+                    fontWeight = FontWeight.Black,
+                )
+                Text(
+                    text = detail,
+                    color = if (myEntry == null) AqMuted else AqGold,
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            Spacer(Modifier.width(8.dp))
             Text(
-                text = detail,
-                color = if (myEntry == null) AqMuted else AqGold,
+                text = "보기",
+                color = AqGold,
                 fontSize = 12.sp,
-                lineHeight = 16.sp,
+                fontWeight = FontWeight.Black,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+            )
+            Spacer(Modifier.width(2.dp))
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = AqGold,
+                modifier = Modifier.size(20.dp),
             )
         }
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = null,
-            tint = AqMuted,
-            modifier = Modifier.size(22.dp),
-        )
     }
+}
+
+internal fun rankingEntryMenuDetail(entry: RankingEntry?): String = when {
+    entry == null -> "순위 미집계"
+    entry.rank <= 0 -> entry.honorific
+    else -> "${rankingPositionLabel(entry.rank)} · ${entry.honorific}"
+}
+
+internal fun rankingPositionLabel(rank: Int): String = when {
+    rank > MAX_DISPLAYED_RANK -> "${rankingNumber(MAX_DISPLAYED_RANK.toLong())}위 밖"
+    rank > 0 -> "${rankingNumber(rank.toLong())}위"
+    else -> "순위 없음"
 }
 
 @Composable
@@ -350,7 +435,7 @@ internal fun RankingScreen(
                 if (cached == null) {
                     RankingMessageState(
                         title = "랭킹을 불러오지 못했습니다",
-                        detail = uiState.message,
+                        detail = "네트워크 연결을 확인한 뒤 다시 시도해 주세요.",
                         actionLabel = "다시 시도",
                         onAction = onRetry,
                     )
@@ -379,7 +464,7 @@ private fun RankingTopBar(uiState: RankingUiState, onBack: () -> Unit) {
         IconButton(onClick = onBack, modifier = Modifier.size(48.dp)) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                contentDescription = "캐릭터 화면으로 돌아가기",
+                contentDescription = localized("캐릭터 화면으로 돌아가기"),
                 tint = AqText,
                 modifier = Modifier.size(26.dp),
             )
@@ -395,7 +480,7 @@ private fun RankingTopBar(uiState: RankingUiState, onBack: () -> Unit) {
             )
             if (fetchedAt != null) {
                 Text(
-                    text = "${rankingTimeLabel(fetchedAt)} 기준",
+                    text = "${rankingTimeLabel(fetchedAt, LocalAppLanguage.current)} 기준",
                     color = AqMuted,
                     fontSize = 12.sp,
                     lineHeight = 16.sp,
@@ -410,6 +495,30 @@ private fun RankingContent(
     snapshot: RankingSnapshot,
     warning: String? = null,
 ) {
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    val myRankingListIndex = remember(snapshot.entries, snapshot.myEntry.characterId) {
+        snapshot.entries.indexOfFirst { it.characterId == snapshot.myEntry.characterId }
+            .takeIf { it >= 0 }
+            ?.plus(RANKING_LIST_ITEM_OFFSET)
+    }
+    val isAtTop by remember(listState) {
+        derivedStateOf {
+            listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
+        }
+    }
+    val isMyRankingMoveEnabled by remember(listState, myRankingListIndex) {
+        derivedStateOf {
+            val visibleIndices = listState.layoutInfo.visibleItemsInfo.mapTo(mutableSetOf()) { it.index }
+            shouldEnableMyRankingMove(myRankingListIndex, visibleIndices)
+        }
+    }
+    val quickMoveColors = ButtonDefaults.buttonColors(
+        containerColor = AqSurfaceHigh,
+        contentColor = AqGold,
+        disabledContainerColor = AqSurface,
+        disabledContentColor = AqMuted.copy(alpha = 0.45f),
+    )
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
     ) {
@@ -427,46 +536,96 @@ private fun RankingContent(
                 lineHeight = 17.sp,
             )
         }
-        MyRankingCard(snapshot.myEntry)
         Row(
-            modifier = Modifier.fillMaxWidth().padding(start = 4.dp, top = 14.dp, end = 4.dp, bottom = 2.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
+            horizontalArrangement = Arrangement.End,
         ) {
-            Text(
-                text = "전체 랭킹",
-                modifier = Modifier.semantics { heading() },
-                color = AqText,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-            )
-            Spacer(Modifier.weight(1f))
-            Text(
-                "전투력 순",
-                color = AqGold,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-            )
+            Button(
+                onClick = {
+                    scope.launch { listState.animateScrollToItem(RANKING_MY_CARD_INDEX) }
+                },
+                enabled = !isAtTop,
+                colors = quickMoveColors,
+                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 7.dp),
+            ) {
+                Text("최상단", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            }
+            Spacer(Modifier.width(8.dp))
+            Button(
+                onClick = {
+                    scope.launch {
+                        myRankingListIndex?.let { listState.scrollToItemCentered(it) }
+                    }
+                },
+                enabled = isMyRankingMoveEnabled,
+                colors = quickMoveColors,
+                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 7.dp),
+            ) {
+                Text("내 순위", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            }
         }
         LazyColumn(
+            state = listState,
             modifier = Modifier.weight(1f).fillMaxWidth(),
             contentPadding = PaddingValues(top = 6.dp, bottom = 14.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            items(snapshot.entries, key = RankingEntry::characterId) { entry ->
+            item(key = "my-ranking-card") {
+                MyRankingCard(snapshot.myEntry)
+            }
+            item(key = "ranking-heading") {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(start = 4.dp, top = 8.dp, end = 4.dp, bottom = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "전체 랭킹 · ${rankingNumber(snapshot.totalParticipants.toLong())}명",
+                        modifier = Modifier.semantics { heading() },
+                        color = AqText,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
+            itemsIndexed(snapshot.entries, key = { _, entry -> entry.characterId }) { _, entry ->
                 RankingListRow(entry)
             }
         }
     }
 }
 
+private suspend fun LazyListState.scrollToItemCentered(index: Int) {
+    scrollToItem(index)
+    val target = layoutInfo.visibleItemsInfo.firstOrNull { it.index == index } ?: return
+    val viewportCenter = (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
+    val targetCenter = target.offset + target.size / 2
+    scrollBy((targetCenter - viewportCenter).toFloat())
+}
+
+private const val RANKING_MY_CARD_INDEX = 0
+private const val RANKING_LIST_ITEM_OFFSET = 2
+
 @Composable
 private fun MyRankingCard(entry: RankingEntry) {
+    val isOutsideDisplayedRanking = entry.rank > MAX_DISPLAYED_RANK
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 104.dp)
             .semantics(mergeDescendants = true) {
-                contentDescription = "내 순위 ${entry.rank}위, ${entry.displayName}, 호칭 ${entry.honorific}, 전투력 ${rankingNumber(entry.combatPower)}"
+                val rankingDescription = if (entry.level < 20L) {
+                    "랭킹 참가까지 레벨 20, 현재 레벨 ${entry.level}, ${entry.displayName}"
+                } else if (isOutsideDisplayedRanking) {
+                    "내 순위 ${rankingPositionLabel(entry.rank)}, ${entry.displayName}, 호칭 ${entry.honorific}, 전투력 ${rankingNumber(entry.combatPower)}"
+                } else if (entry.rank > 0) {
+                    "내 순위 ${entry.rank}위, ${entry.displayName}, 호칭 ${entry.honorific}, 전투력 ${rankingNumber(entry.combatPower)}"
+                } else {
+                    "내 순위 없음, ${entry.displayName}, 전투력 ${rankingNumber(entry.combatPower)}"
+                }
+                contentDescription = localizedPreserving(
+                    rankingDescription,
+                    entry.displayName,
+                )
             },
         colors = CardDefaults.cardColors(containerColor = AqGold.copy(alpha = 0.10f)),
         border = BorderStroke(1.dp, AqGoldSoft),
@@ -479,9 +638,13 @@ private fun MyRankingCard(entry: RankingEntry) {
             Column(modifier = Modifier.width(78.dp)) {
                 Text("내 순위", color = AqGold, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 Text(
-                    text = "#${rankingNumber(entry.rank.toLong())}",
+                    text = when {
+                        isOutsideDisplayedRanking -> rankingPositionLabel(entry.rank)
+                        entry.rank > 0 -> "#${rankingNumber(entry.rank.toLong())}"
+                        else -> "—"
+                    },
                     color = AqText,
-                    fontSize = 29.sp,
+                    fontSize = if (isOutsideDisplayedRanking) 14.sp else 29.sp,
                     lineHeight = 32.sp,
                     fontWeight = FontWeight.Black,
                     maxLines = 1,
@@ -490,18 +653,15 @@ private fun MyRankingCard(entry: RankingEntry) {
             Box(Modifier.width(1.dp).height(58.dp).background(AqGoldSoft.copy(alpha = 0.65f)))
             Spacer(Modifier.width(14.dp))
             Column(Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = entry.displayName,
-                        modifier = Modifier.weight(1f),
-                        color = AqText,
-                        fontSize = 16.sp,
-                        lineHeight = 21.sp,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
+                UnlocalizedText(
+                    text = entry.displayName,
+                    color = AqText,
+                    fontSize = 16.sp,
+                    lineHeight = 21.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
                 Text(
                     text = entry.honorific,
                     color = AqGold,
@@ -539,12 +699,15 @@ private fun RankingListRow(entry: RankingEntry) {
             .background(if (entry.isMe) AqGold.copy(alpha = 0.09f) else AqSurface)
             .then(if (entry.isMe) Modifier.border(1.dp, AqGoldSoft, shape) else Modifier)
             .semantics(mergeDescendants = true) {
-                contentDescription = buildString {
-                    append("${entry.rank}위, ")
-                    if (entry.isMe) append("나, ")
-                    append("${entry.displayName}, ${entry.heroClass.labelKo}, 레벨 ${entry.level}, ")
-                    append("호칭 ${entry.honorific}, 전투력 ${rankingNumber(entry.combatPower)}")
-                }
+                contentDescription = localizedPreserving(
+                    buildString {
+                        append("${entry.rank}위, ")
+                        if (entry.isMe) append("나, ")
+                        append("${entry.displayName}, ${entry.heroClass.labelKo}, 레벨 ${entry.level}, ")
+                        append("호칭 ${entry.honorific}, 전투력 ${rankingNumber(entry.combatPower)}")
+                    },
+                    entry.displayName,
+                )
             }
             .padding(horizontal = 12.dp, vertical = 9.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -561,7 +724,7 @@ private fun RankingListRow(entry: RankingEntry) {
         Spacer(Modifier.width(8.dp))
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
+                UnlocalizedText(
                     text = entry.displayName,
                     modifier = Modifier.weight(1f),
                     color = AqText,
@@ -656,9 +819,18 @@ private fun RankingMessageState(
 private fun rankingNumber(value: Long): String =
     NumberFormat.getNumberInstance(Locale.KOREA).format(value)
 
-private fun rankingTimeLabel(epochMillis: Long): String =
-    RANKING_TIME_FORMATTER.format(Instant.ofEpochMilli(epochMillis))
+private fun rankingTimeLabel(
+    epochMillis: Long,
+    language: com.alarmquest.localization.AppLanguage,
+): String = rankingTimeFormatter(language).format(Instant.ofEpochMilli(epochMillis))
 
-private val RANKING_TIME_FORMATTER: DateTimeFormatter =
-    DateTimeFormatter.ofPattern("M월 d일 HH:mm", Locale.KOREA)
-        .withZone(ZoneId.of("Asia/Seoul"))
+private fun rankingTimeFormatter(
+    language: com.alarmquest.localization.AppLanguage,
+): DateTimeFormatter = when (language) {
+    com.alarmquest.localization.AppLanguage.ENGLISH ->
+        DateTimeFormatter.ofPattern("MMM d, HH:mm", Locale.ENGLISH)
+    com.alarmquest.localization.AppLanguage.JAPANESE ->
+        DateTimeFormatter.ofPattern("M月d日 HH:mm", Locale.JAPANESE)
+    com.alarmquest.localization.AppLanguage.KOREAN ->
+        DateTimeFormatter.ofPattern("M월 d일 HH:mm", Locale.KOREA)
+}.withZone(ZoneId.of("Asia/Seoul"))

@@ -26,7 +26,8 @@ internal data class SkillDefinition(
     val candidate: Int,
     val name: String,
     val description: String,
-    val damagePercent: Int,
+    val damagePercentMin: Int,
+    val damagePercentMax: Int,
     val hitWeights: List<Int>,
     val hitTimingsMillis: List<Int>,
     val element: SkillElement,
@@ -40,23 +41,28 @@ internal data class SkillDefinition(
 }
 
 internal object SkillCatalog {
-    private const val CANDIDATES_PER_TIER = 5
     private const val MAX_TIER = 20
     private const val CATALOG_SEED_SALT = 0x2F63_1A4D_7B29_5CE1L
 
-    private val catalogNames: Map<HeroClass, List<List<String>>> by lazy(::createCatalogNames)
+    private data class SignatureSkill(
+        val catalogId: String,
+        val name: String,
+        val hitCount: Int,
+    )
+
+    private val signatureSkills: Map<HeroClass, List<SignatureSkill>> by lazy(::createSignatureSkills)
     val all: List<SkillDefinition> = HeroClass.entries.flatMap(::buildClassCatalog)
     private val byId = all.associateBy(SkillDefinition::catalogId)
     private val byClass = all.groupBy(SkillDefinition::heroClass)
 
     init {
-        require(all.size == HeroClass.entries.size * MAX_TIER * CANDIDATES_PER_TIER)
+        require(all.size == HeroClass.entries.size * MAX_TIER)
         require(byId.size == all.size)
         HeroClass.entries.forEach { heroClass ->
             val definitions = byClass.getValue(heroClass)
-            require(definitions.size == 100)
+            require(definitions.size == MAX_TIER)
             require(definitions.map { it.name }.distinct().size == definitions.size)
-            require((1..MAX_TIER).all { tier -> definitions.count { it.unlockLevel == tier * 5 } == 5 })
+            require(definitions.map { it.unlockLevel } == listOf(1) + (5..95 step 5).toList())
         }
         all.forEach { definition ->
             require(definition.hitWeights.size in 1..12)
@@ -72,12 +78,9 @@ internal object SkillCatalog {
 
     fun forClass(heroClass: HeroClass): List<SkillDefinition> = byClass.getValue(heroClass)
 
-    fun select(skillCatalogSeed: Long, heroClass: HeroClass, tier: Int): SkillDefinition {
+    fun select(@Suppress("UNUSED_PARAMETER") skillCatalogSeed: Long, heroClass: HeroClass, tier: Int): SkillDefinition {
         val safeTier = tier.coerceIn(1, MAX_TIER)
-        val candidate = candidateIndex(skillCatalogSeed, heroClass, safeTier)
-        return byClass.getValue(heroClass).first {
-            it.unlockLevel == safeTier * 5 && it.candidate == candidate
-        }
+        return byClass.getValue(heroClass)[safeTier - 1]
     }
 
     fun deriveSeed(seed: Long, heroClass: HeroClass): Long {
@@ -100,103 +103,50 @@ internal object SkillCatalog {
         return result
     }
 
-    private fun candidateIndex(seed: Long, heroClass: HeroClass, tier: Int): Int {
-        val mixed = mix64(
-            seed xor
-                ((heroClass.ordinal + 1L) * 0x1F12_3BB5_9A77_4D21L) xor
-                (tier.toLong() * 0x0D6E_8FEB_8665_9FD9L),
-        )
-        return ((mixed ushr 1) % CANDIDATES_PER_TIER.toLong()).toInt()
+    fun damagePercentRange(tier: Int): IntRange {
+        val safeTier = tier.coerceIn(1, MAX_TIER)
+        val minimum = 90 + (safeTier - 1) * 20
+        return minimum..(minimum + 10)
     }
 
     private fun buildClassCatalog(heroClass: HeroClass): List<SkillDefinition> {
-        val rows = catalogNames.getValue(heroClass)
-        require(rows.size == MAX_TIER)
-        return rows.flatMapIndexed { tierIndex, row ->
-            require(row.size == CANDIDATES_PER_TIER)
-            row.mapIndexed { candidate, name ->
-                val tier = tierIndex + 1
-                val hitCount = if (heroClass == HeroClass.WARRIOR) {
-                    warriorHitCount(tier, candidate)
+        val skills = signatureSkills.getValue(heroClass)
+        require(skills.size == MAX_TIER)
+        return skills.mapIndexed { tierIndex, signature ->
+            val tier = tierIndex + 1
+            val candidate = signature.catalogId.substringAfterLast("_c").toInt() - 1
+            require(signature.catalogId.startsWith("${heroClass.name.lowercase()}_t${tier.toString().padStart(2, '0')}_"))
+            require(candidate in 0..4)
+            val timingProfile = SkillTimingProfile.entries[(tier + candidate) % SkillTimingProfile.entries.size]
+            val element = elementFor(heroClass, candidate, tier, signature.name)
+            val motion = motionFor(heroClass, candidate, tier, signature.name)
+            val damagePercentRange = damagePercentRange(tier)
+            SkillDefinition(
+                catalogId = signature.catalogId,
+                heroClass = heroClass,
+                unlockLevel = if (tier == 1) 1 else (tier - 1) * 5,
+                candidate = candidate,
+                name = signature.name,
+                description = if (signature.hitCount == 1) {
+                    "${signature.name} 기술로 적을 강하게 공격한다."
                 } else {
-                    explicitHitCount(name) ?: hitCount(heroClass, candidate, tier, name)
-                }
-                val timingProfile = SkillTimingProfile.entries[(tier + candidate) % SkillTimingProfile.entries.size]
-                val element = elementFor(heroClass, candidate, tier, name)
-                val motion = motionFor(heroClass, candidate, tier, name)
-                SkillDefinition(
-                    catalogId = "${heroClass.name.lowercase()}_t${tier.toString().padStart(2, '0')}_c${(candidate + 1).toString().padStart(2, '0')}",
-                    heroClass = heroClass,
-                    unlockLevel = tier * 5,
-                    candidate = candidate,
-                    name = name,
-                    description = if (hitCount == 1) {
-                        "$name 기술로 적을 강하게 공격한다."
-                    } else {
-                        "$name 기술로 적을 ${hitCount}회 연속 공격한다."
-                    },
-                    damagePercent = 120 + (tier - 1) * 3,
-                    hitWeights = weightsFor(hitCount),
-                    hitTimingsMillis = timingsFor(
-                        hitCount = hitCount,
-                        profile = timingProfile,
-                        singleImpactMillis = singleImpactMillisFor(heroClass, candidate),
-                    ),
-                    element = element,
-                    motion = motion,
-                    timingProfile = timingProfile,
-                    finisher = finisherFor(element, motion, tier, candidate),
-                    effectVariant = (tier + candidate) % 4,
-                    intensityTier = ((tier - 1) / 4 + 1).coerceIn(1, 5),
-                )
-            }
+                    "${signature.name} 기술로 적을 ${signature.hitCount}회 연속 공격한다."
+                },
+                damagePercentMin = damagePercentRange.first,
+                damagePercentMax = damagePercentRange.last,
+                hitWeights = weightsFor(signature.hitCount),
+                hitTimingsMillis = authoredHitTimingsFor(
+                    catalogId = signature.catalogId,
+                    hitCount = signature.hitCount,
+                ),
+                element = element,
+                motion = motion,
+                timingProfile = timingProfile,
+                finisher = finisherFor(element, motion, tier, candidate),
+                effectVariant = (tier + candidate) % 4,
+                intensityTier = ((tier - 1) / 4 + 1).coerceIn(1, 5),
+            )
         }
-    }
-
-    private fun singleImpactMillisFor(heroClass: HeroClass, candidate: Int): Int {
-        val safeCandidate = candidate.coerceIn(0, 4)
-        return when (heroClass) {
-            HeroClass.WARRIOR -> 420
-            HeroClass.ROGUE -> intArrayOf(340, 500, 440, 520, 580)[safeCandidate]
-            HeroClass.RANGER -> intArrayOf(500, 340, 420, 500, 560)[safeCandidate]
-            HeroClass.MAGE -> intArrayOf(440, 520, 300, 580, 600)[safeCandidate]
-            HeroClass.CLERIC -> intArrayOf(480, 560, 520, 450, 580)[safeCandidate]
-            HeroClass.PALADIN -> intArrayOf(420, 440, 560, 480, 600)[safeCandidate]
-        }
-    }
-
-    private fun hitCount(heroClass: HeroClass, candidate: Int, tier: Int, name: String): Int {
-        val range = when (heroClass) {
-            HeroClass.WARRIOR -> error("Warrior uses catalog hit counts")
-            HeroClass.ROGUE -> listOf(2..5, 1..3, 2..4, 2..4, 1..1)
-            HeroClass.RANGER -> listOf(1..1, 3..5, 2..4, 2..3, 1..3)
-            HeroClass.MAGE -> listOf(1..3, 1..4, 2..5, 1..3, 1..5)
-            HeroClass.CLERIC -> listOf(1..3, 1..1, 2..4, 1..3, 2..5)
-            HeroClass.PALADIN -> listOf(1..3, 1..2, 1..1, 2..4, 1..5)
-        }[candidate]
-        return range.first + ((tier + candidate) % (range.last - range.first + 1))
-    }
-
-    /** Exact number words are a player-facing promise and always beat candidate defaults. */
-    private fun explicitHitCount(name: String): Int? = when {
-        name.contains("일격") || name == "만악 종결광" -> 1
-        name == "비수 난무" -> 4
-        name == "차원 연쇄" || name == "성광 검무" -> 3
-        name == "성검 회오리" || name == "대천사 성검" -> 3
-        name.contains("십이연") -> 12
-        name.containsAny("백련", "무한 참격") -> 10
-        name.contains("일곱") || name.contains("칠연") -> 7
-        name.contains("오연") -> 5
-        name.containsAny("네 갈래", "사방") -> 4
-        name.containsAny("세 갈래", "삼연", "삼중") -> 3
-        name.containsAny("쌍침", "십자참", "십자 베기") -> 2
-        else -> null
-    }
-
-    /** Warrior hit choreography is stable catalog data, never a side effect of display wording. */
-    private fun warriorHitCount(tier: Int, candidate: Int): Int {
-        if (candidate != 4) return 1
-        return intArrayOf(3, 3, 5, 5, 5, 6, 4, 7, 6, 7, 7, 7, 6, 10, 8, 12, 9, 8, 10, 12)[tier - 1]
     }
 
     private fun weightsFor(hitCount: Int): List<Int> = when (hitCount) {
@@ -219,71 +169,31 @@ internal object SkillCatalog {
         }
     }
 
-    private fun timingsFor(
-        hitCount: Int,
-        profile: SkillTimingProfile,
-        singleImpactMillis: Int = 420,
-    ): List<Int> = when (hitCount) {
-        1 -> listOf(singleImpactMillis)
-        2 -> when (profile) {
-            SkillTimingProfile.RAPID -> listOf(180, 500)
-            SkillTimingProfile.EVEN -> listOf(240, 680)
-            SkillTimingProfile.DELAYED_FINISH -> listOf(220, 780)
-            SkillTimingProfile.ACCELERATE -> listOf(330, 650)
-            SkillTimingProfile.DECELERATE -> listOf(170, 690)
-        }
-        3 -> when (profile) {
-            SkillTimingProfile.RAPID -> listOf(140, 300, 520)
-            SkillTimingProfile.EVEN -> listOf(180, 430, 720)
-            SkillTimingProfile.DELAYED_FINISH -> listOf(170, 360, 790)
-            SkillTimingProfile.ACCELERATE -> listOf(260, 470, 650)
-            SkillTimingProfile.DECELERATE -> listOf(140, 420, 780)
-        }
-        4 -> when (profile) {
-            SkillTimingProfile.RAPID -> listOf(120, 250, 390, 580)
-            SkillTimingProfile.EVEN -> listOf(140, 320, 520, 760)
-            SkillTimingProfile.DELAYED_FINISH -> listOf(130, 280, 450, 810)
-            SkillTimingProfile.ACCELERATE -> listOf(260, 450, 600, 720)
-            SkillTimingProfile.DECELERATE -> listOf(110, 310, 550, 800)
-        }
-        5 -> when (profile) {
-            SkillTimingProfile.RAPID -> listOf(100, 210, 330, 460, 620)
-            SkillTimingProfile.EVEN -> listOf(110, 250, 400, 570, 780)
-            SkillTimingProfile.DELAYED_FINISH -> listOf(100, 220, 350, 500, 820)
-            SkillTimingProfile.ACCELERATE -> listOf(260, 430, 560, 660, 740)
-            SkillTimingProfile.DECELERATE -> listOf(90, 250, 450, 650, 820)
-        }
-        else -> extendedTimingsFor(hitCount, profile)
-    }
-
-    private fun extendedTimingsFor(hitCount: Int, profile: SkillTimingProfile): List<Int> {
-        val start = when (profile) {
-            SkillTimingProfile.RAPID -> 80
-            SkillTimingProfile.EVEN -> 100
-            SkillTimingProfile.DELAYED_FINISH -> 90
-            SkillTimingProfile.ACCELERATE -> 150
-            SkillTimingProfile.DECELERATE -> 70
-        }
-        val end = when (profile) {
-            SkillTimingProfile.RAPID -> 710
-            SkillTimingProfile.EVEN -> 770
-            SkillTimingProfile.DELAYED_FINISH -> 790
-            SkillTimingProfile.ACCELERATE -> 750
-            SkillTimingProfile.DECELERATE -> 780
-        }
-        var previous = start - 1
-        return List(hitCount) { index ->
-            val progress = index.toDouble() / (hitCount - 1).toDouble()
-            val curved = when (profile) {
-                SkillTimingProfile.RAPID -> progress
-                SkillTimingProfile.EVEN -> progress
-                SkillTimingProfile.DELAYED_FINISH -> if (index == hitCount - 1) 1.0 else progress * 0.72
-                SkillTimingProfile.ACCELERATE -> 1.0 - Math.pow(1.0 - progress, 1.45)
-                SkillTimingProfile.DECELERATE -> Math.pow(progress, 1.45)
+    /**
+     * The reviewed sprite sheets share an F01-F09 attack contract: buildup occupies F01-F07,
+     * contact starts around F08 and the final/strongest hit lands on F09 (about 500 ms).
+     * Explicit exceptions mirror the authored web VFX metadata.
+     */
+    private fun authoredHitTimingsFor(catalogId: String, hitCount: Int): List<Int> = when (catalogId) {
+        "warrior_t01_c01" -> listOf(490)
+        "warrior_t03_c02" -> listOf(250)
+        "warrior_t06_c05" -> listOf(63, 125, 188, 250, 313, 500)
+        "warrior_t14_c03",
+        "warrior_t17_c01",
+        "warrior_t18_c02",
+        "warrior_t19_c02",
+        "warrior_t20_c01",
+        -> listOf(800)
+        "warrior_t16_c05" -> listOf(63, 100, 138, 175, 213, 250, 288, 325, 363, 400, 438, 500)
+        else -> when (hitCount) {
+            1 -> listOf(500)
+            2 -> listOf(313, 500)
+            3 -> listOf(188, 313, 500)
+            4 -> listOf(125, 250, 375, 500)
+            5 -> listOf(125, 219, 313, 406, 500)
+            else -> List(hitCount) { index ->
+                63 + ((500 - 63) * index / (hitCount - 1).coerceAtLeast(1))
             }
-            val timing = (start + (end - start) * curved).toInt().coerceAtLeast(previous + 34)
-            previous = timing
-            timing
         }
     }
 
@@ -460,155 +370,158 @@ internal object SkillCatalog {
         return z xor (z ushr 31)
     }
 
-    private fun rows(value: String): List<List<String>> = value.trimIndent()
+    private fun signatureRows(value: String): List<SignatureSkill> = value.trimIndent()
         .lineSequence()
         .filter(String::isNotBlank)
-        .map { line -> line.split('|').map(String::trim) }
+        .map { line ->
+            val (catalogId, name, hitCount) = line.split('|').map(String::trim)
+            SignatureSkill(catalogId, name, hitCount.toInt())
+        }
         .toList()
 
-    private fun createCatalogNames(): Map<HeroClass, List<List<String>>> = mapOf(
-        HeroClass.WARRIOR to rows(
+    private fun createSignatureSkills(): Map<HeroClass, List<SignatureSkill>> = mapOf(
+        HeroClass.WARRIOR to signatureRows(
             """
-            칼날 베기|완력 내려찍기|전열 돌진|지면 발구르기|거친 연속참
-            반월 가르기|갑주 깨부수기|방패 돌파|땅울림 강타|강철 연격
-            전열 베기|철퇴 강타|맹진 찌르기|암반 쪼개기|맹수 난격
-            강철 양단|투구 박살|공성 돌격|바위기둥 솟구침|전장 난무
-            대검 절단|전투도끼 낙하|철쐐기 돌파|지반 내려찍기|광전 난격
-            대검 회전참|거인철퇴|중갑 돌진|단층 깨뜨리기|광폭 연참
-            맹호 참격|골절 대강타|돌격 분쇄|대지 뒤엎기|혈전 연격
-            용맹 대절단|성문 깨기|전차 충돌|지축 파쇄타|백전 난격
-            철갑 회전참|공성 대강타|불굴 진격|균열 폭쇄|광란 대난격
-            성벽 양단|요새 분쇄|선봉 쇄도|지층 솟구침|철혈 연참
-            검호의 대참|파성 철퇴|불패 돌파|협곡 균열타|불굴 난무
-            거인 가르기|거구 분쇄|군왕 진군|산맥 붕괴타|전쟁광 연격
-            전쟁군주 참격|용골 대파쇄|철혈 관통|전장 지반격파|폭군 난격
-            대장군 대절단|절벽 깨부수기|군단 대돌파|지각 대폭쇄|군왕 연참
-            군왕의 일도|군왕 강타|군왕 돌진|거산 함몰타|패왕 대난무
-            패왕 양단|패왕 대강타|성채 대돌파|철옹성 지반붕쇄|용살 연속참
-            용살 대참|태산 대붕괴|용살 쇄도|산하 대파쇄|전쟁왕 광란
-            전쟁왕 대참격|전쟁왕 대철퇴|패왕 대진군|만산 대붕괴|천하 난무
-            만군 대양단|대륙 파쇄타|불퇴 대돌파|대륙 대붕쇄|만군 대참무
-            천하대양단|무쌍 대분쇄|천하무패 돌격|천하붕쇄|멸군광란
+            warrior_t01_c01|칼날 베기|1
+            warrior_t02_c03|강철 베기|1
+            warrior_t03_c02|파쇄격|1
+            warrior_t04_c03|대지 가르기|1
+            warrior_t05_c02|십자 참격|1
+            warrior_t06_c05|폭풍 베기|6
+            warrior_t07_c01|철갑 돌진|1
+            warrior_t08_c02|전장의 돌격|1
+            warrior_t09_c03|회오리 참격|1
+            warrior_t10_c01|대지 분쇄|1
+            warrior_t11_c02|폭풍검|1
+            warrior_t12_c04|섬광 일섬|1
+            warrior_t13_c03|무영 연참|1
+            warrior_t14_c03|용살검|1
+            warrior_t15_c01|멸천 일섬|1
+            warrior_t16_c05|무극일섬|12
+            warrior_t17_c01|파멸의 검|1
+            warrior_t18_c02|천지 가르기|1
+            warrior_t19_c02|천하대양단|1
+            warrior_t20_c01|최후의 일격|1
             """,
         ),
-        HeroClass.ROGUE to rows(
+        HeroClass.ROGUE to signatureRows(
             """
-            빠른 찌르기|그림자 베기|독니 찌르기|발목 덫|급소 베기
-            쌍아 연격|암습|녹독 파열|철사 절단|숨통 끊기
-            삼연 찌르기|잔영 습격|맹독 쌍침|올가미 강타|심장 찌르기
-            비수 난무|어둠 도약|독안개 폭침|칼날 덫|무음 처형
-            초승달 단검|그림자 교차|독액 분사|은사 포박|붉은 급소
-            질풍 쌍검|야행 습격|부식 파열|회전 올가미|사각 일격
-            네 갈래 비수|흑영 베기|사독 연침|사슬 덫|치명 절단
-            유령 난도|잔상 도약|독사 송곳니|강철 실선|영혼 찌르기
-            핏빛 쌍아|월하 암습|녹독 폭발|처형의 올가미|한밤의 급소
-            폭풍 비수|그림자 분신참|왕독 연쇄|칼날 감옥|절명 일격
-            환영 연격|심연 도약|검은독 파열|은사 난무|목숨 베기
-            백야 쌍검|무형 습격|용독 쌍침|사슬 절단진|침묵의 처형
-            악몽 비수|칠흑 교차참|독왕의 송곳니|그림자 덫|운명 절단
-            천공 단검무|공허 도약|심연독 폭침|천라지망|사신의 급소
-            별빛 쌍아|밤의 군무|맹독성 폭발|월광 철사|영혼 처형
-            무한 비수|그림자 왕의 습격|재앙독 연쇄|검은 실 감옥|존재 절단
-            신살 쌍검|심연 분신참|세계수 독침|운명 포박|왕의 숨통
-            종말의 단검무|무월 암습|종언독 파열|사신의 올가미|절대 급소
-            천야백련|그림자 세계 절단|만독 관통|인과 절단선|찰나 처형
-            무영천살|공허의 마지막 춤|독신 폭살|천망 종결|죽음의 한 점
+            rogue_t01_c01|빠른 찌르기|3
+            rogue_t02_c02|암습|1
+            rogue_t03_c03|맹독 쌍침|2
+            rogue_t04_c04|칼날 덫|3
+            rogue_t05_c01|초승달 단검|3
+            rogue_t06_c05|사각 일격|1
+            rogue_t07_c01|네 갈래 비수|4
+            rogue_t08_c02|잔상 도약|1
+            rogue_t09_c02|월하 암습|2
+            rogue_t10_c04|칼날 감옥|3
+            rogue_t11_c04|은사 난무|4
+            rogue_t12_c05|침묵의 처형|1
+            rogue_t13_c03|독왕의 송곳니|2
+            rogue_t14_c04|천라지망|4
+            rogue_t15_c04|월광 철사|2
+            rogue_t16_c04|검은 실 감옥|3
+            rogue_t17_c05|왕의 숨통|1
+            rogue_t18_c01|종말의 단검무|4
+            rogue_t19_c02|그림자 세계 절단|3
+            rogue_t20_c05|죽음의 한 점|1
             """,
         ),
-        HeroClass.RANGER to rows(
+        HeroClass.RANGER to signatureRows(
             """
-            정조준 사격|세 갈래 화살|산들 화살|가시 덫|달빛 화살
-            관통 사격|연속 사격|돌풍 시위|늑대 엄니|별가루 사격
-            매눈 관통|오연사|바람 가르기|올가미 화살|초승달 관통
-            약점 관통|부채꼴 사격|회오리 화살|맹수 덫|별빛 연사
-            사냥꾼의 일점|유성 화살비|질풍 관통|독가시 덫|월광 저격
-            장거리 저격|매의 깃 연사|폭풍 시위|곰발톱 강타|혜성 화살
-            철갑 관통|일곱 화살|청풍 난사|사슬 올가미|은하 사격
-            심장 조준|비익 연사|회오리 관통|송곳니 덫|보름달 일격
-            추적자의 화살|폭우 사격|폭풍 화살|매의 급강하|별무리 연사
-            왕가의 저격|천공 화살비|태풍 시위|야수의 협공|유성 관통
-            무음 관통|백발백중 연사|질풍 폭발|거대 가시 덫|월식 사격
-            천리 저격|군집 화살|폭풍왕의 화살|그리핀 급습|성좌의 화살
-            용안 조준|빛살 난무|천공 회오리|와이번 발톱|은하수 관통
-            필중의 일점|만화살 폭우|대기의 칼날|고대 야수 덫|별의 추적자
-            황금 매 저격|유성우 연사|폭풍신의 시위|왕의 사냥개|만월 파열
-            세계수 관통|무한 화살진|하늘 가르기|신수의 엄니|성운 폭격
-            용살 저격|천익 난사|창공 붕괴|별짐승 급습|별자리 관통
-            운명 조준|종말의 화살비|태풍 종결|신화의 덫|월신의 일격
-            천안 필중|백만 화살|세계풍 관통|사냥신 강습|은하 종단
-            지평선의 한 발|무한성우|창세의 바람|야생의 종언|별을 꿰는 화살
+            ranger_t01_c01|정조준 사격|1
+            ranger_t02_c02|연속 사격|3
+            ranger_t03_c04|올가미 화살|2
+            ranger_t04_c03|회오리 화살|2
+            ranger_t05_c02|유성 화살비|3
+            ranger_t06_c04|곰발톱 강타|3
+            ranger_t07_c01|철갑 관통|1
+            ranger_t08_c05|보름달 일격|1
+            ranger_t09_c04|매의 급강하|2
+            ranger_t10_c02|천공 화살비|5
+            ranger_t11_c05|월식 사격|1
+            ranger_t12_c04|그리핀 급습|3
+            ranger_t13_c05|은하수 관통|3
+            ranger_t14_c03|대기의 칼날|3
+            ranger_t15_c04|왕의 사냥개|2
+            ranger_t16_c02|무한 화살진|5
+            ranger_t17_c03|창공 붕괴|3
+            ranger_t18_c04|신화의 덫|3
+            ranger_t19_c05|은하 종단|3
+            ranger_t20_c05|성운 가르기|1
             """,
         ),
-        HeroClass.MAGE to rows(
+        HeroClass.MAGE to signatureRows(
             """
-            불씨 화살|서리 파편|전격|마력탄|별가루 폭발
-            화염구|얼음 창|연쇄 번개|비전 파동|유성 조각
-            불꽃 고리|동결 파열|삼중 낙뢰|마력 칼날|달빛 폭발
-            화염 폭발|서리 연창|뇌광 구체|비전 충격|작은 유성우
-            용암 분출|얼음 송곳비|번개 사슬|마력 회오리|성운 파동
-            불기둥|빙결 창벽|폭뢰|공간 절단|혜성 낙하
-            홍염 연폭|서리 폭풍|천둥 구체|비전 연탄|별무리 폭격
-            화염 소용돌이|빙하 파열|사방 낙뢰|차원 칼날|월식 파동
-            불새 강하|눈보라|뇌전 폭발|마력 붕괴|유성우
-            용의 화염|영구빙창|폭풍 번개|공간 왜곡파|성좌 폭발
-            지옥불 구체|빙산 낙하|청뢰 연쇄|비전 폭풍|혜성 충돌
-            태양 화염|절대영도 파열|천뢰|차원 붕괴|은하 파동
-            홍련 폭발|서리왕의 창|뇌신의 사슬|마력 핵폭발|별바다 폭격
-            용암해일|빙하 폭풍|만뢰|공허 칼날|초신성 파편
-            불사조 격돌|영겁빙쇄|폭풍신의 낙뢰|차원 연쇄|성운 붕괴
-            태양핵 폭발|세계빙벽 붕괴|천둥 종말|공간 소멸|행성 낙하
-            화신 폭발|빙신의 심판|신격 뇌전 연격|비전 특이점|별자리 붕괴
-            종말의 불바다|절대빙옥 파쇄|세계뇌전|공허 폭발|은하 충돌
-            태양을 삼킨 불꽃|시간을 얼리는 창|천벌의 만뢰|차원 종단|초신성
-            창세의 화염|영원빙설 폭발|신들의 뇌폭|무한 특이점 붕괴|우주 종말
+            mage_t01_c01|불씨 화살|2
+            mage_t02_c02|얼음 창|4
+            mage_t03_c03|삼중 낙뢰|3
+            mage_t04_c04|비전 충격|2
+            mage_t05_c01|용암 분출|3
+            mage_t06_c04|공간 절단|1
+            mage_t07_c02|서리 폭풍|1
+            mage_t08_c03|사방 낙뢰|4
+            mage_t09_c05|유성우|4
+            mage_t10_c04|공간 왜곡파|2
+            mage_t11_c01|지옥불 구체|3
+            mage_t12_c02|절대영도 파열|2
+            mage_t13_c03|뇌신의 사슬|5
+            mage_t14_c04|공허 칼날|3
+            mage_t15_c01|불사조 격돌|1
+            mage_t16_c05|행성 낙하|1
+            mage_t17_c04|비전 특이점|3
+            mage_t18_c02|절대빙옥 파쇄|4
+            mage_t19_c05|초신성|4
+            mage_t20_c05|우주 종말|5
             """,
         ),
-        HeroClass.CLERIC to rows(
+        HeroClass.CLERIC to signatureRows(
             """
-            빛의 화살|작은 심판|정화의 일격|성스러운 불씨|수호령 돌진
-            성광탄|심판의 망치|악령 파쇄|성화구|천사의 깃날
-            삼중 광선|죄악 분쇄|퇴마 연타|정화의 불꽃|영혼의 파동
-            빛의 고리|단죄 강하|성수 파열|성화 폭발|천익 연격
-            새벽 광선|정의의 망치|악마 봉인격|백염 기둥|수호천사 강하
-            축복 광탄|천칭 심판|퇴마 사슬|성화 회오리|영혼 군세
-            순백의 파동|죄인 분쇄|정화 연격|새벽 불꽃|천사의 검무
-            성광 폭발|대심판|파마의 인장|백색 화염|성령 포화
-            태양 광선|신벌의 망치|악령 소멸진|성화 폭풍|대천사 돌진
-            구원 광탄|정의의 광주|퇴마 광쇄|정화의 불기둥|영혼 심판
-            성자의 광선|천벌 분쇄|성수 연쇄|신성 화염구|천익 폭격
-            찬란한 폭발|교단의 심판|파마 대연격|새벽의 화염|대천사 검무
-            순교자의 광선|신의 망치|악마 파쇄진|백염 폭발|성령 군단
-            천상의 광선|절대 단죄|퇴마 성역폭진|성화 해일|천군 강하
-            구원자의 파동|운명 심판|지옥문 붕괴|태양 성화|영혼왕 연격
-            세계수 성광포|종말 분쇄|만마 퇴마격|신성 불바다|대천사 연무
-            신성 폭발|천국의 심판|악신 파쇄|창세의 성화|천군 포화
-            영원의 광주|최후의 단죄|세계 정화폭진|종말의 백염|성령 폭격
-            별을 밝히는 광선|신좌의 망치|천지 퇴마광|태양신의 불꽃|만천사 돌격
-            창세 성광포|절대 심판|만악 종결광|영원한 성화|천국문 폭격
+            cleric_t01_c01|빛의 화살|2
+            cleric_t02_c02|심판의 망치|1
+            cleric_t03_c03|퇴마 연타|4
+            cleric_t04_c04|성화 폭발|2
+            cleric_t05_c05|수호천사 강하|3
+            cleric_t06_c03|퇴마 사슬|4
+            cleric_t07_c01|순백의 파동|2
+            cleric_t08_c03|파마의 인장|3
+            cleric_t09_c05|대천사 돌진|3
+            cleric_t10_c04|정화의 불기둥|2
+            cleric_t11_c02|천벌 분쇄|1
+            cleric_t12_c05|대천사 검무|2
+            cleric_t13_c03|악마 파쇄진|2
+            cleric_t14_c04|성화 해일|3
+            cleric_t15_c03|지옥문 붕괴|4
+            cleric_t16_c01|세계수 성광포|2
+            cleric_t17_c05|천군 포화|3
+            cleric_t18_c03|세계 정화폭진|4
+            cleric_t19_c02|신좌의 망치|1
+            cleric_t20_c05|천국문 폭격|2
             """,
         ),
-        HeroClass.PALADIN to rows(
+        HeroClass.PALADIN to signatureRows(
             """
-            빛의 베기|방패 강타|전투망치 강타|새벽 파동|수호의 일격
-            성검 가르기|철벽 밀치기|성추 강하|여명 베기|맹세의 검격
-            삼중 성검|빛의 방패돌진|기사의 망치 강타|새벽 연격|왕국의 일격
-            십자 베기|방패 파쇄|단죄 강타|여명 폭발|기사단 돌격
-            축성 검광|성벽 충격|황금 망치 강타|새벽의 칼날|불굴의 검격
-            성검 회오리|빛의 돌진방패|심판의 성추|여명 파동진|왕가의 검격
-            백은 가르기|철성 강타|신벌 망치|찬란한 연격|충성의 일격
-            태양 십자참|수호벽 돌파|대성추 강하|새벽 폭풍|기사왕 돌진
-            성광 검무|황금 방패격|천벌 강타|여명 폭발진|불패의 돌격
-            왕국의 성검|성채 밀치기|정의의 대망치 강하|태양 파동|왕권 일격
-            구원 가르기|신성 방패돌진|별철 성추 강타|여명 검무|기사단 심판
-            대천사 성검|빛의 성벽격|혜성 망치|찬란한 검풍|황금 서약참
-            용살 성검|천공 방패격|용골 분쇄추|새벽의 군무|성왕의 일격
-            천상 십자참|신의 방벽돌파|천벌 대성추|여명 해일|영원 서약참
-            태양왕의 검격|절대 수호격|심판왕의 망치|황금 새벽광|왕권 연격
-            세계수 성검|성역 방패돌진|종말 성추|여명 종결진|기사왕 천공돌격
-            신살 가르기|천국의 방패격|신격 분쇄추|창세 새벽광|불멸 서약참
-            종말 십자참|세계벽 돌파|최후의 망치|태양 종말|성왕의 심판
-            별을 가르는 성검|신좌 방패격|운명 분쇄추|영원 여명광|만기사 돌격
-            창세의 성검|절대성벽 충격|신의 마지막 망치|첫 빛의 종언|왕국 영겁참
+            paladin_t01_c01|빛의 베기|2
+            paladin_t02_c02|철벽 밀치기|2
+            paladin_t03_c03|기사의 망치 강타|1
+            paladin_t04_c01|십자 베기|2
+            paladin_t05_c04|새벽의 칼날|4
+            paladin_t06_c03|심판의 성추|1
+            paladin_t07_c05|충성의 일격|1
+            paladin_t08_c02|수호벽 돌파|2
+            paladin_t09_c01|성광 검무|3
+            paladin_t10_c05|왕권 일격|1
+            paladin_t11_c03|별철 성추 강타|1
+            paladin_t12_c05|황금 서약참|2
+            paladin_t13_c02|천공 방패격|1
+            paladin_t14_c01|천상 십자참|2
+            paladin_t15_c03|심판왕의 망치|1
+            paladin_t16_c02|성역 방패돌진|2
+            paladin_t17_c05|불멸 서약참|2
+            paladin_t18_c04|태양 종말|2
+            paladin_t19_c01|별을 가르는 성검|2
+            paladin_t20_c05|왕국 영겁참|5
             """,
         ),
     )

@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "paladin signature t01-t20 intuitive-name batch v1",
+  "gateway": "http://127.0.0.1:4317",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 90,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for NULL PLAYING. Create exactly 16 chronological frames in a strict 4-column by 4-row, row-major sheet. Every cell is one independent wide 361x160 combat viewport with identical fixed camera and scale; final sheet is exactly 1444x640 transparent 8-bit RGBA. Treat every cell as a sealed hard crop with no adjacent-cell leakage. F01 is almost transparent anticipation, F02-F07 clearly build the named action, F08 completes the main action, F09 is the single unique maximum impact, F10 immediately loses at least 35% energy, F11-F15 fade monotonically, and F16 is almost fully transparent. Detailed premium Korean fantasy action-RPG VFX, high-resolution hand-painted rendering, crisp tapered edges, controlled bloom, readable silhouette, clean alpha and broad transparent channels. No character body, enemy body, landscape, UI, text, grid, labels, gutters, borders, or opaque background.",
+  "negativePrompt": "pixel art, low resolution, retro sprite, human body, face, hands, enemy, monster body, full background scene, battlefield, HUD, text, letters, numbers, logo, watermark, frame number, grid line, border, gutter, padding, opaque background, black background, white background, checkerboard background, cross-cell residue, adjacent-frame band, wrong frame count, duplicated frame, missing frame, wrong order, inconsistent camera, radial flower, butterfly, symmetrical wings, pinwheel, mandala, generic starburst, unrelated rings, closed circular loop, one stretched panorama stripe, opaque rectangle, whiteout, late energy regrowth, persistent final frame, muddy colors, jagged alpha, haloed alpha",
+  "skills": [
+    {
+      "catalogId": "paladin_t01_c01",
+      "level": 5,
+      "name": "빛의 베기",
+      "generationPrompt": "Create ‘빛의 베기’ using LIGHT_EDGE_CUT. The name must be immediately readable through this concrete action: one clean ivory-gold sword-light edge sweeps left-to-right and separates a dark pressure ribbon into upper and lower pieces, without showing a sword or wielder. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t02_c02",
+      "level": 10,
+      "name": "철벽 밀치기",
+      "generationPrompt": "Create ‘철벽 밀치기’ using IRON_WALL_SHOVE. The name must be immediately readable through this concrete action: a thick blue-gold rectangular shield-pressure front advances left-to-right and pushes three staggered debris layers aside without depicting a physical shield. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t03_c03",
+      "level": 15,
+      "name": "기사의 망치 강타",
+      "generationPrompt": "Create ‘기사의 망치 강타’ using KNIGHT_HAMMER_SMASH. The name must be immediately readable through this concrete action: a cropped steel-gold hammer-pressure wedge drops vertically and breaks one earthen slab into heavy angular fragments, with no character or handle. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t04_c01",
+      "level": 20,
+      "name": "십자 베기",
+      "generationPrompt": "Create ‘십자 베기’ using HORIZONTAL_VERTICAL_CROSS_CUT. The name must be immediately readable through this concrete action: one horizontal ivory slash appears first and remains as a fading afterimage, then one vertical gold slash completes the cross at the unique peak. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t05_c04",
+      "level": 25,
+      "name": "새벽의 칼날",
+      "generationPrompt": "Create ‘새벽의 칼날’ using DAWN_BLADE_FLURRY. The name must be immediately readable through this concrete action: four pink-gold dawn blade-light cuts sweep across four separate positions from low-left toward high-right, ending in a long sunrise-colored diagonal seam. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t06_c03",
+      "level": 30,
+      "name": "심판의 성추",
+      "generationPrompt": "Create ‘심판의 성추’ using JUDGMENT_MAUL_DESCENT. The name must be immediately readable through this concrete action: three nested gold-white weight planes descend in sequence and compress one offset target zone, the last impact splitting a holy pressure slab. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t07_c05",
+      "level": 35,
+      "name": "충성의 일격",
+      "generationPrompt": "Create ‘충성의 일격’ using LOYALTY_EXECUTION. The name must be immediately readable through this concrete action: a single upright blue-gold vow line fixes the target, then a heavy diagonal ivory cut crosses it once and leaves a restrained oath-colored afterimage. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t08_c02",
+      "level": 40,
+      "name": "수호벽 돌파",
+      "generationPrompt": "Create ‘수호벽 돌파’ using GUARD_WALL_BREAKTHROUGH. The name must be immediately readable through this concrete action: three blue-gold shield-pressure panels charge left-to-right in echelon and punch through one broad dark barricade at different depths. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t09_c01",
+      "level": 45,
+      "name": "성광 검무",
+      "generationPrompt": "Create ‘성광 검무’ using HOLY_SWORD_DANCE. The name must be immediately readable through this concrete action: five countable ivory sword-light strokes roam asymmetrically across the viewport and finish as one long gold horizontal exit cut. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t10_c05",
+      "level": 50,
+      "name": "왕권 일격",
+      "generationPrompt": "Create ‘왕권 일격’ using ROYAL_AUTHORITY_STRIKE. The name must be immediately readable through this concrete action: a heavy crimson-gold vertical authority seam descends through layered blue pressure plates and forces them apart without a crown, emblem, or character. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t11_c03",
+      "level": 55,
+      "name": "별철 성추 강타",
+      "generationPrompt": "Create ‘별철 성추 강타’ using STAR_IRON_HAMMER. The name must be immediately readable through this concrete action: a dark blue meteor-iron hammer pressure mass with sparse gold sparks falls diagonally and crushes a pale cosmic slab into angular fragments. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t12_c05",
+      "level": 60,
+      "name": "황금 서약참",
+      "generationPrompt": "Create ‘황금 서약참’ using GOLDEN_OATH_CUT. The name must be immediately readable through this concrete action: two separated gold vow ribbons pull taut across the viewport and one ivory diagonal cut severs both at different points, leaving open broken ribbons. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t13_c02",
+      "level": 65,
+      "name": "천공 방패격",
+      "generationPrompt": "Create ‘천공 방패격’ using SKY_SHIELD_IMPACT. The name must be immediately readable through this concrete action: a tall cyan-gold shield-pressure plane dives from upper-left and rebounds upward after crushing a dark aerial barrier, without a physical shield icon. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t14_c01",
+      "level": 70,
+      "name": "천상 십자참",
+      "generationPrompt": "Create ‘천상 십자참’ using CELESTIAL_CROSS_CUT. The name must be immediately readable through this concrete action: a broad horizontal blue-white cut spans the viewport first, then a narrow descending gold cut intersects it off-center to form a luminous celestial cross afterimage. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t15_c03",
+      "level": 75,
+      "name": "심판왕의 망치",
+      "generationPrompt": "Create ‘심판왕의 망치’ using JUDGMENT_KING_HAMMER. The name must be immediately readable through this concrete action: an immense cropped gold-white gravity mass drops in two accelerating stages and crushes three earthen pressure terraces into deep angular debris. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t16_c02",
+      "level": 80,
+      "name": "성역 방패돌진",
+      "generationPrompt": "Create ‘성역 방패돌진’ using SANCTUARY_SHIELD_CHARGE. The name must be immediately readable through this concrete action: four translucent blue-gold ward panels advance in a staggered wedge, merge into one charging sanctuary front, and split a dark siege wall. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t17_c05",
+      "level": 85,
+      "name": "불멸 서약참",
+      "generationPrompt": "Create ‘불멸 서약참’ using IMMORTAL_OATH_SEVER. The name must be immediately readable through this concrete action: a pale-gold horizontal oath line holds steady while three dark attacks strike it and fail, then the line releases as one unstoppable edge-to-edge sever. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t18_c04",
+      "level": 90,
+      "name": "태양 종말",
+      "generationPrompt": "Create ‘태양 종말’ using SUN_END_COLLAPSE. The name must be immediately readable through this concrete action: three warm gold daylight planes dim from the outer edges inward, fracture into orange-white dawn shards, and collapse through one diagonal holy fault without a sun disc. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t19_c01",
+      "level": 95,
+      "name": "별을 가르는 성검",
+      "generationPrompt": "Create ‘별을 가르는 성검’ using STAR_SEVERING_HOLY_SWORD. The name must be immediately readable through this concrete action: one blue-white cosmic blade-light traverses left-to-right and cuts a layered star-cloud ribbon into two long halves that drift to opposite edges. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "paladin_t20_c05",
+      "level": 100,
+      "name": "왕국 영겁참",
+      "generationPrompt": "Create ‘왕국 영겁참’ using ETERNAL_KINGDOM_FLURRY. The name must be immediately readable through this concrete action: five royal gold-white cuts advance across foreground, midground, and background, followed by one immense final horizontal kingdom-severing seam spanning every edge. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: ivory gold, steel blue, dawn rose, restrained crimson. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No paladin body, physical weapon or shield, heraldic emblem, readable oath text, generic halo, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    }
+  ]
+}

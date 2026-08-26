@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
+import { execFile } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { promisify } from "node:util";
 import { resolve } from "node:path";
 
 const jobsManifestInput = process.env.SPRITE_JOBS_MANIFEST;
@@ -32,6 +34,8 @@ const watch = process.env.SPRITE_WATCH === "1";
 const pollIntervalMs = Math.max(5_000, Number.parseInt(process.env.SPRITE_POLL_MS || "20000", 10));
 const previousStatuses = new Map();
 const synced = new Set();
+const execFileAsync = promisify(execFile);
+const cellNormalizer = resolve("tools/vfx-lab/normalize_sprite_sheet_cells.py");
 
 await mkdir(outputDir, { recursive: true });
 
@@ -55,6 +59,15 @@ function assertPngContract(catalogId, metadata) {
   }
   if (metadata.bitDepth !== 8 || metadata.colorType !== 6) {
     throw new Error(`${catalogId} must be an 8-bit RGBA PNG (color type 6), received bit depth ${metadata.bitDepth}, color type ${metadata.colorType}.`);
+  }
+}
+
+async function normalizeCells(catalogId, destination) {
+  try {
+    const { stdout } = await execFileAsync("python3", [cellNormalizer, destination]);
+    process.stdout.write(`${JSON.stringify({ catalogId, normalization: stdout.trim() })}\n`);
+  } catch (error) {
+    throw new Error(`${catalogId} cell normalization failed: ${error.message}`);
   }
 }
 
@@ -87,7 +100,11 @@ async function syncCompleted(jobSpec, job) {
   const bytes = new Uint8Array(await response.arrayBuffer());
   const metadata = pngMetadata(bytes);
   assertPngContract(jobSpec.catalogId, metadata);
-  await writeFile(resolve(outputDir, `${jobSpec.catalogId}.png`), bytes);
+  const destination = resolve(outputDir, `${jobSpec.catalogId}.png`);
+  await writeFile(destination, bytes);
+  await normalizeCells(jobSpec.catalogId, destination);
+  const normalizedBytes = new Uint8Array(await readFile(destination));
+  assertPngContract(jobSpec.catalogId, pngMetadata(normalizedBytes));
   synced.add(jobSpec.catalogId);
   process.stdout.write(`${JSON.stringify({ catalogId: jobSpec.catalogId, status: "synced", ...metadata, rgba: true })}\n`);
 }

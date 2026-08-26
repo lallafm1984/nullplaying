@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "retainedAt": "2026-08-25",
+  "reason": "Keep all twenty confirmed original Paladin sheets active while preserving every prior Paladin candidate for recovery.",
+  "candidateStatus": "retained-in-workspace-unregistered",
+  "activeDirectory": "custom-assets/paladin-finalized-vfx",
+  "retainedCandidateRoots": [
+    "custom-assets/paladin-signature-t01-t20-intuitive-imagegen-refined-v1",
+    "custom-assets/apex-class-rework-imagegen-v1",
+    "custom-assets/apex-class-rework-imagegen-alpha-v1",
+    "custom-assets/apex-class-rework-imagegen-refined-v1",
+    "custom-assets/apex-class-rework-v2-imagegen-v1",
+    "custom-assets/apex-class-rework-v2-imagegen-alpha-v1",
+    "custom-assets/apex-class-rework-v2-imagegen-refined-v1"
+  ],
+  "retainedSupportFiles": [
+    "paladin-signature-t01-t20-intuitive-v1-sprite-prompts.json",
+    "refine_apex_class_rework_v2.py",
+    "normalize_generated_sprite_matte.py",
+    "repair_apex_sprite_artifacts.py"
+  ],
+  "restoreRule": "Copy the selected candidate into custom-assets/paladin-finalized-vfx, update data/paladin-vfx-finalized.json, and re-register review UI only when the user explicitly requests another comparison.",
+  "androidStatus": "promoted-to-android-q85-webp-20260825"
+}

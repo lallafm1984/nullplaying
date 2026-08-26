@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 3,
+  "updatedAt": "2026-08-25",
+  "source": "Codex direct image generation v2 review set; all six finalized classes are intentionally excluded",
+  "spriteRoot": "custom-assets/apex-class-rework-v2-imagegen-refined-v1",
+  "skillSpriteRoots": {},
+  "skillGenerators": {},
+  "variants": ["1", "2", "3", "4"],
+  "finalizedSkillLayouts": ["mage_t18_c02"],
+  "customReviews": {},
+  "skills": []
+}

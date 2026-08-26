@@ -2,6 +2,7 @@ package com.alarmquest.engine
 
 import com.alarmquest.model.CombatPhase
 import com.alarmquest.model.AdventurePhase
+import com.alarmquest.model.CompletedTaleRecord
 import com.alarmquest.model.EquipmentSlot
 import com.alarmquest.model.HeroClass
 import com.alarmquest.model.HeroStats
@@ -9,12 +10,15 @@ import com.alarmquest.model.InventoryItem
 import com.alarmquest.model.LearnedSkill
 import com.alarmquest.model.MonsterGrade
 import com.alarmquest.model.SettlementDelta
+import com.alarmquest.model.ShopEquipmentOffer
+import com.alarmquest.model.SIMPLE_GAME_SCHEMA_VERSION
 import com.alarmquest.model.SimpleGameState
 import com.alarmquest.model.TaleKind
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -22,15 +26,112 @@ class SimpleGameEngineTest {
     private val engine = SimpleGameEngine()
 
     @Test
-    fun `character roll uses 3d6 stats and blended intelligence wisdom mana`() {
+    fun `new hero sees an opening before the first encounter search`() {
+        val game = engine.newGame(
+            name = "새별",
+            heroClass = HeroClass.RANGER,
+            rolledStats = engine.rollStats(77L).stats,
+            seed = 88L,
+            now = 1_000L,
+        )
+
+        assertEquals(AdventurePhase.OPENING, game.adventurePhase)
+        assertEquals(
+            SimpleGameEngine.OPENING_PRESENTATION_MILLIS,
+            game.actionEndsAt - game.actionStartedAt,
+        )
+        assertEquals(2_000L, SimpleGameEngine.OPENING_SLIDE_MILLIS)
+        assertEquals(3, SimpleGameEngine.OPENING_SLIDE_COUNT)
+        assertEquals(6_000L, SimpleGameEngine.OPENING_PRESENTATION_MILLIS)
+        assertEquals(3, game.adventureTale.openingSlides.size)
+        assertTrue(game.adventureTale.openingSlides.first().contains("새별"))
+        assertTrue(game.lastResult.contains("새별"))
+        assertTrue(game.monster.name.isBlank())
+
+        engine.settle(game, game.actionEndsAt)
+
+        assertEquals(AdventurePhase.COMBAT, game.adventurePhase)
+        assertEquals(CombatPhase.REVEAL, game.combatPhase)
+        assertTrue(game.monster.name.isNotBlank())
+        assertEquals(
+            SimpleGameEngine.ENCOUNTER_REVEAL_MILLIS,
+            game.actionEndsAt - game.actionStartedAt,
+        )
+        assertEquals(0L, game.actionSequence)
+    }
+
+    @Test
+    fun `character roll derives class resources with dnd style modifiers`() {
         repeat(500) { index ->
-            val stats = engine.rollStats(index.toLong() + 1L).stats
-            stats.values().take(6).forEach { value ->
-                assertTrue(value in 3L..18L)
+            HeroClass.entries.forEach { heroClass ->
+                val stats = engine.rollStats(index.toLong() + 1L, heroClass).stats
+                stats.values().take(6).forEach { value ->
+                    assertTrue(value in 3L..18L)
+                }
+                assertEquals(
+                    engine.initialMaxHealth(heroClass, stats.constitution),
+                    stats.maxHealth,
+                )
+                assertEquals(
+                    engine.initialMaxMana(heroClass, stats.intelligence, stats.wisdom),
+                    stats.maxMana,
+                )
             }
-            assertTrue(stats.maxHealth in (stats.constitution / 6L)..(stats.constitution / 6L + 7L))
-            val manaBase = engine.manaBaseAttribute(stats.intelligence, stats.wisdom)
-            assertTrue(stats.maxMana in (manaBase / 6L)..(manaBase / 6L + 7L))
+        }
+    }
+
+    @Test
+    fun `dnd ability modifier rounds negative odd scores down`() {
+        val expected = mapOf(
+            3L to -4L,
+            8L to -1L,
+            9L to -1L,
+            10L to 0L,
+            11L to 0L,
+            12L to 1L,
+            18L to 4L,
+        )
+
+        expected.forEach { (score, modifier) ->
+            assertEquals(modifier, engine.dndAbilityModifier(score))
+        }
+    }
+
+    @Test
+    fun `class resource bases distinguish martial hybrid and caster roles`() {
+        val stats = HeroStats(
+            strength = 12L,
+            constitution = 13L,
+            dexterity = 12L,
+            intelligence = 10L,
+            wisdom = 8L,
+            charisma = 12L,
+            maxHealth = 0L,
+            maxMana = 0L,
+        )
+        val expected = mapOf(
+            HeroClass.WARRIOR to (11L to 3L),
+            HeroClass.ROGUE to (9L to 5L),
+            HeroClass.RANGER to (11L to 7L),
+            HeroClass.MAGE to (7L to 9L),
+            HeroClass.CLERIC to (9L to 9L),
+            HeroClass.PALADIN to (11L to 7L),
+        )
+
+        expected.forEach { (heroClass, resources) ->
+            val derived = engine.initialStatsForClass(stats, heroClass)
+            assertEquals(resources.first, derived.maxHealth)
+            assertEquals(resources.second, derived.maxMana)
+            derived.values().take(6).forEachIndexed { index, value ->
+                assertEquals(stats.values()[index], value)
+            }
+        }
+
+        val minimum = stats.copy(constitution = 3L, intelligence = 3L, wisdom = 3L)
+        HeroClass.entries.forEach { heroClass ->
+            val derived = engine.initialStatsForClass(minimum, heroClass)
+            assertTrue(derived.maxHealth >= 1L)
+            assertTrue(derived.maxMana >= 1L)
         }
     }
 
@@ -121,15 +222,17 @@ class SimpleGameEngineTest {
         assertEquals(1L, delta.talesCompleted)
         assertEquals(beforeLevel, game.hero.level)
         assertTrue(game.hero.stats.values().sum() > before)
-        assertEquals(2L, game.adventureTale.sequence)
+        assertEquals(1L, game.adventureTale.sequence)
         assertEquals(5, game.adventureTale.acts.size)
         assertEquals(1, game.completedTaleHistory.size)
         assertEquals(5, game.completedTaleHistory.single().actMemories.size)
-        assertEquals("돌아오지 않은 순찰대", game.completedTaleHistory.single().title)
+        assertEquals("부러진 성문의 파수꾼", game.completedTaleHistory.single().title)
+        assertEquals(TaleKind.PROLOGUE, game.completedTaleHistory.single().kind)
+        assertEquals("돌아오지 않은 순찰대", game.adventureTale.title)
     }
 
     @Test
-    fun `skills arrive every five levels and stop at twenty`() {
+    fun `heroes start with one skill then learn every five levels and stop at twenty`() {
         val game = newGame(now = 0L)
         for (level in 1L..104L) {
             game.hero.level = level
@@ -138,7 +241,7 @@ class SimpleGameEngineTest {
         }
 
         assertEquals(20, game.skills.size)
-        assertEquals((1..20).map { it * 5L }, game.skills.map { it.acquiredAtLevel })
+        assertEquals(listOf(1L) + (5L..95L step 5L).toList(), game.skills.map { it.acquiredAtLevel })
         assertEquals(20, game.skills.map { it.name }.distinct().size)
     }
 
@@ -156,20 +259,28 @@ class SimpleGameEngineTest {
     }
 
     @Test
-    fun `reference hero reaches level one hundred on day one hundred eighty`() {
+    fun `depth aware labyrinth keeps level one hundred near day one hundred sixty six`() {
         val game = newGame(now = 0L)
         val dayMillis = 24L * 60L * 60L * 1_000L
 
-        engine.settleOffline(game, 179L * dayMillis)
-        assertTrue("day 179 level=${game.hero.level}", game.hero.level < 100L)
+        engine.settleOffline(game, 165L * dayMillis)
+        assertTrue("day 165 level=${game.hero.level}", game.hero.level < 100L)
 
-        engine.settleOffline(game, 180L * dayMillis)
-        assertEquals("day 180 level", 100L, game.hero.level)
+        engine.settleOffline(game, 166L * dayMillis)
+        assertEquals("day 166 level", 100L, game.hero.level)
+        assertTrue(game.skills.all { it.level <= LearnedSkill.MAX_LEVEL })
+        assertEquals(LearnedSkill.MAX_LEVEL, game.skills.first().level)
+        val firstTierAverage = SkillCatalog.damagePercentRange(1).average() +
+            game.skills.first().damageBonusPercent
+        val lastTierAverage = SkillCatalog.damagePercentRange(20).average() +
+            game.skills.last().damageBonusPercent
+        assertTrue("tier 1=$firstTierAverage tier 20=$lastTierAverage", lastTierAverage > firstTierAverage)
     }
 
     @Test
     fun `schema nineteen preserves active act progress ratio under the longer targets`() {
         val game = newGame(now = 0L)
+        game.useFirstMainTale()
         game.schemaVersion = 19
         game.adventureTale.acts.indices.forEach { index ->
             val old = game.adventureTale.acts[index]
@@ -181,15 +292,16 @@ class SimpleGameEngineTest {
 
         engine.settleOfflineWithOfflineAdventure(game, now = 0L)
 
-        assertEquals(24, game.schemaVersion)
-        assertEquals(listOf(145L, 178L, 220L, 271L, 331L), game.adventureTale.acts.map { it.target })
-        assertEquals(72L, game.adventureTale.acts.first().progress)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals(listOf(150L, 250L, 300L, 200L, 350L), game.adventureTale.acts.map { it.target })
+        assertEquals(75L, game.adventureTale.acts.first().progress)
         assertEquals(0L, game.adventureTale.acts.drop(1).sumOf { it.progress })
     }
 
     @Test
     fun `schema twenty preserves level experience and act progress ratios`() {
         val game = newGame(now = 0L)
+        game.useFirstMainTale()
         game.schemaVersion = 20
         game.hero.level = 50L
         game.hero.experience = 561_330L
@@ -202,15 +314,15 @@ class SimpleGameEngineTest {
 
         engine.settleOfflineWithOfflineAdventure(game, now = 0L)
 
-        assertEquals(24, game.schemaVersion)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
         assertEquals(812_592L, game.hero.experience)
-        assertEquals(72L, game.adventureTale.acts.first().progress)
-        assertEquals(145L, game.adventureTale.acts.first().target)
+        assertEquals(75L, game.adventureTale.acts.first().progress)
+        assertEquals(150L, game.adventureTale.acts.first().target)
         assertEquals(46L, game.adventureTale.acts.first().rewardExperience)
     }
 
     @Test
-    fun `schema twenty one caps oversized act targets without scaling rewards twice`() {
+    fun `schema twenty one migrates oversized act targets without scaling rewards twice`() {
         val game = newGame(now = 0L)
         game.schemaVersion = 21
         game.hero.level = 50L
@@ -231,9 +343,9 @@ class SimpleGameEngineTest {
 
         engine.settleOfflineWithOfflineAdventure(game, now = 0L)
 
-        assertEquals(24, game.schemaVersion)
-        assertEquals(500L, game.adventureTale.acts.first().progress)
-        assertEquals(1_000L, game.adventureTale.acts.first().target)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals(354L, game.adventureTale.acts.first().progress)
+        assertEquals(708L, game.adventureTale.acts.first().target)
         assertEquals(46L, game.adventureTale.acts.first().rewardExperience)
         assertEquals(812_592L, game.hero.experience)
     }
@@ -253,15 +365,57 @@ class SimpleGameEngineTest {
 
         engine.settleOfflineWithOfflineAdventure(game, now = 0L)
 
-        assertEquals(24, game.schemaVersion)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
         assertEquals("ash_border.c13", game.adventureTale.definitionId)
         assertEquals(13L, game.adventureTale.sequence)
         assertEquals(TaleKind.MAIN, game.adventureTale.kind)
         assertEquals(2, game.adventureTale.volumeNumber)
         assertEquals("유리 숲의 백야", game.adventureTale.volumeTitle)
         assertEquals(17L, game.totalTales)
-        assertTrue(game.adventureTale.acts.all { it.target == 1_000L })
+        assertEquals(
+            listOf(720L, 1_200L, 1_440L, 960L, 1_680L),
+            game.adventureTale.acts.map { it.target },
+        )
         assertTrue(game.monster.catalogId.startsWith("ash_border.c13."))
+    }
+
+    @Test
+    fun `schema thirty six preserves active main act progress under the chapter rhythm`() {
+        val game = newGame(now = 0L)
+        game.schemaVersion = 36
+        game.adventureTale = AdventureTaleCatalog.instantiate(
+            definition = AdventureTaleCatalog.mainTales[11],
+            sequence = 12L,
+            heroName = game.hero.name,
+            heroLevel = game.hero.level,
+            variant = game.adventureTale.variant,
+        )
+        game.adventureTale.currentActIndex = 2
+        game.adventureTale.acts.indices.forEach { index ->
+            val act = game.adventureTale.acts[index]
+            game.adventureTale.acts[index] = act.copy(
+                progress = when {
+                    index < 2 -> 1_000L
+                    index == 2 -> 500L
+                    else -> 0L
+                },
+                target = 1_000L,
+                completed = index < 2,
+            )
+        }
+
+        engine.settleOfflineWithOfflineAdventure(game, now = 0L)
+
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals(
+            listOf(708L, 1_180L, 1_416L, 944L, 1_652L),
+            game.adventureTale.acts.map { it.target },
+        )
+        assertEquals(
+            listOf(708L, 1_180L, 708L, 0L, 0L),
+            game.adventureTale.acts.map { it.progress },
+        )
+        assertEquals(listOf(true, true, false, false, false), game.adventureTale.acts.map { it.completed })
     }
 
     @Test
@@ -324,7 +478,8 @@ class SimpleGameEngineTest {
         assertEquals(elapsed, game.lastSettledAt)
         assertTrue(delta.defeatedMonsters > 0L)
         assertTrue(game.actionSequence > 0L)
-        assertEquals(presentationSeed, game.presentationRngState)
+        assertTrue(presentationSeed != game.presentationRngState)
+        assertTrue(game.skills.sumOf { it.usageCount } > 0L)
         assertEquals(0L, game.lastDamage)
         assertEquals("", game.lastAttackName)
     }
@@ -360,11 +515,27 @@ class SimpleGameEngineTest {
         assertEquals(online.totalLootEquipmentEquips, offline.totalLootEquipmentEquips)
         assertEquals(online.totalSaleGold, offline.totalSaleGold)
         assertEquals(online.rngState, offline.rngState)
+        assertEquals(online.presentationRngState, offline.presentationRngState)
         assertEquals(online.taleRngState, offline.taleRngState)
         assertEquals(online.recentMonsterNames, offline.recentMonsterNames)
         assertEquals(online.recentItemNames, offline.recentItemNames)
+        assertEquals(online.consecutiveBasicAttacks, offline.consecutiveBasicAttacks)
         assertEquals(0L, offline.lastDamage)
         assertEquals("", offline.lastAttackName)
+    }
+
+    @Test
+    fun `chunked offline settlement matches one continuous offline replay`() {
+        val continuous = newGame(now = 0L)
+        val chunked = newGame(now = 0L)
+        val chunkMillis = 6L * 60L * 60L * 1_000L
+
+        engine.settleOffline(continuous, 24L * 60L * 60L * 1_000L)
+        repeat(4) { index ->
+            engine.settleOffline(chunked, (index + 1L) * chunkMillis)
+        }
+
+        assertEquals(continuous, chunked)
     }
 
     @Test
@@ -414,7 +585,7 @@ class SimpleGameEngineTest {
         val game = newGame(now = 0L)
         val completedTitles = mutableListOf<String>()
 
-        repeat(AdventureTaleCatalog.MAIN_TALE_COUNT) {
+        repeat(AdventureTaleCatalog.MAIN_TALE_COUNT + 1) {
             val currentTitle = game.adventureTale.title
             repeat(SimpleGameEngine.ACTS_PER_TALE) {
                 val act = game.adventureTale.activeAct()
@@ -425,33 +596,60 @@ class SimpleGameEngineTest {
             completedTitles += currentTitle
         }
 
-        assertEquals(AdventureTaleCatalog.mainTales.map { it.title }, completedTitles)
-        assertEquals(24L, game.totalTales)
-        assertEquals(120L, game.totalActs)
-        assertEquals(24, game.completedTaleHistory.size)
-        assertTrue(game.completedTaleHistory.all { it.kind == TaleKind.MAIN })
+        assertEquals(
+            listOf(StarterPrologueCatalog.forClass(HeroClass.WARRIOR).title) +
+                AdventureTaleCatalog.mainTales.map { it.title },
+            completedTitles,
+        )
+        assertEquals(25L, game.totalTales)
+        assertEquals(125L, game.totalActs)
+        assertEquals(25, game.completedTaleHistory.size)
+        assertEquals(TaleKind.PROLOGUE, game.completedTaleHistory.first().kind)
+        assertTrue(game.completedTaleHistory.drop(1).all { it.kind == TaleKind.MAIN })
         assertEquals(TaleKind.EPILOGUE, game.adventureTale.kind)
         assertEquals(25L, game.adventureTale.sequence)
     }
 
     @Test
-    fun `ten foreground minutes bank one full offline day proportionally`() {
+    fun `main tale rhythm reaches the epilogue in the intended effective progression window`() {
+        val game = newGame(now = 0L)
+        val stepMillis = 6L * 60L * 60L * 1_000L
+        val maximumMillis = 40L * 24L * 60L * 60L * 1_000L
+        var now = 0L
+
+        while (game.adventureTale.kind != TaleKind.EPILOGUE && now < maximumMillis) {
+            now += stepMillis
+            engine.settleOffline(game, now)
+        }
+
+        assertEquals(TaleKind.EPILOGUE, game.adventureTale.kind)
+        val elapsedHours = now / (60L * 60L * 1_000L)
+        assertTrue("elapsedHours=$elapsedHours", elapsedHours in (32L * 24L)..(35L * 24L))
+        assertTrue("level=${game.hero.level}", game.hero.level in 42L..44L)
+        println(
+            "mainTaleRhythm elapsedHours=$elapsedHours " +
+                "level=${game.hero.level} kills=${game.totalKills}",
+        )
+    }
+
+    @Test
+    fun `one foreground minute banks one offline hour and twelve minutes fills the bank`() {
         val game = newGame(now = 0L)
         game.offlineAdventureMillis = 0L
 
         engine.advanceOfflineAdventureForeground(
             game,
-            SimpleGameEngine.OFFLINE_ADVENTURE_CHARGE_MILLIS / 2L,
+            60L * 1_000L,
         )
         assertEquals(
-            SimpleGameEngine.OFFLINE_ADVENTURE_CAPACITY_MILLIS / 2L,
+            60L * 60L * 1_000L,
             game.offlineAdventureMillis,
         )
-        assertEquals(0.5f, engine.offlineAdventureFraction(game))
+        assertEquals(1f / 12f, engine.offlineAdventureFraction(game))
 
         engine.advanceOfflineAdventureForeground(
             game,
-            SimpleGameEngine.OFFLINE_ADVENTURE_CHARGE_MILLIS / 2L,
+            SimpleGameEngine.OFFLINE_ADVENTURE_CHARGE_MILLIS - 60L * 1_000L,
         )
         assertEquals(
             SimpleGameEngine.OFFLINE_ADVENTURE_CAPACITY_MILLIS,
@@ -461,6 +659,17 @@ class SimpleGameEngineTest {
 
         engine.advanceOfflineAdventureForeground(game, 60_000L)
         assertEquals(SimpleGameEngine.OFFLINE_ADVENTURE_CAPACITY_MILLIS, game.offlineAdventureMillis)
+    }
+
+    @Test
+    fun `existing offline balances are capped at twelve hours`() {
+        val game = newGame(now = 0L)
+        game.offlineAdventureMillis = 24L * 60L * 60L * 1_000L
+
+        engine.settleOfflineWithOfflineAdventure(game, now = 0L)
+
+        assertEquals(SimpleGameEngine.OFFLINE_ADVENTURE_CAPACITY_MILLIS, game.offlineAdventureMillis)
+        assertEquals(12L * 60L * 60L * 1_000L, game.offlineAdventureMillis)
     }
 
     @Test
@@ -552,7 +761,7 @@ class SimpleGameEngineTest {
         assertEquals(expected.defeatedMonsters, actual.defeatedMonsters)
         assertEquals(reference.hero, migrated.hero)
         assertEquals(reference.equipment, migrated.equipment)
-        assertEquals(24, migrated.schemaVersion)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, migrated.schemaVersion)
         assertEquals(SimpleGameEngine.OFFLINE_ADVENTURE_CAPACITY_MILLIS, migrated.offlineAdventureMillis)
     }
 
@@ -571,7 +780,7 @@ class SimpleGameEngineTest {
         )
 
         assertEquals(now, delta.elapsedMillis)
-        assertEquals(24, migrated.schemaVersion)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, migrated.schemaVersion)
         assertEquals(activeUntil - now, migrated.offlineAdventureMillis)
     }
 
@@ -588,7 +797,7 @@ class SimpleGameEngineTest {
             legacy = LegacyAutoHuntSnapshot(8, chargeMillis = halfCharge, activeUntil = 0L),
         )
 
-        assertEquals(24, migrated.schemaVersion)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, migrated.schemaVersion)
         assertEquals(
             SimpleGameEngine.OFFLINE_ADVENTURE_CAPACITY_MILLIS / 2L,
             migrated.offlineAdventureMillis,
@@ -600,7 +809,7 @@ class SimpleGameEngineTest {
         val game = newGame(now = 0L)
         repeat(240) {
             settleUntilNextKill(game)
-            assertEquals(SimpleGameEngine.MONSTER_ENERGY_SCALE, game.monster.maxEnergy)
+            assertTrue(game.monster.maxEnergy > 0L)
         }
 
         assertEquals(game.recentMonsterNames.size, game.recentMonsterNames.distinct().size)
@@ -614,6 +823,7 @@ class SimpleGameEngineTest {
     fun `monster energy only drops on attack events and reaches zero before victory settlement`() {
         val game = newGame(now = 5_000L)
         val expectedAttacks = game.monster.expectedAttacks
+        val maximumEnergy = game.monster.maxEnergy
 
         assertEquals(1f, engine.monsterEnergyFraction(game))
         val firstBoundary = game.actionEndsAt
@@ -621,8 +831,13 @@ class SimpleGameEngineTest {
 
         assertEquals(1L, game.actionSequence)
         assertEquals(1, game.monster.attacksCompleted)
-        assertTrue(game.monster.currentEnergy < SimpleGameEngine.MONSTER_ENERGY_SCALE)
+        assertTrue(game.monster.currentEnergy < maximumEnergy)
         assertTrue(game.lastDamage > 0L)
+        assertEquals(maximumEnergy, game.lastMonsterEnergyBeforeAttack)
+        assertEquals(
+            (maximumEnergy - game.lastDamage).coerceAtLeast(0L),
+            game.monster.currentEnergy,
+        )
         val afterFirstAttack = game.monster.currentEnergy
 
         engine.settle(game, firstBoundary + 500L)
@@ -631,7 +846,11 @@ class SimpleGameEngineTest {
         while (game.combatPhase != CombatPhase.VICTORY) {
             engine.settle(game, game.actionEndsAt)
         }
-        assertEquals(expectedAttacks, game.monster.attacksCompleted)
+        assertTrue(
+            "target=$expectedAttacks actual=${game.monster.attacksCompleted}",
+            game.monster.attacksCompleted in
+                (expectedAttacks - 2).coerceAtLeast(1)..(expectedAttacks + 2),
+        )
         assertEquals(0L, game.monster.currentEnergy)
         assertEquals(0f, engine.monsterEnergyFraction(game))
         assertEquals(0L, game.totalKills)
@@ -645,20 +864,33 @@ class SimpleGameEngineTest {
         engine.settle(game, game.actionEndsAt)
         assertEquals(AdventurePhase.COMBAT, game.adventurePhase)
         assertEquals(CombatPhase.REVEAL, game.combatPhase)
-        assertEquals(SimpleGameEngine.MONSTER_ENERGY_SCALE, game.monster.currentEnergy)
+        assertTrue(game.monster.currentEnergy > 0L)
+        assertEquals(game.monster.maxEnergy, game.monster.currentEnergy)
+    }
+
+    @Test
+    fun `skill damage is subtracted from monster energy exactly once`() {
+        val game = newGame(now = 0L)
+        game.consecutiveBasicAttacks = SimpleGameEngine.MAX_CONSECUTIVE_BASIC_ATTACKS
+        val energyBefore = game.monster.currentEnergy
+        val usageBefore = game.skills.single().usageCount
+
+        engine.settle(game, game.actionEndsAt)
+
+        assertTrue(game.lastAttackWasSkill)
+        assertEquals(usageBefore + 1L, game.skills.single().usageCount)
+        assertEquals(energyBefore, game.lastMonsterEnergyBeforeAttack)
+        assertEquals(
+            (energyBefore - game.lastDamage).coerceAtLeast(0L),
+            game.monster.currentEnergy,
+        )
     }
 
     @Test
     fun `basic attacks have no technique name and skills keep their attack name`() {
         val game = newGame(now = 0L)
         val definition = SkillCatalog.select(game.skillCatalogSeed, game.hero.heroClass, 1)
-        game.skills += LearnedSkill(
-            1,
-            definition.name,
-            5L,
-            definition.description,
-            definition.catalogId,
-        )
+        assertEquals(listOf(definition.catalogId), game.skills.map { it.catalogId })
         val attackTypes = mutableSetOf<String>()
 
         repeat(120) {
@@ -683,18 +915,107 @@ class SimpleGameEngineTest {
     }
 
     @Test
+    fun `basic and skill damage coefficients use the requested ranges`() {
+        assertEquals(40, SimpleGameEngine.BASIC_ATTACK_MIN_PERCENT)
+        assertEquals(60, SimpleGameEngine.BASIC_ATTACK_MAX_PERCENT)
+        assertEquals(90..100, SkillCatalog.damagePercentRange(1))
+        assertEquals(270..280, SkillCatalog.damagePercentRange(10))
+        assertEquals(470..480, SkillCatalog.damagePercentRange(20))
+        assertEquals(
+            (1..20).map { 90 + (it - 1) * 20 },
+            (1..20).map { SkillCatalog.damagePercentRange(it).first },
+        )
+    }
+
+    @Test
+    fun `skill mastery distributes fifty damage percent across one hundred levels`() {
+        val game = newGame(now = 0L)
+        game.skills[0] = game.skills.single().copy(usageCount = 99L)
+
+        settleUntilSkillAttack(game)
+
+        val levelTwo = game.skills.first()
+        assertEquals(100L, levelTwo.usageCount)
+        assertEquals(2L, levelTwo.level)
+        assertEquals(0L, levelTwo.damageBonusPercent)
+        assertEquals("${levelTwo.name} LV.2", levelTwo.displayName)
+
+        game.skills[0] = levelTwo.copy(usageCount = 199L)
+        settleUntilSkillAttack(game)
+
+        val levelThree = game.skills.first()
+        assertEquals(200L, levelThree.usageCount)
+        assertEquals(3L, levelThree.level)
+        assertEquals(1L, levelThree.damageBonusPercent)
+        assertEquals("${levelThree.name} LV.3", levelThree.displayName)
+    }
+
+    @Test
+    fun `skill mastery stops at level one hundred with a full experience bar`() {
+        val game = newGame(now = 0L)
+        game.skills[0] = game.skills.single().copy(
+            usageCount = LearnedSkill.MAX_USAGE_COUNT - 1L,
+        )
+
+        settleUntilSkillAttack(game)
+
+        val maximum = game.skills.single()
+        assertEquals(LearnedSkill.MAX_USAGE_COUNT, maximum.usageCount)
+        assertEquals(LearnedSkill.MAX_LEVEL, maximum.level)
+        assertEquals(LearnedSkill.MAX_DAMAGE_BONUS_PERCENT, maximum.damageBonusPercent)
+        assertEquals(LearnedSkill.USES_PER_LEVEL, maximum.masteryExperience)
+        assertEquals(1f, maximum.masteryProgress)
+        assertTrue(maximum.isMaxLevel)
+
+        settleUntilSkillAttack(game)
+
+        assertEquals(LearnedSkill.MAX_USAGE_COUNT, game.skills.single().usageCount)
+        assertEquals(LearnedSkill.MAX_LEVEL, game.skills.single().level)
+    }
+
+    @Test
+    fun `oversized saved mastery is bounded to level one hundred`() {
+        val game = newGame(now = 0L)
+        game.skills[0] = game.skills.single().copy(usageCount = Long.MAX_VALUE)
+        val learned = game.skills.single()
+
+        assertEquals(LearnedSkill.MAX_USAGE_COUNT, learned.boundedUsageCount)
+        assertEquals(LearnedSkill.MAX_LEVEL, learned.level)
+        assertEquals(LearnedSkill.MAX_DAMAGE_BONUS_PERCENT, learned.damageBonusPercent)
+        assertEquals(LearnedSkill.MAX_USAGE_COUNT, learned.nextUsageCount)
+        assertEquals(1f, learned.masteryProgress)
+
+        engine.settle(game, now = 1L)
+
+        assertEquals(LearnedSkill.MAX_USAGE_COUNT, game.skills.single().usageCount)
+    }
+
+    @Test
+    fun `legacy learned skill json starts mastery at level one`() {
+        val learned = Json.decodeFromString<LearnedSkill>(
+            """{"id":1,"name":"칼날 베기","acquiredAtLevel":1,"description":"설명","catalogId":"warrior_t01_c01"}""",
+        )
+
+        assertEquals(0L, learned.usageCount)
+        assertEquals(1L, learned.level)
+        assertEquals("칼날 베기 LV.1", learned.displayName)
+    }
+
+    @Test
     fun `legacy learned skills migrate to the direct attack catalog without progress loss`() {
         val game = newGame(now = 0L)
         game.schemaVersion = 6
+        game.hero.level = 95L
+        game.skills.clear()
         game.skills += LearnedSkill(2, "전투 감각", 10L, "예전 설명")
         game.skills += LearnedSkill(19, "세계수의 가호", 95L, "예전 설명")
         val actionEndsAt = game.actionEndsAt
 
         engine.settle(game, 1L)
 
-        assertEquals(24, game.schemaVersion)
-        assertEquals(listOf(2, 19), game.skills.map { it.id })
-        assertEquals(listOf(10L, 95L), game.skills.map { it.acquiredAtLevel })
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals((1..20).toList(), game.skills.map { it.id })
+        assertEquals(listOf(1L) + (5L..95L step 5L).toList(), game.skills.map { it.acquiredAtLevel })
         assertTrue(game.skills.all { it.catalogId.isNotBlank() })
         assertTrue(game.skills.all { SkillCatalog.find(it.catalogId)?.name == it.name })
         assertTrue(game.skills.all { "적" in it.description })
@@ -702,43 +1023,72 @@ class SimpleGameEngineTest {
     }
 
     @Test
-    fun `schema twenty two warrior display names refresh without rerolling the learned skill`() {
+    fun `schema twenty six maps a removed candidate to the fixed signature skill at the same tier`() {
         val game = newGame(now = 0L)
-        val definition = SkillCatalog.find("warrior_t20_c04")!!
+        val definition = SkillCatalog.find("warrior_t20_c01")!!
         val catalogSeed = game.skillCatalogSeed
-        game.schemaVersion = 22
+        game.schemaVersion = 26
+        game.hero.level = 95L
+        game.skills.clear()
         game.skills += LearnedSkill(
             id = 20,
             name = "창세 지진",
             acquiredAtLevel = 100L,
             description = "예전 설명",
-            catalogId = definition.catalogId,
+            catalogId = "warrior_t20_c04",
+            usageCount = 299L,
         )
         game.lastAttackWasSkill = true
-        game.lastSkillCatalogId = definition.catalogId
+        game.lastSkillCatalogId = "warrior_t20_c04"
         game.lastAttackName = "창세 지진"
         game.lastResult = "창세 지진 · 777 피해"
 
         engine.settle(game, 1L)
 
-        assertEquals(24, game.schemaVersion)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
         assertEquals(catalogSeed, game.skillCatalogSeed)
-        assertEquals(definition.catalogId, game.skills.single().catalogId)
-        assertEquals("천하붕쇄", game.skills.single().name)
-        assertEquals(definition.description, game.skills.single().description)
-        assertEquals("천하붕쇄", game.lastAttackName)
-        assertEquals("천하붕쇄 · 777 피해", game.lastResult)
+        assertEquals(20, game.skills.size)
+        assertEquals(definition.catalogId, game.skills.last().catalogId)
+        assertEquals("최후의 일격", game.skills.last().name)
+        assertEquals(definition.description, game.skills.last().description)
+        assertEquals(299L, game.skills.last().usageCount)
+        assertEquals(3L, game.skills.last().level)
+        assertEquals("", game.lastSkillCatalogId)
+        assertEquals("", game.lastAttackName)
+        assertEquals(0L, game.lastMonsterEnergyBeforeAttack)
+        assertEquals("최후의 일격 · 777 피해", game.lastResult)
     }
 
     @Test
-    fun `the class catalogs contain six hundred unique direct attacks`() {
-        assertEquals(600, SkillCatalog.all.size)
-        assertEquals(600, SkillCatalog.all.map { it.catalogId }.distinct().size)
+    fun `the class catalogs contain one hundred twenty unique signature attacks`() {
+        assertEquals(120, SkillCatalog.all.size)
+        assertEquals(120, SkillCatalog.all.map { it.catalogId }.distinct().size)
         HeroClass.entries.forEach { heroClass ->
             val skills = SkillCatalog.forClass(heroClass)
-            assertEquals(100, skills.size)
-            assertEquals(100, skills.map { it.name }.distinct().size)
+            assertEquals(20, skills.size)
+            assertEquals(20, skills.map { it.name }.distinct().size)
+            assertEquals(listOf(1) + (5..95 step 5).toList(), skills.map { it.unlockLevel })
             assertTrue(skills.all { "적" in it.description })
+        }
+    }
+
+    @Test
+    fun `every class starts at level one with its first signature skill`() {
+        HeroClass.entries.forEachIndexed { index, heroClass ->
+            val game = engine.newGame(
+                name = "${heroClass.name} 테스터",
+                heroClass = heroClass,
+                rolledStats = engine.rollStats(700L + index).stats,
+                seed = 800L + index,
+                now = 0L,
+            )
+            val expected = SkillCatalog.forClass(heroClass).first()
+
+            assertEquals(1L, game.hero.level)
+            assertEquals(1, game.skills.size)
+            assertEquals(expected.catalogId, game.skills.single().catalogId)
+            assertEquals(expected.name, game.skills.single().name)
+            assertEquals(1L, game.skills.single().acquiredAtLevel)
         }
     }
 
@@ -754,23 +1104,27 @@ class SimpleGameEngineTest {
             "번개", "천둥", "창세", "신격", "종언", "우주", "성광",
         )
 
-        assertEquals(100, warrior.size)
-        assertEquals(100, warrior.map { it.name }.distinct().size)
+        assertEquals(20, warrior.size)
+        assertEquals(20, warrior.map { it.name }.distinct().size)
         assertTrue(warrior.none { it.name in otherClassNames })
         assertTrue(warrior.none { definition -> spellWords.any(definition.name::contains) })
         assertEquals(
-            listOf("칼날 베기", "완력 내려찍기", "전열 돌진", "지면 발구르기", "거친 연속참"),
-            warrior.filter { it.unlockLevel == 5 }.map { it.name },
+            listOf(
+                "칼날 베기", "강철 베기", "파쇄격", "대지 가르기", "십자 참격",
+                "폭풍 베기", "철갑 돌진", "전장의 돌격", "회오리 참격", "대지 분쇄",
+                "폭풍검", "섬광 일섬", "무영 연참", "용살검", "멸천 일섬", "무극일섬",
+                "파멸의 검", "천지 가르기", "천하대양단", "최후의 일격",
+            ),
+            warrior.map { it.name },
         )
         assertEquals(
-            listOf("만군 대양단", "대륙 파쇄타", "불퇴 대돌파", "대륙 대붕쇄", "만군 대참무"),
-            warrior.filter { it.unlockLevel == 95 }.map { it.name },
+            (1..20).map { SkillCatalog.damagePercentRange(it).first },
+            warrior.map { it.damagePercentMin },
         )
         assertEquals(
-            listOf("천하대양단", "무쌍 대분쇄", "천하무패 돌격", "천하붕쇄", "멸군광란"),
-            warrior.filter { it.unlockLevel == 100 }.map { it.name },
+            (1..20).map { SkillCatalog.damagePercentRange(it).last },
+            warrior.map { it.damagePercentMax },
         )
-        assertEquals((0 until 20).map { 120 + it * 3 }, warrior.chunked(5).map { it.first().damagePercent })
         warrior.forEach { definition ->
             assertEquals(
                 listOf(SkillElement.PHYSICAL, SkillElement.EARTH, SkillElement.PHYSICAL, SkillElement.EARTH, SkillElement.PHYSICAL)[definition.candidate],
@@ -780,7 +1134,7 @@ class SimpleGameEngineTest {
     }
 
     @Test
-    fun `every class deterministically learns one different skill in each five level tier`() {
+    fun `every class always learns its fixed twenty signature skills`() {
         HeroClass.entries.forEach { heroClass ->
             val seed = SkillCatalog.deriveSeed(123_456_789L, heroClass)
             val firstPass = (1..20).map { tier ->
@@ -808,20 +1162,22 @@ class SimpleGameEngineTest {
 
     @Test
     fun `monster grade controls total battle time without changing the energy scale`() {
+        assertEquals(listOf(10, 20, 30), MonsterGrade.entries.map { it.minAttacks })
+        assertEquals(listOf(10, 20, 30), MonsterGrade.entries.map { it.maxAttacks })
         val normal = engine.expectedCombatDurationRangeMillis(MonsterGrade.NORMAL)
         val elite = engine.expectedCombatDurationRangeMillis(MonsterGrade.ELITE)
         val boss = engine.expectedCombatDurationRangeMillis(MonsterGrade.BOSS)
 
         assertTrue(normal.last < elite.first)
         assertTrue(elite.last < boss.first)
-        assertEquals(17_000L, normal.first)
-        assertEquals(17_000L, normal.last)
-        assertEquals(26_800L, elite.first)
-        assertEquals(26_800L, elite.last)
-        assertEquals(38_000L, boss.first)
-        assertEquals(38_000L, boss.last)
+        assertEquals(21_200L, normal.first)
+        assertEquals(21_200L, normal.last)
+        assertEquals(35_200L, elite.first)
+        assertEquals(35_200L, elite.last)
+        assertEquals(49_200L, boss.first)
+        assertEquals(49_200L, boss.last)
         assertEquals(
-            10_000L,
+            14_200L,
             normal.first - SimpleGameEngine.ENCOUNTER_REVEAL_MILLIS,
         )
     }
@@ -893,13 +1249,14 @@ class SimpleGameEngineTest {
         assertTrue(game.equipment != equipmentBefore)
         assertTrue(game.totalEquipmentPurchases <= EquipmentSlot.entries.size.toLong())
         assertEquals(EquipmentSlot.entries.toSet(), game.shopAttemptedSlots.toSet())
-        assertEquals(AdventurePhase.DEPARTING, game.adventurePhase)
+        assertEmptyShopThenDeparting(game)
         assertEquals(SimpleGameEngine.DEPART_TO_FIELDS_MILLIS, game.actionEndsAt - game.actionStartedAt)
 
         engine.settle(game, game.actionEndsAt)
         assertEquals(AdventurePhase.COMBAT, game.adventurePhase)
         assertEquals(CombatPhase.REVEAL, game.combatPhase)
-        assertEquals(SimpleGameEngine.MONSTER_ENERGY_SCALE, game.monster.currentEnergy)
+        assertTrue(game.monster.currentEnergy > 0L)
+        assertEquals(game.monster.maxEnergy, game.monster.currentEnergy)
     }
 
     @Test
@@ -921,7 +1278,8 @@ class SimpleGameEngineTest {
         assertEquals(CombatPhase.REVEAL, game.combatPhase)
         assertTrue(game.monster.id != defeatedMonsterId)
         assertEquals(SimpleGameEngine.ENCOUNTER_REVEAL_MILLIS, game.actionEndsAt - game.actionStartedAt)
-        assertEquals(SimpleGameEngine.MONSTER_ENERGY_SCALE, game.monster.currentEnergy)
+        assertTrue(game.monster.currentEnergy > 0L)
+        assertEquals(game.monster.maxEnergy, game.monster.currentEnergy)
     }
 
     @Test
@@ -1008,7 +1366,7 @@ class SimpleGameEngineTest {
         assertEquals(resultCount, game.totalEquipmentPurchases)
         assertEquals(EquipmentSlot.entries.size.toLong(), game.totalEquipmentPurchases)
         assertEquals(EquipmentSlot.entries.toSet(), game.shopAttemptedSlots.toSet())
-        assertEquals(AdventurePhase.DEPARTING, game.adventurePhase)
+        assertEmptyShopThenDeparting(game)
     }
 
     @Test
@@ -1017,7 +1375,7 @@ class SimpleGameEngineTest {
         game.inventory += InventoryItem(
             id = 1L,
             name = "황혼의 결정 표본",
-            rarity = "일반",
+            rarity = "희귀",
             kind = "전리품",
             foundAtLevel = 1L,
         )
@@ -1032,6 +1390,7 @@ class SimpleGameEngineTest {
         assertEquals(AdventurePhase.SELLING, game.adventurePhase)
         assertTrue(game.inventory.isEmpty())
         assertEquals("황혼의 결정 표본", game.lastTownItemName)
+        assertEquals("희귀", game.lastTownItemRarity)
         assertTrue(game.lastTownGold > 0L)
         assertEquals(goldBefore + game.lastTownGold, game.hero.gold)
         assertTrue(game.lastResult.contains("+${game.lastTownGold}G"))
@@ -1042,7 +1401,7 @@ class SimpleGameEngineTest {
     }
 
     @Test
-    fun `sale value is deterministic modest and capped by acquisition level`() {
+    fun `sale value rises at every acquisition level in ten gold units`() {
         fun item(rarity: String, foundAtLevel: Long) = InventoryItem(
             id = foundAtLevel,
             name = "검증 전리품",
@@ -1051,11 +1410,15 @@ class SimpleGameEngineTest {
             foundAtLevel = foundAtLevel,
         )
 
-        assertEquals(1L, engine.saleValueForTest(item("일반", 1L)))
-        assertEquals(4L, engine.saleValueForTest(item("영웅", 12L)))
-        assertEquals(6L, engine.saleValueForTest(item("희귀", 13L)))
-        assertEquals(24L, engine.saleValueForTest(item("신화", 100L)))
-        assertEquals(24L, engine.saleValueForTest(item("신화", Long.MAX_VALUE)))
+        assertEquals(10L, engine.saleValueForTest(item("일반", 1L)))
+        assertEquals(20L, engine.saleValueForTest(item("일반", 2L)))
+        assertEquals(100L, engine.saleValueForTest(item("일반", 10L)))
+        assertEquals(300L, engine.saleValueForTest(item("희귀", 10L)))
+        assertEquals(6_000L, engine.saleValueForTest(item("신화", 100L)))
+        assertEquals(Long.MAX_VALUE, engine.saleValueForTest(item("신화", Long.MAX_VALUE)))
+        (1L..100L).forEach { level ->
+            assertEquals(level * 10L, engine.saleValueForTest(item("일반", level)))
+        }
     }
 
     @Test
@@ -1147,7 +1510,7 @@ class SimpleGameEngineTest {
 
         engine.settle(game, 1L)
 
-        assertEquals(24, game.schemaVersion)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
         assertEquals("별빛 장검", equipped.name)
         assertEquals(777L, equipped.power)
         assertEquals("일반", equipped.rarity)
@@ -1161,37 +1524,61 @@ class SimpleGameEngineTest {
     }
 
     @Test
-    fun `new games use the current schema with the first authored tale`() {
+    fun `new games use the current schema with the class prologue tale`() {
         val game = newGame(now = 0L)
 
-        assertEquals(24, game.schemaVersion)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
         assertTrue(" · " !in game.monster.name)
-        assertEquals("잿빛 국경", game.adventureTale.volumeTitle)
-        assertEquals(1, game.adventureTale.chapterNumber)
-        assertEquals("돌아오지 않은 순찰대", game.adventureTale.title)
+        assertEquals("첫 발걸음", game.adventureTale.volumeTitle)
+        assertEquals(0, game.adventureTale.chapterNumber)
+        assertEquals(TaleKind.PROLOGUE, game.adventureTale.kind)
+        assertEquals("부러진 성문의 파수꾼", game.adventureTale.title)
+        assertEquals(listOf(7L, 8L, 9L, 10L, 12L), game.adventureTale.acts.map { it.target })
         assertEquals(SimpleGameEngine.ACTS_PER_TALE, game.adventureTale.acts.size)
         assertTrue(game.adventureTale.acts.all { it.progress == 0L && !it.completed })
     }
 
     @Test
-    fun `inventory capacity matches the Progress Quest ten plus strength rule`() {
+    fun `inventory capacity keeps strength meaningful below a two to one same level spread`() {
         val game = newGame(now = 0L)
 
+        game.hero.level = 1L
         game.hero.stats.strength = 3L
-        assertEquals(13L, game.inventoryCapacity())
+        assertEquals(16L, game.inventoryCapacity())
         game.hero.stats.strength = 18L
-        assertEquals(28L, game.inventoryCapacity())
-        game.hero.stats.strength = 1_234L
-        assertEquals(1_244L, game.inventoryCapacity())
+        assertEquals(24L, game.inventoryCapacity())
         game.hero.stats.strength = Long.MAX_VALUE
+        assertEquals(29L, game.inventoryCapacity())
+
+        game.hero.level = 100L
+        game.hero.stats.strength = 0L
+        assertEquals(74L, game.inventoryCapacity())
+        game.hero.stats.strength = 50L
+        assertEquals(99L, game.inventoryCapacity())
+        game.hero.stats.strength = 172L
+        assertEquals(147L, game.inventoryCapacity())
+        game.hero.stats.strength = Long.MAX_VALUE
+        assertEquals(147L, game.inventoryCapacity())
+
+        listOf(1L, 10L, 50L, 100L, 1_000L).forEach { level ->
+            game.hero.level = level
+            game.hero.stats.strength = 0L
+            val minimum = game.inventoryCapacity()
+            game.hero.stats.strength = Long.MAX_VALUE
+            val maximum = game.inventoryCapacity()
+            assertTrue("level=$level min=$minimum max=$maximum", maximum < minimum * 2L)
+        }
+
+        game.hero.level = Long.MAX_VALUE
         assertEquals(Long.MAX_VALUE, game.inventoryCapacity())
     }
 
     @Test
-    fun `equipment price follows the Progress Quest level formula`() {
-        assertEquals(35L, engine.equipmentPrice(1L))
-        assertEquals(195L, engine.equipmentPrice(5L))
-        assertEquals(620L, engine.equipmentPrice(10L))
+    fun `equipment price follows the quadratic level formula in ten gold units`() {
+        assertEquals(500L, engine.equipmentPrice(1L))
+        assertEquals(12_500L, engine.equipmentPrice(5L))
+        assertEquals(50_000L, engine.equipmentPrice(10L))
+        assertEquals(5_000_000L, engine.equipmentPrice(100L))
     }
 
     @Test
@@ -1203,14 +1590,19 @@ class SimpleGameEngineTest {
         assertEquals(90L, engine.equipmentPricePercent(EquipmentSlot.FEET))
         assertEquals(80L, engine.equipmentPricePercent(EquipmentSlot.ACCESSORY))
 
-        assertEquals(930L, engine.equipmentPrice(10L, EquipmentSlot.WEAPON))
-        assertEquals(744L, engine.equipmentPrice(10L, EquipmentSlot.BODY))
-        assertEquals(620L, engine.equipmentPrice(10L, EquipmentSlot.HEAD))
-        assertEquals(558L, engine.equipmentPrice(10L, EquipmentSlot.HANDS))
-        assertEquals(558L, engine.equipmentPrice(10L, EquipmentSlot.FEET))
-        assertEquals(496L, engine.equipmentPrice(10L, EquipmentSlot.ACCESSORY))
-        assertEquals(53L, engine.equipmentPrice(1L, EquipmentSlot.WEAPON))
+        assertEquals(75_000L, engine.equipmentPrice(10L, EquipmentSlot.WEAPON))
+        assertEquals(60_000L, engine.equipmentPrice(10L, EquipmentSlot.BODY))
+        assertEquals(50_000L, engine.equipmentPrice(10L, EquipmentSlot.HEAD))
+        assertEquals(45_000L, engine.equipmentPrice(10L, EquipmentSlot.HANDS))
+        assertEquals(45_000L, engine.equipmentPrice(10L, EquipmentSlot.FEET))
+        assertEquals(40_000L, engine.equipmentPrice(10L, EquipmentSlot.ACCESSORY))
+        assertEquals(750L, engine.equipmentPrice(1L, EquipmentSlot.WEAPON))
         assertEquals(Long.MAX_VALUE, engine.equipmentPrice(Long.MAX_VALUE, EquipmentSlot.WEAPON))
+        (1L..100L).forEach { level ->
+            EquipmentSlot.entries.forEach { slot ->
+                assertEquals(0L, engine.equipmentPrice(level, slot) % 10L)
+            }
+        }
     }
 
     @Test
@@ -1262,7 +1654,7 @@ class SimpleGameEngineTest {
 
         engine.settle(game, game.actionEndsAt)
 
-        assertEquals(AdventurePhase.DEPARTING, game.adventurePhase)
+        assertEmptyShopThenDeparting(game)
     }
 
     @Test
@@ -1270,7 +1662,7 @@ class SimpleGameEngineTest {
         val uninterrupted = newGame(now = 0L)
         uninterrupted.hero.level = 10L
         uninterrupted.equipment.forEach { it.power = 0L }
-        uninterrupted.hero.gold = 10_000L
+        uninterrupted.hero.gold = engine.equipmentPrice(10L, EquipmentSlot.WEAPON)
         uninterrupted.adventurePhase = AdventurePhase.SELLING
         uninterrupted.actionStartedAt = 0L
         uninterrupted.actionEndsAt = 1L
@@ -1296,12 +1688,12 @@ class SimpleGameEngineTest {
             .groupingBy(engine::equipmentLootRarityForRoll)
             .eachCount()
 
-        assertEquals(100, equipmentCounts.getValue("신화"))
-        assertEquals(1_000, equipmentCounts.getValue("전설"))
+        assertEquals(50, equipmentCounts.getValue("신화"))
+        assertEquals(500, equipmentCounts.getValue("전설"))
         assertEquals(50_000, equipmentCounts.getValue("영웅"))
         assertEquals(140_000, equipmentCounts.getValue("희귀"))
         assertEquals(300_000, equipmentCounts.getValue("고급"))
-        assertEquals(508_900, equipmentCounts.getValue("일반"))
+        assertEquals(509_450, equipmentCounts.getValue("일반"))
 
         val trophyCounts = (0 until 100)
             .groupingBy(engine::trophyRarityForRoll)
@@ -1344,7 +1736,7 @@ class SimpleGameEngineTest {
 
         engine.settle(game, game.actionEndsAt)
 
-        assertEquals(AdventurePhase.DEPARTING, game.adventurePhase)
+        assertEmptyShopThenDeparting(game)
         assertEquals(null, game.pendingShopOffer)
         assertEquals(0L, game.totalEquipmentPurchases)
 
@@ -1372,7 +1764,132 @@ class SimpleGameEngineTest {
     }
 
     @Test
-    fun `random selected slot ends the shop visit when its real upgrade is unaffordable`() {
+    fun `loot and shop share the five power per level base while rare loot keeps its premium`() {
+        assertEquals(14L, engine.maximumShopEquipmentPower(1L))
+        assertEquals(59L, engine.maximumShopEquipmentPower(10L))
+        assertEquals(244L, engine.maximumShopEquipmentPower(47L))
+        assertEquals(509L, engine.maximumShopEquipmentPower(100L))
+
+        assertEquals(1L, engine.lootEquipmentPowerForRoll(1L, "일반", 0))
+        assertEquals(36L, engine.lootEquipmentPowerForRoll(10L, "일반", 0))
+        assertEquals(41L, engine.lootEquipmentPowerForRoll(11L, "일반", 0))
+        (3L..100L).forEach { level ->
+            assertEquals(
+                engine.shopEquipmentPowerForRoll(level, "영웅", 0),
+                engine.lootEquipmentPowerForRoll(level, "영웅", 0),
+            )
+            assertEquals(
+                engine.shopEquipmentPowerForRoll(level, "영웅", 11),
+                engine.lootEquipmentPowerForRoll(level, "영웅", 11),
+            )
+        }
+
+        assertEquals(20L, engine.lootEquipmentPowerForRoll(1L, "전설", 0))
+        assertEquals(31L, engine.lootEquipmentPowerForRoll(1L, "전설", 11))
+        assertEquals(30L, engine.lootEquipmentPowerForRoll(1L, "신화", 0))
+        assertEquals(41L, engine.lootEquipmentPowerForRoll(1L, "신화", 11))
+        assertEquals(61L, engine.lootEquipmentPowerForRoll(10L, "전설", 0))
+        assertEquals(66L, engine.lootEquipmentPowerForRoll(10L, "신화", 0))
+        assertEquals(249L, engine.lootEquipmentPowerForRoll(47L, "전설", 0))
+        assertEquals(257L, engine.lootEquipmentPowerForRoll(47L, "신화", 0))
+        assertEquals(520L, engine.lootEquipmentPowerForRoll(100L, "전설", 0))
+        assertEquals(535L, engine.lootEquipmentPowerForRoll(100L, "신화", 0))
+        assertEquals(Long.MAX_VALUE, engine.maximumShopEquipmentPower(Long.MAX_VALUE))
+        assertEquals(
+            Long.MAX_VALUE,
+            engine.lootEquipmentPowerForRoll(Long.MAX_VALUE, "전설", 11),
+        )
+        assertEquals(
+            Long.MAX_VALUE,
+            engine.lootEquipmentPowerForRoll(Long.MAX_VALUE, "신화", 11),
+        )
+    }
+
+    @Test
+    fun `plus four and plus five loot always beat the strongest same level shop item by contract`() {
+        (1L..10_000L).forEach { level ->
+            val shopMaximum = engine.maximumShopEquipmentPower(level)
+            val legendaryMinimum = engine.lootEquipmentPowerForRoll(level, "전설", 0)
+            val mythicMinimum = engine.lootEquipmentPowerForRoll(level, "신화", 0)
+
+            assertTrue(
+                "level=$level legendary=$legendaryMinimum shop=$shopMaximum",
+                legendaryMinimum * 100L >= shopMaximum * 102L,
+            )
+            assertTrue(
+                "level=$level mythic=$mythicMinimum shop=$shopMaximum",
+                mythicMinimum * 100L >= shopMaximum * 105L,
+            )
+        }
+    }
+
+    @Test
+    fun `shop keeps checking remaining slots after an unaffordable upgrade`() {
+        val affordableGold = engine.equipmentPrice(10L, EquipmentSlot.HEAD)
+        var missedPurchases = 0
+
+        (1L..600L).forEach { seed ->
+            val game = newGameWithSeed(seed = seed, now = 0L)
+            game.hero.level = 10L
+            game.hero.gold = affordableGold
+            game.equipment.forEach { item ->
+                item.rarity = "일반"
+                item.power = 0L
+            }
+            game.adventurePhase = AdventurePhase.SELLING
+            game.actionStartedAt = 0L
+            game.actionEndsAt = 1L
+            game.lastSettledAt = 0L
+
+            engine.settle(game, game.actionEndsAt)
+
+            val offer = game.pendingShopOffer
+            if (offer == null) {
+                missedPurchases += 1
+            } else {
+                assertTrue("seed=$seed price=${offer.price}", offer.price <= game.hero.gold)
+                assertTrue(offer.slot in game.shopAttemptedSlots)
+            }
+        }
+
+        assertEquals("affordable upgrade missed across 600 seeds", 0, missedPurchases)
+    }
+
+    @Test
+    fun `persisted offer that becomes unaffordable falls through to another affordable slot`() {
+        val game = newGame(now = 0L)
+        game.hero.level = 10L
+        game.hero.gold = engine.equipmentPrice(10L, EquipmentSlot.HEAD)
+        game.equipment.forEach { item ->
+            item.rarity = "일반"
+            item.power = 0L
+        }
+        game.adventurePhase = AdventurePhase.SHOPPING
+        game.pendingShopOffer = com.alarmquest.model.ShopEquipmentOffer(
+            slot = EquipmentSlot.WEAPON,
+            name = "비싼 무기",
+            rarity = "일반",
+            previousPower = 0L,
+            newPower = 100L,
+            price = engine.equipmentPrice(10L, EquipmentSlot.WEAPON),
+        )
+        game.shopAttemptedSlots.clear()
+        game.shopAttemptedSlots += EquipmentSlot.WEAPON
+        game.actionStartedAt = 0L
+        game.actionEndsAt = 1L
+        game.lastSettledAt = 0L
+
+        engine.settle(game, game.actionEndsAt)
+
+        val fallback = requireNotNull(game.pendingShopOffer)
+        assertEquals(AdventurePhase.SHOPPING, game.adventurePhase)
+        assertTrue(fallback.slot != EquipmentSlot.WEAPON)
+        assertTrue(fallback.price <= game.hero.gold)
+        assertEquals(0L, game.totalEquipmentPurchases)
+    }
+
+    @Test
+    fun `shop exhausts every slot when no real upgrade is affordable`() {
         val game = newGame(now = 0L)
         game.hero.level = 10L
         game.hero.gold = 0L
@@ -1384,10 +1901,68 @@ class SimpleGameEngineTest {
 
         engine.settle(game, game.actionEndsAt)
 
-        assertEquals(AdventurePhase.DEPARTING, game.adventurePhase)
+        assertEmptyShopThenDeparting(game)
         assertEquals(null, game.pendingShopOffer)
         assertEquals(EquipmentSlot.entries.toSet(), game.shopAttemptedSlots.toSet())
         assertEquals(0L, game.totalEquipmentPurchases)
+    }
+
+    @Test
+    fun `schema thirty three raises only underpowered plus four and plus five equipment`() {
+        val game = newGame(now = 0L)
+        game.schemaVersion = 33
+        game.hero.level = 100L
+        val legendary = game.equipment.first { it.slot == EquipmentSlot.WEAPON }
+        legendary.rarity = "전설"
+        legendary.power = 1L
+        legendary.acquiredAtLevel = 47L
+        val strongMythic = game.equipment.first { it.slot == EquipmentSlot.BODY }
+        strongMythic.rarity = "신화"
+        strongMythic.power = 999L
+        strongMythic.acquiredAtLevel = 47L
+        game.inventory += InventoryItem(
+            id = 1L,
+            name = "오래된 전설 장비 +4",
+            rarity = "전설",
+            kind = "장비",
+            foundAtLevel = 100L,
+            equipmentSlot = EquipmentSlot.HEAD,
+            equipmentPower = 100L,
+        )
+        game.inventory += InventoryItem(
+            id = 2L,
+            name = "오래된 신화 장비 +5",
+            rarity = "신화",
+            kind = "장비",
+            foundAtLevel = 47L,
+            equipmentSlot = EquipmentSlot.HANDS,
+            equipmentPower = 220L,
+        )
+        game.lastLootRarity = "신화"
+        game.lastLootEquipmentPower = 1L
+        game.adventurePhase = AdventurePhase.SHOPPING
+        game.pendingShopOffer = com.alarmquest.model.ShopEquipmentOffer(
+            slot = EquipmentSlot.WEAPON,
+            name = "구형 상점 장비",
+            rarity = "영웅",
+            previousPower = 1L,
+            newPower = 2L,
+            price = 1L,
+        )
+        game.lastShopPurchase = game.pendingShopOffer
+        game.shopAttemptedSlots += EquipmentSlot.WEAPON
+
+        engine.settleOfflineWithOfflineAdventure(game, now = game.lastSettledAt)
+
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals(249L, legendary.power)
+        assertEquals(999L, strongMythic.power)
+        assertEquals(520L, game.inventory.first { it.id == 1L }.equipmentPower)
+        assertEquals(257L, game.inventory.first { it.id == 2L }.equipmentPower)
+        assertEquals(535L, game.lastLootEquipmentPower)
+        assertEquals(null, game.pendingShopOffer)
+        assertEquals(null, game.lastShopPurchase)
+        assertTrue(game.shopAttemptedSlots.isEmpty())
     }
 
     @Test
@@ -1403,7 +1978,7 @@ class SimpleGameEngineTest {
 
         engine.settle(game, game.actionEndsAt)
 
-        assertEquals(AdventurePhase.DEPARTING, game.adventurePhase)
+        assertEmptyShopThenDeparting(game)
         assertEquals(null, game.pendingShopOffer)
         assertEquals(EquipmentSlot.entries.toSet(), game.shopAttemptedSlots.toSet())
         assertEquals(0L, game.totalEquipmentPurchases)
@@ -1428,10 +2003,34 @@ class SimpleGameEngineTest {
 
         engine.settleOfflineWithOfflineAdventure(game, now = 0L)
 
-        assertEquals(24, game.schemaVersion)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
         assertTrue(game.equipment.all { it.acquiredAtLevel == 42L })
         assertTrue(game.shopAttemptedSlots.isEmpty())
         assertEquals(null, game.pendingShopOffer)
+    }
+
+    @Test
+    fun `schema twenty five clears a pending offer priced on the former curve`() {
+        val game = newGame(now = 0L)
+        game.schemaVersion = 25
+        game.hero.level = 10L
+        game.hero.gold = 1_000L
+        game.adventurePhase = AdventurePhase.SHOPPING
+        game.pendingShopOffer = com.alarmquest.model.ShopEquipmentOffer(
+            slot = EquipmentSlot.BODY,
+            name = "구형 상점 몸 장비",
+            rarity = "일반",
+            previousPower = game.equipment.first { it.slot == EquipmentSlot.BODY }.power,
+            newPower = game.equipment.first { it.slot == EquipmentSlot.BODY }.power + 1L,
+            price = 750L,
+        )
+        game.shopAttemptedSlots += EquipmentSlot.BODY
+
+        engine.settleOfflineWithOfflineAdventure(game, now = 0L)
+
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals(null, game.pendingShopOffer)
+        assertTrue(game.shopAttemptedSlots.isEmpty())
     }
 
     @Test
@@ -1475,7 +2074,7 @@ class SimpleGameEngineTest {
 
         engine.settleOfflineWithOfflineAdventure(game, now = 0L)
 
-        assertEquals(24, game.schemaVersion)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
         assertEquals(0L, game.classGuidedLevelGrowths)
         assertEquals(496L, engine.characterStatPower(game))
         assertEquals(992L, engine.displayCombatPower(game))
@@ -1611,6 +2210,89 @@ class SimpleGameEngineTest {
     }
 
     @Test
+    fun `class offense uses primary seventy secondary thirty with half up rounding`() {
+        val stats = HeroStats(
+            strength = 60L,
+            constitution = 30L,
+            dexterity = 50L,
+            intelligence = 40L,
+            wisdom = 35L,
+            charisma = 25L,
+            maxHealth = 100L,
+            maxMana = 100L,
+        )
+        val expectedOffense = mapOf(
+            HeroClass.WARRIOR to 51L,
+            HeroClass.ROGUE to 53L,
+            HeroClass.RANGER to 46L,
+            HeroClass.MAGE to 39L,
+            HeroClass.CLERIC to 37L,
+            HeroClass.PALADIN to 50L,
+        )
+
+        expectedOffense.forEach { (heroClass, expected) ->
+            assertEquals(expected, engine.classOffenseAttribute(stats, heroClass))
+        }
+
+        val maximumStats = HeroStats(
+            strength = Long.MAX_VALUE,
+            constitution = Long.MAX_VALUE,
+            dexterity = Long.MAX_VALUE,
+            intelligence = Long.MAX_VALUE,
+            wisdom = Long.MAX_VALUE,
+            charisma = Long.MAX_VALUE,
+            maxHealth = Long.MAX_VALUE,
+            maxMana = Long.MAX_VALUE,
+        )
+        assertEquals(
+            Long.MAX_VALUE,
+            engine.classOffenseAttribute(maximumStats, HeroClass.WARRIOR),
+        )
+    }
+
+    @Test
+    fun `paladin basic skill and monster power use strength charisma and ignore wisdom`() {
+        val game = newGame(now = 0L)
+        game.hero.heroClass = HeroClass.PALADIN
+        game.hero.level = 20L
+        game.hero.stats = HeroStats(
+            strength = 40L,
+            constitution = 10L,
+            dexterity = 10L,
+            intelligence = 10L,
+            wisdom = 10L,
+            charisma = 20L,
+            maxHealth = 100L,
+            maxMana = 100L,
+        )
+        game.equipment.clear()
+        val skill = SkillCatalog.forClass(HeroClass.PALADIN).first()
+        val baselineBasic = engine.expectedBasicAttackDamage(game)
+        val baselineSkill = engine.skillPreviewDamage(game, skill.catalogId)
+        val baselineMonster = engine.monsterEnergyFor(game, targetAttacks = 20)
+
+        game.hero.stats.wisdom = 10_000L
+
+        assertEquals(baselineBasic, engine.expectedBasicAttackDamage(game))
+        assertEquals(baselineSkill, engine.skillPreviewDamage(game, skill.catalogId))
+        assertEquals(baselineMonster, engine.monsterEnergyFor(game, targetAttacks = 20))
+
+        game.hero.stats.charisma = 60L
+        val charismaBasic = engine.expectedBasicAttackDamage(game)
+        val charismaSkill = engine.skillPreviewDamage(game, skill.catalogId)
+        val charismaMonster = engine.monsterEnergyFor(game, targetAttacks = 20)
+
+        assertTrue(charismaBasic > baselineBasic)
+        assertTrue(charismaSkill > baselineSkill)
+        assertTrue(charismaMonster > baselineMonster)
+
+        game.hero.stats.strength = 80L
+        assertTrue(engine.expectedBasicAttackDamage(game) > charismaBasic)
+        assertTrue(engine.skillPreviewDamage(game, skill.catalogId) > charismaSkill)
+        assertTrue(engine.monsterEnergyFor(game, targetAttacks = 20) > charismaMonster)
+    }
+
+    @Test
     fun `primary stats affect combat power more than secondary stats`() {
         val game = newGame(now = 0L)
         game.hero.level = 10L
@@ -1673,13 +2355,14 @@ class SimpleGameEngineTest {
 
         engine.settleOfflineWithOfflineAdventure(game, now = 0L)
 
-        assertEquals(24, game.schemaVersion)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
         assertEquals(
             engine.attackCountForCombatPower(game, MonsterGrade.NORMAL.minAttacks),
             game.monster.expectedAttacks,
         )
         assertEquals(0, game.monster.attacksCompleted)
-        assertEquals(SimpleGameEngine.MONSTER_ENERGY_SCALE, game.monster.currentEnergy)
+        assertTrue(game.monster.currentEnergy > 0L)
+        assertEquals(game.monster.maxEnergy, game.monster.currentEnergy)
         assertEquals(CombatPhase.REVEAL, game.combatPhase)
         assertEquals(0L, game.actionStartedAt)
         assertEquals(SimpleGameEngine.ENCOUNTER_REVEAL_MILLIS, game.actionEndsAt)
@@ -1696,7 +2379,7 @@ class SimpleGameEngineTest {
 
         engine.settleOfflineWithOfflineAdventure(game, now = 0L)
 
-        assertEquals(24, game.schemaVersion)
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
         assertEquals(AdventurePhase.LOOTING, game.adventurePhase)
         assertEquals(1_000L, game.actionStartedAt)
         assertEquals(4_000L, game.actionEndsAt)
@@ -1717,6 +2400,383 @@ class SimpleGameEngineTest {
         assertEquals(Long.MAX_VALUE, engine.displayCombatPower(game))
     }
 
+    @Test
+    fun `skill proc rate uses each class primary secondary stats at seven to three`() {
+        val game = newGame(now = 0L)
+        game.hero.stats = HeroStats(
+            strength = 60L,
+            constitution = 30L,
+            dexterity = 50L,
+            intelligence = 40L,
+            wisdom = 35L,
+            charisma = 25L,
+            maxHealth = 100L,
+            maxMana = 100L,
+        )
+        val expected = mapOf(
+            HeroClass.WARRIOR to 16,
+            HeroClass.ROGUE to 16,
+            HeroClass.RANGER to 15,
+            HeroClass.MAGE to 14,
+            HeroClass.CLERIC to 14,
+            HeroClass.PALADIN to 16,
+        )
+
+        expected.forEach { (heroClass, percent) ->
+            game.hero.heroClass = heroClass
+            assertEquals(heroClass.name, percent, engine.skillProcPercent(game))
+        }
+
+        game.hero.stats = HeroStats(0L, 0L, 0L, 0L, 0L, 0L, 100L, 100L)
+        assertEquals(8, engine.skillProcPercent(game))
+        game.hero.stats = HeroStats(100L, 100L, 100L, 100L, 100L, 100L, 100L, 100L)
+        assertEquals(20, engine.skillProcPercent(game))
+    }
+
+    @Test
+    fun `expected skill rate includes the fifteen basic attack guarantee`() {
+        val game = newGame(now = 0L)
+
+        game.hero.stats = HeroStats(0L, 0L, 0L, 0L, 0L, 0L, 100L, 100L)
+        assertEquals(1_086, engine.effectiveSkillProcBasisPoints(game))
+
+        game.hero.stats = HeroStats(100L, 100L, 100L, 100L, 100L, 100L, 100L, 100L)
+        assertEquals(2_058, engine.effectiveSkillProcBasisPoints(game))
+    }
+
+    @Test
+    fun `monster energy budget excludes skill tier and mastery damage`() {
+        val game = newGame(now = 0L)
+        game.hero.level = 20L
+        val targetAttacks = game.monster.expectedAttacks
+        val noviceBasicDamage = engine.expectedBasicAttackDamage(game)
+        val noviceDamage = engine.expectedAttackDamage(game)
+        val noviceEnergy = engine.monsterEnergyFor(game, targetAttacks)
+
+        game.skills[0] = game.skills.single().copy(usageCount = 1_000L)
+
+        assertEquals(noviceBasicDamage, engine.expectedBasicAttackDamage(game))
+        assertTrue(engine.expectedAttackDamage(game) > noviceDamage)
+        assertEquals(noviceEnergy, engine.monsterEnergyFor(game, targetAttacks))
+
+        val masteredDamage = engine.expectedAttackDamage(game)
+        val finalTier = SkillCatalog.forClass(HeroClass.WARRIOR).last()
+        game.skills[0] = game.skills.single().copy(
+            id = 20,
+            name = finalTier.name,
+            catalogId = finalTier.catalogId,
+            usageCount = LearnedSkill.MAX_USAGE_COUNT,
+        )
+
+        assertTrue(engine.expectedAttackDamage(game) > masteredDamage)
+        assertEquals(noviceEnergy, engine.monsterEnergyFor(game, targetAttacks))
+    }
+
+    @Test
+    fun `fifteen consecutive basic attacks force the next skill and reset the streak`() {
+        val game = newGame(now = 0L)
+        game.consecutiveBasicAttacks = SimpleGameEngine.MAX_CONSECUTIVE_BASIC_ATTACKS
+        game.combatPhase = CombatPhase.ATTACKING
+        game.actionStartedAt = 0L
+        game.actionEndsAt = 1L
+
+        assertTrue(engine.shouldUseSkill(game, procRoll = 99))
+        engine.settle(game, now = 1L)
+
+        assertTrue(game.lastAttackWasSkill)
+        assertEquals(0, game.consecutiveBasicAttacks)
+    }
+
+    @Test
+    fun `new skill selection weight fades from eight to one through two hundred uses`() {
+        val game = newGame(now = 0L)
+        val definitions = SkillCatalog.forClass(HeroClass.WARRIOR)
+        game.skills = listOf(0L, 100L, 150L, 200L).mapIndexed { index, usageCount ->
+            val definition = definitions[index]
+            game.skills.single().copy(
+                id = index + 1,
+                name = definition.name,
+                catalogId = definition.catalogId,
+                usageCount = usageCount,
+            )
+        }.toMutableList()
+
+        assertEquals(listOf(8, 5, 3, 1), engine.skillSelectionWeights(game))
+    }
+
+    @Test
+    fun `one owned skill remains selectable while two owned skills alternate`() {
+        val singleSkillGame = newGame(now = 0L)
+        val onlySkill = singleSkillGame.skills.single()
+        singleSkillGame.lastActivatedSkillCatalogId = onlySkill.catalogId
+
+        assertEquals(listOf(8), engine.skillSelectionWeights(singleSkillGame))
+        assertEquals(0, engine.selectWeightedSkillIndex(singleSkillGame, selectionRoll = 7))
+
+        val twoSkillGame = newGame(now = 0L)
+        twoSkillGame.hero.level = 5L
+        val secondDefinition = SkillCatalog.forClass(HeroClass.WARRIOR)[1]
+        twoSkillGame.skills += LearnedSkill(
+            id = 2,
+            name = secondDefinition.name,
+            acquiredAtLevel = 5L,
+            description = secondDefinition.description,
+            catalogId = secondDefinition.catalogId,
+        )
+        twoSkillGame.lastActivatedSkillCatalogId = twoSkillGame.skills.first().catalogId
+
+        assertEquals(listOf(0, 8), engine.skillSelectionWeights(twoSkillGame))
+        assertEquals(1, engine.selectWeightedSkillIndex(twoSkillGame, selectionRoll = 0))
+
+        twoSkillGame.consecutiveBasicAttacks = SimpleGameEngine.MAX_CONSECUTIVE_BASIC_ATTACKS
+        twoSkillGame.combatPhase = CombatPhase.ATTACKING
+        twoSkillGame.actionStartedAt = 0L
+        twoSkillGame.actionEndsAt = 1L
+        engine.settle(twoSkillGame, now = 1L)
+
+        assertTrue(twoSkillGame.lastAttackWasSkill)
+        assertEquals(secondDefinition.catalogId, twoSkillGame.lastActivatedSkillCatalogId)
+    }
+
+    @Test
+    fun `basic attacks and presentation clearing keep the previous skill exclusion`() {
+        val game = newGame(now = 0L)
+        val onlySkillCatalogId = game.skills.single().catalogId
+        game.lastActivatedSkillCatalogId = onlySkillCatalogId
+        var guard = 0
+        while (game.lastAttackType != "기본 공격" && guard < 100) {
+            engine.settle(game, game.actionEndsAt)
+            guard += 1
+        }
+
+        assertEquals("기본 공격", game.lastAttackType)
+        assertEquals(onlySkillCatalogId, game.lastActivatedSkillCatalogId)
+
+        game.offlineAdventureMillis = 0L
+        engine.settleOfflineWithOfflineAdventure(game, now = game.lastSettledAt + 1L)
+
+        assertEquals("", game.lastSkillCatalogId)
+        assertEquals(onlySkillCatalogId, game.lastActivatedSkillCatalogId)
+    }
+
+    @Test
+    fun `schema forty one starts weighted selection without a previous skill`() {
+        val game = newGame(now = 0L)
+        game.schemaVersion = 41
+        game.lastActivatedSkillCatalogId = game.skills.single().catalogId
+
+        engine.settleOfflineWithOfflineAdventure(game, now = 0L)
+
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals("", game.lastActivatedSkillCatalogId)
+    }
+
+    @Test
+    fun `schema twenty eight resets the newly persisted basic attack pity counter`() {
+        val game = newGame(now = 0L)
+        game.schemaVersion = 28
+        game.consecutiveBasicAttacks = 15
+
+        engine.settleOfflineWithOfflineAdventure(game, now = 0L)
+
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals(0, game.consecutiveBasicAttacks)
+    }
+
+    @Test
+    fun `schema twenty nine active combat is rebuilt with real damage energy`() {
+        val game = newGame(now = 0L)
+        game.schemaVersion = 29
+        game.consecutiveBasicAttacks = 7
+        game.monster.maxEnergy = SimpleGameEngine.MONSTER_ENERGY_SCALE
+        game.monster.currentEnergy = 40L
+        game.monster.attacksCompleted = 3
+        game.combatPhase = CombatPhase.ATTACKING
+        game.lastDamage = 60L
+        game.lastMonsterEnergyBeforeAttack = 100L
+        game.lastAttackName = "이전 스킬"
+
+        engine.settleOfflineWithOfflineAdventure(game, now = 0L)
+
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals(7, game.consecutiveBasicAttacks)
+        assertEquals(0, game.monster.attacksCompleted)
+        assertTrue(game.monster.maxEnergy > 0L)
+        assertEquals(game.monster.maxEnergy, game.monster.currentEnergy)
+        assertEquals(CombatPhase.REVEAL, game.combatPhase)
+        assertEquals(0L, game.lastDamage)
+        assertEquals(0L, game.lastMonsterEnergyBeforeAttack)
+        assertEquals("", game.lastAttackName)
+    }
+
+    @Test
+    fun `schema thirty five active combat is rebuilt for unified class offense`() {
+        val game = newGame(now = 0L)
+        game.schemaVersion = 35
+        game.hero.heroClass = HeroClass.RANGER
+        game.hero.stats.dexterity = 40L
+        game.hero.stats.wisdom = 10L
+        game.adventurePhase = AdventurePhase.COMBAT
+        game.combatPhase = CombatPhase.ATTACKING
+        game.monster.maxEnergy = 99_999L
+        game.monster.currentEnergy = 12_345L
+        game.monster.attacksCompleted = 3
+        game.lastDamage = 60L
+        game.lastMonsterEnergyBeforeAttack = 100L
+        game.lastAttackName = "이전 스킬"
+
+        engine.settleOfflineWithOfflineAdventure(game, now = 0L)
+
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals(0, game.monster.attacksCompleted)
+        assertTrue(game.monster.maxEnergy > 0L)
+        assertTrue(game.monster.maxEnergy != 99_999L)
+        assertEquals(game.monster.maxEnergy, game.monster.currentEnergy)
+        assertEquals(CombatPhase.REVEAL, game.combatPhase)
+        assertEquals(0L, game.lastDamage)
+        assertEquals(0L, game.lastMonsterEnergyBeforeAttack)
+        assertEquals("", game.lastAttackName)
+    }
+
+    @Test
+    fun `schema thirty nine active combat is rebuilt for the current monster energy formula`() {
+        val game = newGame(now = 0L)
+        game.schemaVersion = 39
+        game.adventurePhase = AdventurePhase.COMBAT
+        game.combatPhase = CombatPhase.ATTACKING
+        game.monster.maxEnergy = 99_999L
+        game.monster.currentEnergy = 12_345L
+        game.monster.attacksCompleted = 3
+        game.lastDamage = 60L
+        game.lastMonsterEnergyBeforeAttack = 100L
+        game.lastAttackName = "이전 공격"
+
+        engine.settleOfflineWithOfflineAdventure(game, now = 0L)
+
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals(0, game.monster.attacksCompleted)
+        assertTrue(game.monster.maxEnergy > 0L)
+        assertTrue(game.monster.maxEnergy != 99_999L)
+        assertEquals(game.monster.maxEnergy, game.monster.currentEnergy)
+        assertEquals(CombatPhase.REVEAL, game.combatPhase)
+        assertEquals(0L, game.lastDamage)
+        assertEquals(0L, game.lastMonsterEnergyBeforeAttack)
+        assertEquals("", game.lastAttackName)
+    }
+
+    @Test
+    fun `schema forty migrates saved class equipment to the approved terminology`() {
+        val game = newGame(now = 0L)
+        game.schemaVersion = 40
+        game.equipment.first().name = "훈련식 전사 투구"
+        game.inventory += InventoryItem(
+            id = 41L,
+            name = "견습식 도적 가죽옷 +1",
+            rarity = "고급",
+            kind = "장비",
+            foundAtLevel = 4L,
+            equipmentSlot = EquipmentSlot.BODY,
+            equipmentPower = 12L,
+        )
+        game.pendingShopOffer = ShopEquipmentOffer(
+            slot = EquipmentSlot.WEAPON,
+            name = "모험식 순찰자 창",
+            rarity = "일반",
+            previousPower = 10L,
+            newPower = 11L,
+            price = 100L,
+        )
+        game.lastShopPurchase = ShopEquipmentOffer(
+            slot = EquipmentSlot.BODY,
+            name = "철제 마도사 로브",
+            rarity = "일반",
+            previousPower = 11L,
+            newPower = 12L,
+            price = 120L,
+        )
+        game.lastTownItemName = "강철 성직 장화"
+        game.lastLootName = "왕실제 성기사 갑옷"
+        game.lastLootSummary = "왕실제 성기사 갑옷 획득"
+        game.lastResult = "왕실제 성기사 갑옷 자동 장착"
+        game.recentItemNames = mutableListOf("강철 성직 장화", "훈련식 전사 투구")
+
+        engine.settleOfflineWithOfflineAdventure(game, now = 0L)
+
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals("훈련식 파이터 투구", game.equipment.first().name)
+        assertEquals("견습식 시프 가죽옷 +1", game.inventory.last().name)
+        assertEquals("모험식 레인져 창", game.pendingShopOffer?.name)
+        assertEquals("철제 메이지 로브", game.lastShopPurchase?.name)
+        assertEquals("강철 클래릭 장화", game.lastTownItemName)
+        assertEquals("왕실제 팔라딘 갑옷", game.lastLootName)
+        assertEquals("왕실제 팔라딘 갑옷 획득", game.lastLootSummary)
+        assertEquals("왕실제 팔라딘 갑옷 자동 장착", game.lastResult)
+        assertEquals(
+            listOf("강철 클래릭 장화", "훈련식 파이터 투구"),
+            game.recentItemNames,
+        )
+    }
+
+    @Test
+    fun `schema thirty refreshes the active tale and completed history with dawn bells`() {
+        val game = newGame(now = 0L)
+        val definition = AdventureTaleCatalog.mainTales[3]
+        val legacyTale = AdventureTaleCatalog.instantiate(
+            definition = definition,
+            sequence = 4L,
+            heroName = game.hero.name,
+            heroLevel = game.hero.level,
+            variant = game.adventureTale.variant,
+        )
+        legacyTale.currentActIndex = 1
+        legacyTale.acts[1] = legacyTale.acts[1].copy(
+            title = "종혀가 여는 길",
+            body = "첫 번째 종혀를 홈에 대자 비밀 계단이 나타났다.",
+            completionBody = "첫 종혀로 비밀 계단을 열어 오르반을 찾았다.",
+            progress = 37L,
+        )
+        val previousTarget = legacyTale.acts[1].target
+        val previousRewardExperience = legacyTale.acts[1].rewardExperience
+        game.adventureTale = legacyTale
+        game.completedTaleHistory += CompletedTaleRecord(
+            taleSequence = 4L,
+            taleId = definition.id,
+            kind = TaleKind.MAIN,
+            volumeNumber = 1,
+            chapterNumber = 4,
+            title = definition.title,
+            summary = "첫 종혀로 비밀 계단을 열어 오르반을 찾았다.",
+            nextHook = "도둑맞은 세 종혀를 되찾아야 한다.",
+            actMemories = listOf("첫 번째 종혀를 홈에 대자 비밀 계단이 나타났다."),
+            completedAtLevel = game.hero.level,
+        )
+        game.monster.catalogId = "ash_border.c04.boss.02"
+        game.monster.baseName = "종혀로 열린 길의 파수꾼"
+        game.monster.name = "종혀 홈에 웅크린 종혀로 열린 길의 파수꾼"
+        game.recentMonsterNames = mutableListOf(game.monster.name)
+        game.lastResult = "종혀로 열린 길의 파수꾼 처치"
+        game.schemaVersion = 30
+
+        engine.settleOfflineWithOfflineAdventure(game, now = 0L)
+
+        val migratedAct = game.adventureTale.acts[1]
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, game.schemaVersion)
+        assertEquals("clapper_door", migratedAct.id)
+        assertEquals("종소리가 여는 길", migratedAct.title)
+        assertTrue(migratedAct.body.contains("첫 번째 새벽종을 울리자"))
+        assertEquals(37L, migratedAct.progress)
+        assertEquals(previousTarget, migratedAct.target)
+        assertEquals(previousRewardExperience, migratedAct.rewardExperience)
+        val migratedHistory = game.completedTaleHistory.single()
+        assertTrue(migratedHistory.summary.contains("첫 번째 새벽종을 울려"))
+        assertTrue(migratedHistory.nextHook.contains("도둑맞은 두 새벽종"))
+        assertFalse(migratedHistory.actMemories.any { "종혀" in it || "홈에 대자" in it })
+        assertEquals("종소리로 열린 길의 파수꾼", game.monster.baseName)
+        assertFalse(game.monster.name.contains("종혀"))
+        assertFalse(game.recentMonsterNames.any { "종혀" in it })
+        assertFalse(game.lastResult.contains("종혀"))
+    }
+
     private fun settleUntilNextKill(game: SimpleGameState): SettlementDelta {
         val beforeKills = game.totalKills
         var delta = SettlementDelta(0L, 0L, 0L, 0L, 0L, 0L)
@@ -1729,13 +2789,24 @@ class SimpleGameEngineTest {
         return delta
     }
 
+    private fun settleUntilSkillAttack(game: SimpleGameState) {
+        var guard = 0
+        while (guard < 1_000) {
+            val beforeSequence = game.actionSequence
+            engine.settle(game, game.actionEndsAt)
+            if (game.actionSequence > beforeSequence && game.lastAttackWasSkill) return
+            guard += 1
+        }
+        assertTrue("skill attack was not selected", false)
+    }
+
     private fun newGame(now: Long) = engine.newGame(
         name = "테스터",
         heroClass = HeroClass.WARRIOR,
         rolledStats = engine.rollStats(77L).stats,
         seed = 88L,
         now = now,
-    )
+    ).also(::skipOpeningForLegacyTestBaseline)
 
     private fun newGameWithSeed(seed: Long, now: Long) = engine.newGame(
         name = "테스터",
@@ -1743,7 +2814,42 @@ class SimpleGameEngineTest {
         rolledStats = engine.rollStats(77L).stats,
         seed = seed,
         now = now,
-    )
+    ).also(::skipOpeningForLegacyTestBaseline)
+
+    private fun skipOpeningForLegacyTestBaseline(game: SimpleGameState) {
+        engine.settle(game, game.actionEndsAt)
+        game.actionStartedAt -= SimpleGameEngine.OPENING_PRESENTATION_MILLIS
+        game.actionEndsAt -= SimpleGameEngine.OPENING_PRESENTATION_MILLIS
+        game.lastSettledAt -= SimpleGameEngine.OPENING_PRESENTATION_MILLIS
+        game.lastResult = "모험을 준비하는 중"
+    }
+
+    private fun assertEmptyShopThenDeparting(game: SimpleGameState) {
+        assertEquals(AdventurePhase.SHOPPING_EMPTY, game.adventurePhase)
+        assertEquals(null, game.pendingShopOffer)
+        assertEquals(
+            "지금 살 수 있는 더 좋은 장비를 찾지 못했습니다",
+            game.lastResult,
+        )
+        assertEquals(
+            SimpleGameEngine.SHOP_EMPTY_RESULT_MILLIS,
+            game.actionEndsAt - game.actionStartedAt,
+        )
+
+        engine.settle(game, game.actionEndsAt)
+
+        assertEquals(AdventurePhase.DEPARTING, game.adventurePhase)
+    }
+
+    private fun SimpleGameState.useFirstMainTale() {
+        adventureTale = AdventureTaleCatalog.instantiate(
+            definition = AdventureTaleCatalog.firstMain,
+            sequence = 1L,
+            heroName = hero.name,
+            heroLevel = hero.level,
+            variant = AdventureTaleCatalog.variantAt(0),
+        )
+    }
 
     private fun forceVictory(game: SimpleGameState) {
         game.adventurePhase = AdventurePhase.COMBAT

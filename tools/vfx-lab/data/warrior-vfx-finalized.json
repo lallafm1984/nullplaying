@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-24",
+  "scope": "finalized warrior web and Android detailed sprite sources",
+  "catalogOrder": "Lv.80 파멸의 검, Lv.85 천지 가르기, Lv.90 천하대양단, Lv.95 최후의 일격",
+  "finalized": [
+    {
+      "unlockLevel": 45,
+      "catalogId": "warrior_t10_c01",
+      "name": "대지 분쇄",
+      "variant": "legacy",
+      "finalSource": "custom-assets/warrior-finalized-vfx/warrior_t10_c01.png",
+      "selectionSource": "custom-assets/warrior-t07-t20-intuitive-skills-imagegen-v1/warrior_t10_c01.png",
+      "legacySource": "custom-assets/warrior-t07-t20-intuitive-skills-imagegen-v1/warrior_t10_c01.png"
+    },
+    {
+      "unlockLevel": 70,
+      "catalogId": "warrior_t15_c01",
+      "name": "멸천 일섬",
+      "variant": "1",
+      "finalSource": "custom-assets/warrior-finalized-vfx/warrior_t15_c01.png",
+      "selectionSource": "custom-assets/warrior-t15-heaven-erasing-flash-black-matte-imagegen-refined-v3/warrior_t15_c01.png",
+      "legacySource": "custom-assets/warrior-t07-t20-intuitive-skills-imagegen-v1/warrior_t15_c01.png"
+    },
+    {
+      "unlockLevel": 75,
+      "catalogId": "warrior_t16_c05",
+      "name": "무극일섬",
+      "variant": "5",
+      "finalSource": "custom-assets/warrior-finalized-vfx/warrior_t16_c05.png",
+      "selectionSource": "custom-assets/warrior-t16-boundless-void-domain-black-matte-imagegen-refined-v2/warrior_t16_c05.png",
+      "legacySource": "custom-assets/warrior-t07-t20-intuitive-skills-imagegen-v1/warrior_t16_c05.png"
+    },
+    {
+      "unlockLevel": 80,
+      "catalogId": "warrior_t17_c01",
+      "name": "파멸의 검",
+      "variant": "2",
+      "finalSource": "custom-assets/warrior-finalized-vfx/warrior_t17_c01.png",
+      "selectionSource": "custom-assets/warrior-t17-t20-style-cohesion-dark-painterly-imagegen-refined-v4/warrior_t18_c02.png",
+      "legacySource": "custom-assets/warrior-t07-t20-intuitive-skills-imagegen-v1/warrior_t18_c02.png"
+    },
+    {
+      "unlockLevel": 85,
+      "catalogId": "warrior_t18_c02",
+      "name": "천지 가르기",
+      "variant": "1",
+      "finalSource": "custom-assets/warrior-finalized-vfx/warrior_t18_c02.png",
+      "selectionSource": "custom-assets/warrior-t17-t20-style-cohesion-dark-painterly-imagegen-refined-v4/warrior_t19_c02.png",
+      "legacySource": "custom-assets/warrior-t07-t20-intuitive-skills-imagegen-v1/warrior_t19_c02.png"
+    },
+    {
+      "unlockLevel": 90,
+      "catalogId": "warrior_t19_c02",
+      "name": "천하대양단",
+      "variant": "4",
+      "finalSource": "custom-assets/warrior-finalized-vfx/warrior_t19_c02.png",
+      "selectionSource": "custom-assets/warrior-t17-t20-style-cohesion-dark-painterly-imagegen-refined-v4/warrior_t20_c01.png",
+      "legacySource": "custom-assets/warrior-t07-t20-intuitive-skills-imagegen-v1/warrior_t20_c01.png"
+    },
+    {
+      "unlockLevel": 95,
+      "catalogId": "warrior_t20_c01",
+      "name": "최후의 일격",
+      "variant": "5",
+      "finalSource": "custom-assets/warrior-finalized-vfx/warrior_t20_c01.png",
+      "selectionSource": "custom-assets/warrior-t17-final-blow-falling-void-guillotine-imagegen-refined-v5/warrior_t17_c01.png",
+      "legacySource": "custom-assets/warrior-t07-t20-intuitive-skills-imagegen-v1/warrior_t17_c01.png"
+    }
+  ],
+  "cleanupPolicy": "keep finalized sources, selected-source provenance, and pre-review legacy sources; move all unselected warrior review assets and generation-only records to recoverable Trash"
+}

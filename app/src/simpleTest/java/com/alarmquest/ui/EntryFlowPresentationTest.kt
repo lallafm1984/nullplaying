@@ -1,6 +1,9 @@
 package com.alarmquest.ui
 
 import com.alarmquest.data.StartupPhase
+import com.alarmquest.engine.SimpleGameEngine
+import com.alarmquest.model.HeroClass
+import com.alarmquest.model.TaleKind
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -8,9 +11,51 @@ import org.junit.Test
 
 class EntryFlowPresentationTest {
     @Test
-    fun `all three planned character slots are available`() {
+    fun `one shared banner covers every post-title entry scene`() {
+        assertFalse(entrySceneUsesSharedBanner(EntryScene.TITLE))
+        assertTrue(entrySceneUsesSharedBanner(EntryScene.ROSTER))
+        assertTrue(entrySceneUsesSharedBanner(EntryScene.CREATION))
+        assertTrue(entrySceneUsesSharedBanner(EntryScene.GAME))
+    }
+
+    @Test
+    fun `changing character uses directional transitions around the roster`() {
+        assertEquals(
+            EntrySceneTransitionDirection.BACKWARD,
+            entrySceneTransitionDirection(EntryScene.GAME, EntryScene.ROSTER),
+        )
+        assertEquals(
+            EntrySceneTransitionDirection.FORWARD,
+            entrySceneTransitionDirection(EntryScene.ROSTER, EntryScene.GAME),
+        )
+        assertEquals(
+            EntrySceneTransitionDirection.FADE,
+            entrySceneTransitionDirection(EntryScene.TITLE, EntryScene.ROSTER),
+        )
+    }
+
+    @Test
+    fun `new character enters the game with a playable prologue quest`() {
+        val engine = SimpleGameEngine()
+        val state = engine.newGame(
+            name = "루나",
+            heroClass = HeroClass.MAGE,
+            rolledStats = engine.rollStats(77L).stats,
+            seed = 88L,
+            now = 1_000L,
+        )
+
+        assertEquals(EntryScene.GAME, entrySceneFor(state))
+        assertEquals(TaleKind.PROLOGUE, state.adventureTale.kind)
+        assertEquals(5, state.adventureTale.acts.size)
+        assertTrue(state.adventureTale.acts.all { it.target > 1L })
+    }
+
+    @Test
+    fun `character slots begin at one and expand through level unlocks`() {
         assertEquals(3, PLANNED_CHARACTER_SLOT_COUNT)
-        assertEquals(3, AVAILABLE_CHARACTER_SLOT_COUNT)
+        assertFalse(canCreateCharacter(emptyList(), 0))
+        assertTrue(canCreateCharacter(emptyList(), 1))
     }
 
     @Test
@@ -22,9 +67,8 @@ class EntryFlowPresentationTest {
     @Test
     fun `roster accessibility summary includes offline adventure balance`() {
         val description = characterRosterContentDescription(
-            slotId = 2,
             name = "루나",
-            classLabel = "마법사",
+            classLabel = "메이지",
             level = 42L,
             combatPower = 1_234L,
             adventureTitle = "유리 숲의 백야",
@@ -34,6 +78,7 @@ class EntryFlowPresentationTest {
         assertTrue(description.contains("루나"))
         assertTrue(description.contains("현재 모험 유리 숲의 백야"))
         assertTrue(description.contains("오프라인 모험 잔여 37퍼센트"))
+        assertFalse(description.contains("슬롯"))
     }
 
     @Test

@@ -7,7 +7,7 @@ import org.junit.Test
 
 class SkillEffectTestCatalogTest {
     @Test
-    fun `effect test list contains only the twenty refined warrior skills`() {
+    fun `warrior effect test list preserves the twenty refined skills`() {
         val definitions = warriorSignatureSkillDefinitions()
 
         assertEquals(20, definitions.size)
@@ -16,12 +16,28 @@ class SkillEffectTestCatalogTest {
         assertTrue(definitions.all { it.heroClass == HeroClass.WARRIOR })
         assertEquals(
             listOf(
-                "칼날 베기", "방패 돌파", "철퇴 강타", "공성 돌격", "전투도끼 낙하",
-                "광폭 연참", "맹호 참격", "성문 깨기", "불굴 진격", "성벽 양단",
-                "파성 철퇴", "산맥 붕괴타", "철혈 관통", "군단 대돌파", "군왕의 일도",
-                "용살 연속참", "용살 대참", "전쟁왕 대철퇴", "대륙 파쇄타", "천하대양단",
+                "칼날 베기", "강철 베기", "파쇄격", "대지 가르기", "십자 참격",
+                "폭풍 베기", "철갑 돌진", "전장의 돌격", "회오리 참격", "대지 분쇄",
+                "폭풍검", "섬광 일섬", "무영 연참", "용살검", "멸천 일섬", "무극일섬",
+                "파멸의 검", "천지 가르기", "천하대양단", "최후의 일격",
             ),
             definitions.map { it.name },
         )
+    }
+
+    @Test
+    fun `effect test exposes twenty signature skills for every hero class`() {
+        HeroClass.entries.forEach { heroClass ->
+            val definitions = signatureSkillDefinitions(heroClass)
+
+            assertEquals("$heroClass skill count", 20, definitions.size)
+            assertEquals("$heroClass unique IDs", 20, definitions.map { it.catalogId }.distinct().size)
+            assertTrue("$heroClass ownership", definitions.all { it.heroClass == heroClass })
+            assertEquals(
+                "$heroClass unlock levels",
+                listOf(1) + (5..95 step 5),
+                definitions.map { it.unlockLevel },
+            )
+        }
     }
 }

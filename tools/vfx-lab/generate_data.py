@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-"""Build the browser catalogue only from Android's authoritative VFX export.
+"""Build the 120-skill browser catalogue from the retained Android presentation export.
 
-The web lab deliberately contains no motion, tier, direction, or asset-selection
-formula. Android exports those decisions from the same pure frame planner that
-the Compose Canvas consumes; this module only converts the PSV metadata to a
-small JSON catalogue and prepares per-skill frame rows for the local API.
+The web lab draws the reviewed PNG sheets directly. This module keeps the compact
+skill metadata and damage/camera presentation samples that drive the test UI.
 """
 
 from __future__ import annotations
@@ -20,8 +18,8 @@ ROOT = Path(__file__).resolve().parents[2]
 LAB = Path(__file__).resolve().parent
 EXPORT = LAB / "data/android-export"
 OUT = LAB / "data/skills.json"
+SIGNATURE_MANIFEST = LAB / "data/signature-skills.json"
 ASSETS = ROOT / "app/src/simple/res/drawable-nodpi"
-R_SYMBOLS = ROOT / "app/build/intermediates/runtime_symbol_list/debug/processDebugResources/R.txt"
 
 CLASS_LABELS = {
     "WARRIOR": "전사",
@@ -43,47 +41,31 @@ def _read_psv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(stream, delimiter="|"))
 
 
+def _signature_skills() -> dict[str, dict[str, Any]]:
+    payload = json.loads(SIGNATURE_MANIFEST.read_text(encoding="utf-8"))
+    skills = payload.get("skills", [])
+    by_id = {skill["id"]: skill for skill in skills}
+    if len(skills) != 120 or len(by_id) != 120:
+        raise SystemExit(f"Expected 120 unique signature skills, found {len(skills)}/{len(by_id)}")
+    return by_id
+
+
 def _ints(value: str) -> list[int]:
     return [int(item) for item in value.split(",") if item]
 
 
-def _asset_filename(asset_name: str) -> str:
-    matches = [path for path in ASSETS.glob(f"{asset_name}.*") if path.suffix.lower() in {".webp", ".png"}]
-    if len(matches) != 1:
-        raise SystemExit(f"Expected one drawable for {asset_name}, found {matches}")
-    return matches[0].name
-
-
-def _asset_ids(value: str) -> list[int]:
-    return _ints(value)
-
-
-def _resource_asset_names() -> dict[str, str]:
-    if not R_SYMBOLS.exists():
-        return {}
-    names: dict[str, str] = {}
-    for raw in R_SYMBOLS.read_text(encoding="utf-8").splitlines():
-        columns = raw.split()
-        if len(columns) == 4 and columns[:2] == ["int", "drawable"] and columns[2].startswith("vfx"):
-            names[str(int(columns[3], 16))] = _asset_filename(columns[2])
-    return names
-
-
 def generate() -> dict[str, Any]:
+    signatures_by_id = _signature_skills()
     manifest_rows = _read_psv(EXPORT / "manifest.psv")
     if len(manifest_rows) != 1:
         raise SystemExit(f"Expected one Android VFX manifest row, found {len(manifest_rows)}")
     manifest = manifest_rows[0]
     skill_rows = _read_psv(EXPORT / "skills.psv")
-    asset_rows = _read_psv(EXPORT / "assets.psv")
-    assets_by_id = _resource_asset_names()
-    assets_by_id.update({
-        row["assetId"]: _asset_filename(row["assetName"])
-        for row in asset_rows
-    })
-
     skills: list[dict[str, Any]] = []
     for row in skill_rows:
+        signature = signatures_by_id.get(row["catalogId"])
+        if signature is None:
+            continue
         timings = _ints(row["hitTimings"])
         weights = _ints(row["hitWeights"])
         presentation_timings = _ints(row["presentationHitTimings"])
@@ -100,28 +82,18 @@ def generate() -> dict[str, Any]:
         if len(timings) != len(weights):
             raise SystemExit(f"Timing/weight drift for {row['catalogId']}")
 
-        role_asset_ids = {
-            "primary": _asset_ids(row["primaryAsset"]),
-            "primaryVariants": _asset_ids(row["primaryAssets"]),
-            "secondary": _asset_ids(row["secondaryAsset"]),
-            "impact": _asset_ids(row["impactAssets"]),
-            "debris": _asset_ids(row["debrisAssets"]),
-            "residual": _asset_ids(row["residualAsset"]),
-            "finisherRing": _asset_ids(row["finisherRingAsset"]),
-            "finisherEcho": _asset_ids(row["finisherEchoAsset"]),
-        }
-        role_assets = {
-            role: [assets_by_id[str(asset_id)] for asset_id in asset_ids]
-            for role, asset_ids in role_asset_ids.items()
-        }
+        role_assets = {role: [] for role in (
+            "primary", "primaryVariants", "secondary", "impact", "debris",
+            "residual", "finisherRing", "finisherEcho",
+        )}
         skills.append(
             {
                 "id": row["catalogId"],
                 "heroClass": row["class"],
                 "classLabel": CLASS_LABELS[row["class"]],
-                "level": int(row["level"]),
+                "level": int(signature["unlockLevel"]),
                 "candidate": int(row["candidate"]),
-                "name": row["name"],
+                "name": signature["name"],
                 "branchKey": row["branchKey"],
                 "action": row["action"],
                 "flow": row["flow"],
@@ -152,13 +124,13 @@ def generate() -> dict[str, Any]:
             }
         )
 
-    if len(skills) != 600 or len({skill["id"] for skill in skills}) != 600:
-        raise SystemExit(f"Expected 600 unique skills, found {len(skills)}")
+    if len(skills) != 120 or {skill["id"] for skill in skills} != signatures_by_id.keys():
+        raise SystemExit(f"Expected all 120 signature skills, found {len(skills)}")
 
     return {
         "meta": {
             "generatedFrom": str((EXPORT / "skills.psv").relative_to(ROOT)),
-            "frameSource": "Android authored/legacy frame export at 10 ms samples plus exact damage landmarks",
+            "frameSource": "Reviewed signature sheets plus Android presentation samples",
             "assetRoot": "app/src/simple/res/drawable-nodpi",
             "viewportWidth": float(manifest["viewportWidth"]),
             "viewportHeight": float(manifest["viewportHeight"]),
@@ -167,47 +139,24 @@ def generate() -> dict[str, Any]:
             "attackBoundaryMillis": int(manifest["attackBoundaryMillis"]),
             "sampleStepMillis": int(manifest["sampleStepMillis"]),
             "skillCount": len(skills),
-            "assetsById": assets_by_id,
+            "assetsById": {},
         },
         "skills": skills,
     }
 
 
 def load_frame_cache() -> dict[str, dict[str, list[dict[str, Any]]]]:
-    """Return compact frame samples grouped by skill and reduced-motion flag."""
-    grouped: dict[str, dict[str, list[dict[str, Any]]]] = defaultdict(lambda: {"0": [], "1": []})
-    for row in _read_psv(EXPORT / "frames.psv"):
-        grouped[row["catalogId"]][row["reduced"]].append(
-            {
-                "t": int(row["elapsed"]),
-                "role": row["role"],
-                "asset": int(row["assetId"]),
-                "instance": int(row["instance"]),
-                "hit": int(row["hitIndex"]),
-                "x": float(row["x"]),
-                "y": float(row["y"]),
-                "w": float(row["width"]),
-                "h": float(row["height"]),
-                "r": float(row["rotation"]),
-                "a": float(row["alpha"]),
-                "reveal": float(row["reveal"]),
-                "mirror": float(row["mirror"]),
-                "start": int(row["start"]),
-                "end": int(row["end"]),
-                "drawMode": row["drawMode"],
-                "tintArgb": row["tintArgb"],
-                "safeAlphaCap": float(row["safeAlphaCap"]) if row["safeAlphaCap"] else None,
-            }
-        )
-    if len(grouped) != 600:
-        raise SystemExit(f"Expected exported frames for 600 skills, found {len(grouped)}")
-    return dict(grouped)
+    """Every production skill now renders its reviewed sprite sheet directly."""
+    return {catalog_id: {"0": [], "1": []} for catalog_id in _signature_skills()}
 
 
 def load_presentation_cache() -> dict[str, dict[str, list[dict[str, Any]]]]:
     """Exact Android damage, gauge, label and camera samples for the browser player."""
     grouped: dict[str, dict[str, list[dict[str, Any]]]] = defaultdict(lambda: {"0": [], "1": []})
+    signature_ids = _signature_skills().keys()
     for row in _read_psv(EXPORT / "presentation.psv"):
+        if row["catalogId"] not in signature_ids:
+            continue
         grouped[row["catalogId"]][row["reduced"]].append(
             {
                 "t": int(row["elapsed"]),
@@ -224,8 +173,8 @@ def load_presentation_cache() -> dict[str, dict[str, list[dict[str, Any]]]]:
                 "cameraScale": float(row["cameraScale"]),
             }
         )
-    if len(grouped) != 600:
-        raise SystemExit(f"Expected presentation samples for 600 skills, found {len(grouped)}")
+    if len(grouped) != 120:
+        raise SystemExit(f"Expected presentation samples for 120 signature skills, found {len(grouped)}")
     return dict(grouped)
 
 

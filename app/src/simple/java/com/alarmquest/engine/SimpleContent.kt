@@ -4,6 +4,18 @@ import com.alarmquest.model.EquipmentSlot
 import com.alarmquest.model.HeroClass
 
 internal object SimpleContent {
+    internal data class EquipmentNameParts(
+        val prefix: String?,
+        val progressionLabel: String,
+        val archetype: String,
+        val enhancement: Int?,
+    )
+
+    internal data class GenericLootNameParts(
+        val material: String,
+        val form: String,
+    )
+
     val monsterKinds = listOf(
         "뿔늑대", "동굴 거미", "갑주 멧돼지", "잿빛 슬라임", "숲 고블린",
         "돌가죽 트롤", "해골 기사", "그림자 박쥐", "늪 히드라", "서리 와이번",
@@ -70,16 +82,50 @@ internal object SimpleContent {
 
     fun equipmentPrefixes(level: Long): List<String> = equipmentPrefixPool(level).prefixes
 
+    val localizableEquipmentPrefixes: Set<String>
+        get() = equipmentPrefixPools.flatMap { it.prefixes }.toSet()
+
     fun equipmentBases(slot: EquipmentSlot, level: Long, heroClass: HeroClass): List<String> =
         ClassEquipmentCatalog.bases(heroClass, slot, level)
 
     fun equipmentBase(slot: EquipmentSlot, level: Long, heroClass: HeroClass, variantIndex: Int): String =
         ClassEquipmentCatalog.base(heroClass, slot, level, variantIndex)
 
+    fun parseEquipmentName(name: String): EquipmentNameParts? {
+        val enhancementMatch = ENHANCEMENT_SUFFIX.find(name)
+        val enhancement = enhancementMatch?.groupValues?.get(1)?.toIntOrNull()
+        val coreName = enhancementMatch?.let { name.removeRange(it.range) } ?: name
+        val prefix = localizableEquipmentPrefixes
+            .asSequence()
+            .sortedByDescending(String::length)
+            .firstOrNull { coreName.startsWith("$it ") }
+        val baseName = prefix?.let { coreName.removePrefix("$it ") } ?: coreName
+        val (progressionLabel, archetype) = ClassEquipmentCatalog.splitBaseName(baseName)
+            ?: return null
+        return EquipmentNameParts(
+            prefix = prefix,
+            progressionLabel = progressionLabel,
+            archetype = archetype,
+            enhancement = enhancement,
+        )
+    }
+
+    fun parseGenericLootName(name: String): GenericLootNameParts? {
+        val material = lootMaterials
+            .asSequence()
+            .sortedByDescending(String::length)
+            .firstOrNull { name.startsWith("$it ") }
+            ?: return null
+        val form = name.removePrefix("$material ")
+        return if (form in lootForms) GenericLootNameParts(material, form) else null
+    }
+
     private fun equipmentPrefixPool(level: Long): EquipmentPrefixPool {
         val safeLevel = level.coerceAtLeast(1L)
         return equipmentPrefixPools.last { safeLevel >= it.minimumLevel }
     }
+
+    private val ENHANCEMENT_SUFFIX = Regex(" \\+([1-9][0-9]*)$")
 
     val skills = listOf(
         "강타" to "힘을 실은 일격으로 적을 강하게 타격한다.",

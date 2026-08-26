@@ -1,3 +1,7 @@
+import java.util.Properties
+
+val alarmQuestAdMobAppId = "ca-app-pub-9163944262143117~4374561480"
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -5,6 +9,35 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.devtools.ksp")
 }
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+
+fun buildConfigString(name: String): String =
+    (localProperties.getProperty(name) ?: System.getenv(name).orEmpty())
+        .replace("\\", "\\\\")
+        .replace("\"", "\\\"")
+
+val releaseStoreFile = rootProject.file(
+    System.getenv("ALARMQUEST_RELEASE_STORE_FILE")
+        ?.takeIf { it.isNotBlank() }
+        ?: "keys/alarmquest-upload.keystore",
+)
+val releasePasswordFile = rootProject.file("keys/alarmquest-upload.pass")
+val releaseStorePassword = System.getenv("ALARMQUEST_RELEASE_STORE_PASSWORD")
+    ?.takeIf { it.isNotBlank() }
+    ?: releasePasswordFile
+        .takeIf { it.isFile }
+        ?.readText()
+        ?.trim()
+val releaseKeyPassword = System.getenv("ALARMQUEST_RELEASE_KEY_PASSWORD")
+    ?.takeIf { it.isNotBlank() }
+    ?: releaseStorePassword
+val releaseKeyAlias = System.getenv("ALARMQUEST_RELEASE_KEY_ALIAS")
+    ?.takeIf { it.isNotBlank() }
+    ?: "alarmquest-upload"
 
 android {
     namespace = "com.alarmquest"
@@ -14,13 +47,55 @@ android {
         applicationId = "com.alarmquest"
         minSdk = 26
         targetSdk = 36
-        versionCode = 9
-        versionName = "0.4.0"
+        versionCode = 10
+        versionName = "0.4.1"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField(
+            "String",
+            "ADMOB_APP_ID",
+            "\"$alarmQuestAdMobAppId\"",
+        )
+        manifestPlaceholders["ADMOB_APP_ID"] = alarmQuestAdMobAppId
+        buildConfigField(
+            "String",
+            "BANNER_AD_UNIT_ID",
+            "\"ca-app-pub-9163944262143117/1532775725\"",
+        )
+        buildConfigField(
+            "String",
+            "REWARDED_AD_UNIT_ID",
+            "\"ca-app-pub-9163944262143117/2295193051\"",
+        )
+        buildConfigField(
+            "String",
+            "PRIVACY_POLICY_URL",
+            "\"https://nullplaying.4ltree.com/privacy\"",
+        )
+        buildConfigField(
+            "String",
+            "DATA_DELETION_URL",
+            "\"https://nullplaying.4ltree.com/data-deletion\"",
+        )
+        buildConfigField("String", "SUPABASE_URL", "\"${buildConfigString("SUPABASE_URL")}\"")
+        buildConfigField(
+            "String",
+            "SUPABASE_PUBLISHABLE_KEY",
+            "\"${buildConfigString("SUPABASE_PUBLISHABLE_KEY")}\"",
+        )
     }
 
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = releaseStoreFile
+            storePassword = releaseStorePassword
+            keyAlias = releaseKeyAlias
+            keyPassword = releaseKeyPassword
+        }
     }
 
     buildTypes {
@@ -29,9 +104,32 @@ android {
             // retaining debug-only inspection screens and debug signing.
             isMinifyEnabled = true
             isShrinkResources = true
+            // Never request live ads from local QA builds. This protects the AdMob account
+            // from accidental invalid traffic while exercising the complete banner flow.
+            buildConfigField(
+                "String",
+                "BANNER_AD_UNIT_ID",
+                "\"ca-app-pub-3940256099942544/9214589741\"",
+            )
+            buildConfigField(
+                "String",
+                "REWARDED_AD_UNIT_ID",
+                "\"ca-app-pub-3940256099942544/5224354917\"",
+            )
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
+        create("migrationTest") {
+            initWith(getByName("debug"))
+            isMinifyEnabled = false
+            isShrinkResources = false
+            matchingFallbacks += listOf("debug")
+        }
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+        }
     }
+
+    testBuildType = "migrationTest"
 
     sourceSets {
         getByName("main") {
@@ -41,6 +139,9 @@ android {
         }
         getByName("test") {
             java.setSrcDirs(listOf("src/simpleTest/java"))
+        }
+        getByName("androidTest") {
+            assets.setSrcDirs(listOf("schemas"))
         }
     }
 
@@ -64,12 +165,17 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.room:room-runtime:2.8.4")
+    implementation("androidx.work:work-runtime:2.7.0")
     implementation("androidx.core:core-ktx:1.17.0")
-    implementation("com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.3.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation("com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.4.0")
+    implementation("com.google.android.ump:user-messaging-platform:4.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
     ksp("androidx.room:room-compiler:2.8.4")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.robolectric:robolectric:4.16.1")
+    androidTestImplementation("androidx.room:room-testing:2.8.4")
+    androidTestImplementation("androidx.test.ext:junit:1.3.0")
+    androidTestImplementation("androidx.test:runner:1.7.0")
 }
 
 ksp {

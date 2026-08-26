@@ -1,0 +1,1997 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "id": "ranger_t01_c01",
+      "name": "정조준 사격",
+      "level": 1,
+      "heroClass": "RANGER",
+      "action": "LOCKED_PINPOINT_SHOT",
+      "flow": "SHOT_OUTSIDE_IN",
+      "label": "SHOT · LOCKED_PINPOINT_SHOT",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "정조준 사격 예고",
+      "motion": "정조준 사격 전개",
+      "contact": "정조준 사격 완성",
+      "impact": "정조준 사격 최대 타격",
+      "hold": "정조준 사격 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t01_c01.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t02_c02",
+      "name": "연속 사격",
+      "level": 5,
+      "heroClass": "RANGER",
+      "action": "THREE_STEP_RAPID_FIRE",
+      "flow": "VOLLEY_OUTSIDE_IN",
+      "label": "VOLLEY · THREE_STEP_RAPID_FIRE",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        260,
+        470,
+        650
+      ],
+      "prep": "연속 사격 예고",
+      "motion": "연속 사격 전개",
+      "contact": "연속 사격 완성",
+      "impact": "연속 사격 최대 타격",
+      "hold": "연속 사격 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t02_c02.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t03_c04",
+      "name": "올가미 화살",
+      "level": 10,
+      "heroClass": "RANGER",
+      "action": "OPEN_ROPE_SNARE",
+      "flow": "TRAP_OUTSIDE_IN",
+      "label": "TRAP · OPEN_ROPE_SNARE",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        240,
+        680
+      ],
+      "prep": "올가미 화살 예고",
+      "motion": "올가미 화살 전개",
+      "contact": "올가미 화살 완성",
+      "impact": "올가미 화살 최대 타격",
+      "hold": "올가미 화살 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t03_c04.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t04_c03",
+      "name": "회오리 화살",
+      "level": 15,
+      "heroClass": "RANGER",
+      "action": "ARROW_TORNADO_DRILL",
+      "flow": "SPIN_CLOCKWISE",
+      "label": "SPIN · ARROW_TORNADO_DRILL",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        240,
+        680
+      ],
+      "prep": "회오리 화살 예고",
+      "motion": "회오리 화살 전개",
+      "contact": "회오리 화살 완성",
+      "impact": "회오리 화살 최대 타격",
+      "hold": "회오리 화살 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t04_c03.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t05_c02",
+      "name": "유성 화살비",
+      "level": 20,
+      "heroClass": "RANGER",
+      "action": "METEOR_ARROW_RAIN",
+      "flow": "VOLLEY_TOP_TO_BOTTOM",
+      "label": "VOLLEY · METEOR_ARROW_RAIN",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        180,
+        430,
+        720
+      ],
+      "prep": "유성 화살비 예고",
+      "motion": "유성 화살비 전개",
+      "contact": "유성 화살비 완성",
+      "impact": "유성 화살비 최대 타격",
+      "hold": "유성 화살비 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t05_c02.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t06_c04",
+      "name": "곰발톱 강타",
+      "level": 25,
+      "heroClass": "RANGER",
+      "action": "BEAR_CLAW_DESCENT",
+      "flow": "DESCEND_TOP_TO_BOTTOM",
+      "label": "DESCEND · BEAR_CLAW_DESCENT",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        140,
+        420,
+        780
+      ],
+      "prep": "곰발톱 강타 예고",
+      "motion": "곰발톱 강타 전개",
+      "contact": "곰발톱 강타 완성",
+      "impact": "곰발톱 강타 최대 타격",
+      "hold": "곰발톱 강타 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t06_c04.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t07_c01",
+      "name": "철갑 관통",
+      "level": 30,
+      "heroClass": "RANGER",
+      "action": "ARMOR_PIERCING_BOLT",
+      "flow": "PIERCE_OUTSIDE_IN",
+      "label": "PIERCE · ARMOR_PIERCING_BOLT",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "철갑 관통 예고",
+      "motion": "철갑 관통 전개",
+      "contact": "철갑 관통 완성",
+      "impact": "철갑 관통 최대 타격",
+      "hold": "철갑 관통 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t07_c01.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t08_c05",
+      "name": "보름달 일격",
+      "level": 35,
+      "heroClass": "RANGER",
+      "action": "FULL_MOON_DESCENT",
+      "flow": "DESCEND_TOP_TO_BOTTOM",
+      "label": "DESCEND · FULL_MOON_DESCENT",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "보름달 일격 예고",
+      "motion": "보름달 일격 전개",
+      "contact": "보름달 일격 완성",
+      "impact": "보름달 일격 최대 타격",
+      "hold": "보름달 일격 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t08_c05.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t09_c04",
+      "name": "매의 급강하",
+      "level": 40,
+      "heroClass": "RANGER",
+      "action": "FALCON_DIVE_STRIKE",
+      "flow": "DESCEND_TOP_TO_BOTTOM",
+      "label": "DESCEND · FALCON_DIVE_STRIKE",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        220,
+        780
+      ],
+      "prep": "매의 급강하 예고",
+      "motion": "매의 급강하 전개",
+      "contact": "매의 급강하 완성",
+      "impact": "매의 급강하 최대 타격",
+      "hold": "매의 급강하 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t09_c04.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t10_c02",
+      "name": "천공 화살비",
+      "level": 45,
+      "heroClass": "RANGER",
+      "action": "SKY_ARROW_BARRAGE",
+      "flow": "VOLLEY_TOP_TO_BOTTOM",
+      "label": "VOLLEY · SKY_ARROW_BARRAGE",
+      "hits": 5,
+      "hitWeights": [
+        15,
+        17,
+        18,
+        20,
+        30
+      ],
+      "hitTimings": [
+        110,
+        250,
+        400,
+        570,
+        780
+      ],
+      "prep": "천공 화살비 예고",
+      "motion": "천공 화살비 전개",
+      "contact": "천공 화살비 완성",
+      "impact": "천공 화살비 최대 타격",
+      "hold": "천공 화살비 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t10_c02.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t11_c05",
+      "name": "월식 사격",
+      "level": 50,
+      "heroClass": "RANGER",
+      "action": "ECLIPSE_SHOT",
+      "flow": "SHOT_OUTSIDE_IN",
+      "label": "SHOT · ECLIPSE_SHOT",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "월식 사격 예고",
+      "motion": "월식 사격 전개",
+      "contact": "월식 사격 완성",
+      "impact": "월식 사격 최대 타격",
+      "hold": "월식 사격 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t11_c05.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t12_c04",
+      "name": "그리핀 급습",
+      "level": 55,
+      "heroClass": "RANGER",
+      "action": "GRIFFIN_TALON_RAID",
+      "flow": "DIVE_TOP_TO_BOTTOM",
+      "label": "DIVE · GRIFFIN_TALON_RAID",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        140,
+        300,
+        520
+      ],
+      "prep": "그리핀 급습 예고",
+      "motion": "그리핀 급습 전개",
+      "contact": "그리핀 급습 완성",
+      "impact": "그리핀 급습 최대 타격",
+      "hold": "그리핀 급습 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t12_c04.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t13_c05",
+      "name": "은하수 관통",
+      "level": 60,
+      "heroClass": "RANGER",
+      "action": "MILKY_WAY_PIERCER",
+      "flow": "PIERCE_OUTSIDE_IN",
+      "label": "PIERCE · MILKY_WAY_PIERCER",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        170,
+        360,
+        790
+      ],
+      "prep": "은하수 관통 예고",
+      "motion": "은하수 관통 전개",
+      "contact": "은하수 관통 완성",
+      "impact": "은하수 관통 최대 타격",
+      "hold": "은하수 관통 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t13_c05.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t14_c03",
+      "name": "대기의 칼날",
+      "level": 65,
+      "heroClass": "RANGER",
+      "action": "ATMOSPHERIC_WIND_BLADE",
+      "flow": "CUT_LEFT_TO_RIGHT",
+      "label": "CUT · ATMOSPHERIC_WIND_BLADE",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        180,
+        430,
+        720
+      ],
+      "prep": "대기의 칼날 예고",
+      "motion": "대기의 칼날 전개",
+      "contact": "대기의 칼날 완성",
+      "impact": "대기의 칼날 최대 타격",
+      "hold": "대기의 칼날 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t14_c03.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t15_c04",
+      "name": "왕의 사냥개",
+      "level": 70,
+      "heroClass": "RANGER",
+      "action": "ROYAL_HOUND_POUNCE",
+      "flow": "DIVE_TOP_TO_BOTTOM",
+      "label": "DIVE · ROYAL_HOUND_POUNCE",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        330,
+        650
+      ],
+      "prep": "왕의 사냥개 예고",
+      "motion": "왕의 사냥개 전개",
+      "contact": "왕의 사냥개 완성",
+      "impact": "왕의 사냥개 최대 타격",
+      "hold": "왕의 사냥개 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t15_c04.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t16_c02",
+      "name": "무한 화살진",
+      "level": 75,
+      "heroClass": "RANGER",
+      "action": "INFINITE_ARROW_FORMATION",
+      "flow": "VOLLEY_OUTSIDE_IN",
+      "label": "VOLLEY · INFINITE_ARROW_FORMATION",
+      "hits": 5,
+      "hitWeights": [
+        15,
+        17,
+        18,
+        20,
+        30
+      ],
+      "hitTimings": [
+        100,
+        220,
+        350,
+        500,
+        820
+      ],
+      "prep": "무한 화살진 예고",
+      "motion": "무한 화살진 전개",
+      "contact": "무한 화살진 완성",
+      "impact": "무한 화살진 최대 타격",
+      "hold": "무한 화살진 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t16_c02.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t17_c03",
+      "name": "창공 붕괴",
+      "level": 80,
+      "heroClass": "RANGER",
+      "action": "SKY_COLLAPSE_SHOT",
+      "flow": "COLLAPSE_OUTSIDE_IN",
+      "label": "COLLAPSE · SKY_COLLAPSE_SHOT",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        140,
+        420,
+        780
+      ],
+      "prep": "창공 붕괴 예고",
+      "motion": "창공 붕괴 전개",
+      "contact": "창공 붕괴 완성",
+      "impact": "창공 붕괴 최대 타격",
+      "hold": "창공 붕괴 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t17_c03.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t18_c04",
+      "name": "신화의 덫",
+      "level": 85,
+      "heroClass": "RANGER",
+      "action": "MYTHIC_OPEN_TRAP",
+      "flow": "TRAP_OUTSIDE_IN",
+      "label": "TRAP · MYTHIC_OPEN_TRAP",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        180,
+        430,
+        720
+      ],
+      "prep": "신화의 덫 예고",
+      "motion": "신화의 덫 전개",
+      "contact": "신화의 덫 완성",
+      "impact": "신화의 덫 최대 타격",
+      "hold": "신화의 덫 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t18_c04.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t19_c05",
+      "name": "은하 종단",
+      "level": 90,
+      "heroClass": "RANGER",
+      "action": "GALAXY_TERMINUS_BEAM",
+      "flow": "BEAM_LEFT_TO_RIGHT",
+      "label": "BEAM · GALAXY_TERMINUS_BEAM",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        260,
+        470,
+        650
+      ],
+      "prep": "은하 종단 예고",
+      "motion": "은하 종단 전개",
+      "contact": "은하 종단 완성",
+      "impact": "은하 종단 최대 타격",
+      "hold": "은하 종단 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t19_c05.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "ranger_t20_c05",
+      "name": "성운 가르기",
+      "level": 95,
+      "heroClass": "RANGER",
+      "action": "NEBULA_CLEAVE",
+      "flow": "DIAGONAL_SLASH",
+      "label": "CUT · NEBULA_CLEAVE",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "성운 가르기 예고",
+      "motion": "성운 가르기 전개",
+      "contact": "성운 가르기 완성",
+      "impact": "성운 가르기 최대 타격",
+      "hold": "성운 가르기 잔광 감쇠",
+      "spritePath": "custom-assets/ranger-finalized-vfx/ranger_t20_c05.png?v=ranger-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t01_c01",
+      "name": "불씨 화살",
+      "level": 1,
+      "heroClass": "MAGE",
+      "action": "EMBER_DART",
+      "flow": "SHOT_OUTSIDE_IN",
+      "label": "SHOT · EMBER_DART",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        240,
+        680
+      ],
+      "prep": "불씨 화살 예고",
+      "motion": "불씨 화살 전개",
+      "contact": "불씨 화살 완성",
+      "impact": "불씨 화살 최대 타격",
+      "hold": "불씨 화살 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t01_c01.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t02_c02",
+      "name": "얼음 창",
+      "level": 5,
+      "heroClass": "MAGE",
+      "action": "ICE_LANCE_PIERCE",
+      "flow": "PIERCE_OUTSIDE_IN",
+      "label": "PIERCE · ICE_LANCE_PIERCE",
+      "hits": 4,
+      "hitWeights": [
+        20,
+        22,
+        25,
+        33
+      ],
+      "hitTimings": [
+        260,
+        450,
+        600,
+        720
+      ],
+      "prep": "얼음 창 예고",
+      "motion": "얼음 창 전개",
+      "contact": "얼음 창 완성",
+      "impact": "얼음 창 최대 타격",
+      "hold": "얼음 창 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t02_c02.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t03_c03",
+      "name": "삼중 낙뢰",
+      "level": 10,
+      "heroClass": "MAGE",
+      "action": "TRIPLE_LIGHTNING_DESCENT",
+      "flow": "VOLLEY_TOP_TO_BOTTOM",
+      "label": "VOLLEY · TRIPLE_LIGHTNING_DESCENT",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        140,
+        300,
+        520
+      ],
+      "prep": "삼중 낙뢰 예고",
+      "motion": "삼중 낙뢰 전개",
+      "contact": "삼중 낙뢰 완성",
+      "impact": "삼중 낙뢰 최대 타격",
+      "hold": "삼중 낙뢰 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t03_c03.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t04_c04",
+      "name": "비전 충격",
+      "level": 15,
+      "heroClass": "MAGE",
+      "action": "ARCANE_IMPULSE",
+      "flow": "BURST_CENTER_OUT",
+      "label": "BURST · ARCANE_IMPULSE",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        220,
+        780
+      ],
+      "prep": "비전 충격 예고",
+      "motion": "비전 충격 전개",
+      "contact": "비전 충격 완성",
+      "impact": "비전 충격 최대 타격",
+      "hold": "비전 충격 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t04_c04.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t05_c01",
+      "name": "용암 분출",
+      "level": 20,
+      "heroClass": "MAGE",
+      "action": "LAVA_GEYSER",
+      "flow": "ASCEND_BOTTOM_TO_TOP",
+      "label": "ASCEND · LAVA_GEYSER",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        140,
+        300,
+        520
+      ],
+      "prep": "용암 분출 예고",
+      "motion": "용암 분출 전개",
+      "contact": "용암 분출 완성",
+      "impact": "용암 분출 최대 타격",
+      "hold": "용암 분출 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t05_c01.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t06_c04",
+      "name": "공간 절단",
+      "level": 25,
+      "heroClass": "MAGE",
+      "action": "SPACE_SEVER",
+      "flow": "CUT_LEFT_TO_RIGHT",
+      "label": "CUT · SPACE_SEVER",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "공간 절단 예고",
+      "motion": "공간 절단 전개",
+      "contact": "공간 절단 완성",
+      "impact": "공간 절단 최대 타격",
+      "hold": "공간 절단 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t06_c04.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t07_c02",
+      "name": "서리 폭풍",
+      "level": 30,
+      "heroClass": "MAGE",
+      "action": "FROST_STORM_FRONT",
+      "flow": "SPIN_CLOCKWISE",
+      "label": "SPIN · FROST_STORM_FRONT",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "서리 폭풍 예고",
+      "motion": "서리 폭풍 전개",
+      "contact": "서리 폭풍 완성",
+      "impact": "서리 폭풍 최대 타격",
+      "hold": "서리 폭풍 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t07_c02.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t08_c03",
+      "name": "사방 낙뢰",
+      "level": 35,
+      "heroClass": "MAGE",
+      "action": "FOUR_QUADRANT_LIGHTNING",
+      "flow": "BURST_CENTER_OUT",
+      "label": "BURST · FOUR_QUADRANT_LIGHTNING",
+      "hits": 4,
+      "hitWeights": [
+        20,
+        22,
+        25,
+        33
+      ],
+      "hitTimings": [
+        120,
+        250,
+        390,
+        580
+      ],
+      "prep": "사방 낙뢰 예고",
+      "motion": "사방 낙뢰 전개",
+      "contact": "사방 낙뢰 완성",
+      "impact": "사방 낙뢰 최대 타격",
+      "hold": "사방 낙뢰 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t08_c03.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t09_c05",
+      "name": "유성우",
+      "level": 40,
+      "heroClass": "MAGE",
+      "action": "METEOR_SHOWER",
+      "flow": "VOLLEY_TOP_TO_BOTTOM",
+      "label": "VOLLEY · METEOR_SHOWER",
+      "hits": 4,
+      "hitWeights": [
+        20,
+        22,
+        25,
+        33
+      ],
+      "hitTimings": [
+        260,
+        450,
+        600,
+        720
+      ],
+      "prep": "유성우 예고",
+      "motion": "유성우 전개",
+      "contact": "유성우 완성",
+      "impact": "유성우 최대 타격",
+      "hold": "유성우 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t09_c05.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t10_c04",
+      "name": "공간 왜곡파",
+      "level": 45,
+      "heroClass": "MAGE",
+      "action": "SPACE_DISTORTION_WAVE",
+      "flow": "COLLAPSE_OUTSIDE_IN",
+      "label": "COLLAPSE · SPACE_DISTORTION_WAVE",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        330,
+        650
+      ],
+      "prep": "공간 왜곡파 예고",
+      "motion": "공간 왜곡파 전개",
+      "contact": "공간 왜곡파 완성",
+      "impact": "공간 왜곡파 최대 타격",
+      "hold": "공간 왜곡파 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t10_c04.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t11_c01",
+      "name": "지옥불 구체",
+      "level": 50,
+      "heroClass": "MAGE",
+      "action": "HELLFIRE_ORB_SHOT",
+      "flow": "SHOT_OUTSIDE_IN",
+      "label": "SHOT · HELLFIRE_ORB_SHOT",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        180,
+        430,
+        720
+      ],
+      "prep": "지옥불 구체 예고",
+      "motion": "지옥불 구체 전개",
+      "contact": "지옥불 구체 완성",
+      "impact": "지옥불 구체 최대 타격",
+      "hold": "지옥불 구체 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t11_c01.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t12_c02",
+      "name": "절대영도 파열",
+      "level": 55,
+      "heroClass": "MAGE",
+      "action": "ABSOLUTE_ZERO_SHATTER",
+      "flow": "BURST_CENTER_OUT",
+      "label": "BURST · ABSOLUTE_ZERO_SHATTER",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        330,
+        650
+      ],
+      "prep": "절대영도 파열 예고",
+      "motion": "절대영도 파열 전개",
+      "contact": "절대영도 파열 완성",
+      "impact": "절대영도 파열 최대 타격",
+      "hold": "절대영도 파열 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t12_c02.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t13_c03",
+      "name": "뇌신의 사슬",
+      "level": 60,
+      "heroClass": "MAGE",
+      "action": "THUNDER_GOD_CHAIN",
+      "flow": "CHAIN_OUTSIDE_IN",
+      "label": "CHAIN · THUNDER_GOD_CHAIN",
+      "hits": 5,
+      "hitWeights": [
+        15,
+        17,
+        18,
+        20,
+        30
+      ],
+      "hitTimings": [
+        100,
+        210,
+        330,
+        460,
+        620
+      ],
+      "prep": "뇌신의 사슬 예고",
+      "motion": "뇌신의 사슬 전개",
+      "contact": "뇌신의 사슬 완성",
+      "impact": "뇌신의 사슬 최대 타격",
+      "hold": "뇌신의 사슬 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t13_c03.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t14_c04",
+      "name": "공허 칼날",
+      "level": 65,
+      "heroClass": "MAGE",
+      "action": "VOID_BLADE",
+      "flow": "CUT_LEFT_TO_RIGHT",
+      "label": "CUT · VOID_BLADE",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        170,
+        360,
+        790
+      ],
+      "prep": "공허 칼날 예고",
+      "motion": "공허 칼날 전개",
+      "contact": "공허 칼날 완성",
+      "impact": "공허 칼날 최대 타격",
+      "hold": "공허 칼날 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t14_c04.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t15_c01",
+      "name": "불사조 격돌",
+      "level": 70,
+      "heroClass": "MAGE",
+      "action": "PHOENIX_IMPACT",
+      "flow": "DIVE_TOP_TO_BOTTOM",
+      "label": "DIVE · PHOENIX_IMPACT",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "불사조 격돌 예고",
+      "motion": "불사조 격돌 전개",
+      "contact": "불사조 격돌 완성",
+      "impact": "불사조 격돌 최대 타격",
+      "hold": "불사조 격돌 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t15_c01.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t16_c05",
+      "name": "행성 낙하",
+      "level": 75,
+      "heroClass": "MAGE",
+      "action": "PLANET_FALL",
+      "flow": "DESCEND_TOP_TO_BOTTOM",
+      "label": "DESCEND · PLANET_FALL",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "행성 낙하 예고",
+      "motion": "행성 낙하 전개",
+      "contact": "행성 낙하 완성",
+      "impact": "행성 낙하 최대 타격",
+      "hold": "행성 낙하 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t16_c05.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t17_c04",
+      "name": "비전 특이점",
+      "level": 80,
+      "heroClass": "MAGE",
+      "action": "ARCANE_SINGULARITY",
+      "flow": "COLLAPSE_OUTSIDE_IN",
+      "label": "COLLAPSE · ARCANE_SINGULARITY",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        140,
+        300,
+        520
+      ],
+      "prep": "비전 특이점 예고",
+      "motion": "비전 특이점 전개",
+      "contact": "비전 특이점 완성",
+      "impact": "비전 특이점 최대 타격",
+      "hold": "비전 특이점 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t17_c04.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t18_c02",
+      "name": "절대빙옥 파쇄",
+      "level": 85,
+      "heroClass": "MAGE",
+      "action": "ABSOLUTE_ICE_PRISON_BREAK",
+      "flow": "BURST_CENTER_OUT",
+      "label": "BURST · ABSOLUTE_ICE_PRISON_BREAK",
+      "hits": 4,
+      "hitWeights": [
+        20,
+        22,
+        25,
+        33
+      ],
+      "hitTimings": [
+        110,
+        310,
+        550,
+        800
+      ],
+      "prep": "절대빙옥 파쇄 예고",
+      "motion": "절대빙옥 파쇄 전개",
+      "contact": "절대빙옥 파쇄 완성",
+      "impact": "절대빙옥 파쇄 최대 타격",
+      "hold": "절대빙옥 파쇄 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t18_c02.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t19_c05",
+      "name": "초신성",
+      "level": 90,
+      "heroClass": "MAGE",
+      "action": "SUPERNOVA",
+      "flow": "BURST_CENTER_OUT",
+      "label": "BURST · SUPERNOVA",
+      "hits": 4,
+      "hitWeights": [
+        20,
+        22,
+        25,
+        33
+      ],
+      "hitTimings": [
+        260,
+        450,
+        600,
+        720
+      ],
+      "prep": "초신성 예고",
+      "motion": "초신성 전개",
+      "contact": "초신성 완성",
+      "impact": "초신성 최대 타격",
+      "hold": "초신성 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t19_c05.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "mage_t20_c05",
+      "name": "우주 종말",
+      "level": 95,
+      "heroClass": "MAGE",
+      "action": "COSMIC_END_COLLAPSE",
+      "flow": "COLLAPSE_OUTSIDE_IN",
+      "label": "COLLAPSE · COSMIC_END_COLLAPSE",
+      "hits": 5,
+      "hitWeights": [
+        15,
+        17,
+        18,
+        20,
+        30
+      ],
+      "hitTimings": [
+        90,
+        250,
+        450,
+        650,
+        820
+      ],
+      "prep": "우주 종말 예고",
+      "motion": "우주 종말 전개",
+      "contact": "우주 종말 완성",
+      "impact": "우주 종말 최대 타격",
+      "hold": "우주 종말 잔광 감쇠",
+      "spritePath": "custom-assets/mage-finalized-vfx/mage_t20_c05.png?v=mage-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t01_c01",
+      "name": "빛의 화살",
+      "level": 1,
+      "heroClass": "CLERIC",
+      "action": "HOLY_LIGHT_ARROW",
+      "flow": "SHOT_OUTSIDE_IN",
+      "label": "SHOT · HOLY_LIGHT_ARROW",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        240,
+        680
+      ],
+      "prep": "빛의 화살 예고",
+      "motion": "빛의 화살 전개",
+      "contact": "빛의 화살 완성",
+      "impact": "빛의 화살 최대 타격",
+      "hold": "빛의 화살 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t01_c01.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t02_c02",
+      "name": "심판의 망치",
+      "level": 5,
+      "heroClass": "CLERIC",
+      "action": "JUDGMENT_HAMMER_DESCENT",
+      "flow": "DESCEND_TOP_TO_BOTTOM",
+      "label": "DESCEND · JUDGMENT_HAMMER_DESCENT",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "심판의 망치 예고",
+      "motion": "심판의 망치 전개",
+      "contact": "심판의 망치 완성",
+      "impact": "심판의 망치 최대 타격",
+      "hold": "심판의 망치 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t02_c02.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t03_c03",
+      "name": "퇴마 연타",
+      "level": 10,
+      "heroClass": "CLERIC",
+      "action": "FOUR_EXORCISM_STRIKES",
+      "flow": "FLURRY_LEFT_TO_RIGHT",
+      "label": "FLURRY · FOUR_EXORCISM_STRIKES",
+      "hits": 4,
+      "hitWeights": [
+        20,
+        22,
+        25,
+        33
+      ],
+      "hitTimings": [
+        120,
+        250,
+        390,
+        580
+      ],
+      "prep": "퇴마 연타 예고",
+      "motion": "퇴마 연타 전개",
+      "contact": "퇴마 연타 완성",
+      "impact": "퇴마 연타 최대 타격",
+      "hold": "퇴마 연타 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t03_c03.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t04_c04",
+      "name": "성화 폭발",
+      "level": 15,
+      "heroClass": "CLERIC",
+      "action": "SACRED_FLAME_BURST",
+      "flow": "BURST_CENTER_OUT",
+      "label": "BURST · SACRED_FLAME_BURST",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        220,
+        780
+      ],
+      "prep": "성화 폭발 예고",
+      "motion": "성화 폭발 전개",
+      "contact": "성화 폭발 완성",
+      "impact": "성화 폭발 최대 타격",
+      "hold": "성화 폭발 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t04_c04.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t05_c05",
+      "name": "수호천사 강하",
+      "level": 20,
+      "heroClass": "CLERIC",
+      "action": "GUARDIAN_ANGEL_DESCENT",
+      "flow": "DESCEND_TOP_TO_BOTTOM",
+      "label": "DESCEND · GUARDIAN_ANGEL_DESCENT",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        140,
+        420,
+        780
+      ],
+      "prep": "수호천사 강하 예고",
+      "motion": "수호천사 강하 전개",
+      "contact": "수호천사 강하 완성",
+      "impact": "수호천사 강하 최대 타격",
+      "hold": "수호천사 강하 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t05_c05.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t06_c03",
+      "name": "퇴마 사슬",
+      "level": 25,
+      "heroClass": "CLERIC",
+      "action": "EXORCISM_CHAIN",
+      "flow": "CHAIN_OUTSIDE_IN",
+      "label": "CHAIN · EXORCISM_CHAIN",
+      "hits": 4,
+      "hitWeights": [
+        20,
+        22,
+        25,
+        33
+      ],
+      "hitTimings": [
+        260,
+        450,
+        600,
+        720
+      ],
+      "prep": "퇴마 사슬 예고",
+      "motion": "퇴마 사슬 전개",
+      "contact": "퇴마 사슬 완성",
+      "impact": "퇴마 사슬 최대 타격",
+      "hold": "퇴마 사슬 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t06_c03.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t07_c01",
+      "name": "순백의 파동",
+      "level": 30,
+      "heroClass": "CLERIC",
+      "action": "PURE_WHITE_WAVE",
+      "flow": "BURST_CENTER_OUT",
+      "label": "BURST · PURE_WHITE_WAVE",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        220,
+        780
+      ],
+      "prep": "순백의 파동 예고",
+      "motion": "순백의 파동 전개",
+      "contact": "순백의 파동 완성",
+      "impact": "순백의 파동 최대 타격",
+      "hold": "순백의 파동 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t07_c01.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t08_c03",
+      "name": "파마의 인장",
+      "level": 35,
+      "heroClass": "CLERIC",
+      "action": "BANISHING_SEAL_STRIKE",
+      "flow": "TRAP_OUTSIDE_IN",
+      "label": "TRAP · BANISHING_SEAL_STRIKE",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        140,
+        300,
+        520
+      ],
+      "prep": "파마의 인장 예고",
+      "motion": "파마의 인장 전개",
+      "contact": "파마의 인장 완성",
+      "impact": "파마의 인장 최대 타격",
+      "hold": "파마의 인장 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t08_c03.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t09_c05",
+      "name": "대천사 돌진",
+      "level": 40,
+      "heroClass": "CLERIC",
+      "action": "ARCHANGEL_CHARGE",
+      "flow": "CHARGE_LEFT_TO_RIGHT",
+      "label": "CHARGE · ARCHANGEL_CHARGE",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        260,
+        470,
+        650
+      ],
+      "prep": "대천사 돌진 예고",
+      "motion": "대천사 돌진 전개",
+      "contact": "대천사 돌진 완성",
+      "impact": "대천사 돌진 최대 타격",
+      "hold": "대천사 돌진 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t09_c05.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t10_c04",
+      "name": "정화의 불기둥",
+      "level": 45,
+      "heroClass": "CLERIC",
+      "action": "PURIFICATION_FLAME_PILLAR",
+      "flow": "ASCEND_BOTTOM_TO_TOP",
+      "label": "ASCEND · PURIFICATION_FLAME_PILLAR",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        330,
+        650
+      ],
+      "prep": "정화의 불기둥 예고",
+      "motion": "정화의 불기둥 전개",
+      "contact": "정화의 불기둥 완성",
+      "impact": "정화의 불기둥 최대 타격",
+      "hold": "정화의 불기둥 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t10_c04.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t11_c02",
+      "name": "천벌 분쇄",
+      "level": 50,
+      "heroClass": "CLERIC",
+      "action": "HEAVENLY_PUNISHMENT_CRUSH",
+      "flow": "DESCEND_TOP_TO_BOTTOM",
+      "label": "DESCEND · HEAVENLY_PUNISHMENT_CRUSH",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "천벌 분쇄 예고",
+      "motion": "천벌 분쇄 전개",
+      "contact": "천벌 분쇄 완성",
+      "impact": "천벌 분쇄 최대 타격",
+      "hold": "천벌 분쇄 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t11_c02.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t12_c05",
+      "name": "대천사 검무",
+      "level": 55,
+      "heroClass": "CLERIC",
+      "action": "ARCHANGEL_SWORD_DANCE",
+      "flow": "FLURRY_LEFT_TO_RIGHT",
+      "label": "FLURRY · ARCHANGEL_SWORD_DANCE",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        240,
+        680
+      ],
+      "prep": "대천사 검무 예고",
+      "motion": "대천사 검무 전개",
+      "contact": "대천사 검무 완성",
+      "impact": "대천사 검무 최대 타격",
+      "hold": "대천사 검무 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t12_c05.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t13_c03",
+      "name": "악마 파쇄진",
+      "level": 60,
+      "heroClass": "CLERIC",
+      "action": "DEMON_BREAKING_DOMAIN",
+      "flow": "BURST_CENTER_OUT",
+      "label": "BURST · DEMON_BREAKING_DOMAIN",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        180,
+        500
+      ],
+      "prep": "악마 파쇄진 예고",
+      "motion": "악마 파쇄진 전개",
+      "contact": "악마 파쇄진 완성",
+      "impact": "악마 파쇄진 최대 타격",
+      "hold": "악마 파쇄진 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t13_c03.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t14_c04",
+      "name": "성화 해일",
+      "level": 65,
+      "heroClass": "CLERIC",
+      "action": "SACRED_FLAME_TIDE",
+      "flow": "ASCEND_BOTTOM_TO_TOP",
+      "label": "ASCEND · SACRED_FLAME_TIDE",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        170,
+        360,
+        790
+      ],
+      "prep": "성화 해일 예고",
+      "motion": "성화 해일 전개",
+      "contact": "성화 해일 완성",
+      "impact": "성화 해일 최대 타격",
+      "hold": "성화 해일 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t14_c04.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t15_c03",
+      "name": "지옥문 붕괴",
+      "level": 70,
+      "heroClass": "CLERIC",
+      "action": "HELL_GATE_COLLAPSE",
+      "flow": "COLLAPSE_OUTSIDE_IN",
+      "label": "COLLAPSE · HELL_GATE_COLLAPSE",
+      "hits": 4,
+      "hitWeights": [
+        20,
+        22,
+        25,
+        33
+      ],
+      "hitTimings": [
+        130,
+        280,
+        450,
+        810
+      ],
+      "prep": "지옥문 붕괴 예고",
+      "motion": "지옥문 붕괴 전개",
+      "contact": "지옥문 붕괴 완성",
+      "impact": "지옥문 붕괴 최대 타격",
+      "hold": "지옥문 붕괴 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t15_c03.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t16_c01",
+      "name": "세계수 성광포",
+      "level": 75,
+      "heroClass": "CLERIC",
+      "action": "WORLD_TREE_HOLY_CANNON",
+      "flow": "BEAM_LEFT_TO_RIGHT",
+      "label": "BEAM · WORLD_TREE_HOLY_CANNON",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        240,
+        680
+      ],
+      "prep": "세계수 성광포 예고",
+      "motion": "세계수 성광포 전개",
+      "contact": "세계수 성광포 완성",
+      "impact": "세계수 성광포 최대 타격",
+      "hold": "세계수 성광포 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t16_c01.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t17_c05",
+      "name": "천군 포화",
+      "level": 80,
+      "heroClass": "CLERIC",
+      "action": "HEAVENLY_HOST_BARRAGE",
+      "flow": "VOLLEY_TOP_TO_BOTTOM",
+      "label": "VOLLEY · HEAVENLY_HOST_BARRAGE",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        180,
+        430,
+        720
+      ],
+      "prep": "천군 포화 예고",
+      "motion": "천군 포화 전개",
+      "contact": "천군 포화 완성",
+      "impact": "천군 포화 최대 타격",
+      "hold": "천군 포화 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t17_c05.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t18_c03",
+      "name": "세계 정화폭진",
+      "level": 85,
+      "heroClass": "CLERIC",
+      "action": "WORLD_PURIFICATION_BLAST",
+      "flow": "BURST_CENTER_OUT",
+      "label": "BURST · WORLD_PURIFICATION_BLAST",
+      "hits": 4,
+      "hitWeights": [
+        20,
+        22,
+        25,
+        33
+      ],
+      "hitTimings": [
+        120,
+        250,
+        390,
+        580
+      ],
+      "prep": "세계 정화폭진 예고",
+      "motion": "세계 정화폭진 전개",
+      "contact": "세계 정화폭진 완성",
+      "impact": "세계 정화폭진 최대 타격",
+      "hold": "세계 정화폭진 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t18_c03.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t19_c02",
+      "name": "신좌의 망치",
+      "level": 90,
+      "heroClass": "CLERIC",
+      "action": "THRONE_HAMMER_VERDICT",
+      "flow": "DESCEND_TOP_TO_BOTTOM",
+      "label": "DESCEND · THRONE_HAMMER_VERDICT",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "신좌의 망치 예고",
+      "motion": "신좌의 망치 전개",
+      "contact": "신좌의 망치 완성",
+      "impact": "신좌의 망치 최대 타격",
+      "hold": "신좌의 망치 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t19_c02.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "cleric_t20_c05",
+      "name": "천국문 폭격",
+      "level": 95,
+      "heroClass": "CLERIC",
+      "action": "HEAVEN_GATE_BOMBARDMENT",
+      "flow": "VOLLEY_TOP_TO_BOTTOM",
+      "label": "VOLLEY · HEAVEN_GATE_BOMBARDMENT",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        170,
+        690
+      ],
+      "prep": "천국문 폭격 예고",
+      "motion": "천국문 폭격 전개",
+      "contact": "천국문 폭격 완성",
+      "impact": "천국문 폭격 최대 타격",
+      "hold": "천국문 폭격 잔광 감쇠",
+      "spritePath": "custom-assets/cleric-finalized-vfx/cleric_t20_c05.png?v=cleric-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t01_c01",
+      "name": "빛의 베기",
+      "level": 1,
+      "heroClass": "PALADIN",
+      "action": "LIGHT_EDGE_CUT",
+      "flow": "CUT_LEFT_TO_RIGHT",
+      "label": "CUT · LIGHT_EDGE_CUT",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        240,
+        680
+      ],
+      "prep": "빛의 베기 예고",
+      "motion": "빛의 베기 전개",
+      "contact": "빛의 베기 완성",
+      "impact": "빛의 베기 최대 타격",
+      "hold": "빛의 베기 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t01_c01.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t02_c02",
+      "name": "철벽 밀치기",
+      "level": 5,
+      "heroClass": "PALADIN",
+      "action": "IRON_WALL_SHOVE",
+      "flow": "CHARGE_LEFT_TO_RIGHT",
+      "label": "CHARGE · IRON_WALL_SHOVE",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        330,
+        650
+      ],
+      "prep": "철벽 밀치기 예고",
+      "motion": "철벽 밀치기 전개",
+      "contact": "철벽 밀치기 완성",
+      "impact": "철벽 밀치기 최대 타격",
+      "hold": "철벽 밀치기 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t02_c02.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t03_c03",
+      "name": "기사의 망치 강타",
+      "level": 10,
+      "heroClass": "PALADIN",
+      "action": "KNIGHT_HAMMER_SMASH",
+      "flow": "DESCEND_TOP_TO_BOTTOM",
+      "label": "DESCEND · KNIGHT_HAMMER_SMASH",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "기사의 망치 강타 예고",
+      "motion": "기사의 망치 강타 전개",
+      "contact": "기사의 망치 강타 완성",
+      "impact": "기사의 망치 강타 최대 타격",
+      "hold": "기사의 망치 강타 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t03_c03.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t04_c01",
+      "name": "십자 베기",
+      "level": 15,
+      "heroClass": "PALADIN",
+      "action": "HORIZONTAL_VERTICAL_CROSS_CUT",
+      "flow": "CROSS_CUT_LEFT_TO_RIGHT",
+      "label": "CROSS_CUT · HORIZONTAL_VERTICAL_CROSS_CUT",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        170,
+        690
+      ],
+      "prep": "십자 베기 예고",
+      "motion": "십자 베기 전개",
+      "contact": "십자 베기 완성",
+      "impact": "십자 베기 최대 타격",
+      "hold": "십자 베기 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t04_c01.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t05_c04",
+      "name": "새벽의 칼날",
+      "level": 20,
+      "heroClass": "PALADIN",
+      "action": "DAWN_BLADE_FLURRY",
+      "flow": "FLURRY_LEFT_TO_RIGHT",
+      "label": "FLURRY · DAWN_BLADE_FLURRY",
+      "hits": 4,
+      "hitWeights": [
+        20,
+        22,
+        25,
+        33
+      ],
+      "hitTimings": [
+        260,
+        450,
+        600,
+        720
+      ],
+      "prep": "새벽의 칼날 예고",
+      "motion": "새벽의 칼날 전개",
+      "contact": "새벽의 칼날 완성",
+      "impact": "새벽의 칼날 최대 타격",
+      "hold": "새벽의 칼날 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t05_c04.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t06_c03",
+      "name": "심판의 성추",
+      "level": 25,
+      "heroClass": "PALADIN",
+      "action": "JUDGMENT_MAUL_DESCENT",
+      "flow": "DESCEND_TOP_TO_BOTTOM",
+      "label": "DESCEND · JUDGMENT_MAUL_DESCENT",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "심판의 성추 예고",
+      "motion": "심판의 성추 전개",
+      "contact": "심판의 성추 완성",
+      "impact": "심판의 성추 최대 타격",
+      "hold": "심판의 성추 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t06_c03.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t07_c05",
+      "name": "충성의 일격",
+      "level": 30,
+      "heroClass": "PALADIN",
+      "action": "LOYALTY_EXECUTION",
+      "flow": "EXECUTE_TOP_TO_BOTTOM",
+      "label": "EXECUTE · LOYALTY_EXECUTION",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "충성의 일격 예고",
+      "motion": "충성의 일격 전개",
+      "contact": "충성의 일격 완성",
+      "impact": "충성의 일격 최대 타격",
+      "hold": "충성의 일격 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t07_c05.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t08_c02",
+      "name": "수호벽 돌파",
+      "level": 35,
+      "heroClass": "PALADIN",
+      "action": "GUARD_WALL_BREAKTHROUGH",
+      "flow": "CHARGE_LEFT_TO_RIGHT",
+      "label": "CHARGE · GUARD_WALL_BREAKTHROUGH",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        170,
+        690
+      ],
+      "prep": "수호벽 돌파 예고",
+      "motion": "수호벽 돌파 전개",
+      "contact": "수호벽 돌파 완성",
+      "impact": "수호벽 돌파 최대 타격",
+      "hold": "수호벽 돌파 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t08_c02.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t09_c01",
+      "name": "성광 검무",
+      "level": 40,
+      "heroClass": "PALADIN",
+      "action": "HOLY_SWORD_DANCE",
+      "flow": "FLURRY_LEFT_TO_RIGHT",
+      "label": "FLURRY · HOLY_SWORD_DANCE",
+      "hits": 3,
+      "hitWeights": [
+        28,
+        32,
+        40
+      ],
+      "hitTimings": [
+        140,
+        420,
+        780
+      ],
+      "prep": "성광 검무 예고",
+      "motion": "성광 검무 전개",
+      "contact": "성광 검무 완성",
+      "impact": "성광 검무 최대 타격",
+      "hold": "성광 검무 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t09_c01.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t10_c05",
+      "name": "왕권 일격",
+      "level": 45,
+      "heroClass": "PALADIN",
+      "action": "ROYAL_AUTHORITY_STRIKE",
+      "flow": "EXECUTE_TOP_TO_BOTTOM",
+      "label": "EXECUTE · ROYAL_AUTHORITY_STRIKE",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "왕권 일격 예고",
+      "motion": "왕권 일격 전개",
+      "contact": "왕권 일격 완성",
+      "impact": "왕권 일격 최대 타격",
+      "hold": "왕권 일격 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t10_c05.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t11_c03",
+      "name": "별철 성추 강타",
+      "level": 50,
+      "heroClass": "PALADIN",
+      "action": "STAR_IRON_HAMMER",
+      "flow": "DESCEND_TOP_TO_BOTTOM",
+      "label": "DESCEND · STAR_IRON_HAMMER",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "별철 성추 강타 예고",
+      "motion": "별철 성추 강타 전개",
+      "contact": "별철 성추 강타 완성",
+      "impact": "별철 성추 강타 최대 타격",
+      "hold": "별철 성추 강타 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t11_c03.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t12_c05",
+      "name": "황금 서약참",
+      "level": 55,
+      "heroClass": "PALADIN",
+      "action": "GOLDEN_OATH_CUT",
+      "flow": "CUT_LEFT_TO_RIGHT",
+      "label": "CUT · GOLDEN_OATH_CUT",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        240,
+        680
+      ],
+      "prep": "황금 서약참 예고",
+      "motion": "황금 서약참 전개",
+      "contact": "황금 서약참 완성",
+      "impact": "황금 서약참 최대 타격",
+      "hold": "황금 서약참 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t12_c05.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t13_c02",
+      "name": "천공 방패격",
+      "level": 60,
+      "heroClass": "PALADIN",
+      "action": "SKY_SHIELD_IMPACT",
+      "flow": "CHARGE_LEFT_TO_RIGHT",
+      "label": "CHARGE · SKY_SHIELD_IMPACT",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "천공 방패격 예고",
+      "motion": "천공 방패격 전개",
+      "contact": "천공 방패격 완성",
+      "impact": "천공 방패격 최대 타격",
+      "hold": "천공 방패격 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t13_c02.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t14_c01",
+      "name": "천상 십자참",
+      "level": 65,
+      "heroClass": "PALADIN",
+      "action": "CELESTIAL_CROSS_CUT",
+      "flow": "CROSS_CUT_LEFT_TO_RIGHT",
+      "label": "CROSS_CUT · CELESTIAL_CROSS_CUT",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        170,
+        690
+      ],
+      "prep": "천상 십자참 예고",
+      "motion": "천상 십자참 전개",
+      "contact": "천상 십자참 완성",
+      "impact": "천상 십자참 최대 타격",
+      "hold": "천상 십자참 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t14_c01.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t15_c03",
+      "name": "심판왕의 망치",
+      "level": 70,
+      "heroClass": "PALADIN",
+      "action": "JUDGMENT_KING_HAMMER",
+      "flow": "DESCEND_TOP_TO_BOTTOM",
+      "label": "DESCEND · JUDGMENT_KING_HAMMER",
+      "hits": 1,
+      "hitWeights": [
+        100
+      ],
+      "hitTimings": [
+        420
+      ],
+      "prep": "심판왕의 망치 예고",
+      "motion": "심판왕의 망치 전개",
+      "contact": "심판왕의 망치 완성",
+      "impact": "심판왕의 망치 최대 타격",
+      "hold": "심판왕의 망치 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t15_c03.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t16_c02",
+      "name": "성역 방패돌진",
+      "level": 75,
+      "heroClass": "PALADIN",
+      "action": "SANCTUARY_SHIELD_CHARGE",
+      "flow": "CHARGE_LEFT_TO_RIGHT",
+      "label": "CHARGE · SANCTUARY_SHIELD_CHARGE",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        220,
+        780
+      ],
+      "prep": "성역 방패돌진 예고",
+      "motion": "성역 방패돌진 전개",
+      "contact": "성역 방패돌진 완성",
+      "impact": "성역 방패돌진 최대 타격",
+      "hold": "성역 방패돌진 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t16_c02.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t17_c05",
+      "name": "불멸 서약참",
+      "level": 80,
+      "heroClass": "PALADIN",
+      "action": "IMMORTAL_OATH_SEVER",
+      "flow": "CUT_LEFT_TO_RIGHT",
+      "label": "CUT · IMMORTAL_OATH_SEVER",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        240,
+        680
+      ],
+      "prep": "불멸 서약참 예고",
+      "motion": "불멸 서약참 전개",
+      "contact": "불멸 서약참 완성",
+      "impact": "불멸 서약참 최대 타격",
+      "hold": "불멸 서약참 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t17_c05.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t18_c04",
+      "name": "태양 종말",
+      "level": 85,
+      "heroClass": "PALADIN",
+      "action": "SUN_END_COLLAPSE",
+      "flow": "COLLAPSE_OUTSIDE_IN",
+      "label": "COLLAPSE · SUN_END_COLLAPSE",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        240,
+        680
+      ],
+      "prep": "태양 종말 예고",
+      "motion": "태양 종말 전개",
+      "contact": "태양 종말 완성",
+      "impact": "태양 종말 최대 타격",
+      "hold": "태양 종말 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t18_c04.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t19_c01",
+      "name": "별을 가르는 성검",
+      "level": 90,
+      "heroClass": "PALADIN",
+      "action": "STAR_SEVERING_HOLY_SWORD",
+      "flow": "CUT_LEFT_TO_RIGHT",
+      "label": "CUT · STAR_SEVERING_HOLY_SWORD",
+      "hits": 2,
+      "hitWeights": [
+        48,
+        52
+      ],
+      "hitTimings": [
+        170,
+        690
+      ],
+      "prep": "별을 가르는 성검 예고",
+      "motion": "별을 가르는 성검 전개",
+      "contact": "별을 가르는 성검 완성",
+      "impact": "별을 가르는 성검 최대 타격",
+      "hold": "별을 가르는 성검 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t19_c01.png?v=paladin-finalized-20260825-v1"
+    },
+    {
+      "id": "paladin_t20_c05",
+      "name": "왕국 영겁참",
+      "level": 95,
+      "heroClass": "PALADIN",
+      "action": "ETERNAL_KINGDOM_FLURRY",
+      "flow": "FLURRY_LEFT_TO_RIGHT",
+      "label": "FLURRY · ETERNAL_KINGDOM_FLURRY",
+      "hits": 5,
+      "hitWeights": [
+        15,
+        17,
+        18,
+        20,
+        30
+      ],
+      "hitTimings": [
+        90,
+        250,
+        450,
+        650,
+        820
+      ],
+      "prep": "왕국 영겁참 예고",
+      "motion": "왕국 영겁참 전개",
+      "contact": "왕국 영겁참 완성",
+      "impact": "왕국 영겁참 최대 타격",
+      "hold": "왕국 영겁참 잔광 감쇠",
+      "spritePath": "custom-assets/paladin-finalized-vfx/paladin_t20_c05.png?v=paladin-finalized-20260825-v1"
+    }
+  ]
+}

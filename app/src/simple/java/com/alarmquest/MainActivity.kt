@@ -3,6 +3,7 @@ package com.alarmquest
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -14,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.alarmquest.ui.AlarmQuestApp
 import com.alarmquest.ui.AlarmQuestTheme
+import com.alarmquest.ui.localized
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,13 +28,32 @@ class MainActivity : ComponentActivity() {
         val alarmQuestApplication = application as AlarmQuestApplication
         setContent {
             val mobileAdsReady by alarmQuestApplication.mobileAdsReady.collectAsState()
+            val privacyOptionsRequired by
+                alarmQuestApplication.adsConsentManager.privacyOptionsRequired.collectAsState()
             AlarmQuestTheme {
                 AlarmQuestApp(
                     repository = alarmQuestApplication.gameRepository,
+                    notificationPreferencesStore =
+                        alarmQuestApplication.notificationPreferencesStore,
+                    gameLanguageStore = alarmQuestApplication.gameLanguageStore,
+                    supabaseGameService = alarmQuestApplication.supabaseGameService,
                     mobileAdsReady = mobileAdsReady,
+                    privacyOptionsRequired = privacyOptionsRequired,
+                    onOpenPrivacyOptions = {
+                        alarmQuestApplication.showAdsPrivacyOptions(this@MainActivity) {
+                            if (!isFinishing && !isDestroyed) {
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    localized("광고 개인정보 설정을 열지 못했습니다."),
+                                    Toast.LENGTH_LONG,
+                                ).show()
+                            }
+                        }
+                    },
                 )
             }
         }
+        alarmQuestApplication.gatherAdsConsent(this)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -46,7 +67,9 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onStop() {
-        (application as AlarmQuestApplication).onAppBackgrounded()
+        if (!isChangingConfigurations) {
+            (application as AlarmQuestApplication).onAppBackgrounded()
+        }
         super.onStop()
     }
 

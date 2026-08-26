@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>NULL PLAYING 스킬 연출 랩</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=apex-class-rework-20260825-v3">
 </head>
 <body>
   <main class="lab-shell">
@@ -23,6 +23,10 @@
         <input id="searchInput" type="search" placeholder="이름 또는 catalogId" autocomplete="off">
       </label>
       <div id="skillList" class="skill-list" aria-label="스킬 목록"></div>
+      <div class="sprite-finder-bar">
+        <button id="revealSpriteButton" class="sprite-finder-button" type="button" disabled>스프라이트 Finder에서 보기</button>
+        <span id="spriteFinderStatus" class="sprite-finder-status" role="status" aria-live="polite">스킬을 선택하세요</span>
+      </div>
     </aside>
 
     <section class="stage-column">
@@ -70,7 +74,6 @@
           <div id="vfxViewport" class="vfx-viewport">
             <div id="androidFrameLayers" class="android-frame-layers" aria-hidden="true"></div>
             <canvas id="chargeSprite" class="charge-sprite" width="361" height="160" aria-hidden="true"></canvas>
-            <canvas id="oceanSeverSprite" class="ocean-sever-sprite" width="384" height="384" aria-hidden="true"></canvas>
             <div id="skillLabel" class="skill-label"></div>
             <div id="damageNumber" class="damage-number"></div>
           </div>
@@ -83,6 +86,14 @@
       </div>
         </div>
       </div>
+
+      <section id="mobileApexVariantSection" class="mobile-apex-variant-section" aria-labelledby="mobileApexVariantTitle" hidden>
+        <div class="mobile-apex-variant-heading">
+          <strong id="mobileApexVariantTitle">시안 선택</strong>
+          <span id="mobileApexVariantNote">원본</span>
+        </div>
+        <div id="mobileApexVariantControls" class="mobile-apex-variant-controls" role="group" aria-label="후기 스킬 이미지 시안 선택"></div>
+      </section>
 
       <section class="transport panel">
         <div class="transport-row">
@@ -104,11 +115,39 @@
           </label>
         </div>
         <div class="timeline-row">
-          <input id="timeline" type="range" min="0" max="1350" value="0" step="1" aria-label="연출 시간">
+          <input id="timeline" type="range" min="0" max="1400" value="0" step="1" aria-label="연출 시간">
           <output id="timeOutput">0ms</output>
         </div>
-        <div id="hitMarkers" class="hit-markers" aria-label="타격 시점"></div>
+        <div class="hit-marker-heading">
+          <span>타격 타이밍</span>
+          <small id="hitMarkerHelp"><b>1타</b> 마커를 좌우로 드래그</small>
+        </div>
+        <div id="hitMarkers" class="hit-markers" aria-label="타격 시점" aria-describedby="hitMarkerHelp"></div>
         <div id="phaseMarkers" class="phase-markers" aria-label="연출 단계 고정"></div>
+        <section id="hitEditor" class="hit-editor" aria-labelledby="hitEditorTitle">
+          <div class="hit-editor-header">
+            <button id="hitEditorToggle" class="hit-editor-toggle" type="button" aria-expanded="false" aria-controls="hitEditorBody">
+              <span id="hitEditorTitle" class="hit-editor-eyebrow">APP HIT DATA</span>
+              <strong id="hitEditorSkillName" class="hit-editor-skill"></strong>
+              <span id="hitEditorToggleLabel" class="hit-editor-toggle-label">편집</span>
+            </button>
+            <span id="hitSaveStatus" class="hit-save-status" role="status" aria-live="polite">앱 기본값</span>
+          </div>
+          <div id="hitEditorBody" class="hit-editor-body" hidden>
+            <div class="hit-editor-row">
+              <label class="hit-count-field">
+                <span>타수</span>
+                <input id="hitCountInput" type="number" min="1" max="12" step="1" inputmode="numeric">
+              </label>
+              <div class="hit-timing-editor">
+                <span>각 타격 타이밍 (ms)</span>
+                <div id="hitTimingInputs" class="hit-timing-grid"></div>
+              </div>
+              <button id="saveHitSettingsButton" class="primary-button hit-save-button" type="button">저장</button>
+            </div>
+            <p class="hit-editor-note">마커 드래그 또는 ms 직접 입력 · 1~12타 · 0~900ms · 오름차순 · catalogId 기준 저장</p>
+          </div>
+        </section>
       </section>
     </section>
 
@@ -120,6 +159,15 @@
         </div>
         <span id="layerCount" class="count-badge">4층</span>
       </header>
+
+      <section id="apexVariantSection" class="apex-variant-section" aria-labelledby="apexVariantTitle" hidden>
+        <div class="apex-variant-heading">
+          <h3 id="apexVariantTitle">75–95 스킬 시안 비교</h3>
+          <span>원본 보존 · 웹 전용</span>
+        </div>
+        <div id="apexVariantControls" class="apex-variant-controls" role="group" aria-label="후기 스킬 이미지 시안 선택"></div>
+        <p id="apexVariantNote" class="apex-variant-note"></p>
+      </section>
 
       <section class="role-focus-section" aria-labelledby="roleFocusTitle">
         <div class="role-focus-heading">
@@ -141,7 +189,7 @@
         <ul class="audit-rules">
           <li>공격 방향과 이미지 축이 일치하는지</li>
           <li>피해 숫자 가림과 무관하게 중심 충격 밀도가 충분한지</li>
-          <li>마지막 연출이 1,300ms 전에 끝나는지</li>
+          <li>후기 스킬 신규안이 전사 레퍼런스처럼 1,400ms에 끝나는지</li>
           <li>저레벨에서 고레벨로 층과 잔광이 성장하는지</li>
         </ul>
       </section>
@@ -152,6 +200,6 @@
       </section>
     </aside>
   </main>
-  <script src="app.js?v=warrior-t03-shatter-strike-1"></script>
+  <script src="app.js?v=mage-finalized-20260825-v10"></script>
 </body>
 </html>

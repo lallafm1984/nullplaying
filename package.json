@@ -1,0 +1,16 @@
+{
+  "name": "alarmquest-supabase-tools",
+  "private": true,
+  "scripts": {
+    "supabase": "supabase",
+    "supabase:login": "supabase --agent no login",
+    "supabase:link": "./tools/supabase-remote.sh link",
+    "supabase:adopt-existing": "./tools/supabase-remote.sh adopt-existing",
+    "supabase:dry-run": "./tools/supabase-remote.sh dry-run",
+    "supabase:push": "./tools/supabase-remote.sh push",
+    "supabase:status": "./tools/supabase-remote.sh status"
+  },
+  "devDependencies": {
+    "supabase": "2.115.0"
+  }
+}

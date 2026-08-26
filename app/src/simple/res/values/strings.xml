@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">NULL PLAYING</string>
-    <string name="brand_accessibility_name">Null Playing</string>
-    <string name="brand_status_quest" translatable="false">QUEST:</string>
-    <string name="brand_status_active" translatable="false">ACTIVE</string>
-    <string name="brand_tagline">Not playing. Still progressing.</string>
+    <string name="brand_status_the_adventure" translatable="false">THE ADVENTURE</string>
+    <string name="brand_status_continues" translatable="false">CONTINUES</string>
 </resources>

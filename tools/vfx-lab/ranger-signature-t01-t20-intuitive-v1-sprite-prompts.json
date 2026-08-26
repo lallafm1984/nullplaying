@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "templateOnly": false,
+  "scope": "ranger signature t01-t20 intuitive-name batch v1",
+  "gateway": "http://127.0.0.1:4317",
+  "settings": {
+    "type": "spritesheet",
+    "model": "gpt-5.6-sol",
+    "mode": "detailed",
+    "frameWidth": 361,
+    "frameHeight": 160,
+    "frameCount": 16,
+    "columns": 4,
+    "preset": "attack",
+    "fps": 16,
+    "loop": false,
+    "autoReview": true,
+    "qualityTarget": 90,
+    "maxPasses": 4,
+    "useReference": false
+  },
+  "commonPrompt": "Use case: stylized-concept. Asset type: production 2D combat VFX overlay sprite sheet for NULL PLAYING. Create exactly 16 chronological frames in a strict 4-column by 4-row, row-major sheet. Every cell is one independent wide 361x160 combat viewport with identical fixed camera and scale; final sheet is exactly 1444x640 transparent 8-bit RGBA. Treat every cell as a sealed hard crop with no adjacent-cell leakage. F01 is almost transparent anticipation, F02-F07 clearly build the named action, F08 completes the main action, F09 is the single unique maximum impact, F10 immediately loses at least 35% energy, F11-F15 fade monotonically, and F16 is almost fully transparent. Detailed premium Korean fantasy action-RPG VFX, high-resolution hand-painted rendering, crisp tapered edges, controlled bloom, readable silhouette, clean alpha and broad transparent channels. No character body, enemy body, landscape, UI, text, grid, labels, gutters, borders, or opaque background.",
+  "negativePrompt": "pixel art, low resolution, retro sprite, human body, face, hands, enemy, monster body, full background scene, battlefield, HUD, text, letters, numbers, logo, watermark, frame number, grid line, border, gutter, padding, opaque background, black background, white background, checkerboard background, cross-cell residue, adjacent-frame band, wrong frame count, duplicated frame, missing frame, wrong order, inconsistent camera, radial flower, butterfly, symmetrical wings, pinwheel, mandala, generic starburst, unrelated rings, closed circular loop, one stretched panorama stripe, opaque rectangle, whiteout, late energy regrowth, persistent final frame, muddy colors, jagged alpha, haloed alpha",
+  "skills": [
+    {
+      "catalogId": "ranger_t01_c01",
+      "level": 5,
+      "name": "정조준 사격",
+      "generationPrompt": "Create ‘정조준 사격’ using LOCKED_PINPOINT_SHOT. The name must be immediately readable through this concrete action: a hair-thin gold aim line enters from the far left and drives one blue-white arrow point through an offset target, ending in a tiny puncture crack rather than an explosion. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t02_c02",
+      "level": 10,
+      "name": "연속 사격",
+      "generationPrompt": "Create ‘연속 사격’ using THREE_STEP_RAPID_FIRE. The name must be immediately readable through this concrete action: three countable green-silver arrows fly left-to-right on slightly different heights, each older trail breaking before the next, with the third arrow making the peak hit. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t03_c04",
+      "level": 15,
+      "name": "올가미 화살",
+      "generationPrompt": "Create ‘올가미 화살’ using OPEN_ROPE_SNARE. The name must be immediately readable through this concrete action: four rough vine-rope segments rise from unequal lower positions and cinch into an open angular snare with obvious gaps, then snap apart at the target. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t04_c03",
+      "level": 20,
+      "name": "회오리 화살",
+      "generationPrompt": "Create ‘회오리 화살’ using ARROW_TORNADO_DRILL. The name must be immediately readable through this concrete action: one arrow pulls a narrow open spiral of teal wind forward from left to right; the arrowhead remains readable and the spiral never closes into a ring. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t05_c02",
+      "level": 25,
+      "name": "유성 화살비",
+      "generationPrompt": "Create ‘유성 화살비’ using METEOR_ARROW_RAIN. The name must be immediately readable through this concrete action: three incandescent arrow meteors descend on staggered diagonals into three separate groundless impact points, the final meteor splitting a violet pressure sheet. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t06_c04",
+      "level": 30,
+      "name": "곰발톱 강타",
+      "generationPrompt": "Create ‘곰발톱 강타’ using BEAR_CLAW_DESCENT. The name must be immediately readable through this concrete action: three broad earthen claw-pressure furrows descend from upper-right to lower-left in sequence, with the last heavy rake throwing amber stone splinters. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t07_c01",
+      "level": 35,
+      "name": "철갑 관통",
+      "generationPrompt": "Create ‘철갑 관통’ using ARMOR_PIERCING_BOLT. The name must be immediately readable through this concrete action: a dark steel bodkin arrow crosses the full viewport and punches through two offset iron pressure plates, leaving one narrow tunnel of torn metal fragments. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t08_c05",
+      "level": 40,
+      "name": "보름달 일격",
+      "generationPrompt": "Create ‘보름달 일격’ using FULL_MOON_DESCENT. The name must be immediately readable through this concrete action: a pale lunar arrow descends almost vertically through a thin crescent-lit cloud veil and lands as one compact white-blue impact, without showing a literal moon disc. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t09_c04",
+      "level": 45,
+      "name": "매의 급강하",
+      "generationPrompt": "Create ‘매의 급강하’ using FALCON_DIVE_STRIKE. The name must be immediately readable through this concrete action: a sharp gold-teal falcon-shaped wind wedge dives from upper-left to lower-right without any animal body, raking the target with two trailing feather-like speed cuts. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t10_c02",
+      "level": 50,
+      "name": "천공 화살비",
+      "generationPrompt": "Create ‘천공 화살비’ using SKY_ARROW_BARRAGE. The name must be immediately readable through this concrete action: five arrows descend from five unequal top-edge positions in a left-to-right cascade, creating separated blue-green punctures before the largest fifth strike. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t11_c05",
+      "level": 55,
+      "name": "월식 사격",
+      "generationPrompt": "Create ‘월식 사격’ using ECLIPSE_SHOT. The name must be immediately readable through this concrete action: one black-violet arrow crosses a narrow pale lunar veil and removes a clean horizontal slice of light at impact, leaving an eclipse-dark seam rather than an orb. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t12_c04",
+      "level": 60,
+      "name": "그리핀 급습",
+      "generationPrompt": "Create ‘그리핀 급습’ using GRIFFIN_TALON_RAID. The name must be immediately readable through this concrete action: three gold-white aerial talon-pressure slashes sweep downward at different depths, converge near the lower-right, and tear one broad wind sheet into strips. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t13_c05",
+      "level": 65,
+      "name": "은하수 관통",
+      "generationPrompt": "Create ‘은하수 관통’ using MILKY_WAY_PIERCER. The name must be immediately readable through this concrete action: a single luminous arrow follows an open diagonal river of sparse star dust across the viewport and pierces through it, stretching a narrow cosmic wake edge-to-edge. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t14_c03",
+      "level": 70,
+      "name": "대기의 칼날",
+      "generationPrompt": "Create ‘대기의 칼날’ using ATMOSPHERIC_WIND_BLADE. The name must be immediately readable through this concrete action: one long translucent teal air blade sweeps left-to-right across two depth layers, separating a cloud-pressure plane into an upper and lower sheet. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t15_c04",
+      "level": 75,
+      "name": "왕의 사냥개",
+      "generationPrompt": "Create ‘왕의 사냥개’ using ROYAL_HOUND_POUNCE. The name must be immediately readable through this concrete action: three amber hunting-pressure tracks rush from lower-left, split around the target, then converge as one heavy forward bite wedge without depicting a dog. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t16_c02",
+      "level": 80,
+      "name": "무한 화살진",
+      "generationPrompt": "Create ‘무한 화살진’ using INFINITE_ARROW_FORMATION. The name must be immediately readable through this concrete action: five visible arrow lanes advance in staggered depth while many faint broken arrow echoes extend toward both side edges, culminating in a dense but directional volley front. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t17_c03",
+      "level": 85,
+      "name": "창공 붕괴",
+      "generationPrompt": "Create ‘창공 붕괴’ using SKY_COLLAPSE_SHOT. The name must be immediately readable through this concrete action: a vertical teal pressure canopy fractures from the upper edge as one rising arrow punches through it, causing layered sky shards to collapse downward around the arrow path. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t18_c04",
+      "level": 90,
+      "name": "신화의 덫",
+      "generationPrompt": "Create ‘신화의 덫’ using MYTHIC_OPEN_TRAP. The name must be immediately readable through this concrete action: seven asymmetric spectral trap stakes emerge from irregular perimeter points, almost close an open hunting domain, then all lunge inward at different angles. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t19_c05",
+      "level": 95,
+      "name": "은하 종단",
+      "generationPrompt": "Create ‘은하 종단’ using GALAXY_TERMINUS_BEAM. The name must be immediately readable through this concrete action: a narrow arrow-like cosmic beam travels left-to-right through three offset star-cloud strata and severs them into long unequal violet-blue ribbons. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    },
+    {
+      "catalogId": "ranger_t20_c05",
+      "level": 100,
+      "name": "별을 꿰는 화살",
+      "generationPrompt": "Create ‘별을 꿰는 화살’ using STAR_PIERCING_ULTIMATE. The name must be immediately readable through this concrete action: one tiny gold-white arrow point crosses the entire horizon and pierces a vast translucent star-pressure wall, cracking it to every viewport edge while the focal arrow stays razor thin. Keep the composition strongly directional and asymmetric, with an offset contact point and open transparent gaps. F08 is the completed action; F09 intensifies only that same action into the unique peak, without inventing a second attack. Palette: pine green, teal wind, moon silver, restrained gold. F10-F15 preserve only broken fragments or wake from the same motion and fade without regrowth; F16 almost empty. No literal bow, hands, hunter body, full animal body, neat target reticle, character, radial flower, symmetrical wings, pinwheel, closed ring, magic-circle ornament, cross-cell leakage, text, or opaque panel."
+    }
+  ]
+}

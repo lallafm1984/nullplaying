@@ -47,7 +47,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -86,6 +85,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.sp
 import com.alarmquest.R
 import com.alarmquest.data.MAX_CHARACTER_SLOTS
+import com.alarmquest.data.nextCharacterSlotUnlockLevel
 import com.alarmquest.data.StartupPhase
 import com.alarmquest.model.SimpleGameState
 import java.text.NumberFormat
@@ -105,9 +105,7 @@ internal enum class EntryScene {
     GAME,
 }
 
-// Product contract: all three character slots are available without a paid unlock.
 internal const val PLANNED_CHARACTER_SLOT_COUNT = 3
-internal const val AVAILABLE_CHARACTER_SLOT_COUNT = MAX_CHARACTER_SLOTS
 internal const val ROSTER_CARD_HEIGHT_DP = 182
 internal const val ROSTER_CARD_GAP_DP = 8
 internal const val ROSTER_THREE_CARD_LIST_BUDGET_DP = 600
@@ -125,18 +123,19 @@ internal fun rosterCardsHeightDp(count: Int): Int {
         (cardCount - 1).coerceAtLeast(0) * ROSTER_CARD_GAP_DP
 }
 
+internal fun canCreateCharacter(characters: List<CharacterRosterEntry>, unlockedSlotCount: Int): Boolean =
+    characters.size < unlockedSlotCount.coerceIn(0, MAX_CHARACTER_SLOTS)
+
 internal fun characterRosterContentDescription(
-    slotId: Int,
     name: String,
     classLabel: String,
     level: Long,
     combatPower: Long,
     adventureTitle: String,
     offlinePercent: Int,
-): String = buildString {
-    append("슬롯 $slotId, $name, $classLabel, 레벨 $level, 전투력 ")
-    append(NumberFormat.getIntegerInstance(Locale.KOREA).format(combatPower))
-    append(", 현재 모험 $adventureTitle, 오프라인 모험 잔여 ${offlinePercent}퍼센트, 이어하기")
+): String {
+    val powerText = NumberFormat.getIntegerInstance(Locale.KOREA).format(combatPower)
+    return "$name, $classLabel, 레벨 $level, 전투력 $powerText, 현재 모험 $adventureTitle, 오프라인 모험 잔여 ${offlinePercent}퍼센트, 이어하기"
 }
 
 private data class PendingCharacterDeletion(
@@ -624,6 +623,8 @@ internal fun TitleScene(
     onIntroFinished: () -> Unit,
     onEnterRequested: () -> Unit,
 ) {
+    // The title is the app's root destination, so back must not finish the Activity.
+    BackHandler { }
     val animationsEnabled = ValueAnimator.areAnimatorsEnabled()
     val motion = rememberTitleMotion(animationsEnabled)
     val introProgress = remember {
@@ -692,18 +693,18 @@ internal fun TitleScene(
     )
     val dustFrame = titleLayerFrame(TitleLayer.DUST, motion.dustPhase, !animationsEnabled)
     val status = titleStatusText(ready, pendingEnter, startupPhase)
-    val brandName = stringResource(R.string.brand_accessibility_name)
+    val brandName = localized("널 플레이잉")
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(AqBackground)
             .semantics(mergeDescendants = true) {
-                contentDescription = "$brandName. $status. 캐릭터 선택 화면으로 이동"
+                contentDescription = localized("$brandName. $status. 캐릭터 선택 화면으로 이동")
             }
             .clickable(
                 role = Role.Button,
-                onClickLabel = "캐릭터 선택 화면으로 이동",
+                onClickLabel = localized("캐릭터 선택 화면으로 이동"),
                 onClick = {
                     val introIsBlocking = playIntro &&
                         animationsEnabled &&
@@ -768,7 +769,7 @@ internal fun TitleScene(
             Spacer(Modifier.height(3.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = stringResource(R.string.brand_status_quest),
+                    text = stringResource(R.string.brand_status_the_adventure),
                     color = AqMuted,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
@@ -777,7 +778,7 @@ internal fun TitleScene(
                 )
                 Spacer(Modifier.width(5.dp))
                 Text(
-                    text = stringResource(R.string.brand_status_active),
+                    text = stringResource(R.string.brand_status_continues),
                     color = AqGold,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
@@ -822,6 +823,7 @@ internal fun TitleScene(
 @Composable
 internal fun CharacterRosterScreen(
     characters: List<CharacterRosterEntry>,
+    unlockedCharacterSlotCount: Int,
     onContinue: (slotId: Int) -> Unit,
     onCreate: () -> Unit,
     onDelete: suspend (slotId: Int) -> Boolean,
@@ -854,31 +856,18 @@ internal fun CharacterRosterScreen(
                 IconButton(onClick = onBack, modifier = Modifier.size(48.dp)) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = "타이틀로 돌아가기",
+                        contentDescription = localized("타이틀로 돌아가기"),
                         tint = AqText,
                     )
                 }
-                Column(modifier = Modifier.padding(start = 4.dp)) {
-                    Text(
-                        text = "모험가 선택",
-                        color = AqText,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Black,
-                    )
-                    Text(
-                        text = "누구의 이야기를 이어갈까요",
-                        color = AqMuted,
-                        fontSize = 12.sp,
-                    )
-                }
+                Text(
+                    text = "모험가 선택",
+                    color = AqText,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Black,
+                    modifier = Modifier.padding(start = 4.dp),
+                )
             }
-            Spacer(Modifier.height(10.dp))
-            Text(
-                text = "모험가 슬롯 · ${characters.size}/$AVAILABLE_CHARACTER_SLOT_COUNT",
-                color = AqGold,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold,
-            )
             Spacer(Modifier.height(8.dp))
             LazyColumn(
                 modifier = Modifier.weight(1f),
@@ -907,7 +896,7 @@ internal fun CharacterRosterScreen(
                     }
                 }
             }
-            if (characters.size < AVAILABLE_CHARACTER_SLOT_COUNT) {
+            if (canCreateCharacter(characters, unlockedCharacterSlotCount)) {
                 Spacer(Modifier.height(12.dp))
                 Button(
                     onClick = onCreate,
@@ -923,6 +912,13 @@ internal fun CharacterRosterScreen(
                         fontWeight = FontWeight.Black,
                         color = Color(0xFF211808),
                     )
+                }
+                Spacer(Modifier.height(12.dp))
+            } else {
+                nextCharacterSlotUnlockLevel(unlockedCharacterSlotCount)?.let { level ->
+                    Spacer(Modifier.height(12.dp))
+                    LockedCharacterSlotHint(level)
+                    Spacer(Modifier.height(12.dp))
                 }
             }
         }
@@ -958,6 +954,23 @@ internal fun CharacterRosterScreen(
                     }
                 }
             },
+        )
+    }
+}
+
+@Composable
+private fun LockedCharacterSlotHint(requiredLevel: Long) {
+    Card(
+        colors = CardDefaults.cardColors(containerColor = AqSurface.copy(alpha = 0.82f)),
+        shape = RoundedCornerShape(18.dp),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Text(
+            text = "다음 모험가 슬롯은 캐릭터 Lv.$requiredLevel 달성 시 영구 해금됩니다.",
+            color = AqMuted,
+            fontSize = 13.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 15.dp),
         )
     }
 }
@@ -1024,7 +1037,6 @@ private fun CharacterContinueCard(
     val offlinePercent = offlineAdventurePercent(offlineAdventureProgress)
     val offlineColor = offlineAdventureColor(offlinePercent)
     val description = characterRosterContentDescription(
-        slotId = slotId,
         name = hero.name,
         classLabel = hero.heroClass.labelKo,
         level = hero.level,
@@ -1045,11 +1057,11 @@ private fun CharacterContinueCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .semantics(mergeDescendants = true) {
-                        contentDescription = description
+                        contentDescription = localizedPreserving(description, hero.name)
                     }
                     .clickable(
                         role = Role.Button,
-                        onClickLabel = "${hero.name}으로 이어하기",
+                        onClickLabel = localizedPreserving("${hero.name}으로 이어하기", hero.name),
                         onClick = onContinue,
                     )
                     .weight(1f)
@@ -1086,7 +1098,7 @@ private fun CharacterContinueCard(
                     }
                     Spacer(Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(
+                        UnlocalizedText(
                             text = hero.name,
                             color = AqText,
                             fontSize = 20.sp,
@@ -1095,7 +1107,7 @@ private fun CharacterContinueCard(
                         )
                         Spacer(Modifier.height(1.dp))
                         Text(
-                            text = "슬롯 $slotId · ${hero.heroClass.labelKo}",
+                            text = hero.heroClass.labelKo,
                             color = AqMuted,
                             fontSize = 12.sp,
                             lineHeight = 15.sp,
@@ -1146,15 +1158,21 @@ private fun CharacterContinueCard(
                         )
                     }
                     Column(
-                        modifier = Modifier.width(84.dp),
+                        modifier = Modifier.width(96.dp),
                         horizontalAlignment = Alignment.End,
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
                             Text(
                                 text = "오프라인 잔여",
                                 color = AqMuted,
                                 fontSize = 9.sp,
                                 lineHeight = 12.sp,
+                                maxLines = 1,
+                                softWrap = false,
                             )
                             Spacer(Modifier.width(4.dp))
                             Text(
@@ -1163,6 +1181,8 @@ private fun CharacterContinueCard(
                                 fontSize = 11.sp,
                                 lineHeight = 12.sp,
                                 fontWeight = FontWeight.Black,
+                                maxLines = 1,
+                                softWrap = false,
                             )
                         }
                         Spacer(Modifier.height(5.dp))
@@ -1199,8 +1219,7 @@ private fun CharacterContinueCard(
 }
 
 internal fun characterDeleteWarningText(characterName: String): String =
-    "‘$characterName’의 레벨, 장비, 가방, 기술, 퀘스트를 포함한 모든 모험 기록이 " +
-        "영구 삭제됩니다.\n\n삭제한 기록은 복구할 수 없습니다."
+    "‘$characterName’의 레벨, 장비, 가방, 기술, 퀘스트를 포함한 모든 모험 기록이 영구 삭제됩니다.\n\n삭제한 기록은 복구할 수 없습니다."
 
 @Composable
 private fun CharacterDeleteConfirmationDialog(
@@ -1221,8 +1240,11 @@ private fun CharacterDeleteConfirmationDialog(
         },
         text = {
             Column {
-                Text(
-                    text = characterDeleteWarningText(characterName),
+                UnlocalizedText(
+                    text = localizedPreserving(
+                        characterDeleteWarningText(characterName),
+                        characterName,
+                    ),
                     color = AqMuted,
                     fontSize = 14.sp,
                     lineHeight = 21.sp,

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "retainedAt": "2026-08-25",
+  "reason": "Keep the nineteen confirmed original Mage sheets and Absolute Ice Prison Break option 4 active while preserving every prior Mage candidate for recovery.",
+  "candidateStatus": "retained-in-workspace-unregistered",
+  "activeDirectory": "custom-assets/mage-finalized-vfx",
+  "retainedCandidateRoots": [
+    "custom-assets/mage-signature-t01-t20-intuitive-imagegen-refined-v1",
+    "custom-assets/mage-absolute-ice-prison-break-regenerated-v2",
+    "custom-assets/mage-absolute-ice-prison-break-regenerated-v3",
+    "custom-assets/apex-class-rework-imagegen-v1",
+    "custom-assets/apex-class-rework-imagegen-alpha-v1",
+    "custom-assets/apex-class-rework-imagegen-refined-v1",
+    "custom-assets/apex-class-rework-v2-imagegen-v1",
+    "custom-assets/apex-class-rework-v2-imagegen-alpha-v1",
+    "custom-assets/apex-class-rework-v2-imagegen-refined-v1"
+  ],
+  "retainedSupportFiles": [
+    "mage-signature-t01-t20-intuitive-v1-sprite-prompts.json",
+    "refine_apex_class_rework_v2.py",
+    "normalize_generated_sprite_matte.py"
+  ],
+  "restoreRule": "Copy the selected candidate into custom-assets/mage-finalized-vfx, update data/mage-vfx-finalized.json hashes and selection metadata, and re-register review UI only when the user explicitly requests another comparison.",
+  "androidStatus": "promoted-to-android-q85-webp-20260825"
+}

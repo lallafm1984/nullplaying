@@ -2,9 +2,13 @@ package com.alarmquest.ui
 
 import android.animation.ValueAnimator
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.SystemClock
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
@@ -27,6 +31,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,7 +43,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -49,6 +54,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -71,6 +77,7 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.WorkspacePremium
@@ -86,8 +93,8 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.Text as MaterialText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -95,7 +102,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -120,7 +126,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
@@ -142,6 +147,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.alarmquest.data.SimpleGameRepository
 import com.alarmquest.data.StartupPhase
+import com.alarmquest.engine.LabyrinthProgression
 import com.alarmquest.engine.SimpleGameEngine
 import com.alarmquest.engine.SkillCatalog
 import com.alarmquest.engine.SkillDefinition
@@ -153,11 +159,19 @@ import com.alarmquest.model.CompletedTaleRecord
 import com.alarmquest.model.HeroClass
 import com.alarmquest.model.HeroStats
 import com.alarmquest.model.InventoryItem
+import com.alarmquest.model.LearnedSkill
 import com.alarmquest.model.MonsterGrade
 import com.alarmquest.model.ShopEquipmentOffer
 import com.alarmquest.model.SimpleGameState
 import com.alarmquest.model.TaleActState
-import com.alarmquest.model.StatRoll
+import com.alarmquest.model.TaleKind
+import com.alarmquest.notifications.GameNotificationPreferencesStore
+import com.alarmquest.remote.AppAnnouncement
+import com.alarmquest.localization.GameLanguageStore
+import com.alarmquest.remote.RemoteRankingSnapshot
+import com.alarmquest.remote.AppUpdateNotice
+import com.alarmquest.remote.SupabaseConnectionState
+import com.alarmquest.remote.SupabaseGameService
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
 import com.google.android.libraries.ads.mobile.sdk.common.AdRequest
 import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError
@@ -192,23 +206,182 @@ internal fun offlineAdventureColor(percent: Int): Color = when (percent.coerceIn
     else -> Color(0xFF8BCB84)
 }
 
+internal fun entrySceneUsesSharedBanner(scene: EntryScene): Boolean =
+    scene != EntryScene.TITLE
+
+internal enum class EntrySceneTransitionDirection {
+    BACKWARD,
+    FORWARD,
+    FADE,
+}
+
+internal fun entrySceneTransitionDirection(
+    initialScene: EntryScene,
+    targetScene: EntryScene,
+): EntrySceneTransitionDirection = when {
+    initialScene == EntryScene.GAME && targetScene == EntryScene.ROSTER ->
+        EntrySceneTransitionDirection.BACKWARD
+    initialScene == EntryScene.ROSTER && targetScene == EntryScene.GAME ->
+        EntrySceneTransitionDirection.FORWARD
+    else -> EntrySceneTransitionDirection.FADE
+}
+
+internal fun entrySceneFor(@Suppress("UNUSED_PARAMETER") state: SimpleGameState): EntryScene =
+    EntryScene.GAME
+
 @Composable
-fun AlarmQuestApp(repository: SimpleGameRepository, mobileAdsReady: Boolean = false) {
+fun AlarmQuestApp(
+    repository: SimpleGameRepository,
+    notificationPreferencesStore: GameNotificationPreferencesStore,
+    gameLanguageStore: GameLanguageStore,
+    supabaseGameService: SupabaseGameService,
+    mobileAdsReady: Boolean = false,
+    privacyOptionsRequired: Boolean = false,
+    onOpenPrivacyOptions: () -> Unit = {},
+) {
     val systemDensity = LocalDensity.current
+    val context = LocalContext.current
+    val appLanguage by gameLanguageStore.language.collectAsState()
+    var updateNotice by remember { mutableStateOf<AppUpdateNotice?>(null) }
+    var versionCheckPassed by remember { mutableStateOf(false) }
+    var announcement by remember { mutableStateOf<AppAnnouncement?>(null) }
+    LaunchedEffect(supabaseGameService) {
+        versionCheckPassed = false
+        announcement = null
+        supabaseGameService.checkForAppUpdate()
+            .onSuccess { notice ->
+                updateNotice = notice
+                versionCheckPassed = com.alarmquest.remote.appVersionAllowsAnnouncement(notice)
+            }
+            .onFailure {
+                updateNotice = null
+                versionCheckPassed = false
+            }
+    }
+    LaunchedEffect(supabaseGameService, appLanguage, versionCheckPassed) {
+        if (!versionCheckPassed) {
+            announcement = null
+            return@LaunchedEffect
+        }
+        announcement = null
+        supabaseGameService.fetchAppAnnouncement(appLanguage)
+            .onSuccess { announcement = it }
+    }
     CompositionLocalProvider(
         LocalDensity provides Density(
             density = systemDensity.density,
             fontScale = 1f,
         ),
+        LocalAppLanguage provides appLanguage,
     ) {
-        AlarmQuestAppContent(repository, mobileAdsReady)
+        AlarmQuestAppContent(
+            repository,
+            notificationPreferencesStore,
+            gameLanguageStore,
+            supabaseGameService,
+            startupAnnouncement = if (updateNotice == null) announcement else null,
+            onStartupAnnouncementShown = supabaseGameService::markAppAnnouncementDisplayed,
+            onDismissStartupAnnouncement = { announcement = null },
+            mobileAdsReady = mobileAdsReady,
+            privacyOptionsRequired = privacyOptionsRequired,
+            onOpenPrivacyOptions = onOpenPrivacyOptions,
+        )
+        updateNotice?.let { notice ->
+            AppUpdateDialog(
+                notice = notice,
+                onDismiss = { if (!notice.isRequired) updateNotice = null },
+                onUpdate = {
+                    runCatching {
+                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(notice.updateUrl)))
+                    }.onFailure {
+                        Toast.makeText(
+                            context,
+                            localized("업데이트 페이지를 열지 못했습니다"),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                },
+            )
+        }
     }
+}
+
+@Composable
+private fun AppUpdateDialog(
+    notice: AppUpdateNotice,
+    onDismiss: () -> Unit,
+    onUpdate: () -> Unit,
+) {
+    val language = LocalAppLanguage.current
+    val localizedTitle = if (language == com.alarmquest.localization.AppLanguage.KOREAN) {
+        notice.title
+    } else {
+        localized("새 버전이 준비되었습니다")
+    }
+    val localizedMessage = if (language == com.alarmquest.localization.AppLanguage.KOREAN) {
+        notice.message
+    } else {
+        localized("더 안정적인 모험을 위해 앱을 업데이트해 주세요.")
+    }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = localizedTitle,
+                color = AqText,
+                fontWeight = FontWeight.Black,
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(localizedMessage, color = AqMuted)
+                Text(
+                    text = "새 버전 ${notice.latestVersionName}",
+                    color = AqGold,
+                    fontWeight = FontWeight.Bold,
+                )
+                if (notice.isRequired) {
+                    Text(
+                        text = "계속하려면 업데이트가 필요합니다.",
+                        color = AqRed,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = onUpdate,
+                colors = ButtonDefaults.buttonColors(containerColor = AqGold),
+            ) {
+                Text("업데이트하기", color = Color(0xFF211808), fontWeight = FontWeight.Black)
+            }
+        },
+        dismissButton = if (notice.isRequired) {
+            null
+        } else {
+            {
+                TextButton(onClick = onDismiss) {
+                    Text("나중에", color = AqMuted)
+                }
+            }
+        },
+        containerColor = AqSurface,
+    )
 }
 
 @Composable
 private fun AlarmQuestAppContent(
     repository: SimpleGameRepository,
+    notificationPreferencesStore: GameNotificationPreferencesStore,
+    gameLanguageStore: GameLanguageStore,
+    supabaseGameService: SupabaseGameService,
+    startupAnnouncement: AppAnnouncement?,
+    onStartupAnnouncementShown: (AppAnnouncement) -> Unit,
+    onDismissStartupAnnouncement: () -> Unit,
     mobileAdsReady: Boolean,
+    privacyOptionsRequired: Boolean,
+    onOpenPrivacyOptions: () -> Unit,
 ) {
     val snapshot by repository.snapshots.collectAsState()
     val rosterCharacters = snapshot.characters.map { character ->
@@ -220,9 +393,17 @@ private fun AlarmQuestAppContent(
         )
     }
     val entryScope = rememberCoroutineScope()
+    val deleteCharacterAndSyncRanking: suspend (Int) -> Boolean = { slotId ->
+        val deleted = repository.deleteCharacter(slotId).isSuccess
+        if (deleted) {
+            supabaseGameService.syncRankingNow(repository.snapshots.value)
+        }
+        deleted
+    }
     var initializeAttempt by remember { mutableIntStateOf(0) }
     var minimumLoadingFinished by remember { mutableStateOf(false) }
     var entryScene by rememberSaveable { mutableStateOf(EntryScene.TITLE) }
+    var gameSceneVisitId by rememberSaveable { mutableIntStateOf(0) }
     var pendingEnter by rememberSaveable { mutableStateOf(false) }
     val titleIntroClaimed = remember { ProcessTitleIntroGate.claim() }
     var playTitleIntro by remember {
@@ -260,88 +441,213 @@ private fun AlarmQuestAppContent(
             }
         )
         entryScene != EntryScene.TITLE && !entryReady -> LoadingScreen(snapshot.startupPhase)
-        else -> AnimatedContent(
-            targetState = entryScene,
-            transitionSpec = {
-                val duration = if (ValueAnimator.areAnimatorsEnabled()) 220 else 0
-                fadeIn(tween(durationMillis = duration, easing = FastOutSlowInEasing))
-                    .togetherWith(
-                        fadeOut(tween(durationMillis = duration, easing = FastOutSlowInEasing)),
+        else -> Column(modifier = Modifier.fillMaxSize().background(AqBackground)) {
+            if (entrySceneUsesSharedBanner(entryScene)) {
+                StandardBannerAd(mobileAdsReady = mobileAdsReady)
+            }
+            AnimatedContent(
+                targetState = entryScene,
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+                transitionSpec = {
+                    val enterDuration = if (ValueAnimator.areAnimatorsEnabled()) 240 else 0
+                    val exitDuration = if (ValueAnimator.areAnimatorsEnabled()) 200 else 0
+                    val enterFade = fadeIn(
+                        tween(durationMillis = enterDuration, easing = FastOutSlowInEasing),
                     )
-            },
-            label = "entry-scene-transition",
-        ) { scene ->
-            when (scene) {
-                EntryScene.TITLE -> TitleScene(
-                    ready = entryReady,
-                    pendingEnter = pendingEnter,
-                    startupPhase = snapshot.startupPhase,
-                    playIntro = playTitleIntro,
-                    onIntroFinished = { playTitleIntro = false },
-                    onEnterRequested = {
-                        if (entryReady) {
-                            entryScene = EntryScene.ROSTER
-                        } else {
-                            pendingEnter = true
-                        }
-                    },
-                )
-                EntryScene.ROSTER -> CharacterRosterScreen(
-                    characters = rosterCharacters,
-                    onContinue = { slotId ->
-                        entryScope.launch {
-                            if (
-                                repository.selectCharacter(
-                                    slotId = slotId,
-                                    now = System.currentTimeMillis(),
-                                ).isSuccess
-                            ) {
-                                entryScene = EntryScene.GAME
+                    val exitFade = fadeOut(
+                        tween(durationMillis = exitDuration, easing = FastOutSlowInEasing),
+                    )
+                    when (entrySceneTransitionDirection(initialState, targetState)) {
+                        EntrySceneTransitionDirection.BACKWARD ->
+                            (slideInHorizontally(
+                                animationSpec = tween(
+                                    durationMillis = enterDuration,
+                                    easing = FastOutSlowInEasing,
+                                ),
+                                initialOffsetX = { width -> -width / 12 },
+                            ) + enterFade).togetherWith(
+                                slideOutHorizontally(
+                                    animationSpec = tween(
+                                        durationMillis = exitDuration,
+                                        easing = FastOutSlowInEasing,
+                                    ),
+                                    targetOffsetX = { width -> width / 10 },
+                                ) + exitFade,
+                            )
+                        EntrySceneTransitionDirection.FORWARD ->
+                            (slideInHorizontally(
+                                animationSpec = tween(
+                                    durationMillis = enterDuration,
+                                    easing = FastOutSlowInEasing,
+                                ),
+                                initialOffsetX = { width -> width / 12 },
+                            ) + enterFade).togetherWith(
+                                slideOutHorizontally(
+                                    animationSpec = tween(
+                                        durationMillis = exitDuration,
+                                        easing = FastOutSlowInEasing,
+                                    ),
+                                    targetOffsetX = { width -> -width / 10 },
+                                ) + exitFade,
+                            )
+                        EntrySceneTransitionDirection.FADE ->
+                            enterFade.togetherWith(exitFade)
+                    }
+                },
+                label = "entry-scene-transition",
+            ) { scene ->
+                when (scene) {
+                    EntryScene.TITLE -> TitleScene(
+                        ready = entryReady,
+                        pendingEnter = pendingEnter,
+                        startupPhase = snapshot.startupPhase,
+                        playIntro = playTitleIntro,
+                        onIntroFinished = { playTitleIntro = false },
+                        onEnterRequested = {
+                            if (entryReady) {
+                                entryScene = EntryScene.ROSTER
+                            } else {
+                                pendingEnter = true
                             }
-                        }
-                    },
-                    onCreate = { entryScene = EntryScene.CREATION },
-                    onDelete = { slotId -> repository.deleteCharacter(slotId).isSuccess },
-                    onBack = { entryScene = EntryScene.TITLE },
-                )
-                EntryScene.CREATION -> CharacterCreation(
-                    repository = repository,
-                    onBack = { entryScene = EntryScene.ROSTER },
-                    onCreated = { entryScene = EntryScene.GAME },
-                )
-                EntryScene.GAME -> {
-                    val state = snapshot.state
-                    if (state == null) {
-                        CharacterRosterScreen(
-                            characters = rosterCharacters,
-                            onContinue = { slotId ->
-                                entryScope.launch {
-                                    if (
-                                        repository.selectCharacter(
-                                            slotId = slotId,
-                                            now = System.currentTimeMillis(),
-                                        ).isSuccess
-                                    ) {
-                                        entryScene = EntryScene.GAME
-                                    }
+                        },
+                    )
+                    EntryScene.ROSTER -> CharacterRosterScreen(
+                        characters = rosterCharacters,
+                        unlockedCharacterSlotCount = snapshot.unlockedCharacterSlotCount,
+                        onContinue = { slotId ->
+                            entryScope.launch {
+                                val selectedState = rosterCharacters
+                                    .firstOrNull { it.slotId == slotId }
+                                    ?.state
+                                if (
+                                    repository.selectCharacter(
+                                        slotId = slotId,
+                                        now = System.currentTimeMillis(),
+                                    ).isSuccess
+                                ) {
+                                    gameSceneVisitId += 1
+                                    entryScene = selectedState?.let(::entrySceneFor) ?: EntryScene.GAME
                                 }
-                            },
-                            onCreate = { entryScene = EntryScene.CREATION },
-                            onDelete = { slotId -> repository.deleteCharacter(slotId).isSuccess },
-                            onBack = { entryScene = EntryScene.TITLE },
-                        )
-                    } else {
-                        GameScreen(
-                            repository = repository,
-                            state = state,
-                            mobileAdsReady = mobileAdsReady,
-                            onExitToRoster = { entryScene = EntryScene.ROSTER },
-                        )
+                            }
+                        },
+                        onCreate = { entryScene = EntryScene.CREATION },
+                        onDelete = deleteCharacterAndSyncRanking,
+                        onBack = { entryScene = EntryScene.TITLE },
+                    )
+                    EntryScene.CREATION -> CharacterCreation(
+                        repository = repository,
+                        onBack = { entryScene = EntryScene.ROSTER },
+                        onCreated = {
+                            gameSceneVisitId += 1
+                            entryScene = EntryScene.GAME
+                        },
+                    )
+                    EntryScene.GAME -> {
+                        val state = snapshot.state
+                        if (state == null) {
+                            CharacterRosterScreen(
+                                characters = rosterCharacters,
+                                unlockedCharacterSlotCount = snapshot.unlockedCharacterSlotCount,
+                                onContinue = { slotId ->
+                                    entryScope.launch {
+                                        val selectedState = rosterCharacters
+                                            .firstOrNull { it.slotId == slotId }
+                                            ?.state
+                                        if (
+                                            repository.selectCharacter(
+                                                slotId = slotId,
+                                                now = System.currentTimeMillis(),
+                                            ).isSuccess
+                                        ) {
+                                            gameSceneVisitId += 1
+                                            entryScene = selectedState?.let(::entrySceneFor) ?: EntryScene.GAME
+                                        }
+                                    }
+                                },
+                                onCreate = { entryScene = EntryScene.CREATION },
+                                onDelete = deleteCharacterAndSyncRanking,
+                                onBack = { entryScene = EntryScene.TITLE },
+                            )
+                        } else {
+                            GameScreen(
+                                repository = repository,
+                                state = state,
+                                activeSlotId = snapshot.activeSlotId ?: 1,
+                                presentationVisitId = gameSceneVisitId,
+                                notificationPreferencesStore = notificationPreferencesStore,
+                                gameLanguageStore = gameLanguageStore,
+                                supabaseGameService = supabaseGameService,
+                                mobileAdsReady = mobileAdsReady,
+                                privacyOptionsRequired = privacyOptionsRequired,
+                                onOpenPrivacyOptions = onOpenPrivacyOptions,
+                                onExitToRoster = { entryScene = EntryScene.ROSTER },
+                            )
+                        }
                     }
                 }
             }
         }
     }
+    if (
+        entryScene == EntryScene.TITLE &&
+        snapshot.startupPhase != StartupPhase.FAILED &&
+        startupAnnouncement != null
+    ) {
+        LaunchedEffect(startupAnnouncement.id) {
+            onStartupAnnouncementShown(startupAnnouncement)
+        }
+        AppAnnouncementDialog(
+            announcement = startupAnnouncement,
+            onDismiss = onDismissStartupAnnouncement,
+        )
+    }
+}
+
+@Composable
+private fun AppAnnouncementDialog(
+    announcement: AppAnnouncement,
+    onDismiss: () -> Unit,
+) {
+    val language = LocalAppLanguage.current
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            MaterialText(
+                text = announcement.title,
+                color = AqText,
+                fontWeight = FontWeight.Black,
+            )
+        },
+        text = {
+            MaterialText(
+                text = announcement.message,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 360.dp)
+                    .verticalScroll(rememberScrollState()),
+                color = AqMuted,
+                fontSize = 14.sp,
+                lineHeight = 21.sp,
+            )
+        },
+        confirmButton = {
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(containerColor = AqGold),
+            ) {
+                MaterialText(
+                    text = when (language) {
+                        com.alarmquest.localization.AppLanguage.KOREAN -> "확인"
+                        com.alarmquest.localization.AppLanguage.ENGLISH -> "OK"
+                        com.alarmquest.localization.AppLanguage.JAPANESE -> "確認"
+                    },
+                    color = Color(0xFF211808),
+                    fontWeight = FontWeight.Black,
+                )
+            }
+        },
+        containerColor = AqSurface,
+    )
 }
 
 @Composable
@@ -373,11 +679,11 @@ private fun LoadingScreen(phase: StartupPhase) {
                     .widthIn(max = 228.dp)
                     .fillMaxWidth()
                     .height(50.dp),
-                contentDescription = stringResource(R.string.brand_accessibility_name),
+                contentDescription = localized("널 플레이잉"),
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                stringResource(R.string.brand_tagline),
+                "플레이하지 않아도, 모험은 진행 중.",
                 color = AqMuted,
                 fontSize = 13.sp,
                 textAlign = TextAlign.Center,
@@ -436,6 +742,24 @@ private fun StartupFailureScreen(message: String, onRetry: () -> Unit) {
 
 private const val MINIMUM_LOADING_MILLIS = 1_500L
 
+internal const val MIN_ADVENTURER_NAME_LENGTH = 2
+internal const val MAX_ADVENTURER_NAME_LENGTH = 8
+
+internal fun limitAdventurerNameInput(value: String): String {
+    val characterCount = value.codePointCount(0, value.length)
+    if (characterCount <= MAX_ADVENTURER_NAME_LENGTH) return value
+    val endIndex = value.offsetByCodePoints(0, MAX_ADVENTURER_NAME_LENGTH)
+    return value.substring(0, endIndex)
+}
+
+internal fun normalizedAdventurerName(value: String): String = value.trim()
+
+internal fun isValidAdventurerName(value: String): Boolean {
+    val normalized = normalizedAdventurerName(value)
+    val characterCount = normalized.codePointCount(0, normalized.length)
+    return characterCount in MIN_ADVENTURER_NAME_LENGTH..MAX_ADVENTURER_NAME_LENGTH
+}
+
 @Composable
 private fun CharacterCreation(
     repository: SimpleGameRepository,
@@ -446,159 +770,162 @@ private fun CharacterCreation(
     var selectedClass by remember { mutableStateOf(HeroClass.WARRIOR) }
     val firstRoll = remember { repository.rollStats(System.currentTimeMillis() xor System.nanoTime()) }
     var currentRoll by remember { mutableStateOf(firstRoll) }
-    val rollHistory = remember { mutableStateListOf<StatRoll>() }
     var creating by remember { mutableStateOf(false) }
     var creationError by remember { mutableStateOf<String?>(null) }
     val focusManager = LocalFocusManager.current
+    val density = LocalDensity.current
+    val isKeyboardVisible = WindowInsets.ime.getBottom(density) > 0
     val scope = rememberCoroutineScope()
+    val creationStats = repository.initialStatsForClass(currentRoll.stats, selectedClass)
 
     BackHandler(enabled = !creating, onBack = onBack)
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
                     listOf(Color(0xFF24192E), AqBackground, Color(0xFF100C16)),
                 ),
-            )
-            .windowInsetsPadding(WindowInsets.safeDrawing)
-            .imePadding()
-            .padding(horizontal = 20.dp),
+            ),
     ) {
-        Column(
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(top = 8.dp, bottom = 88.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .weight(1f)
+                .fillMaxWidth()
+                .windowInsetsPadding(WindowInsets.safeDrawing)
+                .padding(horizontal = 20.dp),
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(top = 8.dp, bottom = 104.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                IconButton(
-                    onClick = onBack,
-                    enabled = !creating,
-                    modifier = Modifier.size(48.dp),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = "모험가 선택으로 돌아가기",
-                        tint = AqText,
+                    IconButton(
+                        onClick = onBack,
+                        enabled = !creating,
+                        modifier = Modifier.size(48.dp),
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                            contentDescription = localized("모험가 선택으로 돌아가기"),
+                            tint = AqText,
+                        )
+                    }
+                    Column(modifier = Modifier.padding(start = 4.dp)) {
+                        Text("새로운 모험", color = AqGold, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                        Text("모험가 생성", color = AqText, fontSize = 27.sp, fontWeight = FontWeight.Black)
+                    }
+                }
+                Spacer(Modifier.height(18.dp))
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = {
+                        name = limitAdventurerNameInput(it)
+                        creationError = null
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("모험가 이름 (2~8자)") },
+                    singleLine = true,
+                    isError = creationError != null,
+                    supportingText = creationError?.let { message ->
+                        { Text(message) }
+                    },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                )
+                Spacer(Modifier.height(14.dp))
+                Text(
+                    text = "직업 선택",
+                    modifier = Modifier.fillMaxWidth(),
+                    color = AqText,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(Modifier.height(9.dp))
+                ClassGrid(selectedClass = selectedClass, onSelect = { selectedClass = it })
+                Spacer(Modifier.height(16.dp))
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = AqSurface),
+                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Column(Modifier.padding(14.dp)) {
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text("능력치 굴림", fontWeight = FontWeight.Bold, color = AqText)
+                            Text("합계 ${currentRoll.stats.values().take(6).sum()}", color = AqGold)
+                        }
+                        Spacer(Modifier.height(10.dp))
+                        StatGrid(creationStats, heroClass = selectedClass)
+                        Spacer(Modifier.height(10.dp))
+                        BoxWithConstraints(Modifier.fillMaxWidth()) {
+                            OutlinedButton(
+                                onClick = {
+                                    currentRoll = repository.rollStats(
+                                        currentRoll.nextSeed,
+                                        selectedClass,
+                                    )
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .width((maxWidth - 8.dp) / 2),
+                            ) { Text("다시 굴리기") }
+                        }
+                    }
+                }
+            }
+
+            if (!isKeyboardVisible) {
+                Button(
+                    onClick = {
+                        if (!isValidAdventurerName(name)) {
+                            creationError = "이름은 2자 이상 8자 이하로 입력해 주세요."
+                            return@Button
+                        }
+                        creating = true
+                        creationError = null
+                        focusManager.clearFocus()
+                        scope.launch {
+                            try {
+                                repository.createCharacter(
+                                    name = normalizedAdventurerName(name),
+                                    heroClass = selectedClass,
+                                    stats = creationStats,
+                                    seed = currentRoll.nextSeed,
+                                    now = System.currentTimeMillis(),
+                                )
+                                onCreated()
+                            } catch (_: Exception) {
+                                creating = false
+                                creationError = "모험 기록을 저장하지 못했습니다. 다시 시도해 주세요."
+                            }
+                        }
+                    },
+                    enabled = name.isNotBlank() && !creating,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                        .height(54.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = AqGold),
+                ) {
+                    Text(
+                        if (creating) "저장하는 중…" else "이 능력치로 모험 시작",
+                        color = Color(0xFF211808),
+                        fontWeight = FontWeight.Black,
                     )
                 }
-                Column(modifier = Modifier.padding(start = 4.dp)) {
-                    Text("새로운 모험", color = AqGold, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                    Text("모험가 생성", color = AqText, fontSize = 27.sp, fontWeight = FontWeight.Black)
-                }
             }
-            Spacer(Modifier.height(18.dp))
-            OutlinedTextField(
-                value = name,
-                onValueChange = {
-                    name = it.take(16)
-                    creationError = null
-                },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("모험가 이름") },
-                singleLine = true,
-                isError = creationError != null,
-                supportingText = creationError?.let { message ->
-                    { Text(message) }
-                },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-            )
-            Spacer(Modifier.height(14.dp))
-            Text(
-                text = "직업 선택",
-                modifier = Modifier.fillMaxWidth(),
-                color = AqText,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-            )
-            Spacer(Modifier.height(9.dp))
-            ClassGrid(selectedClass = selectedClass, onSelect = { selectedClass = it })
-            Spacer(Modifier.height(16.dp))
-            Card(
-                colors = CardDefaults.cardColors(containerColor = AqSurface),
-                shape = RoundedCornerShape(20.dp),
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Column(Modifier.padding(14.dp)) {
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Column {
-                            Text("능력치 굴림", fontWeight = FontWeight.Bold, color = AqText)
-                            Text("각 능력치를 3d6으로 결정합니다", fontSize = 12.sp, color = AqMuted)
-                        }
-                        Text("합계 ${currentRoll.stats.values().take(6).sum()}", color = AqGold)
-                    }
-                    Spacer(Modifier.height(10.dp))
-                    StatGrid(currentRoll.stats)
-                    Spacer(Modifier.height(10.dp))
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        OutlinedButton(
-                            onClick = {
-                                val previous = if (rollHistory.isEmpty()) null else rollHistory.removeAt(rollHistory.lastIndex)
-                                if (previous != null) currentRoll = previous
-                            },
-                            enabled = rollHistory.isNotEmpty(),
-                            modifier = Modifier.weight(1f),
-                        ) { Text("되돌리기") }
-                        OutlinedButton(
-                            onClick = {
-                                rollHistory += currentRoll
-                                currentRoll = repository.rollStats(currentRoll.nextSeed)
-                            },
-                            modifier = Modifier.weight(1f),
-                        ) { Text("다시 굴리기") }
-                    }
-                }
-            }
-        }
-
-        Button(
-            onClick = {
-                if (name.isBlank()) {
-                    creationError = "이름을 입력해 주세요."
-                    return@Button
-                }
-                creating = true
-                creationError = null
-                focusManager.clearFocus()
-                scope.launch {
-                    try {
-                        repository.createCharacter(
-                            name = name.trim(),
-                            heroClass = selectedClass,
-                            stats = currentRoll.stats,
-                            seed = currentRoll.nextSeed,
-                            now = System.currentTimeMillis(),
-                        )
-                        onCreated()
-                    } catch (_: Exception) {
-                        creating = false
-                        creationError = "모험 기록을 저장하지 못했습니다. 다시 시도해 주세요."
-                    }
-                }
-            },
-            enabled = name.isNotBlank() && !creating,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .height(54.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = AqGold),
-        ) {
-            Text(
-                if (creating) "저장하는 중…" else "이 능력치로 모험 시작",
-                color = Color(0xFF211808),
-                fontWeight = FontWeight.Black,
-            )
         }
     }
 }
@@ -631,11 +958,21 @@ private fun ClassGrid(selectedClass: HeroClass, onSelect: (HeroClass) -> Unit) {
 private fun GameScreen(
     repository: SimpleGameRepository,
     state: SimpleGameState,
+    activeSlotId: Int,
+    presentationVisitId: Int,
+    notificationPreferencesStore: GameNotificationPreferencesStore,
+    gameLanguageStore: GameLanguageStore,
+    supabaseGameService: SupabaseGameService,
     mobileAdsReady: Boolean,
+    privacyOptionsRequired: Boolean,
+    onOpenPrivacyOptions: () -> Unit,
     onExitToRoster: () -> Unit,
 ) {
     var selectedTab by rememberSaveable(state.hero.name) { mutableStateOf(MenuTab.MAIN) }
     var showingRanking by rememberSaveable { mutableStateOf(false) }
+    var showingSettings by rememberSaveable(activeSlotId, presentationVisitId) {
+        mutableStateOf(false)
+    }
     var showingSkillEffectTest by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -654,10 +991,10 @@ private fun GameScreen(
         }
         rewardedLoadState = RewardedLoadState.LOADING
         RewardedAd.load(
-            AdRequest.Builder(TEST_REWARDED_AD_UNIT_ID).build(),
+            AdRequest.Builder(BuildConfig.REWARDED_AD_UNIT_ID).build(),
             object : AdLoadCallback<RewardedAd> {
                 override fun onAdLoaded(ad: RewardedAd) {
-                    Log.d(REWARDED_AD_TAG, "Rewarded test ad loaded")
+                    Log.d(REWARDED_AD_TAG, "Rewarded ad loaded")
                     ad.setImmersiveMode(true)
                     ad.adEventCallback = object : RewardedAdEventCallback {
                         override fun onAdDismissedFullScreenContent() {
@@ -671,7 +1008,7 @@ private fun GameScreen(
                             fullScreenContentError: FullScreenContentError,
                         ) {
                             repository.setRewardAdInFlight(false, SystemClock.elapsedRealtime())
-                            Log.w(REWARDED_AD_TAG, "Rewarded test ad failed to show: $fullScreenContentError")
+                            Log.w(REWARDED_AD_TAG, "Rewarded ad failed to show: $fullScreenContentError")
                             rewardedAd = null
                             rewardedLoadState = RewardedLoadState.FAILED
                             rewardedLoadGeneration += 1
@@ -682,7 +1019,7 @@ private fun GameScreen(
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.w(REWARDED_AD_TAG, "Rewarded test ad failed to load: $adError")
+                    Log.w(REWARDED_AD_TAG, "Rewarded ad failed to load: $adError")
                     rewardedAd = null
                     rewardedLoadState = RewardedLoadState.FAILED
                 }
@@ -736,7 +1073,7 @@ private fun GameScreen(
                 )
             }.onFailure { error ->
                 repository.setRewardAdInFlight(false, SystemClock.elapsedRealtime())
-                Log.w(REWARDED_AD_TAG, "Rewarded test ad show call failed", error)
+                Log.w(REWARDED_AD_TAG, "Rewarded ad show call failed", error)
                 rewardedLoadState = RewardedLoadState.FAILED
                 rewardedLoadGeneration += 1
             }
@@ -744,26 +1081,42 @@ private fun GameScreen(
     }
 
     val combatPower = repository.displayCombatPower(state)
-    val rankingSnapshotAt = rememberSaveable { System.currentTimeMillis() }
-    val rankingPlayerName = rememberSaveable { state.hero.name }
-    val rankingPlayerClass = rememberSaveable { state.hero.heroClass.name }
-    val rankingPlayerLevel = rememberSaveable { state.hero.level }
-    val rankingPlayerCombatPower = rememberSaveable { combatPower }
-    val rankingUiState = remember(
-        rankingSnapshotAt,
-        rankingPlayerName,
-        rankingPlayerClass,
-        rankingPlayerLevel,
-        rankingPlayerCombatPower,
+    val supabaseConnection by supabaseGameService.connectionState.collectAsState()
+    val remoteRanking by supabaseGameService.rankingSnapshot.collectAsState()
+    val rankingError by supabaseGameService.rankingError.collectAsState()
+    val rankingUiState: RankingUiState = remember(
+        supabaseConnection,
+        remoteRanking,
+        rankingError,
+        state.rankingCharacterId,
+        state.hero.name,
+        state.hero.heroClass,
+        state.hero.level,
+        combatPower,
     ) {
-        initialRankingUiState(
-            showPreviewData = BuildConfig.DEBUG,
-            playerName = rankingPlayerName,
-            playerClass = HeroClass.valueOf(rankingPlayerClass),
-            playerLevel = rankingPlayerLevel,
-            playerCombatPower = rankingPlayerCombatPower,
-            fetchedAtEpochMillis = rankingSnapshotAt,
-        )
+        val evaluatedAt = System.currentTimeMillis()
+        when {
+            supabaseConnection is SupabaseConnectionState.Disabled ->
+                RankingUiState.Empty("아직 집계된 순위가 없습니다")
+            remoteRanking != null -> RankingUiState.Content(
+                requireNotNull(remoteRanking).toUiSnapshot(
+                    playerCharacterId = state.rankingCharacterId,
+                    playerName = state.hero.name,
+                    playerClass = state.hero.heroClass,
+                    playerLevel = state.hero.level,
+                    playerCombatPower = combatPower,
+                ).withLocalPlayerPower(
+                    characterId = state.rankingCharacterId,
+                    displayName = state.hero.name,
+                    heroClass = state.hero.heroClass,
+                    level = state.hero.level,
+                    combatPower = combatPower,
+                    now = evaluatedAt,
+                ),
+            )
+            rankingError != null -> RankingUiState.Error(requireNotNull(rankingError))
+            else -> RankingUiState.Loading
+        }
     }
     val rankingTransition = updateTransition(
         targetState = showingRanking,
@@ -772,6 +1125,7 @@ private fun GameScreen(
     BackHandler(
         enabled = !showingRanking &&
             !rankingTransition.currentState &&
+            !showingSettings &&
             !showingSkillEffectTest &&
             !showingRewardDialog,
         onBack = onExitToRoster,
@@ -785,7 +1139,6 @@ private fun GameScreen(
     if (BuildConfig.DEBUG && showingSkillEffectTest) {
         SkillEffectTestScreen(
             baseState = state,
-            mobileAdsReady = mobileAdsReady,
             offlineAdventureProgress = offlineAdventureProgress,
             offlineAdventureFull = offlineAdventureFull,
             onExit = { showingSkillEffectTest = false },
@@ -793,7 +1146,6 @@ private fun GameScreen(
         return
     }
     Column(modifier = Modifier.fillMaxSize().background(AqBackground)) {
-        StandardBannerAd(mobileAdsReady = mobileAdsReady)
         rankingTransition.AnimatedContent(
             modifier = Modifier.weight(1f).fillMaxWidth(),
             transitionSpec = {
@@ -819,54 +1171,89 @@ private fun GameScreen(
                     RankingScreen(
                         uiState = rankingUiState,
                         onBack = { showingRanking = false },
-                        onRetry = { },
+                        onRetry = {
+                            scope.launch {
+                                supabaseGameService.fetchRanking(
+                                    state.rankingCharacterId,
+                                    forceRefresh = true,
+                                )
+                            }
+                        },
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
             } else {
-                Column(modifier = Modifier.fillMaxSize().background(AqBackground)) {
-                    OfflineAdventureStrip(
-                        progress = offlineAdventureProgress,
-                        isFull = offlineAdventureFull,
-                        onRewardClick = { showingRewardDialog = true },
-                    )
-                    HeroHeader(
+                if (showingSettings) {
+                    GameSettingsScreen(
                         state = state,
-                        combatPower = combatPower,
-                        ranking = rankingHeaderPresentation(rankingUiState),
-                        onLevelClick = if (BuildConfig.DEBUG) {
-                            { showingSkillEffectTest = true }
-                        } else {
-                            null
-                        },
+                        notificationPreferencesStore = notificationPreferencesStore,
+                        gameLanguageStore = gameLanguageStore,
+                        onBack = { showingSettings = false },
+                        onExitToRoster = onExitToRoster,
+                        dataIdentifier = (supabaseConnection as? SupabaseConnectionState.Connected)
+                            ?.anonymousUserId,
+                        privacyOptionsRequired = privacyOptionsRequired,
+                        onOpenPrivacyOptions = onOpenPrivacyOptions,
                     )
-                    AdventurePanel(state, repository.monsterEnergyFraction(state))
-                    Box(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp)) {
-                        when (selectedTab) {
-                            MenuTab.MAIN -> MainPanel(state, repository)
-                            MenuTab.CHARACTER -> CharacterPanel(
-                                state = state,
-                                rankingUiState = rankingUiState,
-                                onOpenRanking = {
-                                    selectedTab = MenuTab.CHARACTER
-                                    showingRanking = true
-                                },
-                            )
-                            MenuTab.EQUIPMENT -> EquipmentPanel(state)
-                            MenuTab.BAG -> BagPanel(state)
-                            MenuTab.QUEST -> QuestPanel(state)
+                } else {
+                    Column(modifier = Modifier.fillMaxSize().background(AqBackground)) {
+                        OfflineAdventureStrip(
+                            progress = offlineAdventureProgress,
+                            isFull = offlineAdventureFull,
+                            onRewardClick = { showingRewardDialog = true },
+                        )
+                        HeroHeader(
+                            state = state,
+                            combatPower = combatPower,
+                            ranking = rankingHeaderPresentation(rankingUiState),
+                            onLevelClick = if (BuildConfig.DEBUG) {
+                                { showingSkillEffectTest = true }
+                            } else {
+                                null
+                            },
+                            onOpenSettings = {
+                                showingRanking = false
+                                showingSettings = true
+                            },
+                        )
+                        AdventurePanel(state, repository.monsterEnergyFraction(state))
+                        Box(
+                            Modifier
+                                .weight(1f)
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 10.dp),
+                        ) {
+                            when (selectedTab) {
+                                MenuTab.MAIN -> MainPanel(
+                                    state = state,
+                                    repository = repository,
+                                )
+                                MenuTab.CHARACTER -> CharacterPanel(
+                                    state = state,
+                                    rankingUiState = rankingUiState,
+                                    onOpenRanking = {
+                                        selectedTab = MenuTab.CHARACTER
+                                        showingRanking = true
+                                    },
+                                )
+                                MenuTab.EQUIPMENT -> EquipmentPanel(state)
+                                MenuTab.BAG -> BagPanel(state)
+                                MenuTab.QUEST -> QuestPanel(state)
+                            }
                         }
                     }
                 }
             }
         }
-        BottomMenu(
-            selectedTab = if (showingRanking) MenuTab.CHARACTER else selectedTab,
-            onSelect = { tab ->
-                selectedTab = tab
-                showingRanking = false
-            },
-        )
+        if (!showingSettings) {
+            BottomMenu(
+                selectedTab = if (showingRanking) MenuTab.CHARACTER else selectedTab,
+                onSelect = { tab ->
+                    selectedTab = tab
+                    showingRanking = false
+                },
+            )
+        }
     }
 
     if (showingRewardDialog) {
@@ -905,22 +1292,23 @@ internal val WARRIOR_SIGNATURE_SKILL_IDS = listOf(
 )
 
 internal fun warriorSignatureSkillDefinitions(): List<SkillDefinition> =
-    WARRIOR_SIGNATURE_SKILL_IDS.map { catalogId ->
-        checkNotNull(SkillCatalog.find(catalogId)) { "Missing signature warrior skill: $catalogId" }
-    }
+    signatureSkillDefinitions(HeroClass.WARRIOR)
+
+internal fun signatureSkillDefinitions(heroClass: HeroClass): List<SkillDefinition> =
+    SkillCatalog.forClass(heroClass)
 
 @Composable
 private fun SkillEffectTestScreen(
     baseState: SimpleGameState,
-    mobileAdsReady: Boolean,
     offlineAdventureProgress: Float,
     offlineAdventureFull: Boolean,
     onExit: () -> Unit,
 ) {
     val engine = remember { SimpleGameEngine() }
     val frozenBaseState = remember { baseState.skillEffectTestCopy() }
-    val definitions = remember { warriorSignatureSkillDefinitions() }
-    val initialDefinition = remember { definitions.first() }
+    var selectedClass by remember { mutableStateOf(HeroClass.WARRIOR) }
+    val definitions = remember(selectedClass) { signatureSkillDefinitions(selectedClass) }
+    val initialDefinition = remember { warriorSignatureSkillDefinitions().first() }
     var selectedCatalogId by remember { mutableStateOf(initialDefinition.catalogId) }
     var previewSequence by remember { mutableLongStateOf(0L) }
     var previewState by remember {
@@ -936,17 +1324,24 @@ private fun SkillEffectTestScreen(
         )
     }
 
-    fun playSkill(definition: SkillDefinition) {
+    fun playSkill(definition: SkillDefinition, heroClass: HeroClass = selectedClass) {
         selectedCatalogId = definition.catalogId
         previewSequence = if (previewSequence == Long.MAX_VALUE) 1L else previewSequence + 1L
         previewState = buildSkillEffectPreviewState(
             baseState = frozenBaseState,
-            heroClass = HeroClass.WARRIOR,
+            heroClass = heroClass,
             definition = definition,
             sequence = previewSequence,
             engine = engine,
             playAnimation = true,
         )
+    }
+
+    fun selectClass(heroClass: HeroClass) {
+        if (heroClass == selectedClass) return
+        val firstDefinition = signatureSkillDefinitions(heroClass).first()
+        selectedClass = heroClass
+        playSkill(firstDefinition, heroClass)
     }
 
     LaunchedEffect(Unit) {
@@ -965,7 +1360,6 @@ private fun SkillEffectTestScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize().background(AqBackground)) {
-        StandardBannerAd(mobileAdsReady = mobileAdsReady)
         OfflineAdventureStrip(
             progress = offlineAdventureProgress,
             isFull = offlineAdventureFull,
@@ -1030,9 +1424,39 @@ private fun SkillEffectTestScreen(
                     IconButton(onClick = onExit, modifier = Modifier.size(38.dp)) {
                         Icon(
                             Icons.Filled.Close,
-                            contentDescription = "스킬 연출 테스트 종료",
+                            contentDescription = localized("스킬 연출 테스트 종료"),
                             tint = AqText,
                         )
+                    }
+                }
+                Spacer(Modifier.height(6.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    HeroClass.entries.forEach { heroClass ->
+                        val selected = heroClass == selectedClass
+                        OutlinedButton(
+                            onClick = { selectClass(heroClass) },
+                            modifier = Modifier.height(34.dp),
+                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = if (selected) AqGold.copy(alpha = 0.16f) else Color.Transparent,
+                                contentColor = if (selected) AqGold else AqMuted,
+                            ),
+                            border = BorderStroke(
+                                1.dp,
+                                if (selected) AqGoldSoft else AqSurfaceHigh,
+                            ),
+                        ) {
+                            Text(
+                                heroClass.labelKo,
+                                fontSize = 11.sp,
+                                fontWeight = if (selected) FontWeight.Black else FontWeight.Bold,
+                            )
+                        }
                     }
                 }
                 Spacer(Modifier.height(6.dp))
@@ -1059,7 +1483,7 @@ private fun SkillEffectTestScreen(
                             .height(34.dp)
                             .clickable(
                                 role = Role.Button,
-                                onClickLabel = "마지막 스킬로 이동",
+                                onClickLabel = localized("마지막 스킬로 이동"),
                                 onClick = { playSkill(definitions.last()) },
                             ),
                         contentAlignment = Alignment.Center,
@@ -1108,7 +1532,8 @@ private fun SkillEffectTestScreen(
                             "Lv.${selectedDefinition.unlockLevel} · " +
                                 "${selectedDefinition.element.labelKo} · " +
                                 "${selectedDefinition.hitCount}타 · " +
-                                "${selectedDefinition.damagePercent}% · " +
+                                "${selectedDefinition.damagePercentMin}~" +
+                                "${selectedDefinition.damagePercentMax}% · " +
                                 "표시 피해 ${previewState.lastDamage.format()}",
                             color = AqMuted,
                             fontSize = 10.sp,
@@ -1122,7 +1547,7 @@ private fun SkillEffectTestScreen(
                     ) {
                         Icon(
                             Icons.Filled.Refresh,
-                            contentDescription = "선택한 스킬 다시 재생",
+                            contentDescription = localized("선택한 스킬 다시 재생"),
                             tint = AqGold,
                             modifier = Modifier.size(20.dp),
                         )
@@ -1130,7 +1555,7 @@ private fun SkillEffectTestScreen(
                 }
                 Spacer(Modifier.height(7.dp))
                 Text(
-                    "전사 수정 스킬 20개 · 스킬을 누르면 즉시 재생",
+                    "${selectedClass.labelKo} 스킬 ${definitions.size}개 · 스킬을 누르면 즉시 재생",
                     color = AqMuted,
                     fontSize = 10.sp,
                 )
@@ -1171,7 +1596,7 @@ private fun SkillEffectTestRow(
             )
             .clickable(
                 role = Role.Button,
-                onClickLabel = "${definition.name} 연출 재생",
+                onClickLabel = localized("${definition.name} 연출 재생"),
                 onClick = onClick,
             )
             .padding(horizontal = 12.dp, vertical = 8.dp),
@@ -1188,7 +1613,8 @@ private fun SkillEffectTestRow(
             )
             Text(
                 "Lv.${definition.unlockLevel} · ${definition.element.labelKo} · " +
-                    "${definition.hitCount}타 · ${definition.damagePercent}%",
+                    "${definition.hitCount}타 · ${definition.damagePercentMin}~" +
+                    "${definition.damagePercentMax}%",
                 color = AqMuted,
                 fontSize = 10.sp,
                 maxLines = 1,
@@ -1235,6 +1661,11 @@ private fun buildSkillEffectPreviewState(
         lastAttackWasSkill = playAnimation,
         lastSkillCatalogId = if (playAnimation) definition.catalogId else "",
         lastDamage = 0L,
+        lastMonsterEnergyBeforeAttack = if (playAnimation) {
+            SimpleGameEngine.MONSTER_ENERGY_SCALE
+        } else {
+            0L
+        },
         lastResult = "테스트 전용 미리보기",
     )
     if (playAnimation) {
@@ -1266,6 +1697,43 @@ private fun AdventurePanel(state: SimpleGameState, energyFraction: Float) {
     }
 }
 
+internal fun usesMarketActionPanel(phase: AdventurePhase): Boolean =
+    phase == AdventurePhase.SELLING ||
+        phase == AdventurePhase.SHOPPING ||
+        phase == AdventurePhase.SHOPPING_RESULT
+
+internal data class OpeningNarrativePresentation(
+    val slideNumber: Int,
+    val slideCount: Int,
+    val slideProgress: Float,
+    val text: String,
+)
+
+internal fun openingNarrativePresentation(
+    slides: List<String>,
+    totalProgress: Float,
+): OpeningNarrativePresentation {
+    val authoredSlides = slides.map(String::trim).filter(String::isNotBlank).ifEmpty { listOf("") }
+    val clampedProgress = totalProgress.coerceIn(0f, 1f)
+    val scaledProgress = clampedProgress * authoredSlides.size.toFloat()
+    val slideIndex = if (clampedProgress >= 1f) {
+        authoredSlides.lastIndex
+    } else {
+        scaledProgress.toInt().coerceIn(0, authoredSlides.lastIndex)
+    }
+    val slideProgress = if (clampedProgress >= 1f) {
+        1f
+    } else {
+        (scaledProgress - slideIndex.toFloat()).coerceIn(0f, 1f)
+    }
+    return OpeningNarrativePresentation(
+        slideNumber = slideIndex + 1,
+        slideCount = authoredSlides.size,
+        slideProgress = slideProgress,
+        text = authoredSlides[slideIndex],
+    )
+}
+
 @Composable
 private fun TownActionPanel(state: SimpleGameState) {
     val actionProgress = remember(state.actionStartedAt, state.actionEndsAt) { Animatable(0f) }
@@ -1289,25 +1757,28 @@ private fun TownActionPanel(state: SimpleGameState) {
         LootResultPanel(state = state, progress = actionProgress.value)
         return
     }
-    if (
-        state.adventurePhase == AdventurePhase.SELLING ||
-        state.adventurePhase == AdventurePhase.SHOPPING ||
-        state.adventurePhase == AdventurePhase.SHOPPING_RESULT
-    ) {
+    if (state.adventurePhase == AdventurePhase.OPENING) {
+        OpeningNarrativePanel(state = state, progress = actionProgress.value)
+        return
+    }
+    if (usesMarketActionPanel(state.adventurePhase)) {
         MarketActionPanel(state = state, progress = actionProgress.value)
         return
     }
     val title = when (state.adventurePhase) {
+        AdventurePhase.OPENING -> "새로운 모험의 시작"
         AdventurePhase.LOOTING -> "아이템 획득"
         AdventurePhase.RETURNING -> "마을로 귀환 중"
         AdventurePhase.EQUIPPING -> "드롭 장비 선별 중"
         AdventurePhase.SELLING -> "전리품 판매 중"
         AdventurePhase.SHOPPING -> "새 장비를 고르는 중"
         AdventurePhase.SHOPPING_RESULT -> "새 장비 장착 완료"
+        AdventurePhase.SHOPPING_EMPTY -> "지금 살 수 있는 더 좋은 장비를 찾지 못했습니다"
         AdventurePhase.DEPARTING -> "사냥터로 출정 중"
         AdventurePhase.COMBAT -> "전투 중"
     }
     val detail = when (state.adventurePhase) {
+        AdventurePhase.OPENING -> "${state.hero.name}의 발걸음이 새로운 모험의 첫 장을 엽니다"
         AdventurePhase.LOOTING -> state.lastLootSummary
         AdventurePhase.RETURNING -> "가방 ${state.inventory.size}/${state.inventoryCapacity()}"
         AdventurePhase.EQUIPPING -> if (state.lastTownGold > 0L) {
@@ -1322,13 +1793,16 @@ private fun TownActionPanel(state: SimpleGameState) {
             "${state.lastTownItemName} 구매 · -${state.lastTownGold.format()}G"
         }
         AdventurePhase.SHOPPING_RESULT -> state.lastShopPurchase?.let(::shopEquipmentChangeLabel).orEmpty()
+        AdventurePhase.SHOPPING_EMPTY -> "잠시 후 사냥터로 출정합니다"
         AdventurePhase.DEPARTING -> "잔액 ${state.hero.gold.format()}G"
         AdventurePhase.COMBAT -> ""
     }
     val sectionTitle = when (state.adventurePhase) {
+        AdventurePhase.OPENING -> "모험의 서막"
         AdventurePhase.LOOTING -> "전리품"
         AdventurePhase.SHOPPING,
         AdventurePhase.SHOPPING_RESULT,
+        AdventurePhase.SHOPPING_EMPTY,
         -> "장비 상점"
         else -> "자동 모험"
     }
@@ -1339,7 +1813,12 @@ private fun TownActionPanel(state: SimpleGameState) {
     ) {
         Box(Modifier.fillMaxSize().border(1.dp, AqGoldSoft, RoundedCornerShape(22.dp))) {
             Image(
-                painter = painterResource(R.drawable.battle_background),
+                painter = painterResource(
+                    battleBackgroundResource(
+                        definitionId = state.adventureTale.definitionId,
+                        chapterNumber = state.adventureTale.chapterNumber,
+                    ),
+                ),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
@@ -1373,8 +1852,8 @@ private fun TownActionPanel(state: SimpleGameState) {
                             .height(8.dp)
                             .clip(RoundedCornerShape(99.dp))
                             .semantics {
-                                contentDescription = title
-                                stateDescription = "${(actionProgress.value * 100f).toInt()}퍼센트"
+                                contentDescription = localized(title)
+                                stateDescription = localized("${(actionProgress.value * 100f).toInt()}퍼센트")
                             },
                         color = AqGold,
                         trackColor = Color(0xFF4A3B4F),
@@ -1408,10 +1887,106 @@ private fun TownActionPanel(state: SimpleGameState) {
 }
 
 @Composable
+private fun OpeningNarrativePanel(
+    state: SimpleGameState,
+    progress: Float,
+) {
+    val slides = state.adventureTale.openingSlides.ifEmpty {
+        listOf(state.adventureTale.opening)
+    }
+    val presentation = openingNarrativePresentation(slides, progress)
+    Card(
+        modifier = Modifier.fillMaxWidth().height(218.dp).padding(horizontal = 16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        shape = RoundedCornerShape(22.dp),
+    ) {
+        Box(Modifier.fillMaxSize().border(1.dp, AqGoldSoft, RoundedCornerShape(22.dp))) {
+            Image(
+                painter = painterResource(
+                    battleBackgroundResource(
+                        definitionId = state.adventureTale.definitionId,
+                        chapterNumber = state.adventureTale.chapterNumber,
+                    ),
+                ),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
+            )
+            Box(
+                Modifier.fillMaxSize().background(
+                    Brush.verticalGradient(
+                        listOf(Color(0xD5161020), Color(0xE01A1222), Color(0xF015101B)),
+                    ),
+                ),
+            )
+            Column(Modifier.fillMaxSize()) {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(58.dp)
+                        .background(Color(0xEE17111F))
+                        .border(1.dp, AqGoldSoft)
+                        .padding(horizontal = 15.dp, vertical = 8.dp),
+                ) {
+                    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                        Text("모험의 서막", color = AqText, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                        Spacer(Modifier.weight(1f))
+                        Text(
+                            "${presentation.slideNumber}/${presentation.slideCount}",
+                            color = AqGold,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                    Spacer(Modifier.height(6.dp))
+                    LinearProgressIndicator(
+                        progress = { presentation.slideProgress },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
+                            .clip(RoundedCornerShape(99.dp))
+                            .semantics {
+                                contentDescription = localized("프롤로그 ${presentation.slideNumber}번째 장면")
+                                stateDescription = localized("${(presentation.slideProgress * 100f).toInt()}퍼센트")
+                            },
+                        color = AqGold,
+                        trackColor = Color(0xFF4A3B4F),
+                    )
+                }
+                Column(
+                    Modifier.fillMaxWidth().weight(1f).padding(horizontal = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        "새로운 모험의 시작",
+                        color = AqText,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    Text(
+                        presentation.text,
+                        color = AqMuted,
+                        fontSize = 14.sp,
+                        lineHeight = 21.sp,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun MarketActionPanel(
     state: SimpleGameState,
     progress: Float,
 ) {
+    val language = LocalAppLanguage.current
     val isSelling = state.adventurePhase == AdventurePhase.SELLING
     val isPurchaseResult = state.adventurePhase == AdventurePhase.SHOPPING_RESULT
     val equipmentChange = if (isPurchaseResult) {
@@ -1436,15 +2011,27 @@ private fun MarketActionPanel(
         isPurchaseResult -> "-${(equipmentChange?.price ?: state.lastTownGold).format()}G"
         else -> "가격 ${(equipmentChange?.price ?: state.lastTownGold).format()}G"
     }
-    val actionDescription = when {
+    val sourceActionItemName = when {
         isSelling -> state.lastTownItemName.ifBlank { "판매할 전리품을 확인하고 있습니다" }
-        equipmentChange != null -> buildString {
-            append(equipmentChange.name)
-            append('\n')
-            append(shopEquipmentChangeLabel(equipmentChange))
-        }
+        equipmentChange != null -> equipmentChange.name
         else -> "소지금으로 살 수 있는 장비를 살펴봅니다"
     }
+    val actionItemName = if (equipmentChange != null) {
+        localizedEquipmentName(sourceActionItemName, language)
+    } else {
+        localizedItemName(sourceActionItemName, language)
+    }
+    val actionItemDetail = equipmentChange?.let(::shopEquipmentChangeLabel)
+    val actionItemRarity = when {
+        isSelling -> state.lastTownItemRarity
+        equipmentChange != null -> equipmentChange.rarity
+        else -> ""
+    }
+    val actionDescription = listOfNotNull(actionItemName, actionItemDetail).joinToString("\n")
+    val actionDescriptionColor = marketActionDescriptionColor(
+        itemName = actionItemName,
+        rarity = actionItemRarity,
+    )
     val semanticsDescription = buildString {
         append("보유 골드 ${state.hero.gold.format()}, ")
         append(actionTitle)
@@ -1464,7 +2051,12 @@ private fun MarketActionPanel(
     ) {
         Box(Modifier.fillMaxSize().border(1.dp, AqGoldSoft, RoundedCornerShape(22.dp))) {
             Image(
-                painter = painterResource(R.drawable.battle_background),
+                painter = painterResource(
+                    battleBackgroundResource(
+                        definitionId = state.adventureTale.definitionId,
+                        chapterNumber = state.adventureTale.chapterNumber,
+                    ),
+                ),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
@@ -1498,8 +2090,8 @@ private fun MarketActionPanel(
                             .height(6.dp)
                             .clip(RoundedCornerShape(99.dp))
                             .semantics {
-                                contentDescription = phaseLabel
-                                stateDescription = "${(progress * 100f).toInt()}퍼센트"
+                                contentDescription = localized(phaseLabel)
+                                stateDescription = localized("${(progress * 100f).toInt()}퍼센트")
                             },
                         color = accent,
                         trackColor = Color(0xFF4A3B4F),
@@ -1511,7 +2103,7 @@ private fun MarketActionPanel(
                         .weight(1f)
                         .padding(horizontal = 20.dp, vertical = 9.dp)
                         .semantics(mergeDescendants = true) {
-                            contentDescription = semanticsDescription
+                            contentDescription = localized(semanticsDescription)
                         },
                     verticalArrangement = Arrangement.Center,
                 ) {
@@ -1531,11 +2123,7 @@ private fun MarketActionPanel(
                         Spacer(Modifier.weight(1f))
                         Text(
                             actionAmount,
-                            color = when {
-                                isSelling -> Color(0xFF8BCB84)
-                                isPurchaseResult -> Color(0xFFF29A49)
-                                else -> AqMuted
-                            },
+                            color = AqGold,
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
                             maxLines = 1,
@@ -1543,16 +2131,29 @@ private fun MarketActionPanel(
                     }
                     Spacer(Modifier.height(3.dp))
                     Text(
-                        actionDescription,
-                        color = AqText,
-                        fontSize = if (actionDescription.length > 24) 13.sp else 15.sp,
-                        lineHeight = 18.sp,
+                        actionItemName,
+                        color = actionDescriptionColor,
+                        fontSize = marketActionItemFontSizeSp(actionItemName.length).sp,
+                        lineHeight = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
+                        maxLines = MARKET_ACTION_ITEM_MAX_LINES,
+                        overflow = MARKET_ACTION_ITEM_OVERFLOW,
                         textAlign = TextAlign.Start,
                         modifier = Modifier.fillMaxWidth(),
                     )
+                    if (actionItemDetail != null) {
+                        Text(
+                            actionItemDetail,
+                            color = AqMuted,
+                            fontSize = 13.sp,
+                            lineHeight = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Start,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
                 }
             }
         }
@@ -1581,7 +2182,7 @@ private fun GoldBalanceCard(gold: Long) {
             .border(1.dp, Color(0x99E5B84D), RoundedCornerShape(13.dp))
             .padding(horizontal = 14.dp)
             .clearAndSetSemantics {
-                contentDescription = "보유 골드 $formattedGold"
+                contentDescription = localized("보유 골드 $formattedGold")
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -1625,10 +2226,16 @@ private fun LootResultPanel(
     state: SimpleGameState,
     progress: Float,
 ) {
+    val language = LocalAppLanguage.current
     val hasLoot = state.lastLootName.isNotBlank()
     val rarity = state.lastLootRarity.ifBlank { "일반" }
     val accent = if (hasLoot) rarityColor(rarity) else AqMuted
-    val itemName = state.lastLootName.ifBlank { "전리품을 담지 못했습니다" }
+    val sourceItemName = state.lastLootName.ifBlank { "전리품을 담지 못했습니다" }
+    val itemName = if (state.lastLootKind == "장비") {
+        localizedEquipmentName(sourceItemName, language)
+    } else {
+        localizedItemName(sourceItemName, language)
+    }
     val typeLabel = when {
         !hasLoot -> "가방 가득 참"
         state.lastLootKind == "장비" && state.lastLootEquipmentSlot != null ->
@@ -1667,21 +2274,18 @@ private fun LootResultPanel(
     } else {
         Color(0xD922192C)
     }
-    val itemFontSize = when {
-        itemName.length > 24 -> 18.sp
-        itemName.length > 16 -> 20.sp
-        else -> 22.sp
-    }
-    val semanticsDescription = buildString {
-        if (hasLoot) append("$rarity, $typeLabel, $itemName, $itemDetail, ")
-        append(statusTitle)
-        if (statusDetail.isNotBlank()) append(", $statusDetail")
-    }
+    val usesDenseLootLayout = itemName.length > 18
+    val itemFontSize = lootResultItemFontSizeSp(itemName.length).sp
+    val semanticsDescription = buildList {
+        if (hasLoot) addAll(listOf(rarity, typeLabel, itemName, itemDetail))
+        add(statusTitle)
+        if (statusDetail.isNotBlank()) add(statusDetail)
+    }.joinToString(", ") { localized(it) }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(218.dp)
+            .height(LOOT_RESULT_PANEL_HEIGHT_DP.dp)
             .padding(horizontal = 16.dp)
             .semantics(mergeDescendants = true) {
                 contentDescription = semanticsDescription
@@ -1691,7 +2295,12 @@ private fun LootResultPanel(
     ) {
         Box(Modifier.fillMaxSize().border(1.dp, AqGoldSoft, RoundedCornerShape(22.dp))) {
             Image(
-                painter = painterResource(R.drawable.battle_background),
+                painter = painterResource(
+                    battleBackgroundResource(
+                        definitionId = state.adventureTale.definitionId,
+                        chapterNumber = state.adventureTale.chapterNumber,
+                    ),
+                ),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
@@ -1725,8 +2334,8 @@ private fun LootResultPanel(
                             .height(6.dp)
                             .clip(RoundedCornerShape(99.dp))
                             .semantics {
-                                contentDescription = "전리품 확인"
-                                stateDescription = "${(progress * 100f).toInt()}퍼센트"
+                                contentDescription = localized("전리품 확인")
+                                stateDescription = localized("${(progress * 100f).toInt()}퍼센트")
                             },
                         color = accent,
                         trackColor = Color(0xFF4A3B4F),
@@ -1736,7 +2345,10 @@ private fun LootResultPanel(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .padding(horizontal = 20.dp, vertical = 8.dp),
+                        .padding(
+                            horizontal = 20.dp,
+                            vertical = lootResultContentVerticalPaddingDp(itemName.length).dp,
+                        ),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
@@ -1755,33 +2367,37 @@ private fun LootResultPanel(
                             borderColor = AqSurfaceHigh,
                         )
                     }
-                    Spacer(Modifier.height(5.dp))
+                    Spacer(Modifier.height(if (usesDenseLootLayout) 2.dp else 5.dp))
                     Text(
                         itemName,
                         color = if (hasLoot) accent else AqText,
                         fontSize = itemFontSize,
-                        lineHeight = 25.sp,
+                        lineHeight = lootResultItemLineHeightSp(itemName.length).sp,
                         fontWeight = FontWeight.Black,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
+                        maxLines = LOOT_RESULT_ITEM_MAX_LINES,
+                        overflow = LOOT_RESULT_ITEM_OVERFLOW,
                         textAlign = TextAlign.Center,
                     )
                     Text(
                         itemDetail,
                         color = if (state.lastLootEquipped) accent else AqMuted,
-                        fontSize = 11.sp,
+                        fontSize = if (usesDenseLootLayout) 10.sp else 11.sp,
+                        lineHeight = if (usesDenseLootLayout) 12.sp else 14.sp,
                         fontWeight = if (state.lastLootEquipped) FontWeight.Bold else FontWeight.Normal,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         textAlign = TextAlign.Center,
                     )
-                    Spacer(Modifier.height(6.dp))
+                    Spacer(Modifier.height(if (usesDenseLootLayout) 2.dp else 6.dp))
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(statusBackground, RoundedCornerShape(11.dp))
                             .border(1.dp, statusBorder, RoundedCornerShape(11.dp))
-                            .padding(horizontal = 12.dp, vertical = 7.dp)
+                            .padding(
+                                horizontal = 12.dp,
+                                vertical = lootResultStatusVerticalPaddingDp(itemName.length).dp,
+                            )
                             .semantics { liveRegion = LiveRegionMode.Polite },
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center,
@@ -1794,14 +2410,15 @@ private fun LootResultPanel(
                             },
                             contentDescription = null,
                             tint = if (state.lastLootEquipped) statusColor else AqMuted,
-                            modifier = Modifier.size(18.dp),
+                            modifier = Modifier.size(if (usesDenseLootLayout) 16.dp else 18.dp),
                         )
-                        Spacer(Modifier.width(8.dp))
+                        Spacer(Modifier.width(if (usesDenseLootLayout) 6.dp else 8.dp))
                         Column(horizontalAlignment = Alignment.Start) {
                             Text(
                                 statusTitle,
                                 color = statusColor,
-                                fontSize = 12.sp,
+                                fontSize = if (usesDenseLootLayout) 11.sp else 12.sp,
+                                lineHeight = if (usesDenseLootLayout) 13.sp else 15.sp,
                                 fontWeight = FontWeight.Bold,
                                 maxLines = 1,
                             )
@@ -1809,7 +2426,8 @@ private fun LootResultPanel(
                                 Text(
                                     statusDetail,
                                     color = AqMuted,
-                                    fontSize = 10.sp,
+                                    fontSize = if (usesDenseLootLayout) 9.sp else 10.sp,
+                                    lineHeight = if (usesDenseLootLayout) 11.sp else 13.sp,
                                     maxLines = 1,
                                 )
                             }
@@ -1862,135 +2480,168 @@ private fun HeroHeader(
     combatPower: Long,
     ranking: RankingHeaderPresentation? = null,
     onLevelClick: (() -> Unit)? = null,
+    onOpenSettings: (() -> Unit)? = null,
 ) {
     val levelText = state.hero.level.format()
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(90.dp)
-            .padding(horizontal = 20.dp)
-            .semantics(mergeDescendants = true) {
-                contentDescription = buildString {
-                    append("레벨 $levelText, ")
-                    append(state.hero.name)
-                    append(", ")
-                    append(state.hero.heroClass.labelKo)
-                    if (ranking != null) {
-                        append(", ")
-                        append(ranking.accessibilityLabel)
-                    }
-                    append(", 전투력 ")
-                    append(combatPower.format())
-                }
-            },
-        verticalAlignment = Alignment.CenterVertically,
+            .height(90.dp),
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .width(78.dp)
-                .then(
-                    if (onLevelClick != null) {
-                        Modifier.clickable(
-                            onClickLabel = "스킬 연출 테스트 열기",
-                            role = Role.Button,
-                            onClick = onLevelClick,
-                        )
-                    } else {
-                        Modifier
-                    },
-                ),
-            horizontalAlignment = Alignment.Start,
+                .fillMaxSize()
+                .padding(horizontal = 20.dp)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = buildList {
+                        add(localized("레벨 $levelText"))
+                        add(state.hero.name)
+                        add(localized(state.hero.heroClass.labelKo))
+                        ranking?.let { add(localized(it.accessibilityLabel)) }
+                        add(localized("전투력 ${combatPower.format()}"))
+                    }.joinToString(", ")
+                },
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                "LV",
-                color = AqMuted,
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.sp,
-                maxLines = 1,
-            )
-            Text(
-                levelText,
-                modifier = Modifier.fillMaxWidth(),
-                color = AqGold,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Black,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-        Spacer(Modifier.width(12.dp))
-        Box(
-            Modifier
-                .width(1.dp)
-                .height(62.dp)
-                .background(AqSurfaceHigh),
-        )
-        Spacer(Modifier.width(14.dp))
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                state.hero.name,
-                color = AqText,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Black,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Spacer(Modifier.height(7.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
+            Column(
+                modifier = Modifier
+                    .width(48.dp)
+                    .then(
+                        if (onLevelClick != null) {
+                            Modifier.clickable(
+                                onClickLabel = localized("스킬 연출 테스트 열기"),
+                                role = Role.Button,
+                                onClick = onLevelClick,
+                            )
+                        } else {
+                            Modifier
+                        },
+                    ),
+                horizontalAlignment = Alignment.Start,
             ) {
                 Text(
-                    state.hero.heroClass.labelKo,
+                    "LV",
                     color = AqMuted,
-                    fontSize = 13.sp,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.sp,
                     maxLines = 1,
                 )
-                if (ranking != null) {
-                    Spacer(Modifier.width(8.dp))
-                    Box(
-                        Modifier
-                            .width(1.dp)
-                            .height(12.dp)
-                            .background(AqSurfaceHigh),
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Icon(
-                        imageVector = Icons.Filled.WorkspacePremium,
-                        contentDescription = null,
-                        tint = if (ranking.isRanked) AqGold else AqMuted,
-                        modifier = Modifier.size(18.dp),
-                    )
-                    Spacer(Modifier.width(4.dp))
+                Text(
+                    levelText,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = AqGold,
+                    fontSize = heroHeaderLevelFontSizeSp(levelText).sp,
+                    fontWeight = FontWeight.Black,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            Spacer(Modifier.width(8.dp))
+            Box(
+                Modifier
+                    .width(1.dp)
+                    .height(62.dp)
+                    .background(AqSurfaceHigh),
+            )
+            Spacer(Modifier.width(10.dp))
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                UnlocalizedText(
+                    state.hero.name,
+                    modifier = Modifier.padding(end = if (onOpenSettings != null) 76.dp else 0.dp),
+                    color = AqText,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Black,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Spacer(Modifier.height(7.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     Text(
-                        text = ranking.visualLabel,
-                        modifier = Modifier.weight(1f),
-                        color = if (ranking.isRanked) AqGold else AqMuted,
-                        fontSize = 12.sp,
+                        state.hero.heroClass.labelKo,
+                        color = AqMuted,
+                        fontSize = 13.sp,
+                        maxLines = 1,
+                    )
+                    if (ranking != null) {
+                        Spacer(Modifier.width(8.dp))
+                        Box(
+                            Modifier
+                                .width(1.dp)
+                                .height(12.dp)
+                                .background(AqSurfaceHigh),
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Icon(
+                            imageVector = Icons.Filled.WorkspacePremium,
+                            contentDescription = null,
+                            tint = if (ranking.isRanked) AqGold else AqMuted,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            text = ranking.visualLabel,
+                            modifier = Modifier.weight(1f),
+                            color = if (ranking.isRanked) AqGold else AqMuted,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        Spacer(Modifier.width(8.dp))
+                    } else {
+                        Spacer(Modifier.weight(1f))
+                    }
+                    Text("전투력", color = AqMuted, fontSize = 11.sp, maxLines = 1)
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        combatPower.format(),
+                        color = AqGold,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
                     )
-                    Spacer(Modifier.width(8.dp))
-                } else {
-                    Spacer(Modifier.weight(1f))
                 }
-                Text("전투력", color = AqMuted, fontSize = 11.sp, maxLines = 1)
-                Spacer(Modifier.width(6.dp))
-                Text(
-                    combatPower.format(),
-                    color = AqGold,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
+            }
+        }
+        if (onOpenSettings != null) {
+            OutlinedButton(
+                onClick = onOpenSettings,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 8.dp, end = 20.dp)
+                    .height(40.dp),
+                contentPadding = PaddingValues(horizontal = 12.dp),
+                border = BorderStroke(1.dp, AqGoldSoft),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = AqGold.copy(alpha = 0.12f),
+                    contentColor = AqGold,
+                ),
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp),
                 )
+                Spacer(Modifier.width(5.dp))
+                Text("설정", fontSize = 12.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
+}
+
+internal fun heroHeaderLevelFontSizeSp(levelText: String): Int = when {
+    levelText.length <= 2 -> 24
+    levelText.length == 3 -> 21
+    levelText.length == 4 -> 18
+    else -> 15
 }
 
 @Composable
@@ -2036,7 +2687,7 @@ private fun OfflineAdventureStrip(
             modifier = Modifier
                 .weight(1f)
                 .semantics(mergeDescendants = true) {
-                    contentDescription = "오프라인 모험, ${percent}퍼센트, $message"
+                    contentDescription = localized("오프라인 모험, ${percent}퍼센트, $message")
                     progressBarRangeInfo = ProgressBarRangeInfo(
                         current = progress.coerceIn(0f, 1f),
                         range = 0f..1f,
@@ -2084,11 +2735,13 @@ private fun OfflineAdventureStrip(
                 .width(72.dp)
                 .height(44.dp)
                 .semantics {
-                    contentDescription = if (isFull) {
-                        "오프라인 모험 충전 완료"
-                    } else {
-                        "광고를 보고 오프라인 모험을 24시간 충전"
-                    }
+                    contentDescription = localized(
+                        if (isFull) {
+                            "오프라인 모험 충전 완료"
+                        } else {
+                            "광고를 보고 오프라인 모험 모두 충전"
+                        },
+                    )
                 },
             border = BorderStroke(1.dp, if (isFull) AqMuted else AqGold),
             colors = ButtonDefaults.outlinedButtonColors(
@@ -2101,8 +2754,11 @@ private fun OfflineAdventureStrip(
             Text(
                 if (isFull) "충전 완료" else "바로 충전",
                 fontSize = 11.sp,
+                lineHeight = 12.sp,
                 fontWeight = FontWeight.Bold,
-                maxLines = 1,
+                maxLines = 2,
+                overflow = TextOverflow.Visible,
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -2115,7 +2771,7 @@ private fun OfflineAdventureRewardDialog(
     onConfirm: () -> Unit,
 ) {
     val rewardReady = rewardedLoadState == RewardedLoadState.READY
-    val confirmText = if (rewardReady) "광고 보고 24시간 충전" else "광고 준비 중"
+    val confirmText = if (rewardReady) "광고 보고 모두 충전" else "광고 준비 중"
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = AqSurfaceHigh,
@@ -2128,7 +2784,7 @@ private fun OfflineAdventureRewardDialog(
         text = {
             Text(
                 if (rewardReady) {
-                    "광고를 끝까지 보면 오프라인 모험 시간이 24시간으로 충전됩니다."
+                    "광고를 끝까지 보면 오프라인 모험이 모두 충전됩니다."
                 } else {
                     "광고를 준비하고 있습니다. 잠시 후 다시 시도해 주세요."
                 },
@@ -2180,9 +2836,18 @@ private fun EncounterPanel(state: SimpleGameState) {
     val searchBoundary = SimpleGameEngine.ENCOUNTER_SEARCH_MILLIS.toFloat() /
         SimpleGameEngine.ENCOUNTER_REVEAL_MILLIS.toFloat()
     val searching = actionProgress.value < searchBoundary
-    val header = if (searching) "다음 모험" else state.monster.name
-    val badge = if (searching) "탐색" else state.monster.grade.labelKo
-    val title = if (searching) "주변을 탐색 중" else "${state.monster.name} 발견"
+    val monsterName = localizedMonsterName(
+        state.monster.name,
+        state.monster.baseName,
+        LocalAppLanguage.current,
+    )
+    val header = if (searching) "다음 모험" else monsterName
+    val badge = when {
+        searching -> "탐색"
+        state.monster.isLabyrinthGateBoss -> "관문 보스"
+        else -> state.monster.grade.labelKo
+    }
+    val title = if (searching) "주변을 탐색 중" else "$monsterName 발견"
     Card(
         modifier = Modifier.fillMaxWidth().height(218.dp).padding(horizontal = 16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -2190,7 +2855,12 @@ private fun EncounterPanel(state: SimpleGameState) {
     ) {
         Box(Modifier.fillMaxSize().border(1.dp, AqGoldSoft, RoundedCornerShape(22.dp))) {
             Image(
-                painter = painterResource(R.drawable.battle_background),
+                painter = painterResource(
+                    battleBackgroundResource(
+                        definitionId = state.adventureTale.definitionId,
+                        chapterNumber = state.adventureTale.chapterNumber,
+                    ),
+                ),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
@@ -2243,8 +2913,8 @@ private fun EncounterPanel(state: SimpleGameState) {
                             .height(8.dp)
                             .clip(RoundedCornerShape(99.dp))
                             .semantics {
-                                contentDescription = title
-                                stateDescription = if (searching) "탐색 중" else "몬스터 발견"
+                                contentDescription = localized(title)
+                                stateDescription = localized(if (searching) "탐색 중" else "몬스터 발견")
                             },
                         color = if (searching) AqGold else AqRed,
                         trackColor = if (searching) Color(0xFF4A3B4F) else Color(0xFF4A2636),
@@ -2281,7 +2951,7 @@ private fun EncounterPanel(state: SimpleGameState) {
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
-                                state.monster.name,
+                                monsterName,
                                 color = AqText,
                                 fontSize = 17.sp,
                                 lineHeight = 22.sp,
@@ -2352,6 +3022,17 @@ private fun CombatPanel(
     } else {
         null
     }
+    val displayedAttackName = if (state.lastAttackWasSkill && state.lastAttackName.isNotBlank()) {
+        state.skills.firstOrNull { it.catalogId == state.lastSkillCatalogId }?.displayName
+            ?: "${state.lastAttackName} LV.1"
+    } else {
+        state.lastAttackName
+    }
+    val monsterName = localizedMonsterName(
+        state.monster.name,
+        state.monster.baseName,
+        LocalAppLanguage.current,
+    )
     val palette = definition?.let { skillPalette(it.element) }
     val reducedMotion = !ValueAnimator.areAnimatorsEnabled()
     val cameraFrame = if (
@@ -2424,7 +3105,12 @@ private fun CombatPanel(
                 },
             ) {
                 Image(
-                    painter = painterResource(R.drawable.battle_background),
+                    painter = painterResource(
+                        battleBackgroundResource(
+                            definitionId = state.adventureTale.definitionId,
+                            chapterNumber = state.adventureTale.chapterNumber,
+                        ),
+                    ),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
@@ -2459,7 +3145,7 @@ private fun CombatPanel(
                 ) {
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            state.monster.name,
+                            monsterName,
                             color = AqText,
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
@@ -2468,9 +3154,14 @@ private fun CombatPanel(
                             modifier = Modifier.weight(1f),
                         )
                         Spacer(Modifier.width(8.dp))
+                        val monsterGradeLabel = if (state.monster.isLabyrinthGateBoss) {
+                            "관문 보스"
+                        } else {
+                            state.monster.grade.labelKo
+                        }
                         Text(
-                            state.monster.grade.labelKo,
-                            color = monsterGradeColor(state.monster.grade.labelKo),
+                            monsterGradeLabel,
+                            color = monsterGradeColor(monsterGradeLabel),
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
                         )
@@ -2483,8 +3174,8 @@ private fun CombatPanel(
                             .height(8.dp)
                             .clip(RoundedCornerShape(99.dp))
                             .semantics {
-                                contentDescription = "몬스터 전투 진행"
-                                stateDescription = "${(displayedEnergy * 100f).toInt()}퍼센트"
+                                contentDescription = localized("몬스터 전투 진행")
+                                stateDescription = localized("${(displayedEnergy * 100f).toInt()}퍼센트")
                             },
                         color = AqRed,
                         trackColor = Color(0xFF4A2636),
@@ -2505,11 +3196,11 @@ private fun CombatPanel(
                             attackLabelVisible(
                                 showAttackPresentation = showAttackPresentation,
                                 isSkill = state.lastAttackWasSkill,
-                                attackName = state.lastAttackName,
+                                attackName = displayedAttackName,
                             ) && labelAlpha > 0f
                         ) {
                             Text(
-                                state.lastAttackName,
+                                displayedAttackName,
                                 modifier = Modifier
                                     .widthIn(max = 236.dp)
                                     .graphicsLayer { alpha = labelAlpha }
@@ -2613,16 +3304,10 @@ internal fun combatPresentationElapsedForCurrentFrame(
 }
 
 internal fun energyFractionBeforeLastAttack(state: SimpleGameState, endFraction: Float): Float {
-    val expected = state.monster.expectedAttacks
-    if (expected <= 0 || state.monster.attacksCompleted <= 0) return endFraction.coerceIn(0f, 1f)
-    val completedBefore = (state.monster.attacksCompleted - 1).coerceAtLeast(0)
-    val remainingBefore = (expected - completedBefore).coerceAtLeast(0)
-    val previousEnergy = if (remainingBefore == 0) {
-        0L
-    } else {
-        (remainingBefore.toLong() * SimpleGameEngine.MONSTER_ENERGY_SCALE) / expected.toLong()
-    }
-    return (previousEnergy.toFloat() / SimpleGameEngine.MONSTER_ENERGY_SCALE.toFloat())
+    val maxEnergy = state.monster.maxEnergy
+    val previousEnergy = state.lastMonsterEnergyBeforeAttack
+    if (maxEnergy <= 0L || previousEnergy <= 0L) return endFraction.coerceIn(0f, 1f)
+    return (previousEnergy.toDouble() / maxEnergy.toDouble()).toFloat()
         .coerceIn(0f, 1f)
 }
 
@@ -2655,7 +3340,10 @@ internal fun skillDamageFontSize(hitCount: Int, isFinal: Boolean): Int = when (h
 }
 
 @Composable
-private fun MainPanel(state: SimpleGameState, repository: SimpleGameRepository) {
+private fun MainPanel(
+    state: SimpleGameState,
+    repository: SimpleGameRepository,
+) {
     val tale = state.adventureTale
     val act = tale.activeAct()
     val required = repository.experienceRequired(state.hero.level)
@@ -2663,7 +3351,12 @@ private fun MainPanel(state: SimpleGameState, repository: SimpleGameRepository) 
     val experienceProgress = ratio(state.hero.experience, required)
     val sceneProgress = ratio(act.progress, act.target)
     val bagProgress = ratio(state.inventory.size.toLong(), inventoryCapacity)
-    val taleProgress = mainTaleProgress(tale.currentActIndex, tale.acts.size)
+    val taleProgress = mainTaleProgress(
+        currentActIndex = tale.currentActIndex,
+        actCount = tale.acts.size,
+        currentActProgress = act.progress,
+        currentActTarget = act.target,
+    )
 
     Column(
         modifier = Modifier
@@ -2672,7 +3365,7 @@ private fun MainPanel(state: SimpleGameState, repository: SimpleGameRepository) 
             .padding(horizontal = 4.dp, vertical = 10.dp),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().height(24.dp),
+            modifier = Modifier.fillMaxWidth().height(40.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
@@ -2695,6 +3388,10 @@ private fun MainPanel(state: SimpleGameState, repository: SimpleGameRepository) 
             title = act.title,
             progress = sceneProgress,
             value = "${act.progress}/${act.target}",
+            backgroundResourceId = battleBackgroundResource(
+                definitionId = tale.definitionId,
+                chapterNumber = tale.chapterNumber,
+            ),
         )
         Spacer(Modifier.height(6.dp))
         MainStatusRow(
@@ -2709,9 +3406,11 @@ private fun MainPanel(state: SimpleGameState, repository: SimpleGameRepository) 
             icon = Icons.Filled.Backpack,
             title = "가방",
             detail = when (state.adventurePhase) {
+                AdventurePhase.OPENING -> "모험의 첫 장을 여는 중"
                 AdventurePhase.RETURNING -> "가득 차서 마을로 귀환 중"
                 AdventurePhase.EQUIPPING -> "드롭 장비를 부위별로 비교 중"
                 AdventurePhase.SELLING -> "마을에서 전리품 판매 중"
+                AdventurePhase.SHOPPING_EMPTY -> "살 수 있는 더 좋은 장비가 없어 출정 준비 중"
                 else -> "가득 차면 자동 귀환"
             },
             progress = bagProgress,
@@ -2722,10 +3421,19 @@ private fun MainPanel(state: SimpleGameState, repository: SimpleGameRepository) 
         MainStatusRow(
             icon = Icons.AutoMirrored.Filled.MenuBook,
             title = "모험담",
-            detail = "제${tale.volumeNumber}권 · ${tale.volumeTitle}",
+            detail = taleVolumeLabel(
+                kind = tale.kind,
+                volumeNumber = tale.volumeNumber,
+                volumeTitle = tale.volumeTitle,
+                heroLevel = state.hero.level,
+            ),
             progress = taleProgress,
             color = MainTaleAccent,
-            value = "${tale.currentActIndex + 1}/${tale.acts.size}",
+            value = mainTaleActCompletionLabel(
+                currentActIndex = tale.currentActIndex,
+                actCount = tale.acts.size,
+                currentActCompleted = act.completed,
+            ),
         )
     }
 }
@@ -2739,6 +3447,7 @@ private fun MainSceneProgress(
     title: String,
     progress: Float,
     value: String,
+    @DrawableRes backgroundResourceId: Int,
 ) {
     val animated by animateFloatAsState(
         targetValue = progress.coerceIn(0f, 1f),
@@ -2753,14 +3462,14 @@ private fun MainSceneProgress(
             .background(Color(0xFF281D32))
             .border(1.dp, MainSceneAccent.copy(alpha = 0.14f), RoundedCornerShape(16.dp))
             .semantics(mergeDescendants = true) {
-                contentDescription = "현재 장면 $title, $value"
+                contentDescription = localized("현재 장면 $title, $value")
                 progressBarRangeInfo = ProgressBarRangeInfo(progress.coerceIn(0f, 1f), 0f..1f)
             }
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
-            painter = painterResource(R.drawable.battle_background),
+            painter = painterResource(backgroundResourceId),
             contentDescription = null,
             modifier = Modifier
                 .size(56.dp)
@@ -2830,20 +3539,14 @@ private fun MainStatusRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
+            .heightIn(min = 56.dp)
             .semantics(mergeDescendants = true) {
-                contentDescription = buildString {
-                    append(title)
-                    append(", ")
-                    append(detail)
-                    if (value != null) {
-                        append(", ")
-                        append(value)
-                    }
-                    append(", ")
-                    append(percent)
-                    append("퍼센트")
-                }
+                contentDescription = buildList {
+                    add(localized(title))
+                    add(localized(detail))
+                    if (value != null) add(localized(value))
+                    add(localized("${percent}퍼센트"))
+                }.joinToString(", ")
                 progressBarRangeInfo = ProgressBarRangeInfo(safeProgress, 0f..1f)
             },
         verticalAlignment = Alignment.CenterVertically,
@@ -2875,8 +3578,8 @@ private fun MainStatusRow(
                 color = AqMuted,
                 fontSize = 10.sp,
                 lineHeight = 14.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                maxLines = 3,
+                overflow = TextOverflow.Visible,
             )
         }
         Spacer(Modifier.width(10.dp))
@@ -2929,10 +3632,37 @@ private fun MainStatusRow(
 internal fun mainStatusPercent(progress: Float): Int =
     (progress.coerceIn(0f, 1f) * 100f).toInt()
 
-internal fun mainTaleProgress(currentActIndex: Int, actCount: Int): Float {
+internal fun mainTaleProgress(
+    currentActIndex: Int,
+    actCount: Int,
+    currentActProgress: Long,
+    currentActTarget: Long,
+): Float {
     if (actCount <= 0) return 0f
-    val displayedAct = (currentActIndex + 1).coerceIn(0, actCount)
-    return displayedAct.toFloat() / actCount.toFloat()
+    if (currentActIndex >= actCount) return 1f
+
+    val completedActCount = currentActIndex.coerceAtLeast(0)
+    val currentActFraction = if (currentActTarget <= 0L) {
+        0.0
+    } else {
+        (currentActProgress.toDouble() / currentActTarget.toDouble()).coerceIn(0.0, 1.0)
+    }
+    return ((completedActCount.toDouble() + currentActFraction) / actCount.toDouble())
+        .toFloat()
+        .coerceIn(0f, 1f)
+}
+
+internal fun mainTaleActCompletionLabel(
+    currentActIndex: Int,
+    actCount: Int,
+    currentActCompleted: Boolean,
+): String {
+    if (actCount <= 0) return "0/0 완료"
+    val completedActCount = (
+        currentActIndex.coerceIn(0, actCount) +
+            if (currentActIndex in 0 until actCount && currentActCompleted) 1 else 0
+    ).coerceAtMost(actCount)
+    return "$completedActCount/$actCount 완료"
 }
 
 @Composable
@@ -2959,7 +3689,7 @@ private fun CharacterPanel(
             EmptyText("보유한 스킬이 없습니다.")
         } else {
             state.skills.forEachIndexed { index, skill ->
-                SkillListRow(skill.name, skill.description)
+                SkillListRow(skill)
                 if (index < state.skills.lastIndex) DividerLine()
             }
         }
@@ -3054,16 +3784,35 @@ private fun CharacterStatCell(
 
 @Composable
 private fun EquipmentPanel(state: SimpleGameState) {
+    val language = LocalAppLanguage.current
     PanelCard {
         Text("장착 장비", color = AqText, fontSize = 18.sp, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(7.dp))
         state.equipment.forEach { item ->
+            val displayName = localizedEquipmentName(item.name, language)
             Row(
-                Modifier.fillMaxWidth().height(44.dp),
+                Modifier.fillMaxWidth().height(56.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(item.slot.labelKo, color = AqMuted, fontSize = 12.sp, modifier = Modifier.width(48.dp))
-                Text(item.name, color = rarityColor(item.rarity), fontSize = 13.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+                Text(
+                    item.slot.labelKo,
+                    color = AqMuted,
+                    fontSize = 11.sp,
+                    lineHeight = 14.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Visible,
+                    modifier = Modifier.width(68.dp),
+                )
+                Text(
+                    displayName,
+                    color = rarityColor(item.rarity),
+                    fontSize = 13.sp,
+                    lineHeight = 16.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Visible,
+                    modifier = Modifier.weight(1f),
+                )
+                Spacer(Modifier.width(6.dp))
                 Text("${item.power.format()}", color = AqGold, fontWeight = FontWeight.Bold, fontSize = 12.sp)
             }
         }
@@ -3074,7 +3823,10 @@ private fun EquipmentPanel(state: SimpleGameState) {
 private fun BagPanel(state: SimpleGameState) {
     ScrollablePanelCard {
         item {
-            SectionHeader("가방 ${state.inventory.size}/${state.inventoryCapacity()}")
+            SectionHeader(
+                title = "가방 ${state.inventory.size}/${state.inventoryCapacity()}",
+                subtitle = "${state.hero.gold.format()} G",
+            )
             Spacer(Modifier.height(6.dp))
         }
         if (state.inventory.isEmpty()) {
@@ -3113,6 +3865,12 @@ private fun BagItemCard(
     item: InventoryItem,
     modifier: Modifier = Modifier,
 ) {
+    val language = LocalAppLanguage.current
+    val displayName = if (item.equipmentSlot != null) {
+        localizedEquipmentName(item.name, language)
+    } else {
+        localizedItemName(item.name, language)
+    }
     val detail = if (item.equipmentSlot != null && item.equipmentPower != null) {
         "${item.equipmentSlot.labelKo} · 장비력 ${item.equipmentPower.format()} · ${item.rarity}"
     } else {
@@ -3120,23 +3878,24 @@ private fun BagItemCard(
     }
     Column(
         modifier = modifier
-            .height(49.dp)
+            .height(64.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(AqSurfaceHigh)
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .semantics(mergeDescendants = true) {
-                contentDescription = "${item.name}, $detail"
+                contentDescription = listOf(displayName, detail)
+                    .joinToString(", ") { localized(it) }
             },
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = item.name,
+            text = displayName,
             color = rarityColor(item.rarity),
             fontWeight = FontWeight.Bold,
             fontSize = 10.4f.sp,
             lineHeight = 11.2f.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
+            maxLines = 3,
+            overflow = TextOverflow.Visible,
         )
         Text(
             text = detail,
@@ -3154,7 +3913,7 @@ private fun QuestPanel(state: SimpleGameState) {
     val tale = state.adventureTale
     val scrollState = rememberScrollState()
     var historyOpen by rememberSaveable { mutableStateOf(false) }
-    val completedHistory = state.completedTaleHistory.asReversed()
+    val completedHistory = completedTalesInReadingOrder(state.completedTaleHistory)
 
     Card(
         modifier = Modifier
@@ -3170,11 +3929,15 @@ private fun QuestPanel(state: SimpleGameState) {
                 .padding(start = 16.dp, end = 16.dp, top = 12.dp, bottom = 14.dp),
         ) {
             TaleHeader(
+                kind = tale.kind,
                 volumeNumber = tale.volumeNumber,
                 chapterNumber = tale.chapterNumber,
                 volumeTitle = tale.volumeTitle,
                 chapterTitle = tale.title,
                 chapterSubtitle = tale.subtitle,
+                heroLevel = state.hero.level,
+                labyrinthDepth = tale.labyrinthDepth,
+                highestLabyrinthDepth = state.labyrinthDepthCompleted,
             )
             tale.acts.forEachIndexed { index, act ->
                 TaleActTimelineRow(
@@ -3182,6 +3945,7 @@ private fun QuestPanel(state: SimpleGameState) {
                     index = index,
                     currentActIndex = tale.currentActIndex,
                     totalActs = tale.acts.size,
+                    heroName = state.hero.name,
                 )
             }
             Spacer(Modifier.height(10.dp))
@@ -3201,7 +3965,9 @@ private fun QuestPanel(state: SimpleGameState) {
                         modifier = Modifier.fillMaxWidth().padding(vertical = 18.dp),
                     )
                 } else {
-                    completedHistory.forEach { record -> CompletedTaleCard(record) }
+                    completedHistory.forEach { record ->
+                        CompletedTaleCard(record = record, heroName = state.hero.name)
+                    }
                 }
             }
         }
@@ -3210,12 +3976,17 @@ private fun QuestPanel(state: SimpleGameState) {
 
 @Composable
 private fun TaleHeader(
+    kind: TaleKind,
     volumeNumber: Int,
     chapterNumber: Int,
     volumeTitle: String,
     chapterTitle: String,
     chapterSubtitle: String,
+    heroLevel: Long,
+    labyrinthDepth: Long,
+    highestLabyrinthDepth: Long,
 ) {
+    val currentLabyrinthDepth = resolvedLabyrinthDepth(labyrinthDepth, chapterNumber)
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -3223,7 +3994,7 @@ private fun TaleHeader(
             .padding(bottom = 8.dp),
     ) {
         Text(
-            "제${volumeNumber}권 · $volumeTitle",
+            taleVolumeLabel(kind, volumeNumber, volumeTitle, heroLevel),
             color = AqText,
             fontSize = 20.sp,
             lineHeight = 26.sp,
@@ -3232,7 +4003,7 @@ private fun TaleHeader(
         )
         Spacer(Modifier.height(2.dp))
         Text(
-            "제${chapterNumber}장  $chapterTitle",
+            taleChapterLabel(kind, chapterNumber, chapterTitle, labyrinthDepth),
             color = AqMuted,
             fontSize = 14.sp,
             lineHeight = 21.sp,
@@ -3240,13 +4011,103 @@ private fun TaleHeader(
         )
         Spacer(Modifier.height(2.dp))
         Text(
-            chapterSubtitle,
+            taleSubtitleLabel(kind, chapterSubtitle, heroLevel),
             color = AqMuted.copy(alpha = 0.82f),
             fontSize = 12.sp,
             lineHeight = 18.sp,
         )
+        if (kind == TaleKind.LABYRINTH) {
+            Spacer(Modifier.height(10.dp))
+            LabyrinthDepthSummary(
+                heroLevel = heroLevel,
+                currentDepth = currentLabyrinthDepth,
+                highestCompletedDepth = highestLabyrinthDepth,
+            )
+        }
         Spacer(Modifier.height(8.dp))
         Box(Modifier.fillMaxWidth().height(1.dp).background(Color(0xFF3C3045)))
+    }
+}
+
+@Composable
+private fun LabyrinthDepthSummary(
+    heroLevel: Long,
+    currentDepth: Long,
+    highestCompletedDepth: Long,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 116.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(AqSurfaceHigh)
+            .clearAndSetSemantics {
+                contentDescription = localized(
+                    labyrinthDepthContentDescription(
+                        heroLevel = heroLevel,
+                        currentDepth = currentDepth,
+                        highestCompletedDepth = highestCompletedDepth,
+                    ),
+                )
+            }
+            .padding(horizontal = 14.dp, vertical = 9.dp),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("현재 깊이", color = AqMuted, fontSize = 11.sp, lineHeight = 16.sp)
+                Text(
+                    "제${currentDepth.coerceAtLeast(1L)}구역",
+                    color = AqText,
+                    fontSize = 15.sp,
+                    lineHeight = 21.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+            Box(Modifier.width(1.dp).height(34.dp).background(Color(0xFF51445B)))
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.End,
+            ) {
+                Text("최고 완주 깊이", color = AqMuted, fontSize = 11.sp, lineHeight = 16.sp)
+                Text(
+                    labyrinthHighestDepthValueLabel(highestCompletedDepth),
+                    color = AqGold,
+                    fontSize = 15.sp,
+                    lineHeight = 21.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+        }
+        Spacer(Modifier.height(8.dp))
+        Box(Modifier.fillMaxWidth().height(1.dp).background(Color(0xFF51445B)))
+        Spacer(Modifier.height(7.dp))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(
+                labyrinthTitleLabel(highestCompletedDepth),
+                color = AqGold,
+                fontSize = 12.sp,
+                lineHeight = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f),
+            )
+            Text(
+                labyrinthNextGateLabel(highestCompletedDepth),
+                color = AqMuted,
+                fontSize = 11.sp,
+                lineHeight = 18.sp,
+                textAlign = TextAlign.End,
+                modifier = Modifier.weight(1f),
+            )
+        }
+        Text(
+            labyrinthDepthRuleLabel(currentDepth),
+            color = if (LabyrinthProgression.isGateDepth(currentDepth)) AqGold else AqMuted,
+            fontSize = 11.sp,
+            lineHeight = 17.sp,
+        )
     }
 }
 
@@ -3256,6 +4117,7 @@ private fun TaleActTimelineRow(
     index: Int,
     currentActIndex: Int,
     totalActs: Int,
+    heroName: String,
 ) {
     val isCompleted = act.completed || index < currentActIndex
     val isCurrent = !isCompleted && index == currentActIndex
@@ -3273,14 +4135,28 @@ private fun TaleActTimelineRow(
         isCurrent -> AqGold
         else -> AqMuted.copy(alpha = if (isLocked) 0.62f else 0.82f)
     }
+    val localizedActNumber = localized("${act.number}막")
+    val localizedExpandedHint = localized("펼쳐짐. 두 번 탭하여 접기.")
+    val localizedCollapsedHint = localized("접힘. 두 번 탭하여 펼치기.")
+    val localizedProgress = localized("${act.target}회 중 ${act.progress}회 완료")
+    val localizedAutoProgress = localized("자동 진행 중")
+    val localizedNotStarted = localized("아직 시작되지 않음.")
+    val localizedPreviousIncomplete = localized("앞의 장면이 아직 끝나지 않음.")
     val description = buildString {
-        append("$status, ${act.number}막 ${act.title}.")
+        append("${localized(status)}, $localizedActNumber ${localized(act.title)}.")
         when {
-            isCompleted && completedExpanded -> append(" ${act.completionBody}. 펼쳐짐. 두 번 탭하여 접기.")
-            isCompleted -> append(" 접힘. 두 번 탭하여 펼치기.")
-            isCurrent -> append(" ${act.body}. ${act.target}회 중 ${act.progress}회 완료. 자동 진행 중.")
-            isScheduled -> append(" 아직 시작되지 않음.")
-            else -> append(" 앞의 장면이 아직 끝나지 않음.")
+            isCompleted && completedExpanded -> append(
+                " ${localizedStoryText(act.completionBody, heroName)}. " +
+                    localizedExpandedHint,
+            )
+            isCompleted -> append(" $localizedCollapsedHint")
+            isCurrent -> append(
+                " ${localizedStoryText(act.body, heroName)}. " +
+                    "$localizedProgress. " +
+                    "$localizedAutoProgress.",
+            )
+            isScheduled -> append(" $localizedNotStarted")
+            else -> append(" $localizedPreviousIncomplete")
         }
     }
     val baseModifier = Modifier
@@ -3313,12 +4189,12 @@ private fun TaleActTimelineRow(
         }
         .semantics(mergeDescendants = true) {
             contentDescription = description
-            stateDescription = when {
+            stateDescription = localized(when {
                 isCompleted -> if (completedExpanded) "완료, 펼쳐짐" else "완료, 접힘"
                 isCurrent -> "${act.target}회 중 ${act.progress}회 완료"
                 isScheduled -> "예정"
                 else -> "잠김"
-            }
+            })
             if (isCurrent) {
                 progressBarRangeInfo = ProgressBarRangeInfo(
                     current = act.progress.toFloat().coerceIn(0f, act.target.toFloat()),
@@ -3330,7 +4206,7 @@ private fun TaleActTimelineRow(
     val rowModifier = if (isCompleted) {
         baseModifier.clickable(
             role = Role.Button,
-            onClickLabel = if (completedExpanded) "완료 요약 접기" else "완료 요약 펼치기",
+            onClickLabel = localized(if (completedExpanded) "완료 요약 접기" else "완료 요약 펼치기"),
             onClick = { completedExpanded = !completedExpanded },
         )
     } else {
@@ -3354,8 +4230,8 @@ private fun TaleActTimelineRow(
             )
             if (isCompleted && completedExpanded) {
                 Spacer(Modifier.height(2.dp))
-                Text(
-                    act.completionBody,
+                UnlocalizedText(
+                    localizedStoryText(act.completionBody, heroName),
                     color = AqMuted,
                     fontSize = 13.sp,
                     lineHeight = 20.sp,
@@ -3363,8 +4239,8 @@ private fun TaleActTimelineRow(
             }
             if (isCurrent) {
                 Spacer(Modifier.height(4.dp))
-                Text(
-                    act.body,
+                UnlocalizedText(
+                    localizedStoryText(act.body, heroName),
                     color = AqMuted,
                     fontSize = 13.sp,
                     lineHeight = 20.sp,
@@ -3456,11 +4332,11 @@ private fun PastTalesEntry(
             .background(AqSurfaceHigh)
             .clickable(
                 role = Role.Button,
-                onClickLabel = if (expanded) "지난 모험담 접기" else "지난 모험담 펼치기",
+                onClickLabel = localized(if (expanded) "지난 모험담 접기" else "지난 모험담 펼치기"),
                 onClick = onClick,
             )
             .semantics(mergeDescendants = true) {
-                stateDescription = if (expanded) "펼쳐짐" else "접힘"
+                stateDescription = localized(if (expanded) "펼쳐짐" else "접힘")
             }
             .padding(horizontal = 14.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -3468,7 +4344,7 @@ private fun PastTalesEntry(
         Column(Modifier.weight(1f)) {
             Text("지난 모험담", color = AqText, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
             Text(
-                if (hasHistory) "완결된 이야기와 남은 복선" else "첫 모험담의 결말을 기다리는 중",
+                if (hasHistory) "완결된 이야기" else "첫 모험담의 결말을 기다리는 중",
                 color = AqMuted,
                 fontSize = 12.sp,
                 lineHeight = 18.sp,
@@ -3484,8 +4360,14 @@ private fun PastTalesEntry(
 }
 
 @Composable
-private fun CompletedTaleCard(record: CompletedTaleRecord) {
+private fun CompletedTaleCard(record: CompletedTaleRecord, heroName: String) {
     var expanded by rememberSaveable(record.taleSequence, record.taleId) { mutableStateOf(false) }
+    val displayTitle = completedTaleTitleLabel(record)
+    val completionStatus = completedTaleStatusLabel(record)
+    val localizedCompletionStatus = localized(completionStatus)
+    val localizedLocation = localized(completedTaleLocationLabel(record))
+    val localizedDisplayTitle = localizedStoryText(displayTitle, heroName)
+    val localizedSummary = localizedStoryText(record.summary, heroName)
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -3494,40 +4376,48 @@ private fun CompletedTaleCard(record: CompletedTaleRecord) {
             .background(Color(0xFF1B1424))
             .clickable(
                 role = Role.Button,
-                onClickLabel = if (expanded) "모험담 회고 접기" else "모험담 회고 펼치기",
+                onClickLabel = localized(if (expanded) "모험담 회고 접기" else "모험담 회고 펼치기"),
                 onClick = { expanded = !expanded },
             )
             .semantics(mergeDescendants = true) {
                 contentDescription = buildString {
-                    append("완결, 제${record.volumeNumber}권 제${record.chapterNumber}장, ${record.title}. ${record.summary}.")
-                    if (record.nextHook.isNotBlank()) append(" 남은 복선, ${record.nextHook}.")
-                    append(if (expanded) " 펼쳐짐." else " 접힘.")
+                    append("$localizedCompletionStatus, $localizedLocation. ")
+                    append("$localizedDisplayTitle. $localizedSummary. ")
+                    append(localized(if (expanded) "펼쳐짐" else "접힘"))
+                    append(".")
                 }
-                stateDescription = if (expanded) "펼쳐짐" else "접힘"
+                stateDescription = localized(if (expanded) "펼쳐짐" else "접힘")
             }
             .padding(14.dp),
     ) {
-        Text(
-            "완결 · 제${record.volumeNumber}권 제${record.chapterNumber}장",
-            color = TaleCompleteGreen,
+        UnlocalizedText(
+            "$localizedCompletionStatus · $localizedLocation",
+            color = if (completionStatus == "관문 돌파") AqGold else TaleCompleteGreen,
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
         )
         Spacer(Modifier.height(2.dp))
-        Text(record.title, color = AqText, fontSize = 15.sp, lineHeight = 22.sp, fontWeight = FontWeight.SemiBold)
+        UnlocalizedText(
+            localizedDisplayTitle,
+            color = AqText,
+            fontSize = 15.sp,
+            lineHeight = 22.sp,
+            fontWeight = FontWeight.SemiBold,
+        )
         Spacer(Modifier.height(5.dp))
-        Text(record.summary, color = AqMuted, fontSize = 13.sp, lineHeight = 20.sp)
-        if (record.nextHook.isNotBlank()) {
-            Spacer(Modifier.height(8.dp))
-            Text("남은 복선 · ${record.nextHook}", color = AqGold, fontSize = 12.sp, lineHeight = 18.sp)
-        }
+        UnlocalizedText(
+            localizedSummary,
+            color = AqMuted,
+            fontSize = 13.sp,
+            lineHeight = 20.sp,
+        )
         if (expanded) {
             Spacer(Modifier.height(10.dp))
             Box(Modifier.fillMaxWidth().height(1.dp).background(Color(0xFF3C3045)))
             Spacer(Modifier.height(8.dp))
             record.actMemories.forEachIndexed { index, memory ->
-                Text(
-                    "${index + 1}막 · $memory",
+                UnlocalizedText(
+                    "${localized("${index + 1}막")} · ${localizedStoryText(memory, heroName)}",
                     color = AqMuted,
                     fontSize = 12.sp,
                     lineHeight = 19.sp,
@@ -3549,13 +4439,24 @@ private fun BottomMenu(selectedTab: MenuTab, onSelect: (MenuTab) -> Unit) {
         MenuTab.entries.forEach { tab ->
             val selected = tab == selectedTab
             Column(
-                modifier = Modifier.weight(1f).fillMaxHeight(),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .selectable(
+                        selected = selected,
+                        role = Role.Tab,
+                        onClick = { onSelect(tab) },
+                    ),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
-                IconButton(onClick = { onSelect(tab) }, modifier = Modifier.size(42.dp)) {
-                    Icon(tab.icon, contentDescription = tab.label, tint = if (selected) AqGold else AqMuted, modifier = Modifier.size(22.dp))
-                }
+                Icon(
+                    tab.icon,
+                    contentDescription = null,
+                    tint = if (selected) AqGold else AqMuted,
+                    modifier = Modifier.size(22.dp),
+                )
+                Spacer(Modifier.height(7.dp))
                 Text(tab.label, color = if (selected) AqGold else AqMuted, fontSize = 10.sp, fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal)
             }
         }
@@ -3594,50 +4495,90 @@ private fun ScrollablePanelCard(content: LazyListScope.() -> Unit) {
     }
 }
 
-@Composable
-private fun ProgressRow(
-    title: String,
-    detail: String,
-    progress: Float,
-    color: Color,
-    value: String? = null,
-) {
-    val animated by animateFloatAsState(progress.coerceIn(0f, 1f), tween(650), label = title)
-    Column(
-        Modifier.fillMaxWidth().height(84.dp),
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Column(Modifier.weight(1f)) {
-                Text(title, color = AqText, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                Text(detail, color = AqMuted, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            }
-            if (value != null) Text(value, color = color, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-        }
-        Spacer(Modifier.height(7.dp))
-        LinearProgressIndicator(
-            progress = { animated },
-            modifier = Modifier.fillMaxWidth().height(7.dp).clip(RoundedCornerShape(99.dp)),
-            color = color,
-            trackColor = Color(0xFF44364D),
-        )
-    }
+internal fun primaryStatIndices(heroClass: HeroClass): Set<Int> =
+    setOf(heroClass.primaryStatIndex, heroClass.secondaryStatIndex)
+
+internal enum class CharacterCreationStatRole {
+    PRIMARY,
+    SECONDARY,
+    STANDARD,
+    RESOURCE,
+}
+
+internal val CharacterCreationPrimaryAccent = AqRed
+internal val CharacterCreationSecondaryAccent = Color(0xFFB69ACB)
+
+internal fun characterCreationStatRole(
+    heroClass: HeroClass,
+    statIndex: Int,
+): CharacterCreationStatRole = when (statIndex) {
+    heroClass.primaryStatIndex -> CharacterCreationStatRole.PRIMARY
+    heroClass.secondaryStatIndex -> CharacterCreationStatRole.SECONDARY
+    in 6..7 -> CharacterCreationStatRole.RESOURCE
+    else -> CharacterCreationStatRole.STANDARD
+}
+
+internal fun characterCreationStatAccent(role: CharacterCreationStatRole): Color = when (role) {
+    CharacterCreationStatRole.PRIMARY -> CharacterCreationPrimaryAccent
+    CharacterCreationStatRole.SECONDARY -> CharacterCreationSecondaryAccent
+    CharacterCreationStatRole.RESOURCE -> AqGold
+    CharacterCreationStatRole.STANDARD -> AqText
 }
 
 @Composable
-private fun StatGrid(stats: HeroStats, roomy: Boolean = false) {
+private fun StatGrid(
+    stats: HeroStats,
+    heroClass: HeroClass,
+    roomy: Boolean = false,
+) {
     val values = stats.values()
     Column(verticalArrangement = Arrangement.spacedBy(if (roomy) 10.dp else 6.dp)) {
         values.chunked(4).forEachIndexed { rowIndex, row ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                 row.forEachIndexed { itemIndex, value ->
                     val index = rowIndex * 4 + itemIndex
+                    val role = characterCreationStatRole(heroClass, index)
+                    val isClassStat = role == CharacterCreationStatRole.PRIMARY ||
+                        role == CharacterCreationStatRole.SECONDARY
+                    val accent = characterCreationStatAccent(role)
                     Column(
-                        modifier = Modifier.weight(1f).clip(RoundedCornerShape(10.dp)).background(AqSurfaceHigh).padding(vertical = if (roomy) 12.dp else 7.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(
+                                if (isClassStat) {
+                                    lerp(AqSurfaceHigh, accent, 0.14f)
+                                } else {
+                                    AqSurfaceHigh
+                                },
+                            )
+                            .border(
+                                width = 1.dp,
+                                color = if (isClassStat) {
+                                    accent.copy(alpha = 0.62f)
+                                } else {
+                                    Color.Transparent
+                                },
+                                shape = RoundedCornerShape(10.dp),
+                            )
+                            .padding(vertical = if (roomy) 12.dp else 7.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Text(HeroStats.labels[index], color = AqMuted, fontSize = 10.sp)
-                        Text(value.format(), color = if (index >= 6) AqGold else AqText, fontWeight = FontWeight.Bold, fontSize = if (roomy) 17.sp else 14.sp)
+                        Text(
+                            HeroStats.labels[index],
+                            color = if (isClassStat) lerp(AqMuted, accent, 0.55f) else AqMuted,
+                            fontSize = 10.sp,
+                        )
+                        Text(
+                            value.format(),
+                            color = when {
+                                index >= 6 -> AqGold
+                                isClassStat -> accent
+                                else -> AqText
+                            },
+                            fontWeight = FontWeight.Bold,
+                            fontSize = if (roomy) 17.sp else 14.sp,
+                        )
                     }
                 }
             }
@@ -3646,35 +4587,67 @@ private fun StatGrid(stats: HeroStats, roomy: Boolean = false) {
 }
 
 @Composable
-private fun CompactRow(title: String, subtitle: String, color: Color) {
-    Column(Modifier.fillMaxWidth().height(49.dp), verticalArrangement = Arrangement.Center) {
-        Text(title, color = color, fontWeight = FontWeight.Bold, fontSize = 13.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(subtitle, color = AqMuted, fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+private fun SkillListRow(skill: LearnedSkill) {
+    val animatedProgress by animateFloatAsState(
+        targetValue = skill.masteryProgress,
+        animationSpec = tween(350),
+        label = "${skill.catalogId}-mastery",
+    )
+    val experienceLabel = if (skill.isMaxLevel) {
+        "MAX"
+    } else {
+        "${skill.masteryExperience}/${LearnedSkill.USES_PER_LEVEL}"
     }
-}
-
-@Composable
-private fun SkillListRow(name: String, description: String) {
     Column(
-        modifier = Modifier.fillMaxWidth().height(54.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(54.dp)
+            .clearAndSetSemantics {
+                contentDescription = localized(
+                    if (skill.isMaxLevel) {
+                        "${skill.displayName}, 스킬 경험치 최대"
+                    } else {
+                        "${skill.displayName}, 스킬 경험치 $experienceLabel"
+                    },
+                )
+                progressBarRangeInfo = ProgressBarRangeInfo(
+                    current = skill.masteryProgress,
+                    range = 0f..1f,
+                )
+            },
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = name,
+            text = skill.displayName,
             color = AqGold,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
-        Spacer(Modifier.height(3.dp))
-        Text(
-            text = description,
-            color = AqMuted,
-            fontSize = 11.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        Spacer(Modifier.height(5.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            LinearProgressIndicator(
+                progress = { animatedProgress },
+                modifier = Modifier
+                    .weight(1f)
+                    .height(6.dp)
+                    .clip(RoundedCornerShape(99.dp)),
+                color = AqGold,
+                trackColor = Color(0xFF44364D),
+            )
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = experienceLabel,
+                color = if (skill.isMaxLevel) AqGold else AqMuted,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+            )
+        }
     }
 }
 
@@ -3683,7 +4656,19 @@ private fun SectionHeader(title: String, subtitle: String? = null) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
         Text(title, color = AqText, fontWeight = FontWeight.Bold, fontSize = 18.sp)
         if (!subtitle.isNullOrBlank()) {
-            Text(subtitle, color = AqMuted, fontSize = 10.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f).padding(start = 10.dp), textAlign = TextAlign.End)
+            Text(
+                text = subtitle,
+                color = AqGold,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 10.dp)
+                    .semantics { contentDescription = localized("보유 골드 $subtitle") },
+                textAlign = TextAlign.End,
+            )
         }
     }
 }
@@ -3705,7 +4690,48 @@ private fun ratio(value: Long, max: Long): Float =
 
 private fun Long.format(): String = NumberFormat.getNumberInstance(Locale.KOREA).format(this)
 
-private fun rarityColor(rarity: String): Color = when (rarity) {
+internal fun marketActionDescriptionColor(
+    itemName: String,
+    rarity: String,
+): Color = if (itemName.isNotBlank() && rarity.isNotBlank()) {
+    rarityColor(rarity)
+} else {
+    AqText
+}
+
+internal const val MARKET_ACTION_ITEM_MAX_LINES = 2
+internal val MARKET_ACTION_ITEM_OVERFLOW: TextOverflow = TextOverflow.Visible
+
+internal fun marketActionItemFontSizeSp(nameLength: Int): Float = when {
+    nameLength > 34 -> 11f
+    nameLength > 24 -> 12f
+    else -> 14f
+}
+
+internal const val LOOT_RESULT_ITEM_MAX_LINES = 3
+internal val LOOT_RESULT_ITEM_OVERFLOW: TextOverflow = TextOverflow.Visible
+internal const val LOOT_RESULT_PANEL_HEIGHT_DP = 218
+
+internal fun lootResultItemFontSizeSp(nameLength: Int): Float = when {
+    nameLength > 38 -> 13f
+    nameLength > 28 -> 15f
+    nameLength > 18 -> 17f
+    else -> 20f
+}
+
+internal fun lootResultContentVerticalPaddingDp(nameLength: Int): Float =
+    if (nameLength > 18) 3f else 8f
+
+internal fun lootResultStatusVerticalPaddingDp(nameLength: Int): Float =
+    if (nameLength > 18) 4f else 7f
+
+internal fun lootResultItemLineHeightSp(nameLength: Int): Float = when {
+    nameLength > 28 -> 16f
+    nameLength > 18 -> 17f
+    else -> 18f
+}
+
+internal fun rarityColor(rarity: String): Color = when (rarity) {
     "신화" -> Color(0xFFFF6F91)
     "전설" -> Color(0xFFFFB25C)
     "영웅" -> Color(0xFFD897FF)
@@ -3715,6 +4741,7 @@ private fun rarityColor(rarity: String): Color = when (rarity) {
 }
 
 private fun monsterGradeColor(grade: String): Color = when (grade) {
+    "관문 보스" -> AqGold
     "보스" -> Color(0xFFFF8A78)
     "정예" -> Color(0xFFD897FF)
     else -> AqMuted
@@ -3729,7 +4756,6 @@ private enum class RewardedLoadState {
 }
 
 private const val REWARDED_AD_TAG = "AlarmQuestRewarded"
-private const val TEST_REWARDED_AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
 private const val REWARDED_AD_RETRY_MILLIS = 30_000L
 
 internal data class DamageMotion(

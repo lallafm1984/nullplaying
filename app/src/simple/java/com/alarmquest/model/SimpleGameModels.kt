@@ -2,17 +2,24 @@ package com.alarmquest.model
 
 import kotlinx.serialization.Serializable
 
-const val SIMPLE_GAME_SCHEMA_VERSION = 24
-const val BASE_INVENTORY_CAPACITY = 10L
+const val SIMPLE_GAME_SCHEMA_VERSION = 42
+const val BASE_INVENTORY_CAPACITY = 15L
+private const val INVENTORY_LEVEL_BONUS_NUMERATOR = 3L
+private const val INVENTORY_LEVEL_BONUS_DENOMINATOR = 5L
+private const val INVENTORY_STRENGTH_PER_SLOT = 2L
 
 @Serializable
-enum class HeroClass(val labelKo: String) {
-    WARRIOR("전사"),
-    ROGUE("도적"),
-    RANGER("순찰자"),
-    MAGE("마법사"),
-    CLERIC("성직자"),
-    PALADIN("성기사"),
+enum class HeroClass(
+    val labelKo: String,
+    val primaryStatIndex: Int,
+    val secondaryStatIndex: Int,
+) {
+    WARRIOR("파이터", primaryStatIndex = 0, secondaryStatIndex = 1),
+    ROGUE("시프", primaryStatIndex = 2, secondaryStatIndex = 0),
+    RANGER("레인져", primaryStatIndex = 2, secondaryStatIndex = 4),
+    MAGE("메이지", primaryStatIndex = 3, secondaryStatIndex = 4),
+    CLERIC("클래릭", primaryStatIndex = 4, secondaryStatIndex = 3),
+    PALADIN("팔라딘", primaryStatIndex = 0, secondaryStatIndex = 5),
 }
 
 @Serializable
@@ -106,7 +113,39 @@ data class LearnedSkill(
     val acquiredAtLevel: Long,
     val description: String,
     val catalogId: String = "",
-)
+    val usageCount: Long = 0L,
+) {
+    val boundedUsageCount: Long
+        get() = usageCount.coerceIn(0L, MAX_USAGE_COUNT)
+
+    val level: Long
+        get() = boundedUsageCount / USES_PER_LEVEL + 1L
+
+    val damageBonusPercent: Long
+        get() = (level - 1L) * MAX_DAMAGE_BONUS_PERCENT / (MAX_LEVEL - 1L)
+
+    val isMaxLevel: Boolean
+        get() = level >= MAX_LEVEL
+
+    val masteryExperience: Long
+        get() = if (isMaxLevel) USES_PER_LEVEL else boundedUsageCount % USES_PER_LEVEL
+
+    val masteryProgress: Float
+        get() = masteryExperience.toFloat() / USES_PER_LEVEL.toFloat()
+
+    val nextUsageCount: Long
+        get() = (boundedUsageCount + 1L).coerceAtMost(MAX_USAGE_COUNT)
+
+    val displayName: String
+        get() = "$name LV.$level"
+
+    companion object {
+        const val USES_PER_LEVEL = 100L
+        const val MAX_LEVEL = 100L
+        const val MAX_DAMAGE_BONUS_PERCENT = 50L
+        const val MAX_USAGE_COUNT = (MAX_LEVEL - 1L) * USES_PER_LEVEL
+    }
+}
 
 @Serializable
 data class InventoryItem(
@@ -121,8 +160,10 @@ data class InventoryItem(
 
 @Serializable
 enum class TaleKind {
+    PROLOGUE,
     MAIN,
     EPILOGUE,
+    LABYRINTH,
 }
 
 @Serializable
@@ -160,6 +201,8 @@ data class AdventureTaleState(
     val variant: TaleVariant,
     val acts: MutableList<TaleActState>,
     var currentActIndex: Int = 0,
+    val openingSlides: List<String> = emptyList(),
+    val labyrinthDepth: Long = 0L,
 ) {
     fun activeAct(): TaleActState = acts[currentActIndex.coerceIn(0, acts.lastIndex)]
 }
@@ -176,6 +219,7 @@ data class CompletedTaleRecord(
     val nextHook: String,
     val actMemories: List<String>,
     val completedAtLevel: Long,
+    val labyrinthDepth: Long = 0L,
 )
 
 @Serializable
@@ -191,6 +235,7 @@ data class MonsterState(
     var catalogId: String = "",
     var baseName: String = "",
     var isFinalBoss: Boolean = false,
+    var isLabyrinthGateBoss: Boolean = false,
 )
 
 @Serializable
@@ -199,9 +244,9 @@ enum class MonsterGrade(
     val minAttacks: Int,
     val maxAttacks: Int,
 ) {
-    NORMAL("일반", 7, 7),
-    ELITE("정예", 14, 14),
-    BOSS("보스", 22, 22),
+    NORMAL("일반", 10, 10),
+    ELITE("정예", 20, 20),
+    BOSS("보스", 30, 30),
 }
 
 @Serializable
@@ -213,6 +258,7 @@ enum class CombatPhase {
 
 @Serializable
 enum class AdventurePhase(val labelKo: String) {
+    OPENING("서막"),
     COMBAT("전투"),
     LOOTING("아이템 획득"),
     RETURNING("귀환"),
@@ -220,15 +266,18 @@ enum class AdventurePhase(val labelKo: String) {
     SELLING("전리품 판매"),
     SHOPPING("장비 정비"),
     SHOPPING_RESULT("구매 결과"),
+    SHOPPING_EMPTY("장비 검토"),
     DEPARTING("출정"),
 }
 
 @Serializable
 data class SimpleGameState(
     var schemaVersion: Int = SIMPLE_GAME_SCHEMA_VERSION,
+    var rankingCharacterId: String = "",
     var hero: HeroState,
     var equipment: MutableList<EquippedItem>,
     var skills: MutableList<LearnedSkill> = mutableListOf(),
+    var consecutiveBasicAttacks: Int = 0,
     var inventory: MutableList<InventoryItem> = mutableListOf(),
     var adventureTale: AdventureTaleState,
     var monster: MonsterState,
@@ -251,7 +300,9 @@ data class SimpleGameState(
     var lastAttackType: String = "조우",
     var lastAttackWasSkill: Boolean = false,
     var lastSkillCatalogId: String = "",
+    var lastActivatedSkillCatalogId: String = "",
     var lastDamage: Long = 0L,
+    var lastMonsterEnergyBeforeAttack: Long = 0L,
     var lastResult: String = "모험을 준비하는 중",
     var totalReturns: Long = 0L,
     var totalItemsSold: Long = 0L,
@@ -259,6 +310,7 @@ data class SimpleGameState(
     var totalLootEquipmentEquips: Long = 0L,
     var totalSaleGold: Long = 0L,
     var lastTownItemName: String = "",
+    var lastTownItemRarity: String = "",
     var lastTownGold: Long = 0L,
     var pendingShopOffer: ShopEquipmentOffer? = null,
     var lastShopPurchase: ShopEquipmentOffer? = null,
@@ -276,17 +328,35 @@ data class SimpleGameState(
     var offlineAdventureMillis: Long = 0L,
     var lastRewardRequestId: String = "",
     var completedTaleHistory: MutableList<CompletedTaleRecord> = mutableListOf(),
+    var labyrinthDepthCompleted: Long = 0L,
 ) {
-    /** Progress Quest uses exactly 10 + STR cubits; every non-gold item consumes one. */
+    /**
+     * Strength still expands the bag, while a level-scaled baseline and capped strength bonus
+     * keep same-level capacities strictly below a two-to-one spread.
+     */
     fun inventoryCapacity(): Long {
         val strength = hero.stats.strength.coerceAtLeast(0L)
-        return if (strength > Long.MAX_VALUE - BASE_INVENTORY_CAPACITY) {
-            Long.MAX_VALUE
-        } else {
-            BASE_INVENTORY_CAPACITY + strength
-        }
+        val levelProgress = hero.level.coerceAtLeast(1L) - 1L
+        val levelBonus = saturatingInventoryAdd(
+            saturatingInventoryMultiply(
+                levelProgress / INVENTORY_LEVEL_BONUS_DENOMINATOR,
+                INVENTORY_LEVEL_BONUS_NUMERATOR,
+            ),
+            (levelProgress % INVENTORY_LEVEL_BONUS_DENOMINATOR) *
+                INVENTORY_LEVEL_BONUS_NUMERATOR / INVENTORY_LEVEL_BONUS_DENOMINATOR,
+        )
+        val baseCapacity = saturatingInventoryAdd(BASE_INVENTORY_CAPACITY, levelBonus)
+        val strengthBonus = (strength / INVENTORY_STRENGTH_PER_SLOT)
+            .coerceAtMost((baseCapacity - 1L).coerceAtLeast(0L))
+        return saturatingInventoryAdd(baseCapacity, strengthBonus)
     }
 }
+
+private fun saturatingInventoryAdd(left: Long, right: Long): Long =
+    if (left > Long.MAX_VALUE - right) Long.MAX_VALUE else left + right
+
+private fun saturatingInventoryMultiply(left: Long, right: Long): Long =
+    if (left != 0L && right > Long.MAX_VALUE / left) Long.MAX_VALUE else left * right
 
 data class StatRoll(
     val stats: HeroStats,

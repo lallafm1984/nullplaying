@@ -3,6 +3,7 @@ package com.alarmquest.engine
 import com.alarmquest.model.MonsterGrade
 import com.alarmquest.model.MonsterState
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -13,7 +14,8 @@ class QuestMonsterCatalogTest {
 
         assertEquals(emptyList<String>(), QuestMonsterCatalog.validationErrors(taleIds))
         assertEquals(taleIds, QuestMonsterCatalog.groups.map { it.taleId }.toSet())
-        assertEquals(30, QuestMonsterCatalog.groups.size)
+        assertEquals(taleIds.size, QuestMonsterCatalog.groups.size)
+        assertEquals(6, QuestMonsterCatalog.groups.count { it.taleId.startsWith("prologue.") })
         assertEquals(12, QuestMonsterCatalog.groups.count { group ->
             group.taleId.substringAfterLast('c').toIntOrNull() in 13..24
         })
@@ -31,6 +33,104 @@ class QuestMonsterCatalogTest {
     @Test
     fun `normal species accumulate four six eight ten ten across acts`() {
         assertEquals(listOf(4, 6, 8, 10, 10), (0..4).map(QuestMonsterCatalog::normalPoolSize))
+    }
+
+    @Test
+    fun `postgame owns twelve guardian and six labyrinth monster groups`() {
+        val guardianIds = setOf(
+            "ash_border.epilogue_missing_cart",
+            "ash_border.epilogue_buried_bell",
+            "ash_border.epilogue_root_stair",
+            "ash_border.epilogue_reversed_channel",
+            "ash_border.epilogue_thirteenth_marker",
+            "ash_border.epilogue_fourth_light",
+            "ash_border.epilogue_sealed_arch",
+            "ash_border.epilogue_returning_tracks",
+            "ash_border.epilogue_empty_ledger",
+            "ash_border.epilogue_ash_glass_spiral",
+            "ash_border.epilogue_last_surface_camp",
+            "ash_border.epilogue_star_below",
+        )
+        val labyrinthIds = setOf(
+            "labyrinth.root_gate",
+            "labyrinth.drowned_archive",
+            "labyrinth.glass_cavern",
+            "labyrinth.bell_forge",
+            "labyrinth.ash_garden",
+            "labyrinth.starless_stair",
+        )
+
+        assertEquals(guardianIds + labyrinthIds, PostgameMonsterCatalog.groups.map { it.taleId }.toSet())
+        assertEquals(12, PostgameMonsterCatalog.groups.count { it.taleId.startsWith("ash_border.") })
+        assertEquals(6, PostgameMonsterCatalog.groups.count { it.taleId.startsWith("labyrinth.") })
+
+        val monsterIds = QuestMonsterCatalog.groups.flatMap { group ->
+            (group.normals + group.elites + group.bosses).map { it.id }
+        }
+        assertEquals(monsterIds.size, monsterIds.distinct().size)
+    }
+
+    @Test
+    fun `quest monster names do not reuse the unfamiliar bell term`() {
+        val authoredText = QuestMonsterCatalog.groups.flatMap { group ->
+            group.normals.map { it.baseName } +
+                group.elites.map { it.baseName } +
+                group.bosses.map { it.baseName } +
+                group.adjectives
+        }
+
+        assertFalse(authoredText.any { "종혀" in it })
+    }
+
+    @Test
+    fun `generated modifiers respect creature anatomy and behavior`() {
+        assertFalse(MonsterModifierCompatibility.isCompatible("종이 깃털새", "거친 털의"))
+        assertFalse(MonsterModifierCompatibility.isCompatible("재 속 지렁이", "노련한"))
+        assertFalse(MonsterModifierCompatibility.isCompatible("수레 거미", "성벽 밖에서 포효하는"))
+        assertFalse(MonsterModifierCompatibility.isCompatible("동굴 거미", "검은갈기"))
+        assertFalse(MonsterModifierCompatibility.isCompatible("잿빛 슬라임", "강철발톱"))
+        assertFalse(MonsterModifierCompatibility.isCompatible("황혼 밴시", "수정 껍질의"))
+        assertTrue(MonsterModifierCompatibility.isCompatible("충성 사냥개", "거친 털의"))
+        assertTrue(MonsterModifierCompatibility.isCompatible("뿔늑대", "검은갈기"))
+        val repairedPaperBird = MonsterModifierCompatibility.repairedName(
+            sourceName = "거친 털의 종이 깃털새",
+            baseName = "종이 깃털새",
+            candidates = listOf("소리 없는", "거친 털의", "흔적을 감춘"),
+        )
+        val repairedModifier = repairedPaperBird.removeSuffix("종이 깃털새").trim()
+        assertTrue(MonsterModifierCompatibility.isCompatible("종이 깃털새", repairedModifier))
+
+        SimpleContent.monsterKinds.forEach { baseName ->
+            val candidates = MonsterModifierCompatibility.compatibleModifiers(
+                baseName = baseName,
+                candidates = SimpleContent.monsterAdjectives,
+            )
+            assertTrue(baseName, candidates.isNotEmpty())
+            SimpleContent.monsterAdjectives.forEach { modifier ->
+                val repaired = MonsterModifierCompatibility.repairedName(
+                    sourceName = "$modifier $baseName",
+                    baseName = baseName,
+                    candidates = SimpleContent.monsterAdjectives,
+                )
+                val repairedModifier = repaired.removeSuffix(baseName).trim()
+                assertTrue(
+                    "$modifier $baseName -> $repaired",
+                    MonsterModifierCompatibility.isCompatible(baseName, repairedModifier),
+                )
+            }
+        }
+
+        QuestMonsterCatalog.groups.forEach { group ->
+            group.normals.forEach { definition ->
+                assertTrue(
+                    "${group.taleId}: ${definition.baseName}",
+                    MonsterModifierCompatibility.compatibleModifiers(
+                        baseName = definition.baseName,
+                        candidates = group.adjectives,
+                    ).isNotEmpty(),
+                )
+            }
+        }
     }
 
     @Test
