@@ -1,0 +1,13 @@
+{
+  "shared_final_korean_popup": "PASS",
+  "stat_values_and_name_preserved": "PASS",
+  "english_and_japanese_body_coverage": "PASS; before button chrome update, body unchanged",
+  "large_font_dialog_scroll_and_close": "PASS",
+  "apk_sha256": "6ac2408d197137bb185a439a6044f6add860184c62eadc89e9194886b017bb2c",
+  "final_screenshots": {
+    "creation-ko-final.png": "2e1f06b50bf0307da3cf3bda30833ed15eaecfab2862cdae0c30bd58b5420e81",
+    "adventurer-ko-final.png": "3a718ad97e7f58231dd389cec4b492e9eef40f8e2edabd29d27441e2123eb65d",
+    "creation-guide-ko-final.png": "c5ee586017e39aacfff3f31a929ad3f7534bec761c6e55443cef995945e5efae",
+    "adventurer-guide-ko-final.png": "3ee3b8994b938649f78cc697f5ec92f8ea541b433af55655a3e8a6192acb877c"
+  }
+}

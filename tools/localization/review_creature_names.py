@@ -65,6 +65,9 @@ SPECIES: dict[str, tuple[str, str]] = {
 
 JAPANESE_SPECIES_ALIASES: dict[str, tuple[str, ...]] = {
     "거미": ("グモ", "クモ"),
+    "늑대": ("オオカミ", "狼"),
+    "나방": ("ガ", "蛾"),
+    "왕쥐": ("オオネズミ", "大ネズミ"),
 }
 
 
@@ -170,7 +173,7 @@ EXACT_REVIEWS: dict[str, dict[str, str]] = {
     "재 갑옷 왕쥐": {"en": "Ash-Armor Giant Rat", "ja": "灰の鎧のオオネズミ"},
     "재무리 도롱뇽": {"en": "Ash-Swarm Salamander", "ja": "灰の群れのサンショウウオ"},
     "재밭 여우": {"en": "Ash-Field Fox", "ja": "灰畑のキツネ"},
-    "재 속의 종이 새": {"en": "Paper Bird in the Ash", "ja": "灰の中の紙の鳥"},
+    "재 속의 종이 새": {"en": "Ash-Buried Paper Bird", "ja": "灰の中の紙の鳥"},
     "조작 문서 나방": {"en": "Forged-Document Moth", "ja": "偽造文書のガ"},
     "지도칼 까마귀": {"en": "Map-Blade Crow", "ja": "地図刃のカラス"},
     "지워진층 도마뱀": {"en": "Erased-Layer Lizard", "ja": "消された階層のトカゲ"},

@@ -1,0 +1,6 @@
+(version 1)
+(allow default)
+; Gradle daemon/test workers may communicate locally; external services are never reachable.
+(deny network-outbound)
+(allow network-outbound (remote ip "localhost:*"))
+(allow network-outbound (remote unix-socket))

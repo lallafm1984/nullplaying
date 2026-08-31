@@ -189,7 +189,7 @@ def main() -> int:
     required_audit = (
         "verificationTarget=android-emulator", "avdName=alarmquest-qa", "androidRelease=15",
         "apiLevel=35", "installResult=Success", "pmClearResult=Success", "launchState=COLD",
-        "coldTotalTimeMs=4822", "topResumedActivity=com.alarmquest/.MainActivity",
+        "coldTotalTimeMs=4822", "topResumedActivity=com.nullplaying/.MainActivity",
         "freshRosterEmpty=true", "androidRuntimeFatalCount=0", "engineTests=627", "appTests=176",
         "totalTests=803", "delayedPacketDefinitionsEnabled=3", "outgoingModifierFrozenAtArm=true",
         "afterOutgoingPlanFrozenAtArm=true", "enemyDirectReceiptDriftAllowed=true",
@@ -208,13 +208,13 @@ def main() -> int:
 
     if args.with_emulator:
         devices = command("adb", "devices", "-l")
-        package = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.alarmquest")
+        package = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.nullplaying")
         focus = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "activity", "activities")
         fatal = command("adb", "-s", "emulator-5554", "logcat", "-d", "-v", "brief", "*:E")
         check("emulator online", "emulator-5554" in devices and " device " in devices, devices)
         check("version", "versionName=0.1.0" in package and "versionCode=1" in package, "0.1.0(1)")
         check("target sdk", "targetSdk=36" in package, "36")
-        check("focus", "com.alarmquest/.MainActivity" in focus, "MainActivity")
+        check("focus", "com.nullplaying/.MainActivity" in focus, "MainActivity")
         ui_text = UI.read_text()
         check("empty roster", "아직 캐릭터가 없습니다" in ui_text and "새 캐릭터" in ui_text, "fresh")
         check("fatal zero", "FATAL EXCEPTION" not in fatal and "AndroidRuntime" not in fatal, "0")

@@ -237,7 +237,7 @@ def main() -> int:
         "avdName": "alarmquest-qa",
         "androidRelease": "15",
         "apiLevel": "35",
-        "packageName": "com.alarmquest",
+        "packageName": "com.nullplaying",
         "versionName": "0.1.0",
         "versionCode": "1",
         "targetSdk": "36",
@@ -250,7 +250,7 @@ def main() -> int:
         "coldLaunchTotalTimeMs": "5854",
         "coldLaunchWaitTimeMs": "5862",
         "warmBringToFrontWaitTimeMs": "358",
-        "topResumedActivity": "com.alarmquest/.MainActivity",
+        "topResumedActivity": "com.nullplaying/.MainActivity",
         "freshRosterEmpty": "true",
         "appFatalCount": "0",
         "appErrorCount": "0",
@@ -302,10 +302,10 @@ def main() -> int:
         devices = adb("devices", "-l")
         check("live:device", "emulator-5554" in devices and "device" in devices, devices)
         check("live:avd", "alarmquest-qa" in adb("emu", "avd", "name"), adb("emu", "avd", "name"))
-        package = adb("shell", "dumpsys", "package", "com.alarmquest")
+        package = adb("shell", "dumpsys", "package", "com.nullplaying")
         check("live:version", "versionName=0.1.0" in package and "targetSdk=36" in package, "version/target")
         activity = adb("shell", "dumpsys", "activity", "activities")
-        check("live:focus", "com.alarmquest/.MainActivity" in activity, "MainActivity")
+        check("live:focus", "com.nullplaying/.MainActivity" in activity, "MainActivity")
 
     failures = [item for item in checks if not item[1]]
     print(f"SUMMARY PASS={len(checks) - len(failures)} FAIL={len(failures)} TOTAL={len(checks)}")

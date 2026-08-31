@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "id": "final-class-sales",
+  "title": "100레벨까지 평균 판매수입: 접속 간격별",
+  "chart": {
+    "type": "line",
+    "x": "gap_h",
+    "y": "advantage_pct",
+    "series": "hero_class",
+    "xLabel": "접속 간격 (시간)",
+    "yLabel": "조건별 최저 직업 대비 (%)",
+    "showXAxisLabel": true
+  },
+  "rows": [
+    {
+      "gap_h": 6.0,
+      "hero_class": "전사",
+      "advantage_pct": 0.0
+    },
+    {
+      "gap_h": 6.0,
+      "hero_class": "도적",
+      "advantage_pct": 2.0564
+    },
+    {
+      "gap_h": 6.0,
+      "hero_class": "레인저",
+      "advantage_pct": 3.2856
+    },
+    {
+      "gap_h": 6.0,
+      "hero_class": "마법사",
+      "advantage_pct": 3.8132
+    },
+    {
+      "gap_h": 6.0,
+      "hero_class": "성직자",
+      "advantage_pct": 10.7945
+    },
+    {
+      "gap_h": 6.0,
+      "hero_class": "팔라딘",
+      "advantage_pct": 9.3744
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "전사",
+      "advantage_pct": 0.0
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "도적",
+      "advantage_pct": 2.0564
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "레인저",
+      "advantage_pct": 3.2856
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "마법사",
+      "advantage_pct": 3.8132
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "성직자",
+      "advantage_pct": 10.7945
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "팔라딘",
+      "advantage_pct": 9.3744
+    },
+    {
+      "gap_h": 9.0,
+      "hero_class": "전사",
+      "advantage_pct": 0.0
+    },
+    {
+      "gap_h": 9.0,
+      "hero_class": "도적",
+      "advantage_pct": 0.0834
+    },
+    {
+      "gap_h": 9.0,
+      "hero_class": "레인저",
+      "advantage_pct": 0.9273
+    },
+    {
+      "gap_h": 9.0,
+      "hero_class": "마법사",
+      "advantage_pct": 1.3225
+    },
+    {
+      "gap_h": 9.0,
+      "hero_class": "성직자",
+      "advantage_pct": 8.2215
+    },
+    {
+      "gap_h": 9.0,
+      "hero_class": "팔라딘",
+      "advantage_pct": 7.0865
+    },
+    {
+      "gap_h": 10.0,
+      "hero_class": "전사",
+      "advantage_pct": 2.9548
+    },
+    {
+      "gap_h": 10.0,
+      "hero_class": "도적",
+      "advantage_pct": 0.0
+    },
+    {
+      "gap_h": 10.0,
+      "hero_class": "레인저",
+      "advantage_pct": 0.7795
+    },
+    {
+      "gap_h": 10.0,
+      "hero_class": "마법사",
+      "advantage_pct": 1.1689
+    },
+    {
+      "gap_h": 10.0,
+      "hero_class": "성직자",
+      "advantage_pct": 8.0601
+    },
+    {
+      "gap_h": 10.0,
+      "hero_class": "팔라딘",
+      "advantage_pct": 6.9437
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "전사",
+      "advantage_pct": 2.9548
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "도적",
+      "advantage_pct": 0.0
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "레인저",
+      "advantage_pct": 0.7795
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "마법사",
+      "advantage_pct": 1.1689
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "성직자",
+      "advantage_pct": 8.0601
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "팔라딘",
+      "advantage_pct": 6.9437
+    }
+  ],
+  "source": {
+    "label": "전 직업 신규 성장 경로",
+    "files": [
+      {
+        "label": "all-heldout.csv"
+      },
+      {
+        "label": "final_class_bonus_review.py"
+      }
+    ],
+    "filters": [
+      "직업: 6종",
+      "신규 난수 seed: 14~29",
+      "직업당 전체 전투 경로: 16개",
+      "목표 레벨: 100",
+      "접속 시 충전: 12분",
+      "접속 간격: 6·8·9·10·12시간"
+    ],
+    "caveats": [
+      "실제 이용자 로그가 아닌 로컬 엔진 시뮬레이션입니다.",
+      "접속 간격 영향은 레벨별 저장시간 환산이며 실제 접속 이벤트 재생이 아닙니다.",
+      "HP 기본 8시간·최대 10시간, 마법사 기본 확률 35%, 탐색 최소 4초, 판매 보너스 최대 20%를 적용한 기획안입니다.",
+      "퀘스트 보상, 지출 및 보유 골드는 포함하지 않으며 100레벨 고정 상태의 수입이 아닙니다."
+    ],
+    "metricDefinitions": [
+      {
+        "name": "100레벨까지 평균 판매수입: 접속 간격별",
+        "definition": "100레벨까지 누적 아이템 판매 골드를 환산 기간으로 나눈 평균 판매수입입니다. 각 접속 조건에서 가장 적은 직업을 기준으로 합니다.",
+        "formula": "(해당 직업 평균 판매수입 / 해당 조건 최소 평균 판매수입 − 1) × 100"
+      }
+    ]
+  },
+  "height": 310,
+  "theme": "codex-classic",
+  "generatedAt": "2026-08-31T23:40:25.776410+09:00"
+}

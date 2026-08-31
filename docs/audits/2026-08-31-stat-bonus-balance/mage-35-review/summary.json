@@ -1,0 +1,283 @@
+{
+  "mage_effects": [
+    {
+      "variant": "mage30",
+      "hero_class": "MAGE",
+      "raw_proc_pct": 30.0,
+      "effective_proc_pct": 30.100031224783606,
+      "cap_h": 9.135265413808169,
+      "search_s": 4.685833333333333,
+      "sale_bonus_pct": 6.300000000000001,
+      "skill_damage_pct": 331.98026315789474
+    },
+    {
+      "variant": "mage35",
+      "hero_class": "MAGE",
+      "raw_proc_pct": 35.0,
+      "effective_proc_pct": 35.035573199950406,
+      "cap_h": 9.135265413808169,
+      "search_s": 4.685833333333333,
+      "sale_bonus_pct": 6.300000000000001,
+      "skill_damage_pct": 331.7697368421052
+    }
+  ],
+  "all_effects": [
+    {
+      "variant": "mage30",
+      "hero_class": "CLERIC",
+      "raw_proc_pct": 28.176458333333333,
+      "effective_proc_pct": 28.318668894972895,
+      "cap_h": 9.135880055700717,
+      "search_s": 4.685833333333333,
+      "sale_bonus_pct": 19.833333333333332,
+      "skill_damage_pct": 333.07236842105266
+    },
+    {
+      "variant": "mage30",
+      "hero_class": "MAGE",
+      "raw_proc_pct": 30.0,
+      "effective_proc_pct": 30.100031224783606,
+      "cap_h": 9.135265413808169,
+      "search_s": 4.685833333333333,
+      "sale_bonus_pct": 6.300000000000001,
+      "skill_damage_pct": 331.98026315789474
+    },
+    {
+      "variant": "mage30",
+      "hero_class": "PALADIN",
+      "raw_proc_pct": 24.655833333333334,
+      "effective_proc_pct": 24.92502875879466,
+      "cap_h": 9.082380776161681,
+      "search_s": 4.689166666666667,
+      "sale_bonus_pct": 19.9,
+      "skill_damage_pct": 334.3881578947369
+    },
+    {
+      "variant": "mage30",
+      "hero_class": "RANGER",
+      "raw_proc_pct": 28.248958333333334,
+      "effective_proc_pct": 28.38931232562026,
+      "cap_h": 9.135710866268823,
+      "search_s": 4.0,
+      "sale_bonus_pct": 6.2666666666666675,
+      "skill_damage_pct": 336.4934210526316
+    },
+    {
+      "variant": "mage30",
+      "hero_class": "ROGUE",
+      "raw_proc_pct": 24.392083333333332,
+      "effective_proc_pct": 24.67377158001615,
+      "cap_h": 9.099264999020713,
+      "search_s": 4.0008333333333335,
+      "sale_bonus_pct": 6.4,
+      "skill_damage_pct": 335.1644736842105
+    },
+    {
+      "variant": "mage30",
+      "hero_class": "WARRIOR",
+      "raw_proc_pct": 24.649166666666666,
+      "effective_proc_pct": 24.91867458608275,
+      "cap_h": 10.0,
+      "search_s": 4.689166666666667,
+      "sale_bonus_pct": 6.533333333333333,
+      "skill_damage_pct": 331.2171052631579
+    },
+    {
+      "variant": "mage35",
+      "hero_class": "CLERIC",
+      "raw_proc_pct": 28.176458333333333,
+      "effective_proc_pct": 28.318668894972895,
+      "cap_h": 9.135880055700717,
+      "search_s": 4.685833333333333,
+      "sale_bonus_pct": 19.833333333333332,
+      "skill_damage_pct": 333.07236842105266
+    },
+    {
+      "variant": "mage35",
+      "hero_class": "MAGE",
+      "raw_proc_pct": 35.0,
+      "effective_proc_pct": 35.035573199950406,
+      "cap_h": 9.135265413808169,
+      "search_s": 4.685833333333333,
+      "sale_bonus_pct": 6.300000000000001,
+      "skill_damage_pct": 331.7697368421052
+    },
+    {
+      "variant": "mage35",
+      "hero_class": "PALADIN",
+      "raw_proc_pct": 24.655833333333334,
+      "effective_proc_pct": 24.92502875879466,
+      "cap_h": 9.082380776161681,
+      "search_s": 4.689166666666667,
+      "sale_bonus_pct": 19.9,
+      "skill_damage_pct": 334.3881578947369
+    },
+    {
+      "variant": "mage35",
+      "hero_class": "RANGER",
+      "raw_proc_pct": 28.248958333333334,
+      "effective_proc_pct": 28.38931232562026,
+      "cap_h": 9.135710866268823,
+      "search_s": 4.0,
+      "sale_bonus_pct": 6.2666666666666675,
+      "skill_damage_pct": 336.4934210526316
+    },
+    {
+      "variant": "mage35",
+      "hero_class": "ROGUE",
+      "raw_proc_pct": 24.392083333333332,
+      "effective_proc_pct": 24.67377158001615,
+      "cap_h": 9.099264999020713,
+      "search_s": 4.0008333333333335,
+      "sale_bonus_pct": 6.4,
+      "skill_damage_pct": 335.1644736842105
+    },
+    {
+      "variant": "mage35",
+      "hero_class": "WARRIOR",
+      "raw_proc_pct": 24.649166666666666,
+      "effective_proc_pct": 24.91867458608275,
+      "cap_h": 10.0,
+      "search_s": 4.689166666666667,
+      "sale_bonus_pct": 6.533333333333333,
+      "skill_damage_pct": 331.2171052631579
+    }
+  ],
+  "late_game": [
+    {
+      "variant": "mage30",
+      "pooled_cast_pct": 29.836436873681507,
+      "pooled_kills_per_hour": 192.06619935723865,
+      "pooled_casts_per_hour": 316.42154009666723,
+      "mean_segment_seconds": 2371020.0,
+      "mean_total_seconds": 13743817.5
+    },
+    {
+      "variant": "mage35",
+      "pooled_cast_pct": 34.67742202840522,
+      "pooled_kills_per_hour": 198.81606003850638,
+      "pooled_casts_per_hour": 349.34905895142174,
+      "mean_segment_seconds": 2290530.0,
+      "mean_total_seconds": 13511325.0
+    }
+  ],
+  "comparisons": [
+    {
+      "variant": "mage30",
+      "gap_h": 8.0,
+      "class_growth_spread_pct": 2.9726145907753354,
+      "fastest": "RANGER",
+      "slowest": "PALADIN"
+    },
+    {
+      "variant": "mage35",
+      "gap_h": 8.0,
+      "class_growth_spread_pct": 3.9283711997157855,
+      "fastest": "MAGE",
+      "slowest": "PALADIN"
+    },
+    {
+      "variant": "mage_change",
+      "gap_h": 8.0,
+      "mage_growth_speed_gain_pct": 1.7207231711175774,
+      "paired_seed_quantile_low_pct": 1.6949168491325506,
+      "paired_seed_quantile_high_pct": 1.7490486565835324
+    },
+    {
+      "variant": "mage30",
+      "gap_h": 12.0,
+      "class_growth_spread_pct": 5.506151326265263,
+      "fastest": "WARRIOR",
+      "slowest": "PALADIN"
+    },
+    {
+      "variant": "mage35",
+      "gap_h": 12.0,
+      "class_growth_spread_pct": 5.506151326265263,
+      "fastest": "WARRIOR",
+      "slowest": "PALADIN"
+    },
+    {
+      "variant": "mage_change",
+      "gap_h": 12.0,
+      "mage_growth_speed_gain_pct": 1.679713876899136,
+      "paired_seed_quantile_low_pct": 1.6531749517135097,
+      "paired_seed_quantile_high_pct": 1.7080779215898456
+    }
+  ],
+  "probability_curve": [
+    {
+      "variant": "mage30",
+      "level": 20,
+      "raw_proc_pct": 12.254791666666666
+    },
+    {
+      "variant": "mage30",
+      "level": 40,
+      "raw_proc_pct": 17.113541666666666
+    },
+    {
+      "variant": "mage30",
+      "level": 60,
+      "raw_proc_pct": 23.180208333333333
+    },
+    {
+      "variant": "mage30",
+      "level": 80,
+      "raw_proc_pct": 26.639583333333334
+    },
+    {
+      "variant": "mage30",
+      "level": 100,
+      "raw_proc_pct": 30.0
+    },
+    {
+      "variant": "mage35",
+      "level": 20,
+      "raw_proc_pct": 12.4446875
+    },
+    {
+      "variant": "mage35",
+      "level": 40,
+      "raw_proc_pct": 17.7328125
+    },
+    {
+      "variant": "mage35",
+      "level": 60,
+      "raw_proc_pct": 24.770312500000003
+    },
+    {
+      "variant": "mage35",
+      "level": 80,
+      "raw_proc_pct": 29.959374999999998
+    },
+    {
+      "variant": "mage35",
+      "level": 100,
+      "raw_proc_pct": 35.0
+    }
+  ],
+  "input_seeds": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "app_source_unchanged": true,
+  "other_class_paths_unchanged": true,
+  "calendar_spot_check_passed": true,
+  "theoretical_fixed_proc": [
+    {
+      "raw_pct": 30,
+      "effective_pct": 30.100031224783606
+    },
+    {
+      "raw_pct": 35,
+      "effective_pct": 35.035573199950406
+    }
+  ]
+}

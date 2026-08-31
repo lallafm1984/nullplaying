@@ -260,7 +260,7 @@ def main() -> int:
         "avdName": "alarmquest-qa",
         "androidRelease": "15",
         "apiLevel": "35",
-        "packageName": "com.alarmquest",
+        "packageName": "com.nullplaying",
         "versionName": "0.1.0",
         "versionCode": "1",
         "targetSdk": "36",
@@ -271,7 +271,7 @@ def main() -> int:
         "launchState": "COLD",
         "coldTotalTimeMs": "4501",
         "coldWaitTimeMs": "4508",
-        "topResumedActivity": "com.alarmquest/.MainActivity",
+        "topResumedActivity": "com.nullplaying/.MainActivity",
         "freshRosterEmpty": "true",
         "androidRuntimeFatalCount": "0",
         "emulatorScreenshotSha256": EXPECTED_SCREEN_SHA,
@@ -371,7 +371,7 @@ def main() -> int:
         release = command("adb", "-s", serial, "shell", "getprop", "ro.build.version.release")
         api = command("adb", "-s", serial, "shell", "getprop", "ro.build.version.sdk")
         avd = command("adb", "-s", serial, "shell", "getprop", "ro.boot.qemu.avd_name")
-        package = command("adb", "-s", serial, "shell", "dumpsys", "package", "com.alarmquest")
+        package = command("adb", "-s", serial, "shell", "dumpsys", "package", "com.nullplaying")
         focus = command("adb", "-s", serial, "shell", "dumpsys", "activity", "activities")
         crash = command("adb", "-s", serial, "logcat", "-d", "-b", "crash", "AndroidRuntime:E", "*:S")
         command("adb", "-s", serial, "shell", "uiautomator", "dump", "/sdcard/p6k-review.xml")
@@ -384,7 +384,7 @@ def main() -> int:
         check("emulator:version code", "versionCode=1" in package, "versionCode=1")
         check("emulator:version name", "versionName=0.1.0" in package, "versionName=0.1.0")
         check("emulator:target sdk", "targetSdk=36" in package, "targetSdk=36")
-        check("emulator:focus", "topResumedActivity" in focus and "com.alarmquest/.MainActivity" in focus, "MainActivity")
+        check("emulator:focus", "topResumedActivity" in focus and "com.nullplaying/.MainActivity" in focus, "MainActivity")
         check("emulator:no fatal", "FATAL EXCEPTION" not in crash, "fatal=0")
         check("emulator:fresh roster", "아직 캐릭터가 없습니다" in live_ui, "empty")
         check("emulator:create character", "새 캐릭터" in live_ui, "create")

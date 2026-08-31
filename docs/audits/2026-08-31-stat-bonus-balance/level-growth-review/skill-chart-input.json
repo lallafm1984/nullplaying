@@ -1,0 +1,686 @@
+{
+  "schemaVersion": 1,
+  "id": "level-bonus-skill",
+  "title": "레벨별 스킬 확률 · 직업별 평균",
+  "chart": {
+    "type": "line",
+    "x": "level",
+    "y": "value",
+    "series": "hero_class",
+    "xLabel": "레벨",
+    "yLabel": "기본 발동 확률 (%)",
+    "showXAxisLabel": true
+  },
+  "rows": [
+    {
+      "level": 1,
+      "hero_class": "전사",
+      "value": 9.2566
+    },
+    {
+      "level": 5,
+      "hero_class": "전사",
+      "value": 9.804
+    },
+    {
+      "level": 10,
+      "hero_class": "전사",
+      "value": 10.8101
+    },
+    {
+      "level": 15,
+      "hero_class": "전사",
+      "value": 11.5733
+    },
+    {
+      "level": 20,
+      "hero_class": "전사",
+      "value": 12.4059
+    },
+    {
+      "level": 25,
+      "hero_class": "전사",
+      "value": 13.442
+    },
+    {
+      "level": 30,
+      "hero_class": "전사",
+      "value": 14.4207
+    },
+    {
+      "level": 35,
+      "hero_class": "전사",
+      "value": 15.4839
+    },
+    {
+      "level": 40,
+      "hero_class": "전사",
+      "value": 16.6775
+    },
+    {
+      "level": 45,
+      "hero_class": "전사",
+      "value": 18.0178
+    },
+    {
+      "level": 50,
+      "hero_class": "전사",
+      "value": 19.4671
+    },
+    {
+      "level": 55,
+      "hero_class": "전사",
+      "value": 21.0027
+    },
+    {
+      "level": 60,
+      "hero_class": "전사",
+      "value": 21.5611
+    },
+    {
+      "level": 65,
+      "hero_class": "전사",
+      "value": 21.8408
+    },
+    {
+      "level": 70,
+      "hero_class": "전사",
+      "value": 22.1363
+    },
+    {
+      "level": 75,
+      "hero_class": "전사",
+      "value": 22.4807
+    },
+    {
+      "level": 80,
+      "hero_class": "전사",
+      "value": 22.8441
+    },
+    {
+      "level": 85,
+      "hero_class": "전사",
+      "value": 23.2307
+    },
+    {
+      "level": 90,
+      "hero_class": "전사",
+      "value": 23.6615
+    },
+    {
+      "level": 95,
+      "hero_class": "전사",
+      "value": 24.0927
+    },
+    {
+      "level": 100,
+      "hero_class": "전사",
+      "value": 24.5746
+    },
+    {
+      "level": 1,
+      "hero_class": "도적",
+      "value": 9.1349
+    },
+    {
+      "level": 5,
+      "hero_class": "도적",
+      "value": 9.9317
+    },
+    {
+      "level": 10,
+      "hero_class": "도적",
+      "value": 10.6904
+    },
+    {
+      "level": 15,
+      "hero_class": "도적",
+      "value": 11.577
+    },
+    {
+      "level": 20,
+      "hero_class": "도적",
+      "value": 12.2822
+    },
+    {
+      "level": 25,
+      "hero_class": "도적",
+      "value": 13.3777
+    },
+    {
+      "level": 30,
+      "hero_class": "도적",
+      "value": 14.1683
+    },
+    {
+      "level": 35,
+      "hero_class": "도적",
+      "value": 15.3557
+    },
+    {
+      "level": 40,
+      "hero_class": "도적",
+      "value": 16.4849
+    },
+    {
+      "level": 45,
+      "hero_class": "도적",
+      "value": 17.76
+    },
+    {
+      "level": 50,
+      "hero_class": "도적",
+      "value": 19.3296
+    },
+    {
+      "level": 55,
+      "hero_class": "도적",
+      "value": 21.0524
+    },
+    {
+      "level": 60,
+      "hero_class": "도적",
+      "value": 21.534
+    },
+    {
+      "level": 65,
+      "hero_class": "도적",
+      "value": 21.8036
+    },
+    {
+      "level": 70,
+      "hero_class": "도적",
+      "value": 22.0904
+    },
+    {
+      "level": 75,
+      "hero_class": "도적",
+      "value": 22.4173
+    },
+    {
+      "level": 80,
+      "hero_class": "도적",
+      "value": 22.7662
+    },
+    {
+      "level": 85,
+      "hero_class": "도적",
+      "value": 23.1323
+    },
+    {
+      "level": 90,
+      "hero_class": "도적",
+      "value": 23.5503
+    },
+    {
+      "level": 95,
+      "hero_class": "도적",
+      "value": 23.9622
+    },
+    {
+      "level": 100,
+      "hero_class": "도적",
+      "value": 24.4246
+    },
+    {
+      "level": 1,
+      "hero_class": "레인저",
+      "value": 9.3257
+    },
+    {
+      "level": 5,
+      "hero_class": "레인저",
+      "value": 9.8139
+    },
+    {
+      "level": 10,
+      "hero_class": "레인저",
+      "value": 10.7054
+    },
+    {
+      "level": 15,
+      "hero_class": "레인저",
+      "value": 11.6078
+    },
+    {
+      "level": 20,
+      "hero_class": "레인저",
+      "value": 12.459
+    },
+    {
+      "level": 25,
+      "hero_class": "레인저",
+      "value": 13.524
+    },
+    {
+      "level": 30,
+      "hero_class": "레인저",
+      "value": 14.6033
+    },
+    {
+      "level": 35,
+      "hero_class": "레인저",
+      "value": 15.7793
+    },
+    {
+      "level": 40,
+      "hero_class": "레인저",
+      "value": 17.1003
+    },
+    {
+      "level": 45,
+      "hero_class": "레인저",
+      "value": 18.4009
+    },
+    {
+      "level": 50,
+      "hero_class": "레인저",
+      "value": 20.0288
+    },
+    {
+      "level": 55,
+      "hero_class": "레인저",
+      "value": 21.6564
+    },
+    {
+      "level": 60,
+      "hero_class": "레인저",
+      "value": 22.3257
+    },
+    {
+      "level": 65,
+      "hero_class": "레인저",
+      "value": 22.8169
+    },
+    {
+      "level": 70,
+      "hero_class": "레인저",
+      "value": 23.3576
+    },
+    {
+      "level": 75,
+      "hero_class": "레인저",
+      "value": 23.9839
+    },
+    {
+      "level": 80,
+      "hero_class": "레인저",
+      "value": 24.6636
+    },
+    {
+      "level": 85,
+      "hero_class": "레인저",
+      "value": 25.397
+    },
+    {
+      "level": 90,
+      "hero_class": "레인저",
+      "value": 26.2369
+    },
+    {
+      "level": 95,
+      "hero_class": "레인저",
+      "value": 27.0789
+    },
+    {
+      "level": 100,
+      "hero_class": "레인저",
+      "value": 28.0332
+    },
+    {
+      "level": 1,
+      "hero_class": "마법사",
+      "value": 9.1498
+    },
+    {
+      "level": 5,
+      "hero_class": "마법사",
+      "value": 9.9141
+    },
+    {
+      "level": 10,
+      "hero_class": "마법사",
+      "value": 10.795
+    },
+    {
+      "level": 15,
+      "hero_class": "마법사",
+      "value": 11.7045
+    },
+    {
+      "level": 20,
+      "hero_class": "마법사",
+      "value": 12.7647
+    },
+    {
+      "level": 25,
+      "hero_class": "마법사",
+      "value": 14.0094
+    },
+    {
+      "level": 30,
+      "hero_class": "마법사",
+      "value": 14.9144
+    },
+    {
+      "level": 35,
+      "hero_class": "마법사",
+      "value": 16.458
+    },
+    {
+      "level": 40,
+      "hero_class": "마법사",
+      "value": 17.7372
+    },
+    {
+      "level": 45,
+      "hero_class": "마법사",
+      "value": 19.3605
+    },
+    {
+      "level": 50,
+      "hero_class": "마법사",
+      "value": 21.4045
+    },
+    {
+      "level": 55,
+      "hero_class": "마법사",
+      "value": 23.4645
+    },
+    {
+      "level": 60,
+      "hero_class": "마법사",
+      "value": 24.7486
+    },
+    {
+      "level": 65,
+      "hero_class": "마법사",
+      "value": 25.8253
+    },
+    {
+      "level": 70,
+      "hero_class": "마법사",
+      "value": 27.0169
+    },
+    {
+      "level": 75,
+      "hero_class": "마법사",
+      "value": 28.4114
+    },
+    {
+      "level": 80,
+      "hero_class": "마법사",
+      "value": 29.9348
+    },
+    {
+      "level": 85,
+      "hero_class": "마법사",
+      "value": 31.5845
+    },
+    {
+      "level": 90,
+      "hero_class": "마법사",
+      "value": 33.4891
+    },
+    {
+      "level": 95,
+      "hero_class": "마법사",
+      "value": 34.9017
+    },
+    {
+      "level": 100,
+      "hero_class": "마법사",
+      "value": 35.0
+    },
+    {
+      "level": 1,
+      "hero_class": "성직자",
+      "value": 9.5166
+    },
+    {
+      "level": 5,
+      "hero_class": "성직자",
+      "value": 10.0663
+    },
+    {
+      "level": 10,
+      "hero_class": "성직자",
+      "value": 11.0204
+    },
+    {
+      "level": 15,
+      "hero_class": "성직자",
+      "value": 11.9239
+    },
+    {
+      "level": 20,
+      "hero_class": "성직자",
+      "value": 12.6497
+    },
+    {
+      "level": 25,
+      "hero_class": "성직자",
+      "value": 13.6544
+    },
+    {
+      "level": 30,
+      "hero_class": "성직자",
+      "value": 14.8003
+    },
+    {
+      "level": 35,
+      "hero_class": "성직자",
+      "value": 16.043
+    },
+    {
+      "level": 40,
+      "hero_class": "성직자",
+      "value": 17.3077
+    },
+    {
+      "level": 45,
+      "hero_class": "성직자",
+      "value": 18.5516
+    },
+    {
+      "level": 50,
+      "hero_class": "성직자",
+      "value": 20.1873
+    },
+    {
+      "level": 55,
+      "hero_class": "성직자",
+      "value": 21.8232
+    },
+    {
+      "level": 60,
+      "hero_class": "성직자",
+      "value": 22.375
+    },
+    {
+      "level": 65,
+      "hero_class": "성직자",
+      "value": 22.8752
+    },
+    {
+      "level": 70,
+      "hero_class": "성직자",
+      "value": 23.4246
+    },
+    {
+      "level": 75,
+      "hero_class": "성직자",
+      "value": 24.063
+    },
+    {
+      "level": 80,
+      "hero_class": "성직자",
+      "value": 24.7544
+    },
+    {
+      "level": 85,
+      "hero_class": "성직자",
+      "value": 25.5002
+    },
+    {
+      "level": 90,
+      "hero_class": "성직자",
+      "value": 26.3628
+    },
+    {
+      "level": 95,
+      "hero_class": "성직자",
+      "value": 27.2292
+    },
+    {
+      "level": 100,
+      "hero_class": "성직자",
+      "value": 28.2061
+    },
+    {
+      "level": 1,
+      "hero_class": "팔라딘",
+      "value": 9.2632
+    },
+    {
+      "level": 5,
+      "hero_class": "팔라딘",
+      "value": 9.9981
+    },
+    {
+      "level": 10,
+      "hero_class": "팔라딘",
+      "value": 10.7543
+    },
+    {
+      "level": 15,
+      "hero_class": "팔라딘",
+      "value": 11.6425
+    },
+    {
+      "level": 20,
+      "hero_class": "팔라딘",
+      "value": 12.5376
+    },
+    {
+      "level": 25,
+      "hero_class": "팔라딘",
+      "value": 13.5736
+    },
+    {
+      "level": 30,
+      "hero_class": "팔라딘",
+      "value": 14.4274
+    },
+    {
+      "level": 35,
+      "hero_class": "팔라딘",
+      "value": 15.4905
+    },
+    {
+      "level": 40,
+      "hero_class": "팔라딘",
+      "value": 16.7467
+    },
+    {
+      "level": 45,
+      "hero_class": "팔라딘",
+      "value": 18.0245
+    },
+    {
+      "level": 50,
+      "hero_class": "팔라딘",
+      "value": 19.7237
+    },
+    {
+      "level": 55,
+      "hero_class": "팔라딘",
+      "value": 21.0094
+    },
+    {
+      "level": 60,
+      "hero_class": "팔라딘",
+      "value": 21.5678
+    },
+    {
+      "level": 65,
+      "hero_class": "팔라딘",
+      "value": 21.8475
+    },
+    {
+      "level": 70,
+      "hero_class": "팔라딘",
+      "value": 22.1429
+    },
+    {
+      "level": 75,
+      "hero_class": "팔라딘",
+      "value": 22.4874
+    },
+    {
+      "level": 80,
+      "hero_class": "팔라딘",
+      "value": 22.8507
+    },
+    {
+      "level": 85,
+      "hero_class": "팔라딘",
+      "value": 23.2374
+    },
+    {
+      "level": 90,
+      "hero_class": "팔라딘",
+      "value": 23.6681
+    },
+    {
+      "level": 95,
+      "hero_class": "팔라딘",
+      "value": 24.0994
+    },
+    {
+      "level": 100,
+      "hero_class": "팔라딘",
+      "value": 24.5813
+    }
+  ],
+  "source": {
+    "label": "최종 기획안의 레벨별 성장",
+    "files": [
+      {
+        "label": "all-heldout.csv"
+      },
+      {
+        "label": "final_class_bonus_review.py"
+      },
+      {
+        "label": "SimpleGameEngine.kt"
+      },
+      {
+        "label": "SimpleGameModels.kt"
+      }
+    ],
+    "filters": [
+      "직업: 6종",
+      "난수 seed: 14~29",
+      "직업별 전체 전투 경로: 16개",
+      "표시 레벨: 1 및 5~100의 5레벨 간격"
+    ],
+    "caveats": [
+      "실제 이용자 데이터가 아닌 기존 로컬 엔진 시뮬레이션입니다.",
+      "레벨마다 각 캐릭터의 보너스를 계산한 뒤 직업별 평균을 냈습니다. 표본의 최고값은 이론적 상한이 아닙니다.",
+      "레벨업 외에 모험담 완료로도 성장합니다. 이 경로의 100레벨 모험담 완료는 129회입니다.",
+      "보너스는 기획안이며 운영 앱에 적용된 값이 아닙니다. 이번 계산은 DB·기기·앱 실행 없이 이루어졌습니다.",
+      "연속 15회 일반 공격 후 확정 발동은 이 기본 확률에 포함하지 않습니다."
+    ],
+    "metricDefinitions": [
+      {
+        "name": "MP 스킬 확률",
+        "definition": "마법사의 기본 스킬 확률은 최대 35%, 다른 직업은 최대 30%입니다. MP 보너스는 6000부터 포화됩니다.",
+        "formula": "min(20+A, P0 + A × min(MP/6000,1)); A=마법사 15, 나머지 10"
+      }
+    ]
+  },
+  "generatedAt": "2026-09-01T00:10:47.495153+09:00",
+  "height": 300,
+  "theme": "codex-classic"
+}

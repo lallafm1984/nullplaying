@@ -1,0 +1,15 @@
+{
+  "samples": 4,
+  "seed_offset": 46,
+  "level": 100,
+  "base_minutes": 480,
+  "charge_minutes": 20,
+  "run_name": "final-480-20-production",
+  "started_at": "2026-09-01T02:32:21.887610+09:00",
+  "elapsed_seconds": 43.03758612499951,
+  "output_sha256": "d4196666bcfa2f1189b7bf55fed15fc4d522775c23e6419c3a462484e3b876fa",
+  "network": "OS sandbox denied",
+  "database_files": "OS sandbox denied",
+  "app_started": false,
+  "instrumentation": "Only attack/cast counters; no balance replacement"
+}

@@ -1,0 +1,14 @@
+{
+  "samples": 8,
+  "seed_offset": 30,
+  "level": 120,
+  "output": "heldout.csv",
+  "started_at": "2026-09-01T01:00:54.955184+09:00",
+  "finished_at": "2026-09-01T01:02:50.098226+09:00",
+  "duration_seconds": 115.14137262499571,
+  "output_sha256": "96d39f743d5aea7b14409e523793453cab477d7409d4a41f3953d7e7f7b48f5d",
+  "formula": "CON time; 0.5 INT + 0.5 WIS added skill bonus",
+  "network": "OS sandbox denied",
+  "database_files": "OS sandbox denied",
+  "app_started": false
+}

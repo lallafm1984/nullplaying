@@ -1,0 +1,185 @@
+<section id="aq-level100-caps">
+  <h2>레벨별 직업 스탯 보너스</h2>
+  <div class="text-small">기본 8시간 · 직업당 성장 경로 4개 평균 · 점선은 상한</div>
+  <div class="aq-legend" aria-label="직업별 곡선 표시"></div>
+  <div class="aq-plots">
+    <section data-metric="hp"><h3>HP · 오프라인 시간</h3><div class="text-small">전사 · HP 6,000 기준</div><div class="aq-plot"></div></section>
+    <section data-metric="mp"><h3>MP · 스킬 확률</h3><div class="text-small">마법사·성직자 · MP 6,000 기준</div><div class="aq-plot"></div></section>
+    <section data-metric="dex"><h3>DEX · 몬스터 탐색</h3><div class="text-small">도적·레인저 · DEX 150 기준</div><div class="aq-plot"></div></section>
+    <section data-metric="cha"><h3>CHA · 판매 보너스</h3><div class="text-small">팔라딘 · CHA 150 기준</div><div class="aq-plot"></div></section>
+  </div>
+  <div class="aq-selected text-small tabular-nums" aria-live="polite">Lv.1–100 · 공통 스탯 비례식</div>
+  <div class="tooltip aq-cross-tooltip" role="tooltip" hidden></div>
+  <script type="application/json" id="aq-level100-cap-data">__PLOT_DATA__</script>
+</section>
+<style>
+#aq-level100-caps { position:relative; min-width:0; }
+#aq-level100-caps .aq-legend { display:flex; flex-wrap:wrap; gap:6px 15px; margin:12px 0; }
+#aq-level100-caps .aq-legend button { display:inline-flex; align-items:center; gap:6px; padding:5px 0; color:var(--foreground); border:0; background:transparent; font:inherit; cursor:pointer; }
+#aq-level100-caps .aq-legend button[aria-pressed="false"] { opacity:.4; }
+#aq-level100-caps .aq-legend svg { width:24px; height:12px; overflow:visible; }
+#aq-level100-caps .aq-plots { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 18px; }
+#aq-level100-caps .aq-plots section { min-width:0; }
+#aq-level100-caps .aq-plot { width:100%; min-width:0; }
+#aq-level100-caps .aq-chart { display:block; width:100%; overflow:visible; }
+#aq-level100-caps .aq-chart text { fill:var(--foreground); font-size:12px; font-weight:400; }
+#aq-level100-caps .aq-chart .domain { stroke:var(--border); }
+#aq-level100-caps .aq-chart .tick line { stroke:var(--border); }
+#aq-level100-caps .aq-selected { margin-top:10px; }
+#aq-level100-caps .aq-cross-tooltip { position:absolute; pointer-events:none; background:var(--popover); color:var(--popover-foreground); z-index:2; }
+#aq-level100-caps .aq-cross-tooltip .aq-tip-row { display:flex; justify-content:space-between; gap:16px; white-space:nowrap; }
+#aq-level100-caps .aq-cross-tooltip[hidden] { display:none; }
+@media(max-width:600px) { #aq-level100-caps .aq-plots { grid-template-columns:1fr; } }
+@media(pointer:coarse) { #aq-level100-caps .aq-legend button { min-height:44px; } }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>
+(() => {
+  const root=document.getElementById('aq-level100-caps');
+  const data=JSON.parse(document.getElementById('aq-level100-cap-data').textContent);
+  const specs=[
+    {key:'hp',index:1,label:'보유 시간 (시간)',floor:8,cap:12,capText:'상한 12시간',format:v=>v.toFixed(2)+'시간'},
+    {key:'mp',index:4,label:'기본 발동 확률 (%)',floor:0,cap:30,capText:'상한 30%',format:v=>v.toFixed(2)+'%'},
+    {key:'dex',index:7,label:'탐색 시간 (초)',floor:5,cap:4,capText:'최소 4초',format:v=>v.toFixed(2)+'초'},
+    {key:'cha',index:10,label:'판매 보너스 (%)',floor:0,cap:20,capText:'상한 +20%',format:v=>'+'+v.toFixed(2)+'%'}
+  ];
+  const classes=[
+    {id:'WARRIOR',name:'전사',dash:null}, {id:'ROGUE',name:'도적',dash:'7 3'},
+    {id:'RANGER',name:'레인저',dash:'2 3'}, {id:'MAGE',name:'마법사',dash:null},
+    {id:'CLERIC',name:'성직자',dash:'7 3 2 3'}, {id:'PALADIN',name:'팔라딘',dash:'10 3'}
+  ].map((c,i)=>({...c,color:'var(--viz-series-'+(i+1)+')'}));
+  const visible=new Set(classes.map(c=>c.id));
+  const tooltip=root.querySelector('.aq-cross-tooltip');
+  const selected=root.querySelector('.aq-selected');
+  const charts=[];
+  let pinned=false;
+  let activeChart=null;
+  const legend=d3.select(root.querySelector('.aq-legend'));
+  const buttons=legend.selectAll('button').data(classes).join('button').attr('type','button')
+    .attr('aria-pressed','true').attr('aria-label',d=>d.name+' 곡선 표시');
+  buttons.append('svg').attr('viewBox','0 0 24 12').attr('aria-hidden','true').append('line')
+    .attr('x1',1).attr('x2',23).attr('y1',6).attr('y2',6).attr('stroke',d=>d.color)
+    .attr('stroke-width',2).attr('stroke-dasharray',d=>d.dash);
+  buttons.append('span').text(d=>d.name);
+  buttons.on('click',function(event,c){
+    if(visible.has(c.id)) visible.delete(c.id); else visible.add(c.id);
+    d3.select(this).attr('aria-pressed',String(visible.has(c.id)));
+    charts.forEach(ch=>ch.updateVisibility());
+  });
+  function interp(values,level,idx){
+    const i=d3.bisector(d=>d[0]).left(values,level);
+    if(i<=0)return values[0][idx];
+    if(i>=values.length)return values[values.length-1][idx];
+    const a=values[i-1],b=values[i],t=(level-a[0])/(b[0]-a[0]);
+    return a[idx]+(b[idx]-a[idx])*t;
+  }
+  for(const metric of specs){
+    const host=root.querySelector('[data-metric="'+metric.key+'"] .aq-plot');
+    const svg=d3.select(host).append('svg').attr('class','aq-chart').attr('role','img')
+      .attr('aria-label',metric.label+'의 레벨별 6개 직업 평균 곡선');
+    svg.append('title').text(metric.label+' · 레벨 1–100');
+    svg.append('desc').text('직업당 4개 로컬 성장 경로 평균. '+metric.capText+'. 개별 성장 운에 따라 차이가 있습니다.');
+    let hoverLevel=null;
+    const chart={clear(){
+      hoverLevel=null;
+      if(guide)guide.style('display','none');
+      if(markers)markers.selectAll('*').remove();
+    },updateVisibility(){
+      svg.selectAll('[data-series]').style('display',id=>visible.has(id)?null:'none');
+      if(hoverLevel!==null)showAt(hoverLevel);
+    }};
+    charts.push(chart);
+    let scaleX,scaleY,frame,overlay,markers,guide;
+    function showAt(level,event){
+      if(activeChart!==chart){charts.filter(ch=>ch!==chart).forEach(ch=>ch.clear());activeChart=chart;}
+      hoverLevel=level;
+      guide.attr('x1',scaleX(level)).attr('x2',scaleX(level)).style('display',null);
+      const active=classes.filter(c=>visible.has(c.id));
+      markers.selectAll('circle').data(active,c=>c.id).join('circle')
+        .attr('data-chart-hover-marker',c=>c.id).attr('cx',scaleX(level))
+        .attr('cy',c=>scaleY(interp(data.series[c.id],level,metric.index)))
+        .attr('r',3.5).attr('fill',c=>c.color).attr('stroke','var(--background)').attr('stroke-width',1);
+      tooltip.innerHTML='<div>Lv.'+level.toFixed(1)+' · '+metric.label+'</div>'+
+        active.map(c=>'<div class="aq-tip-row"><span>'+c.name+'</span><span>'+metric.format(interp(data.series[c.id],level,metric.index))+'</span></div>').join('');
+      tooltip.hidden=false;
+      if(event && event.type==='click')selected.textContent='Lv.'+level.toFixed(1)+' · '+metric.label;
+      const rootBox=root.getBoundingClientRect(),box=svg.node().getBoundingClientRect();
+      const px=event ? event.clientX-rootBox.left : box.left-rootBox.left+scaleX(level);
+      const py=event ? event.clientY-rootBox.top : box.top-rootBox.top+frame.y;
+      const tw=tooltip.getBoundingClientRect().width,th=tooltip.getBoundingClientRect().height;
+      tooltip.style.left=Math.max(0,Math.min(root.clientWidth-tw,px+10))+'px';
+      tooltip.style.top=Math.max(0,Math.min(root.clientHeight-th,py+12))+'px';
+    }
+    function draw(){
+      const width=host.getBoundingClientRect().width;
+      if(width<100)return;
+      const height=255;
+      svg.attr('viewBox','0 0 '+width+' '+height).attr('height',height);
+      svg.selectAll(':not(title):not(desc)').remove();
+      frame={x:64,y:27,w:width-76,h:height-78};
+      const observations=classes.flatMap(c=>data.series[c.id].flatMap(r=>[r[metric.index],r[metric.index+1],r[metric.index+2]]));
+      const domain=d3.extent([...observations,metric.floor,metric.cap]);
+      const padding=(domain[1]-domain[0])*.075||1;
+      const levels=d3.extent(classes.flatMap(c=>data.series[c.id].map(r=>r[0])));
+      scaleX=d3.scaleLinear().domain(levels).range([frame.x+4,frame.x+frame.w-4]);
+      scaleY=d3.scaleLinear().domain([domain[0]-padding,domain[1]+padding]).range([frame.y+frame.h-4,frame.y+4]);
+      svg.append('rect').attr('data-chart-frame','').attr('x',frame.x).attr('y',frame.y)
+        .attr('width',frame.w).attr('height',frame.h).attr('fill','none').attr('stroke','var(--border)');
+      const clipId='aq-cap-clip-'+metric.key;
+      svg.append('defs').append('clipPath').attr('id',clipId).append('rect')
+        .attr('x',frame.x).attr('y',frame.y).attr('width',frame.w).attr('height',frame.h);
+      const tickCount=width<=360?4:5;
+      const xAxis=svg.append('g').attr('class','aq-x-axis').attr('transform','translate(0,'+(frame.y+frame.h)+')')
+        .call(d3.axisBottom(scaleX).tickValues([1, ...scaleX.ticks(tickCount).filter(n=>n>1&&n<100),100]).tickFormat(d3.format('d')).tickSizeOuter(0));
+      // At narrow sizes preserve the endpoints, keeping at most four x labels.
+      if(width<=360){
+        const ticks=xAxis.selectAll('.tick').nodes();
+        if(ticks.length>4)ticks.slice(1,-1).filter((_,i)=>i%2===0).forEach(n=>n.remove());
+      }
+      xAxis.selectAll('.tick text').attr('text-anchor',d=>d===1?'start':d===100?'end':'middle');
+      svg.append('g').attr('class','aq-y-axis').attr('transform','translate('+frame.x+',0)')
+        .call(d3.axisLeft(scaleY).ticks(4).tickSize(0).tickPadding(7));
+      svg.append('text').attr('class','axis-title').attr('data-axis','x').attr('x',frame.x+frame.w/2)
+        .attr('y',height-7).attr('text-anchor','middle').text('레벨');
+      svg.append('text').attr('class','axis-title').attr('data-axis','y').attr('x',frame.x).attr('y',13).text(metric.label);
+      const reference=svg.append('g');
+      reference.append('line').attr('x1',frame.x).attr('x2',frame.x+frame.w)
+        .attr('y1',scaleY(metric.cap)).attr('y2',scaleY(metric.cap)).attr('stroke','var(--foreground)')
+        .attr('stroke-width',1).attr('stroke-dasharray','4 4').attr('opacity',.5);
+      reference.append('text').attr('class','aq-cap-label').attr('x',frame.x+frame.w-5)
+        .attr('y',metric.key==='dex'?scaleY(metric.cap)+16:scaleY(metric.cap)-6).attr('text-anchor','end').text(metric.capText);
+      const plots=svg.append('g').attr('clip-path','url(#'+clipId+')');
+      const line=d3.line().x(r=>scaleX(r[0])).y(r=>scaleY(r[metric.index]));
+      for(const c of classes){
+        const layer=plots.append('g').datum(c.id).attr('data-series',c.id);
+        layer.append('path').attr('class','aq-series-line').attr('d',line(data.series[c.id]))
+          .attr('fill','none').attr('stroke',c.color).attr('stroke-width',2).attr('stroke-dasharray',c.dash);
+        const end=data.series[c.id].at(-1);
+        layer.append('circle').attr('class','aq-endpoint').attr('cx',scaleX(end[0])).attr('cy',scaleY(end[metric.index]))
+          .attr('r',3).attr('fill',c.color);
+      }
+      guide=svg.append('line').attr('data-chart-hover-guide','').attr('y1',frame.y).attr('y2',frame.y+frame.h)
+        .attr('stroke','var(--foreground)').attr('stroke-width',1).attr('opacity',.6).style('display','none');
+      markers=svg.append('g').attr('clip-path','url(#'+clipId+')');
+      overlay=svg.append('rect').attr('data-chart-hit','').attr('data-chart-hover-overlay','cross-series')
+        .attr('x',frame.x).attr('y',frame.y).attr('width',frame.w).attr('height',frame.h)
+        .attr('fill','transparent').style('touch-action','pan-y');
+      overlay.on('pointermove',event=>{if(!pinned&&event.pointerType!=='touch')showAt(Math.max(1,Math.min(100,scaleX.invert(d3.pointer(event,svg.node())[0]))),event);})
+        .on('pointerleave',()=>{if(!pinned){tooltip.hidden=true;chart.clear();if(activeChart===chart)activeChart=null;}})
+        .on('click',event=>{pinned=activeChart===chart?!pinned:true;showAt(Math.max(1,Math.min(100,scaleX.invert(d3.pointer(event,svg.node())[0]))),event);});
+      chart.updateVisibility();
+      // Measure axis/value labels together; discard only optional cap annotations.
+      const labels=svg.selectAll('.tick text,.axis-title,.aq-cap-label').nodes();
+      const boxes=labels.map(n=>({n,b:n.getBoundingClientRect()}));
+      for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++){
+        const a=boxes[i],b=boxes[j];
+        const overlap=a.b.left<b.b.right+4&&a.b.right+4>b.b.left&&a.b.top<b.b.bottom+4&&a.b.bottom+4>b.b.top;
+        if(overlap){if(a.n.classList.contains('aq-cap-label'))a.n.remove();else if(b.n.classList.contains('aq-cap-label'))b.n.remove();}
+      }
+      root.dataset.rendered='true';
+    }
+    new ResizeObserver(draw).observe(host);
+    draw();
+  }
+})();
+</script>

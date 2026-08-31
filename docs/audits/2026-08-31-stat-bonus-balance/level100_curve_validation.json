@@ -1,0 +1,108 @@
+{
+  "cap_checks_at_level100": {
+    "hp_hours": {
+      "specialized_at_cap": 4,
+      "specialized_n": 4,
+      "other_at_cap": 0,
+      "other_n": 20
+    },
+    "mp_pct": {
+      "specialized_at_cap": 8,
+      "specialized_n": 8,
+      "other_at_cap": 0,
+      "other_n": 16
+    },
+    "dex_seconds": {
+      "specialized_at_cap": 8,
+      "specialized_n": 8,
+      "other_at_cap": 0,
+      "other_n": 16
+    },
+    "cha_pct": {
+      "specialized_at_cap": 4,
+      "specialized_n": 4,
+      "other_at_cap": 0,
+      "other_n": 20
+    }
+  },
+  "source_hashes_unchanged": true,
+  "linear_boundaries_and_old_curve_compatibility": true,
+  "first_cap_level_range": [
+    87,
+    100
+  ],
+  "caveats": [
+    "4 paired seeds/class, not all possible RNG outcomes",
+    "calibrated thresholds are not a class lock",
+    "calendar-gap effects are time-bank conversions, not real player sessions",
+    "level100 target does not prohibit reaching cap before level100"
+  ],
+  "level100_effects": {
+    "CLERIC": {
+      "hp_hours": 9.8258,
+      "mp_pct": 30.0,
+      "dex_seconds": 4.6517,
+      "cha_pct": 6.8333
+    },
+    "MAGE": {
+      "hp_hours": 9.8245,
+      "mp_pct": 30.0,
+      "dex_seconds": 4.6517,
+      "cha_pct": 6.8333
+    },
+    "PALADIN": {
+      "hp_hours": 9.7977,
+      "mp_pct": 24.4858,
+      "dex_seconds": 4.6717,
+      "cha_pct": 20.0
+    },
+    "RANGER": {
+      "hp_hours": 9.9848,
+      "mp_pct": 27.9996,
+      "dex_seconds": 4.0,
+      "cha_pct": 6.9333
+    },
+    "ROGUE": {
+      "hp_hours": 9.9305,
+      "mp_pct": 24.6213,
+      "dex_seconds": 4.0,
+      "cha_pct": 6.1
+    },
+    "WARRIOR": {
+      "hp_hours": 12.0,
+      "mp_pct": 24.4792,
+      "dex_seconds": 4.6717,
+      "cha_pct": 6.7667
+    }
+  },
+  "level100_gaps": [
+    {
+      "level": 100,
+      "gap_h": 4.0,
+      "session_min": 12,
+      "progress_gap_pct": 3.1027401655650433,
+      "sale_gap_pct": 9.598720951148088
+    },
+    {
+      "level": 100,
+      "gap_h": 8.0,
+      "session_min": 12,
+      "progress_gap_pct": 3.1027401655650433,
+      "sale_gap_pct": 9.598720951148088
+    },
+    {
+      "level": 100,
+      "gap_h": 12.0,
+      "session_min": 12,
+      "progress_gap_pct": 10.368291407257013,
+      "sale_gap_pct": 8.506840665998826
+    },
+    {
+      "level": 100,
+      "gap_h": 24.0,
+      "session_min": 12,
+      "progress_gap_pct": 10.368291407256969,
+      "sale_gap_pct": 8.506840665998826
+    }
+  ]
+}

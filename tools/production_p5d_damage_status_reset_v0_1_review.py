@@ -132,7 +132,7 @@ def main() -> int:
     check("SettlementEngine P5d unconnected", "VNextDamageStatusCarrierAdapterP5d" not in settlement, "not connected")
     check("package data reset executed", "packageDataResetExecuted=true" in document and "packageDataResetExecuted=true" in audit, "true")
     check("character reset executed", "characterResetExecuted=true" in document and "characterResetExecuted=true" in audit, "true")
-    check("exact package clear", "pm clear com.alarmquest" in audit and "pmClearResult=Success" in audit, "com.alarmquest")
+    check("exact package clear", "pm clear com.nullplaying" in audit and "pmClearResult=Success" in audit, "com.nullplaying")
     check("source and documents retained", "sourceDeletionExecuted=false" in document and "designDocumentDeletionExecuted=false" in document, "retained")
 
     for relative, expected in FREEZE.items():
@@ -151,19 +151,19 @@ def main() -> int:
         check("APK size frozen", APK.stat().st_size == APK_SIZE, str(APK.stat().st_size))
 
     check("device audit APK", f"apkSha256={APK_HASH}" in audit, APK_HASH)
-    check("device audit launch", "launchState=COLD" in audit and "resumedActivity=com.alarmquest/.MainActivity" in audit, "cold and resumed")
-    check("device audit focus", "mFocusedApp=com.alarmquest/.MainActivity" in audit, "focused")
+    check("device audit launch", "launchState=COLD" in audit and "resumedActivity=com.nullplaying/.MainActivity" in audit, "cold and resumed")
+    check("device audit focus", "mFocusedApp=com.nullplaying/.MainActivity" in audit, "focused")
     check("device audit fatal zero", "androidRuntimeFatalCount=0" in audit, "0")
     check("fresh database state", "postResetDatabaseFiles=3" in audit and "freshRosterEmpty=true" in audit, "schema recreated and roster empty")
 
     if args.with_device:
         devices = run(["adb", "devices", "-l"])
         check("SM-S931N online", "model:SM_S931N" in devices.stdout and " device " in devices.stdout, devices.stdout.strip())
-        version = run(["adb", "shell", "dumpsys", "package", "com.alarmquest"])
+        version = run(["adb", "shell", "dumpsys", "package", "com.nullplaying"])
         check("device version", "versionCode=1" in version.stdout and "versionName=0.1.0" in version.stdout, "0.1.0(1)")
         activities = run(["adb", "shell", "dumpsys", "activity", "activities"])
         focused = [line.strip() for line in activities.stdout.splitlines() if "ResumedActivity:" in line or "mFocusedApp=" in line]
-        check("MainActivity focused", any("com.alarmquest/.MainActivity" in line for line in focused), " | ".join(focused))
+        check("MainActivity focused", any("com.nullplaying/.MainActivity" in line for line in focused), " | ".join(focused))
         fatal = run(["adb", "logcat", "-d", "-t", "400", "AndroidRuntime:E", "*:S"])
         check("no AndroidRuntime fatal", not fatal.stdout.strip(), "fatal=0")
 

@@ -1,0 +1,23 @@
+{
+  "identity": {
+    "package": "com.nullplaying",
+    "version_code": 14,
+    "version_name": "0.4.1",
+    "min_sdk": 26,
+    "target_sdk": 36,
+    "debuggable": "false",
+    "allow_backup": "false"
+  },
+  "certificate_sha256": "45:EE:A2:23:C8:3F:2A:C6:F7:98:F2:AC:54:1B:FE:A2:70:E0:DD:74:70:AE:95:D9:FC:2C:4E:AD:4A:73:FD:D2",
+  "sha256": "11b01eb9a6febb79d610d51ee370f826408bed1ea20f5d59c3cd092679c9e05b",
+  "bytes": 70196917,
+  "bundletool_version": "1.18.1",
+  "bundletool_validate": "PASS",
+  "jar_signature": "PASS",
+  "native_page_alignment": "PAGE_ALIGNMENT_16K",
+  "qa_apk": {
+    "path": "docs/audits/2026-09-01-preproduction-qa/release-v14-from-aab.apk",
+    "sha256": "758ec6fe7cd9b1fdba1ac017c4e1f31e8c39b635e94cd2c5ea19fa009935bb99",
+    "source": "bundletool build-apks --mode=universal; existing upload key"
+  }
+}

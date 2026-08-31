@@ -1,0 +1,1439 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "8시간 기준 스탯 보너스 권장안",
+    "description": "운영 DB와 분리한 잠정 게임 밸런스 분석",
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# 8시간 기준 스탯 보너스 권장안"
+      },
+      {
+        "id": "summary",
+        "type": "markdown",
+        "body": "## Executive Summary\n\n기본 오프라인 한도를 8시간으로 줄인다는 해석에서, **HP 최대 10시간·MP 추가 최대 8%p·DEX/CHA 최대 15%**를 잠정 권장합니다. 75,264개 후보의 근사모형 비교 후, 탐색에 쓰지 않은 시드 4개 × 6직업 × 기존/추천안 = 48개 성장 경로를 현재 순수 엔진으로 재현했습니다.\n\n레벨 1→100 완료 속도의 직업 격차는 추천안에서 8시간 간격 1.18%, 12시간 간격 1.79%입니다. 다만 기존 8시간·무보너스의 0.50%보다 커졌으므로 **기존보다 더 평준화됐다는 결론은 아닙니다.** 보너스의 의미를 유지하면서 격차를 제한한 후보입니다. 운영 DB·디바이스·앱을 건드리지 않았으며, 실제 게임에는 적용하지 않았습니다.",
+        "sourceId": "local-study"
+      },
+      {
+        "id": "formulas",
+        "type": "markdown",
+        "body": "## 성장할수록 효과가 완만해지는 공식\n\nHP·MP는 최대값을 사용합니다. 현재 남은 자원을 소모하는 구조가 아닙니다. MP의 %p는 퍼센트포인트이므로 기존 20%에 +6%p이면 26%입니다. 8% 증가(21.6%)와 다릅니다. 모든 공식은 스탯 증가 시 효과가 감소하지 않으며 유한한 상한으로 수렴합니다.",
+        "sourceId": "local-study"
+      },
+      {
+        "id": "formulas-evidence",
+        "type": "table",
+        "tableId": "formulas-table"
+      },
+      {
+        "id": "effects",
+        "type": "markdown",
+        "body": "## 레벨 100에서는 직업 차이를 작게 유지합니다\n\n아래는 추천안을 켠 순수 엔진 4개 시드의 직업별 평균입니다. 보너스는 개별 캐릭터별로 계산한 뒤 평균했으며, 평균 스탯을 공식에 넣은 값과 미세하게 다를 수 있습니다. 스킬 확률은 보장 발동을 제외한 원래 판정 확률입니다.",
+        "sourceId": "local-study"
+      },
+      {
+        "id": "effects-evidence",
+        "type": "table",
+        "tableId": "effects-table"
+      },
+      {
+        "id": "capacity",
+        "type": "markdown",
+        "body": "## HP 보너스는 접속 간격에 따라 가치가 달라집니다\n\n8시간 이내 복귀하고 한도를 충분히 충전했다면 HP 보너스 때문에 더 사냥하지는 않습니다. 12·24시간 부재에서는 추가 보유 시간이 사냥 중단 시간을 줄입니다. 전사는 높은 HP로 더 긴 보유 시간을 얻지만, 기본값을 8시간으로 낮추는 취지를 살리기 위해 최종 한도는 10시간으로 제한합니다.",
+        "sourceId": "local-study"
+      },
+      {
+        "id": "capacity-evidence",
+        "type": "chart",
+        "chartId": "capacity-chart"
+      },
+      {
+        "id": "growth",
+        "type": "markdown",
+        "body": "## 성장 속도와 경제 효과를 구분합니다\n\n레벨 1→100의 동일 목표에 도달하는 속도는 8시간 간격에서 기존 8시간·무보너스 대비 **+5.6~7.0%**, 12시간 간격에서 **+24.0~26.3%**입니다. 8시간 간격 값은 엔진의 누적 플레이 시간 비교이며, 12시간 간격은 그 경로를 보유 시간 모델로 환산한 추정치입니다. 그래프는 시간 단축률이 아니라 완료 속도 증가율입니다.\n\n판매 수입은 퀘스트 골드와 분리했습니다. CHA 판매 단가 보너스 외에 사냥 속도와 장비 자동 구매 피드백도 실제 엔진 재생에 포함되어 있습니다. 따라서 전체 판매 수입 증가율을 CHA 단가 증가율로 읽으면 안 됩니다.",
+        "sourceId": "local-study"
+      },
+      {
+        "id": "growth-evidence",
+        "type": "chart",
+        "chartId": "uplift-chart"
+      },
+      {
+        "id": "balance",
+        "type": "markdown",
+        "body": "## 모든 구간을 완전히 같은 효율로 만들지는 못합니다\n\n성장 격차 = 가장 빠른 직업의 평균 완료 속도 / 가장 느린 직업의 평균 완료 속도 − 1. 판매 격차 = 해당 목표까지 판매 골드/완료 일수의 직업 최고/최저 − 1. 직업마다 시드 수는 동일합니다. 아래는 공통 목표 레벨과 충분한 충전 조건의 결과입니다. HP 편의성, MP 전투, DEX 탐색, CHA 경제는 서로 다른 효용이어서 하나의 계수로 모든 접속 패턴을 같게 할 수 없습니다.",
+        "sourceId": "local-study"
+      },
+      {
+        "id": "balance-evidence",
+        "type": "table",
+        "tableId": "gaps-table"
+      },
+      {
+        "id": "ranges",
+        "type": "markdown",
+        "body": "## 전사·마법사 HP/MP: 실제 성장 경로의 표본 범위\n\n현재 엔진의 이야기 완료 성장까지 포함한 직업당 6개 시드입니다. 최저·평균·최고는 **이 표본 안의 값**이지, 가능한 전체 캐릭터의 이론적 하한·기댓값·상한이 아닙니다. 초기 주사위와 성장은 현재 엔진 RNG를 그대로 사용했습니다. 과거의 독립 주사위 가정 표와 혼용하지 않습니다.",
+        "sourceId": "local-study"
+      },
+      {
+        "id": "ranges-evidence",
+        "type": "table",
+        "tableId": "bands-table"
+      },
+      {
+        "id": "methods",
+        "type": "markdown",
+        "body": "## 방법과 검증 범위\n\n탐색은 시드 0·1의 12개 실제 성장 경로에서 얻은 스탯·전투/마을 소요시간을 이용한 근사모형입니다. 레벨 10~100, 부재 4·8·12·24시간에 대해 직업 최대 성장 격차 + 0.5×최대 판매 격차 + 0.25×평균 성장 격차를 최소화했습니다. 레벨 100에서 모든 직업에 최소 +1.5시간·+2%p·탐색/판매 8% 효과를 요구해 영(0) 보너스가 승자가 되지 않게 했습니다. 이 최소 체감 기준과 가중치는 분석을 위한 기획 가정입니다.\n\n검증은 별도 시드 2~5의 48개 엔진 경로, 총 33,676,703회 처치입니다. 스킬 숙련·선택·15회 보장·이야기 보상·인벤토리·판매·장비 구매를 포함했습니다. 운영 소스는 수정하지 않고 분석용 사본에만 보너스를 삽입했습니다. 보너스 비활성 사본이 원본 경로와 일치하는지도 확인했습니다.\n\n오프라인 일수 환산은 전경 1·5·12분과 부재 4·8·12·24시간의 반복을 가정합니다. 기본 충전 완료 시간은 기존의 12분으로 유지했습니다. 레벨별 HP 한도로 적분하며 레벨 100 완료 일수의 상·하한 간 차이는 최대 0.15%입니다. 실제 로그인 이벤트를 리플레이한 결과는 아닙니다. 캐릭터별 실사용 분포나 리롤 선호를 DB에서 조회하지 않았습니다.",
+        "sourceId": "local-study"
+      },
+      {
+        "id": "limits",
+        "type": "markdown",
+        "body": "## 해석의 한계와 적용 전 조건\n\n이 결과는 조사한 후보군과 명시한 목적함수 안의 잠정 추천입니다. 1위와 인접 후보의 점수 차이는 매우 작아 350·750·35·20이 유일한 정답이라는 근거는 없습니다. 독립 검증 시드는 직업당 4개이며 실제 유저 대표 표본이나 라이브 A/B 테스트가 아닙니다. 100레벨 이후는 보너스 상한·단조성만 10¹⁸ 스탯까지 점검했고 장기 성장 균형은 검증하지 않았습니다.\n\n**기존 12시간과 비교하면 별개입니다.** 추천안의 한도는 최대 10시간이므로 8시간 초과 부재 유저에게 종전 12시간을 보전하지 않습니다. 8시간이 기본 한도가 아니라 절대 상한이라는 뜻이면 HP 설계 자체를 다시 정해야 합니다.\n\n실제 적용 때는 MP를 0.01%p 단위로 판정해 정수 반올림 계단을 피하고, 탐색 절약분을 UI와 오프라인 재생에 똑같이 반영해야 합니다. HP 한도 상승은 잔여 시간을 즉시 채우거나 과거 부재를 소급 보상하지 않도록 합니다. 한도 감소 시 기존 잔여 시간 처리와 광고 충전 정책은 별도로 확정해야 합니다. 1분 접속만으로는 기본 40분(8시간/12)의 오프라인 시간만 충전된다는 점도 안내해야 합니다.",
+        "sourceId": "local-study"
+      },
+      {
+        "id": "sources",
+        "type": "markdown",
+        "body": "## 재현과 안전\n\n순수 Kotlin 엔진/모델만 기존 로컬 컴파일러로 빌드했습니다. Gradle·Android 앱·에뮬레이터·인증·Supabase·장치 등록 코드는 실행하지 않았습니다. 시뮬레이션 프로세스는 OS에서 모든 네트워크와 .db/.sqlite/.sqlite3 파일 접근을 차단했습니다. 8·9·10시간 한도의 1분/12분 충전, 24시간 차감, 잔여 시간 0 이후 사냥 중단도 엔진에서 확인했습니다.\n\n기준 파일: `app/src/simple/java/com/nullplaying/engine/SimpleGameEngine.kt`, `OfflineAdventureConfig.kt`, `SkillCatalog.kt`, `model/SimpleGameModels.kt`. 분석 코드와 입력 해시는 이 보고서 폴더 및 `tools/analysis/`에 있습니다. 재현 노트북은 일반 Python으로 코드 셀을 순서대로 실행·검산했습니다. nbformat/nbclient/ipykernel이 없어 Jupyter 커널 자체 검증은 미실행이며, 정확한 재실행 명령은 README에 기록했습니다.",
+        "sourceId": "local-study"
+      }
+    ],
+    "charts": [
+      {
+        "id": "capacity-chart",
+        "title": "레벨별 전사·마법사 오프라인 한도",
+        "type": "line",
+        "intent": "trend",
+        "question": "HP 성장에 따라 보유 시간이 얼마나 늘어나는가?",
+        "rationale": "레벨별 연속 성장과 두 직업의 한도 차이를 같은 시간 축으로 비교합니다.",
+        "dataset": "capacity",
+        "sourceId": "local-study",
+        "encodings": {
+          "x": {
+            "field": "level",
+            "label": "레벨"
+          },
+          "y": {
+            "field": "cap_h",
+            "label": "보유 한도 (시간)"
+          },
+          "color": {
+            "field": "직업"
+          }
+        },
+        "legend": {
+          "position": "bottom"
+        },
+        "valueFormat": "number"
+      },
+      {
+        "id": "uplift-chart",
+        "title": "레벨 1→100 완료 속도 증가율",
+        "type": "bar",
+        "intent": "comparison",
+        "question": "접속 간격에 따라 각 직업의 성장 속도 효과가 얼마나 달라지는가?",
+        "rationale": "동일한 목표 레벨의 직업별 상승률을 두 접속 조건에서 나란히 비교합니다.",
+        "dataset": "uplift",
+        "sourceId": "local-study",
+        "encodings": {
+          "x": {
+            "field": "직업"
+          },
+          "y": {
+            "field": "progress_uplift",
+            "label": "기존 8시간 대비 증가율"
+          },
+          "color": {
+            "field": "접속 간격"
+          }
+        },
+        "options": {
+          "orientation": "vertical",
+          "grouping": "grouped"
+        },
+        "legend": {
+          "position": "bottom"
+        },
+        "valueFormat": "percent"
+      }
+    ],
+    "tables": [
+      {
+        "id": "formulas-table",
+        "title": "권장 공식",
+        "dataset": "formulas",
+        "sourceId": "local-study",
+        "columns": [
+          {
+            "field": "순서",
+            "label": "순서"
+          },
+          {
+            "field": "스탯",
+            "label": "스탯"
+          },
+          {
+            "field": "공식",
+            "label": "공식"
+          },
+          {
+            "field": "상한",
+            "label": "상한"
+          },
+          {
+            "field": "범위",
+            "label": "범위"
+          }
+        ],
+        "defaultSort": {
+          "field": "순서",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "effects-table",
+        "title": "레벨 100 직업별 평균 효과",
+        "dataset": "effects",
+        "sourceId": "local-study",
+        "columns": [
+          {
+            "field": "직업",
+            "label": "직업"
+          },
+          {
+            "field": "오프라인 한도",
+            "label": "오프라인 한도"
+          },
+          {
+            "field": "스킬 확률",
+            "label": "스킬 확률"
+          },
+          {
+            "field": "탐색 시간",
+            "label": "탐색 시간"
+          },
+          {
+            "field": "판매 보너스",
+            "label": "판매 보너스"
+          }
+        ],
+        "defaultSort": {
+          "field": "직업",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "gaps-table",
+        "title": "목표 레벨별 직업 격차",
+        "dataset": "gaps",
+        "sourceId": "local-study",
+        "columns": [
+          {
+            "field": "level",
+            "label": "목표 레벨"
+          },
+          {
+            "field": "gap_h",
+            "label": "부재 시간"
+          },
+          {
+            "field": "설정",
+            "label": "설정"
+          },
+          {
+            "field": "성장 격차",
+            "label": "성장 격차"
+          },
+          {
+            "field": "판매 격차",
+            "label": "판매 격차"
+          }
+        ],
+        "defaultSort": {
+          "field": "level",
+          "direction": "asc"
+        }
+      },
+      {
+        "id": "bands-table",
+        "title": "표본 HP/MP 범위",
+        "dataset": "bands",
+        "sourceId": "local-study",
+        "columns": [
+          {
+            "field": "level",
+            "label": "레벨"
+          },
+          {
+            "field": "직업",
+            "label": "직업"
+          },
+          {
+            "field": "HP 최저/평균/최고",
+            "label": "HP 최저/평균/최고"
+          },
+          {
+            "field": "MP 최저/평균/최고",
+            "label": "MP 최저/평균/최고"
+          },
+          {
+            "field": "n",
+            "label": "시드 수"
+          }
+        ],
+        "defaultSort": {
+          "field": "level",
+          "direction": "asc"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "id": "local-study",
+        "label": "로컬 순수 엔진 시뮬레이션 · 2026-08-31",
+        "path": "tools/analysis/validate_stat_bonus_balance.py",
+        "query": {
+          "language": "python",
+          "engine": "Local Kotlin/JVM and Python/NumPy",
+          "description": "현재 소스의 실제 성장 경로, 후보 탐색, 독립 시드 검증 및 접속 간격 환산",
+          "sql": "#!/usr/bin/env python3\n\"\"\"Validate held-out exact engine replays and compute explicit login scenarios.\"\"\"\nfrom pathlib import Path\nimport hashlib\nimport json\nimport numpy as np\nimport pandas as pd\nfrom stat_bonus_balance import OUT, ROOT, CLASSES, LEVELS, bonuses, evaluate, prepare\n\nKEYS = ['class', 'seed_index', 'level']\n\n\ndef calendar_scenarios(d, params, variant, base_cap=8):\n    rows = []\n    for (hero, seed), trajectory in d.groupby(['class', 'seed_index']):\n        t = trajectory.sort_values('level').copy()\n        caps = bonuses(t, params)[0].to_numpy() if variant == 'selected' else np.full(len(t),base_cap)\n        dt = np.diff(t.seconds, prepend=0)\n        for gap in [4.,8.,12.,24.]:\n            for session in [1.,5.,12.]:\n                fg = session/60\n                bank = caps * min(session/12, 1)\n                active_fraction = (np.minimum(gap,bank) + fg)/(gap+fg)\n                inverse = 1/active_fraction\n                left = np.r_[inverse[0], inverse[:-1]]\n                # Monotonic HP caps bound elapsed calendar time between endpoint\n                # Riemann sums. Trapezoid estimate explicitly approximates the\n                # unrecorded within-segment capacity path; not a login replay.\n                low = np.cumsum(dt*inverse)/86400\n                high = np.cumsum(dt*left)/86400\n                days = (low+high)/2\n                assert np.all(low <= high+1e-9)\n                for i, (_,r) in enumerate(t.iterrows()):\n                    if r.level == 1: continue\n                    rows.append(dict(variant=variant,hero_class=hero,seed_index=int(seed),\n                        level=int(r.level),gap_h=gap,session_min=session,cap_h=caps[i],\n                        calendar_days=days[i],calendar_days_low=low[i],calendar_days_high=high[i],\n                        sale_gold=r.sale_gold,sale_gold_day=r.sale_gold/days[i],\n                        online_days=r.seconds/86400,kills=r.kills,casts=r.casts,attacks=r.attacks))\n    return pd.DataFrame(rows)\n\n\ndef main():\n    params=json.loads((OUT/'selected_parameters.json').read_text())\n    base=pd.read_csv(OUT/'holdout_baseline.csv').sort_values(KEYS)\n    selected=pd.read_csv(OUT/'holdout_selected.csv').sort_values(KEYS)\n    for d in [base,selected]:\n        assert d.shape == (288,26)\n        assert not d.isna().any().any()\n        assert not d.duplicated(KEYS).any()\n        assert set(d.seed_index)=={2,3,4,5}\n        assert set(d['class'])==set(CLASSES)\n        assert (d.groupby(['class','seed_index'])['level'].count()==12).all()\n        for col in ['seconds','kills','hp','mp','casts','attacks','sale_gold']:\n            assert (d.groupby(['class','seed_index'])[col].diff().dropna()>=0).all(),col\n    assert base[KEYS].equals(selected[KEYS])\n    assert (base.tales.to_numpy()==selected.tales.to_numpy()).all()\n    # No game-source edits introduced by analytical instrumentation.\n    hashes=json.loads((OUT/'engine_source_sha256.json').read_text())\n    for name,expected in hashes.items():\n        if name.startswith('app/'):\n            assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==expected,name\n    selected_calendar=selected\n    dense_path=OUT/'holdout_selected_dense.csv'\n    if dense_path.exists():\n        dense=pd.read_csv(dense_path).sort_values(KEYS)\n        assert len(dense)==2400 and not dense.isna().any().any()\n        assert not dense.duplicated(KEYS).any()\n        check=selected.merge(dense,on=KEYS,suffixes=('_sparse','_dense'),validate='one_to_one')\n        assert len(check)==288\n        for col in selected.columns.difference(KEYS):\n            assert np.allclose(check[col+'_sparse'],check[col+'_dense']),col\n        selected_calendar=dense\n    scenarios=pd.concat([calendar_scenarios(base,params,'baseline8'),\n                         calendar_scenarios(base,params,'old12',12),\n                         calendar_scenarios(selected_calendar,params,'selected')],ignore_index=True)\n    scenarios.to_csv(OUT/'validated_calendar_scenarios.csv',index=False)\n    group=['variant','level','gap_h','session_min','hero_class']\n    # Pool equal-level completion time across equal-size seed cohorts. Do NOT\n    # average arbitrary per-run rates or mix different completion levels.\n    ag=scenarios.groupby(group).agg(calendar_days=('calendar_days','mean'),\n        days_min=('calendar_days','min'),days_max=('calendar_days','max'),\n        sale_gold=('sale_gold','mean'),online_days=('online_days','mean'),n=('seed_index','size')).reset_index()\n    ag['progress_rate']=1/ag.calendar_days\n    ag['sale_gold_day']=ag.sale_gold/ag.calendar_days\n    paired=ag[ag.variant=='baseline8'].merge(ag[ag.variant=='selected'],\n        on=['level','gap_h','session_min','hero_class'],suffixes=('_base','_selected'),validate='one_to_one')\n    paired['progress_uplift_pct']=(paired.calendar_days_base/paired.calendar_days_selected-1)*100\n    paired['sale_uplift_pct']=(paired.sale_gold_day_selected/paired.sale_gold_day_base-1)*100\n    paired['days_saved_pct']=(1-paired.calendar_days_selected/paired.calendar_days_base)*100\n    paired.to_csv(OUT/'validated_class_comparison.csv',index=False)\n    gap_rows=[]\n    for key,g in ag.groupby(['variant','level','gap_h','session_min']):\n        gap_rows.append(dict(zip(['variant','level','gap_h','session_min'],key),\n            progress_gap_pct=(g.progress_rate.max()/g.progress_rate.min()-1)*100,\n            sale_gap_pct=(g.sale_gold_day.max()/g.sale_gold_day.min()-1)*100))\n    gaps=pd.DataFrame(gap_rows)\n    gaps.to_csv(OUT/'validated_class_gaps.csv',index=False)\n    # Sensitivity is screening-model robustness, not more independent engine\n    # trials. Vary each selected constant by +-20%, plus combat timing +-25%.\n    _,train=prepare()\n    sensitivity=[]\n    for key in params:\n        for scale in [.8,1.2]:\n            q={**params,key:params[key]*scale}\n            sensitivity.append(dict(change=f'{key} x{scale}',**evaluate(train,q)))\n    for scale in [.75,1.25]:\n        sensitivity.append(dict(change=f'combat_time x{scale}',**evaluate(train,params,combat_scale=scale)))\n    pd.DataFrame(sensitivity).to_csv(OUT/'sensitivity.csv',index=False)\n    # Holdout screening error diagnostic: transfer coefficients without retuning.\n    b=base.copy()\n    b['cycle_s']=b.groupby(['class','seed_index']).seconds.diff()/b.groupby(['class','seed_index']).kills.diff()\n    b=b[b.level.isin(LEVELS)].groupby(['level','class']).mean(numeric_only=True)\n    b=b.reindex(pd.MultiIndex.from_product([LEVELS,CLASSES],names=['level','class'])).reset_index()\n    holdout_proxy=evaluate(b,params)\n    # Boundary/monotonic property tests, including far beyond studied levels.\n    stats=np.r_[0,np.geomspace(1,1e18,2000)]\n    extremes=pd.DataFrame(dict(hp=stats,mp=stats,dex=stats,cha=stats,proc_pct=np.full(len(stats),20.)))\n    cap,prob,dex,cha=bonuses(extremes,params)\n    for a in [cap,prob,dex,cha]: assert (np.diff(a)>=-1e-12).all()\n    assert cap.min()==8 and cap.max()<=8+params['hp_hours']\n    assert prob.min()==.2 and prob.max()<=.28\n    assert dex.min()==0 and dex.max()<=params['dex_max']\n    assert cha.min()==0 and cha.max()<=params['cha_max']\n    assert np.all(5*(1-dex)>=5*(1-params['dex_max']))\n    # Current-engine seed control retains exact old behavior with hooks disabled.\n    control_path=OUT/'engine_control.csv'\n    control_ok=None\n    if control_path.exists():\n        old=pd.read_csv(OUT/'engine_trajectories.csv')\n        ctrl=pd.read_csv(control_path)\n        common=old.merge(ctrl,on=KEYS,suffixes=('_old','_ctrl'),validate='one_to_one')\n        assert len(common)==24\n        for col in old.columns.difference(KEYS):\n            assert np.allclose(common[col+'_old'],common[col+'_ctrl']),col\n        control_ok=True\n    stat_data=pd.concat([pd.read_csv(OUT/'engine_trajectories.csv'),base],ignore_index=True)\n    stat_bands=stat_data.groupby(['level','class']).agg(\n        hp_min=('hp','min'),hp_mean=('hp','mean'),hp_max=('hp','max'),\n        mp_min=('mp','min'),mp_mean=('mp','mean'),mp_max=('mp','max'),n=('seed_index','size')).reset_index()\n    stat_bands.to_csv(OUT/'hp_mp_sample_ranges.csv',index=False)\n    means=selected.groupby(['level','class']).mean(numeric_only=True).reset_index()\n    # Exact nonlinear bonus means: calculate per simulated character then average.\n    per=selected.copy()\n    per['cap_h'],per['raw_proc'],per['dex_bonus'],per['cha_bonus']=bonuses(per,params)\n    per['raw_proc_pct']=per.raw_proc*100\n    per['search_s']=5*(1-per.dex_bonus)\n    per['sale_bonus_pct']=100*per.cha_bonus\n    effects=per.groupby(['level','class'])[['hp','mp','dex','cha','cap_h','raw_proc_pct','search_s','sale_bonus_pct']].mean().reset_index()\n    effects.to_csv(OUT/'recommended_effects.csv',index=False)\n    full=gaps[(gaps.session_min==12)&gaps.level.isin([20,50,100])]\n    end=paired[(paired.level==100)&(paired.session_min==12)]\n    report=dict(status='Share with caveats',engine_control_exact_match=control_ok,\n        holdout_games=48,holdout_kills=int(base[base.level==100].kills.sum()+selected[selected.level==100].kills.sum()),\n        train_games=12,train_seeds=[0,1],holdout_seeds=[2,3,4,5],parameters=params,\n        maximum_calendar_integration_bound_pct=float(((scenarios.calendar_days_high/scenarios.calendar_days_low-1)*100).max()),\n        level100_integration_bound_pct=float(((scenarios[scenarios.level==100].calendar_days_high/scenarios[scenarios.level==100].calendar_days_low-1)*100).max()),\n        holdout_proxy=holdout_proxy,level100_full_charge=end[['gap_h','hero_class','progress_uplift_pct','days_saved_pct','sale_uplift_pct']].to_dict('records'),\n        checkpoint_gaps=full.to_dict('records'),\n        checks=['row completeness/uniqueness/nulls','disjoint train/holdout seeds','source hashes unchanged',\n                'monotonic capped bonuses 0..1e18','calendar endpoint integration bounds','separate old12/baseline8',\n                'pooled numerator/denominator aggregation','no post-holdout parameter retuning'])\n    (OUT/'validation_summary.json').write_text(json.dumps(report,indent=2)+'\\n')\n    print('Validation:',report['status'],'control=',control_ok)\n    print('Integration bound Lv100',report['level100_integration_bound_pct'])\n    print(full[full.gap_h.isin([8,12])].round(3).to_string(index=False))\n    print(end[end.gap_h==12][['hero_class','calendar_days_base','calendar_days_selected','progress_uplift_pct','sale_uplift_pct']].round(3).to_string(index=False))\n\n\nif __name__=='__main__': main()\n",
+          "tables_used": [
+            "docs/audits/2026-08-31-stat-bonus-balance/holdout_baseline.csv",
+            "docs/audits/2026-08-31-stat-bonus-balance/holdout_selected_dense.csv"
+          ],
+          "filters": [
+            "Six classes; seeds 2..5 held out; checkpoints 1..100; no live user data"
+          ],
+          "metric_definitions": {
+            "progress_uplift": "baseline mean completion days / selected mean completion days - 1; same level goal",
+            "progress_gap": "max class completion rate / min class completion rate - 1",
+            "sale_gold_day": "mean cumulative item sale gold / mean calendar completion days; excludes quest and drop gold",
+            "cap_h": "mean of 8 + 2*individual maxHP/(individual maxHP+350), hours"
+          }
+        }
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "status": "ready",
+    "datasets": {
+      "formulas": [
+        {
+          "순서": 1,
+          "스탯": "HP",
+          "공식": "8 + 2 × HP / (HP + 350) 시간",
+          "상한": "10시간",
+          "범위": "오프라인 보유 한도만; HP MAX 사용"
+        },
+        {
+          "순서": 2,
+          "스탯": "MP",
+          "공식": "기존 확률 + 8 × MP / (MP + 750) %p",
+          "상한": "추가 8%p / 합계 28%",
+          "범위": "15회 연속 기본공격 보장 유지; MP MAX 사용"
+        },
+        {
+          "순서": 3,
+          "스탯": "DEX",
+          "공식": "5 × [1 − 0.15 × DEX / (DEX + 35)] 초",
+          "상한": "최소 4.25초",
+          "범위": "탐색 5초만 감소; 발견 연출 2초는 유지"
+        },
+        {
+          "순서": 4,
+          "스탯": "CHA",
+          "공식": "기존 판매가 × [1 + 0.15 × CHA / (CHA + 20)]",
+          "상한": "판매가 +15%",
+          "범위": "아이템 판매만; 퀘스트·드롭 골드 제외"
+        }
+      ],
+      "effects": [
+        {
+          "level": 100,
+          "class": "CLERIC",
+          "hp": 2738.75,
+          "mp": 7027.0,
+          "dex": 52.25,
+          "cha": 51.25,
+          "cap_h": 9.7718359298,
+          "raw_proc_pct": 27.2274835938,
+          "search_s": 4.5518082988,
+          "sale_bonus_pct": 10.7806041335,
+          "직업": "성직자",
+          "오프라인 한도": "9시간 46분",
+          "스킬 확률": "27.23%",
+          "탐색 시간": "4.55초",
+          "판매 보너스": "+10.78%"
+        },
+        {
+          "level": 100,
+          "class": "MAGE",
+          "hp": 2736.75,
+          "mp": 7027.0,
+          "dex": 52.25,
+          "cha": 51.25,
+          "cap_h": 9.7716860662,
+          "raw_proc_pct": 27.2274835938,
+          "search_s": 4.5518082988,
+          "sale_bonus_pct": 10.7806041335,
+          "직업": "마법사",
+          "오프라인 한도": "9시간 46분",
+          "스킬 확률": "27.23%",
+          "탐색 시간": "4.55초",
+          "판매 보너스": "+10.78%"
+        },
+        {
+          "level": 100,
+          "class": "PALADIN",
+          "hp": 2696.5,
+          "mp": 2691.5,
+          "dex": 49.25,
+          "cha": 165.25,
+          "cap_h": 9.7682190578,
+          "raw_proc_pct": 26.2491800461,
+          "search_s": 4.562090673,
+          "sale_bonus_pct": 13.3787529362,
+          "직업": "팔라딘",
+          "오프라인 한도": "9시간 46분",
+          "스킬 확률": "26.25%",
+          "탐색 시간": "4.56초",
+          "판매 보너스": "+13.38%"
+        },
+        {
+          "level": 100,
+          "class": "RANGER",
+          "hp": 2977.25,
+          "mp": 4799.75,
+          "dex": 164.0,
+          "cha": 52.0,
+          "cap_h": 9.7884505207,
+          "raw_proc_pct": 26.9181465397,
+          "search_s": 4.3820135645,
+          "sale_bonus_pct": 10.819065672,
+          "직업": "레인저",
+          "오프라인 한도": "9시간 47분",
+          "스킬 확률": "26.92%",
+          "탐색 시간": "4.38초",
+          "판매 보너스": "+10.82%"
+        },
+        {
+          "level": 100,
+          "class": "ROGUE",
+          "hp": 2895.75,
+          "mp": 2772.75,
+          "dex": 161.25,
+          "cha": 45.75,
+          "cap_h": 9.7840097655,
+          "raw_proc_pct": 26.294481443,
+          "search_s": 4.3842112795,
+          "sale_bonus_pct": 10.4020972787,
+          "직업": "도적",
+          "오프라인 한도": "9시간 47분",
+          "스킬 확률": "26.29%",
+          "탐색 시간": "4.38초",
+          "판매 보너스": "+10.40%"
+        },
+        {
+          "level": 100,
+          "class": "WARRIOR",
+          "hp": 7015.0,
+          "mp": 2687.5,
+          "dex": 49.25,
+          "cha": 50.75,
+          "cap_h": 9.9045259889,
+          "raw_proc_pct": 26.2471247956,
+          "search_s": 4.562090673,
+          "sale_bonus_pct": 10.7252180533,
+          "직업": "전사",
+          "오프라인 한도": "9시간 54분",
+          "스킬 확률": "26.25%",
+          "탐색 시간": "4.56초",
+          "판매 보너스": "+10.73%"
+        }
+      ],
+      "capacity": [
+        {
+          "level": 1,
+          "class": "MAGE",
+          "hp": 6.5,
+          "mp": 10.25,
+          "dex": 11.0,
+          "cha": 12.25,
+          "cap_h": 8.0364463257,
+          "raw_proc_pct": 9.607843057,
+          "search_s": 4.8218871124,
+          "sale_bonus_pct": 5.6696428571,
+          "직업": "마법사"
+        },
+        {
+          "level": 1,
+          "class": "WARRIOR",
+          "hp": 10.5,
+          "mp": 4.25,
+          "dex": 11.0,
+          "cha": 12.25,
+          "cap_h": 8.0582337505,
+          "raw_proc_pct": 9.5450613025,
+          "search_s": 4.8218871124,
+          "sale_bonus_pct": 5.6696428571,
+          "직업": "전사"
+        },
+        {
+          "level": 5,
+          "class": "MAGE",
+          "hp": 36.5,
+          "mp": 42.0,
+          "dex": 12.0,
+          "cha": 13.0,
+          "cap_h": 8.1882026371,
+          "raw_proc_pct": 10.1741519559,
+          "search_s": 4.8103762812,
+          "sale_bonus_pct": 5.8670343137,
+          "직업": "마법사"
+        },
+        {
+          "level": 5,
+          "class": "WARRIOR",
+          "hp": 43.0,
+          "mp": 36.0,
+          "dex": 12.25,
+          "cha": 12.75,
+          "cap_h": 8.218312115,
+          "raw_proc_pct": 10.3663196587,
+          "search_s": 4.8075861026,
+          "sale_bonus_pct": 5.8075105042,
+          "직업": "전사"
+        },
+        {
+          "level": 10,
+          "class": "MAGE",
+          "hp": 79.75,
+          "mp": 96.5,
+          "dex": 12.75,
+          "cha": 14.25,
+          "cap_h": 8.3692746485,
+          "raw_proc_pct": 11.6614743984,
+          "search_s": 4.8022061714,
+          "sale_bonus_pct": 6.2168560606,
+          "직업": "마법사"
+        },
+        {
+          "level": 10,
+          "class": "WARRIOR",
+          "hp": 98.5,
+          "mp": 79.5,
+          "dex": 13.5,
+          "cha": 14.0,
+          "cap_h": 8.4385905686,
+          "raw_proc_pct": 11.7657600686,
+          "search_s": 4.7943079961,
+          "sale_bonus_pct": 6.1485723322,
+          "직업": "전사"
+        },
+        {
+          "level": 20,
+          "class": "MAGE",
+          "hp": 178.5,
+          "mp": 235.0,
+          "dex": 15.25,
+          "cha": 17.25,
+          "cap_h": 8.6715118495,
+          "raw_proc_pct": 14.4058939861,
+          "search_s": 4.7756517653,
+          "sale_bonus_pct": 6.9015444015,
+          "직업": "마법사"
+        },
+        {
+          "level": 20,
+          "class": "WARRIOR",
+          "hp": 235.0,
+          "mp": 172.0,
+          "dex": 14.75,
+          "cha": 17.0,
+          "cap_h": 8.8022145262,
+          "raw_proc_pct": 13.7412050121,
+          "search_s": 4.7801935928,
+          "sale_bonus_pct": 6.8703294864,
+          "직업": "전사"
+        },
+        {
+          "level": 30,
+          "class": "MAGE",
+          "hp": 298.75,
+          "mp": 447.25,
+          "dex": 18.5,
+          "cha": 19.75,
+          "cap_h": 8.915821098,
+          "raw_proc_pct": 16.9845472852,
+          "search_s": 4.7424236556,
+          "sale_bonus_pct": 7.3924342403,
+          "직업": "마법사"
+        },
+        {
+          "level": 30,
+          "class": "WARRIOR",
+          "hp": 446.0,
+          "mp": 293.0,
+          "dex": 19.25,
+          "cha": 19.25,
+          "cap_h": 9.1198903161,
+          "raw_proc_pct": 16.2440063429,
+          "search_s": 4.7352124454,
+          "sale_bonus_pct": 7.3385744767,
+          "직업": "전사"
+        },
+        {
+          "level": 40,
+          "class": "MAGE",
+          "hp": 450.75,
+          "mp": 751.75,
+          "dex": 22.0,
+          "cha": 22.5,
+          "cap_h": 9.1210852963,
+          "raw_proc_pct": 20.0002837859,
+          "search_s": 4.7128209378,
+          "sale_bonus_pct": 7.8709321566,
+          "직업": "마법사"
+        },
+        {
+          "level": 40,
+          "class": "WARRIOR",
+          "hp": 761.25,
+          "mp": 446.0,
+          "dex": 23.0,
+          "cha": 21.75,
+          "cap_h": 9.3695348307,
+          "raw_proc_pct": 19.2269435543,
+          "search_s": 4.7038792122,
+          "sale_bonus_pct": 7.7879517089,
+          "직업": "전사"
+        },
+        {
+          "level": 50,
+          "class": "MAGE",
+          "hp": 664.75,
+          "mp": 1221.0,
+          "dex": 26.75,
+          "cha": 25.5,
+          "cap_h": 9.3057413152,
+          "raw_proc_pct": 23.4520586353,
+          "search_s": 4.6767403479,
+          "sale_bonus_pct": 8.3375139353,
+          "직업": "마법사"
+        },
+        {
+          "level": 50,
+          "class": "WARRIOR",
+          "hp": 1239.25,
+          "mp": 649.0,
+          "dex": 26.25,
+          "cha": 26.25,
+          "cap_h": 9.5586123258,
+          "raw_proc_pct": 21.9520460561,
+          "search_s": 4.6803393905,
+          "sale_bonus_pct": 8.493402606,
+          "직업": "전사"
+        },
+        {
+          "level": 60,
+          "class": "MAGE",
+          "hp": 946.75,
+          "mp": 1920.0,
+          "dex": 31.5,
+          "cha": 29.75,
+          "cap_h": 9.4562146797,
+          "raw_proc_pct": 25.749556298,
+          "search_s": 4.6460435057,
+          "sale_bonus_pct": 8.9056892187,
+          "직업": "마법사"
+        },
+        {
+          "level": 60,
+          "class": "WARRIOR",
+          "hp": 1933.0,
+          "mp": 926.0,
+          "dex": 31.25,
+          "cha": 30.5,
+          "cap_h": 9.6923939723,
+          "raw_proc_pct": 24.4093009004,
+          "search_s": 4.6481606317,
+          "sale_bonus_pct": 9.0330089165,
+          "직업": "전사"
+        },
+        {
+          "level": 70,
+          "class": "MAGE",
+          "hp": 1292.0,
+          "mp": 2832.75,
+          "dex": 36.5,
+          "cha": 34.75,
+          "cap_h": 9.5703728914,
+          "raw_proc_pct": 26.3228184198,
+          "search_s": 4.6184222326,
+          "sale_bonus_pct": 9.4579918033,
+          "직업": "마법사"
+        },
+        {
+          "level": 70,
+          "class": "WARRIOR",
+          "hp": 2838.25,
+          "mp": 1267.75,
+          "dex": 36.0,
+          "cha": 34.5,
+          "cap_h": 9.7795642428,
+          "raw_proc_pct": 25.0152966261,
+          "search_s": 4.6208386684,
+          "sale_bonus_pct": 9.4576271186,
+          "직업": "전사"
+        },
+        {
+          "level": 80,
+          "class": "MAGE",
+          "hp": 1716.75,
+          "mp": 3994.75,
+          "dex": 41.25,
+          "cha": 40.5,
+          "cap_h": 9.6583688182,
+          "raw_proc_pct": 26.7335237537,
+          "search_s": 4.5953125,
+          "sale_bonus_pct": 9.991708126,
+          "직업": "마법사"
+        },
+        {
+          "level": 80,
+          "class": "WARRIOR",
+          "hp": 3991.5,
+          "mp": 1677.25,
+          "dex": 40.25,
+          "cha": 38.25,
+          "cap_h": 9.8380488941,
+          "raw_proc_pct": 25.5180908274,
+          "search_s": 4.5994954715,
+          "sale_bonus_pct": 9.8211156869,
+          "직업": "전사"
+        },
+        {
+          "level": 90,
+          "class": "MAGE",
+          "hp": 2199.25,
+          "mp": 5405.75,
+          "dex": 46.5,
+          "cha": 45.25,
+          "cap_h": 9.7232752999,
+          "raw_proc_pct": 27.0238900114,
+          "search_s": 4.5729179226,
+          "sale_bonus_pct": 10.3771972534,
+          "직업": "마법사"
+        },
+        {
+          "level": 90,
+          "class": "WARRIOR",
+          "hp": 5389.75,
+          "mp": 2163.25,
+          "dex": 45.0,
+          "cha": 42.25,
+          "cap_h": 9.8774722708,
+          "raw_proc_pct": 25.9309855354,
+          "search_s": 4.5785990205,
+          "sale_bonus_pct": 10.1549476643,
+          "직업": "전사"
+        },
+        {
+          "level": 100,
+          "class": "MAGE",
+          "hp": 2736.75,
+          "mp": 7027.0,
+          "dex": 52.25,
+          "cha": 51.25,
+          "cap_h": 9.7716860662,
+          "raw_proc_pct": 27.2274835938,
+          "search_s": 4.5518082988,
+          "sale_bonus_pct": 10.7806041335,
+          "직업": "마법사"
+        },
+        {
+          "level": 100,
+          "class": "WARRIOR",
+          "hp": 7015.0,
+          "mp": 2687.5,
+          "dex": 49.25,
+          "cha": 50.75,
+          "cap_h": 9.9045259889,
+          "raw_proc_pct": 26.2471247956,
+          "search_s": 4.562090673,
+          "sale_bonus_pct": 10.7252180533,
+          "직업": "전사"
+        }
+      ],
+      "uplift": [
+        {
+          "variant_base": "baseline8",
+          "level": 100,
+          "gap_h": 8.0,
+          "session_min": 12.0,
+          "hero_class": "CLERIC",
+          "calendar_days_base": 167.2722222222,
+          "days_min_base": 165.7333333333,
+          "days_max_base": 168.3833333333,
+          "sale_gold_base": 822877357.5,
+          "online_days_base": 167.2722222222,
+          "n_base": 4,
+          "progress_rate_base": 0.0059782789,
+          "sale_gold_day_base": 4919390.360025242,
+          "variant_selected": "selected",
+          "calendar_days_selected": 157.1904513889,
+          "days_min_selected": 155.6375,
+          "days_max_selected": 158.3027777778,
+          "sale_gold_selected": 901749938.5,
+          "online_days_selected": 157.1904513889,
+          "n_selected": 4,
+          "progress_rate_selected": 0.0063617096,
+          "sale_gold_day_selected": 5736671.21973632,
+          "progress_uplift_pct": 6.4137298063,
+          "sale_uplift_pct": 16.6134581706,
+          "days_saved_pct": 6.0271638048,
+          "직업": "성직자",
+          "접속 간격": "8시간",
+          "progress_uplift": 0.0641372981
+        },
+        {
+          "variant_base": "baseline8",
+          "level": 100,
+          "gap_h": 8.0,
+          "session_min": 12.0,
+          "hero_class": "MAGE",
+          "calendar_days_base": 167.0305555556,
+          "days_min_base": 165.9590277778,
+          "days_max_base": 168.1201388889,
+          "sale_gold_base": 822877357.5,
+          "online_days_base": 167.0305555556,
+          "n_base": 4,
+          "progress_rate_base": 0.0059869285,
+          "sale_gold_day_base": 4926507.936006386,
+          "variant_selected": "selected",
+          "calendar_days_selected": 156.9607638889,
+          "days_min_selected": 155.8409722222,
+          "days_max_selected": 157.9493055556,
+          "sale_gold_selected": 901749938.5,
+          "online_days_selected": 156.9607638889,
+          "n_selected": 4,
+          "progress_rate_selected": 0.0063710189,
+          "sale_gold_day_selected": 5745065.939780598,
+          "progress_uplift_pct": 6.4154833458,
+          "sale_uplift_pct": 16.6153797864,
+          "days_saved_pct": 6.0287123115,
+          "직업": "마법사",
+          "접속 간격": "8시간",
+          "progress_uplift": 0.0641548335
+        },
+        {
+          "variant_base": "baseline8",
+          "level": 100,
+          "gap_h": 8.0,
+          "session_min": 12.0,
+          "hero_class": "PALADIN",
+          "calendar_days_base": 166.4394097222,
+          "days_min_base": 165.4604166667,
+          "days_max_base": 167.0472222222,
+          "sale_gold_base": 822504962.5,
+          "online_days_base": 166.4394097222,
+          "n_base": 4,
+          "progress_rate_base": 0.0060081924,
+          "sale_gold_day_base": 4941768.081686383,
+          "variant_selected": "selected",
+          "calendar_days_selected": 157.65,
+          "days_min_selected": 157.2083333333,
+          "days_max_selected": 158.1909722222,
+          "sale_gold_selected": 925013703.0,
+          "online_days_selected": 157.65,
+          "n_selected": 4,
+          "progress_rate_selected": 0.0063431652,
+          "sale_gold_day_selected": 5867514.766888677,
+          "progress_uplift_pct": 5.5752678225,
+          "sale_uplift_pct": 18.7331066513,
+          "days_saved_pct": 5.2808464876,
+          "직업": "팔라딘",
+          "접속 간격": "8시간",
+          "progress_uplift": 0.0557526782
+        },
+        {
+          "variant_base": "baseline8",
+          "level": 100,
+          "gap_h": 8.0,
+          "session_min": 12.0,
+          "hero_class": "RANGER",
+          "calendar_days_base": 166.8921875,
+          "days_min_base": 166.31875,
+          "days_max_base": 168.2645833333,
+          "sale_gold_base": 822984765.0,
+          "online_days_base": 166.8921875,
+          "n_base": 4,
+          "progress_rate_base": 0.0059918922,
+          "sale_gold_day_base": 4931236.011272248,
+          "variant_selected": "selected",
+          "calendar_days_selected": 155.9689236111,
+          "days_min_selected": 155.3,
+          "days_max_selected": 157.4159722222,
+          "sale_gold_selected": 902119008.5,
+          "online_days_selected": 155.9689236111,
+          "n_selected": 4,
+          "progress_rate_selected": 0.0064115336,
+          "sale_gold_day_selected": 5783966.36723172,
+          "progress_uplift_pct": 7.0034873845,
+          "sale_uplift_pct": 17.2924263615,
+          "days_saved_pct": 6.5451019922,
+          "직업": "레인저",
+          "접속 간격": "8시간",
+          "progress_uplift": 0.0700348738
+        },
+        {
+          "variant_base": "baseline8",
+          "level": 100,
+          "gap_h": 8.0,
+          "session_min": 12.0,
+          "hero_class": "ROGUE",
+          "calendar_days_base": 166.7170138889,
+          "days_min_base": 165.8020833333,
+          "days_max_base": 167.6486111111,
+          "sale_gold_base": 822461677.5,
+          "online_days_base": 166.7170138889,
+          "n_base": 4,
+          "progress_rate_base": 0.005998188,
+          "sale_gold_day_base": 4933279.803392725,
+          "variant_selected": "selected",
+          "calendar_days_selected": 156.4956597222,
+          "days_min_selected": 155.2965277778,
+          "days_max_selected": 157.5361111111,
+          "sale_gold_selected": 899237691.75,
+          "online_days_selected": 156.4956597222,
+          "n_selected": 4,
+          "progress_rate_selected": 0.0063899536,
+          "sale_gold_day_selected": 5746087.101368404,
+          "progress_uplift_pct": 6.5313978578,
+          "sale_uplift_pct": 16.4760023832,
+          "days_saved_pct": 6.130960439,
+          "직업": "도적",
+          "접속 간격": "8시간",
+          "progress_uplift": 0.0653139786
+        },
+        {
+          "variant_base": "baseline8",
+          "level": 100,
+          "gap_h": 8.0,
+          "session_min": 12.0,
+          "hero_class": "WARRIOR",
+          "calendar_days_base": 166.5994791667,
+          "days_min_base": 165.3736111111,
+          "days_max_base": 167.1201388889,
+          "sale_gold_base": 822504962.5,
+          "online_days_base": 166.5994791667,
+          "n_base": 4,
+          "progress_rate_base": 0.0060024197,
+          "sale_gold_day_base": 4937020.011192012,
+          "variant_selected": "selected",
+          "calendar_days_selected": 157.8017361111,
+          "days_min_selected": 157.1395833333,
+          "days_max_selected": 158.2729166667,
+          "sale_gold_selected": 900677507.75,
+          "online_days_selected": 157.8017361111,
+          "n_selected": 4,
+          "progress_rate_selected": 0.0063370659,
+          "sale_gold_day_selected": 5707652.716290881,
+          "progress_uplift_pct": 5.5751877466,
+          "sale_uplift_pct": 15.609268412,
+          "days_saved_pct": 5.2807746456,
+          "직업": "전사",
+          "접속 간격": "8시간",
+          "progress_uplift": 0.0557518775
+        },
+        {
+          "variant_base": "baseline8",
+          "level": 100,
+          "gap_h": 12.0,
+          "session_min": 12.0,
+          "hero_class": "CLERIC",
+          "calendar_days_base": 248.8684281843,
+          "days_min_base": 246.5788617886,
+          "days_max_base": 250.5215447154,
+          "sale_gold_base": 822877357.5,
+          "online_days_base": 167.2722222222,
+          "n_base": 4,
+          "progress_rate_base": 0.0040181875,
+          "sale_gold_day_base": 3306475.4878858184,
+          "variant_selected": "selected",
+          "calendar_days_selected": 199.3398859054,
+          "days_min_selected": 198.1399601549,
+          "days_max_selected": 201.1331688033,
+          "sale_gold_selected": 901749938.5,
+          "online_days_selected": 157.1904513889,
+          "n_selected": 4,
+          "progress_rate_selected": 0.0050165575,
+          "sale_gold_day_selected": 4523680.418517619,
+          "progress_uplift_pct": 24.846278031,
+          "sale_uplift_pct": 36.8127613554,
+          "days_saved_pct": 19.901496803,
+          "직업": "성직자",
+          "접속 간격": "12시간",
+          "progress_uplift": 0.2484627803
+        },
+        {
+          "variant_base": "baseline8",
+          "level": 100,
+          "gap_h": 12.0,
+          "session_min": 12.0,
+          "hero_class": "MAGE",
+          "calendar_days_base": 248.5088753388,
+          "days_min_base": 246.914651084,
+          "days_max_base": 250.1299627371,
+          "sale_gold_base": 822877357.5,
+          "online_days_base": 167.0305555556,
+          "n_base": 4,
+          "progress_rate_base": 0.0040240011,
+          "sale_gold_day_base": 3311259.432397735,
+          "variant_selected": "selected",
+          "calendar_days_selected": 199.0535368493,
+          "days_min_selected": 198.4418161716,
+          "days_max_selected": 200.1338283823,
+          "sale_gold_selected": 901749938.5,
+          "online_days_selected": 156.9607638889,
+          "n_selected": 4,
+          "progress_rate_selected": 0.0050237741,
+          "sale_gold_day_selected": 4530187.9724087855,
+          "progress_uplift_pct": 24.8452447881,
+          "sale_uplift_pct": 36.8116290764,
+          "days_saved_pct": 19.9008338926,
+          "직업": "마법사",
+          "접속 간격": "12시간",
+          "progress_uplift": 0.2484524479
+        },
+        {
+          "variant_base": "baseline8",
+          "level": 100,
+          "gap_h": 12.0,
+          "session_min": 12.0,
+          "hero_class": "PALADIN",
+          "calendar_days_base": 247.6293656843,
+          "days_min_base": 246.1728150407,
+          "days_max_base": 248.5336720867,
+          "sale_gold_base": 822504962.5,
+          "online_days_base": 166.4394097222,
+          "n_base": 4,
+          "progress_rate_base": 0.0040382933,
+          "sale_gold_day_base": 3321516.2516252734,
+          "variant_selected": "selected",
+          "calendar_days_selected": 199.6956648328,
+          "days_min_selected": 198.1040300261,
+          "days_max_selected": 201.1383619639,
+          "sale_gold_selected": 925013703.0,
+          "online_days_selected": 157.65,
+          "n_selected": 4,
+          "progress_rate_selected": 0.00500762,
+          "sale_gold_day_selected": 4632117.0956537025,
+          "progress_uplift_pct": 24.0033757826,
+          "sale_uplift_pct": 39.4579085196,
+          "days_saved_pct": 19.3570341381,
+          "직업": "팔라딘",
+          "접속 간격": "12시간",
+          "progress_uplift": 0.2400337578
+        },
+        {
+          "variant_base": "baseline8",
+          "level": 100,
+          "gap_h": 12.0,
+          "session_min": 12.0,
+          "hero_class": "RANGER",
+          "calendar_days_base": 248.3030106707,
+          "days_min_base": 247.449847561,
+          "days_max_base": 250.3448678862,
+          "sale_gold_base": 822984765.0,
+          "online_days_base": 166.8921875,
+          "n_base": 4,
+          "progress_rate_base": 0.0040273374,
+          "sale_gold_day_base": 3314437.3190518385,
+          "variant_selected": "selected",
+          "calendar_days_selected": 197.2999008594,
+          "days_min_selected": 195.9331148527,
+          "days_max_selected": 198.4571449076,
+          "sale_gold_selected": 902119008.5,
+          "online_days_selected": 155.9689236111,
+          "n_selected": 4,
+          "progress_rate_selected": 0.0050684263,
+          "sale_gold_day_selected": 4572323.678677683,
+          "progress_uplift_pct": 25.8505501469,
+          "sale_uplift_pct": 37.9517317282,
+          "days_saved_pct": 20.5406731371,
+          "직업": "레인저",
+          "접속 간격": "12시간",
+          "progress_uplift": 0.2585055015
+        },
+        {
+          "variant_base": "baseline8",
+          "level": 100,
+          "gap_h": 12.0,
+          "session_min": 12.0,
+          "hero_class": "ROGUE",
+          "calendar_days_base": 248.0423865176,
+          "days_min_base": 246.681148374,
+          "days_max_base": 249.4284214092,
+          "sale_gold_base": 822461677.5,
+          "online_days_base": 166.7170138889,
+          "n_base": 4,
+          "progress_rate_base": 0.004031569,
+          "sale_gold_day_base": 3315811.0153951105,
+          "variant_selected": "selected",
+          "calendar_days_selected": 198.1269190151,
+          "days_min_selected": 196.8817621313,
+          "days_max_selected": 199.4744943096,
+          "sale_gold_selected": 899237691.75,
+          "online_days_selected": 156.4956597222,
+          "n_selected": 4,
+          "progress_rate_selected": 0.0050472697,
+          "sale_gold_day_selected": 4538695.1769095,
+          "progress_uplift_pct": 25.1936827921,
+          "sale_uplift_pct": 36.8803938414,
+          "days_saved_pct": 20.1237652174,
+          "직업": "도적",
+          "접속 간격": "12시간",
+          "progress_uplift": 0.2519368279
+        },
+        {
+          "variant_base": "baseline8",
+          "level": 100,
+          "gap_h": 12.0,
+          "session_min": 12.0,
+          "hero_class": "WARRIOR",
+          "calendar_days_base": 247.8675177846,
+          "days_min_base": 246.0436653117,
+          "days_max_base": 248.6421578591,
+          "sale_gold_base": 822504962.5,
+          "online_days_base": 166.5994791667,
+          "n_base": 4,
+          "progress_rate_base": 0.0040344133,
+          "sale_gold_day_base": 3318324.9255552865,
+          "variant_selected": "selected",
+          "calendar_days_selected": 196.184513098,
+          "days_min_selected": 194.9838558555,
+          "days_max_selected": 197.3523115204,
+          "sale_gold_selected": 900677507.75,
+          "online_days_selected": 157.8017361111,
+          "n_selected": 4,
+          "progress_rate_selected": 0.0050972423,
+          "sale_gold_day_selected": 4590971.496817452,
+          "progress_uplift_pct": 26.3440798004,
+          "sale_uplift_pct": 38.3520782266,
+          "days_saved_pct": 20.8510599325,
+          "직업": "전사",
+          "접속 간격": "12시간",
+          "progress_uplift": 0.263440798
+        }
+      ],
+      "gaps": [
+        {
+          "variant": "baseline8",
+          "level": 20,
+          "gap_h": 8.0,
+          "session_min": 12.0,
+          "progress_gap_pct": 1.8580462436,
+          "sale_gap_pct": 1.8649740875,
+          "설정": "8시간·보너스 없음",
+          "성장 격차": "1.86%",
+          "판매 격차": "1.86%"
+        },
+        {
+          "variant": "baseline8",
+          "level": 20,
+          "gap_h": 12.0,
+          "session_min": 12.0,
+          "progress_gap_pct": 1.8580462436,
+          "sale_gap_pct": 1.8649740875,
+          "설정": "8시간·보너스 없음",
+          "성장 격차": "1.86%",
+          "판매 격차": "1.86%"
+        },
+        {
+          "variant": "baseline8",
+          "level": 50,
+          "gap_h": 8.0,
+          "session_min": 12.0,
+          "progress_gap_pct": 1.1906208713,
+          "sale_gap_pct": 1.2475669622,
+          "설정": "8시간·보너스 없음",
+          "성장 격차": "1.19%",
+          "판매 격차": "1.25%"
+        },
+        {
+          "variant": "baseline8",
+          "level": 50,
+          "gap_h": 12.0,
+          "session_min": 12.0,
+          "progress_gap_pct": 1.1906208713,
+          "sale_gap_pct": 1.2475669622,
+          "설정": "8시간·보너스 없음",
+          "성장 격차": "1.19%",
+          "판매 격차": "1.25%"
+        },
+        {
+          "variant": "baseline8",
+          "level": 100,
+          "gap_h": 8.0,
+          "session_min": 12.0,
+          "progress_gap_pct": 0.500369775,
+          "sale_gap_pct": 0.4548881065,
+          "설정": "8시간·보너스 없음",
+          "성장 격차": "0.50%",
+          "판매 격차": "0.45%"
+        },
+        {
+          "variant": "baseline8",
+          "level": 100,
+          "gap_h": 12.0,
+          "session_min": 12.0,
+          "progress_gap_pct": 0.500369775,
+          "sale_gap_pct": 0.4548881065,
+          "설정": "8시간·보너스 없음",
+          "성장 격차": "0.50%",
+          "판매 격차": "0.45%"
+        },
+        {
+          "variant": "selected",
+          "level": 20,
+          "gap_h": 8.0,
+          "session_min": 12.0,
+          "progress_gap_pct": 1.7526897714,
+          "sale_gap_pct": 3.2459693462,
+          "설정": "추천안",
+          "성장 격차": "1.75%",
+          "판매 격차": "3.25%"
+        },
+        {
+          "variant": "selected",
+          "level": 20,
+          "gap_h": 12.0,
+          "session_min": 12.0,
+          "progress_gap_pct": 2.2304212125,
+          "sale_gap_pct": 3.494971892,
+          "설정": "추천안",
+          "성장 격차": "2.23%",
+          "판매 격차": "3.49%"
+        },
+        {
+          "variant": "selected",
+          "level": 50,
+          "gap_h": 8.0,
+          "session_min": 12.0,
+          "progress_gap_pct": 1.21621896,
+          "sale_gap_pct": 3.3577084678,
+          "설정": "추천안",
+          "성장 격차": "1.22%",
+          "판매 격차": "3.36%"
+        },
+        {
+          "variant": "selected",
+          "level": 50,
+          "gap_h": 12.0,
+          "session_min": 12.0,
+          "progress_gap_pct": 2.5187717673,
+          "sale_gap_pct": 3.6026521399,
+          "설정": "추천안",
+          "성장 격차": "2.52%",
+          "판매 격차": "3.60%"
+        },
+        {
+          "variant": "selected",
+          "level": 100,
+          "gap_h": 8.0,
+          "session_min": 12.0,
+          "progress_gap_pct": 1.1751138993,
+          "sale_gap_pct": 2.8008370261,
+          "설정": "추천안",
+          "성장 격차": "1.18%",
+          "판매 격차": "2.80%"
+        },
+        {
+          "variant": "selected",
+          "level": 100,
+          "gap_h": 12.0,
+          "session_min": 12.0,
+          "progress_gap_pct": 1.7897191166,
+          "sale_gap_pct": 2.3970896948,
+          "설정": "추천안",
+          "성장 격차": "1.79%",
+          "판매 격차": "2.40%"
+        }
+      ],
+      "bands": [
+        {
+          "level": 1,
+          "class": "MAGE",
+          "hp_min": 5,
+          "hp_mean": 6.3333333333,
+          "hp_max": 8,
+          "mp_min": 9,
+          "mp_mean": 9.8333333333,
+          "mp_max": 12,
+          "n": 6,
+          "직업": "마법사",
+          "HP 최저/평균/최고": "5 / 6.3 / 8",
+          "MP 최저/평균/최고": "9 / 9.8 / 12"
+        },
+        {
+          "level": 1,
+          "class": "WARRIOR",
+          "hp_min": 9,
+          "hp_mean": 10.3333333333,
+          "hp_max": 12,
+          "mp_min": 3,
+          "mp_mean": 3.8333333333,
+          "mp_max": 6,
+          "n": 6,
+          "직업": "전사",
+          "HP 최저/평균/최고": "9 / 10.3 / 12",
+          "MP 최저/평균/최고": "3 / 3.8 / 6"
+        },
+        {
+          "level": 10,
+          "class": "MAGE",
+          "hp_min": 57,
+          "hp_mean": 78.0,
+          "hp_max": 94,
+          "mp_min": 80,
+          "mp_mean": 92.3333333333,
+          "mp_max": 106,
+          "n": 6,
+          "직업": "마법사",
+          "HP 최저/평균/최고": "57 / 78.0 / 94",
+          "MP 최저/평균/최고": "80 / 92.3 / 106"
+        },
+        {
+          "level": 10,
+          "class": "WARRIOR",
+          "hp_min": 84,
+          "hp_mean": 97.0,
+          "hp_max": 108,
+          "mp_min": 61,
+          "mp_mean": 75.1666666667,
+          "mp_max": 93,
+          "n": 6,
+          "직업": "전사",
+          "HP 최저/평균/최고": "84 / 97.0 / 108",
+          "MP 최저/평균/최고": "61 / 75.2 / 93"
+        },
+        {
+          "level": 20,
+          "class": "MAGE",
+          "hp_min": 138,
+          "hp_mean": 174.6666666667,
+          "hp_max": 208,
+          "mp_min": 203,
+          "mp_mean": 227.1666666667,
+          "mp_max": 265,
+          "n": 6,
+          "직업": "마법사",
+          "HP 최저/평균/최고": "138 / 174.7 / 208",
+          "MP 최저/평균/최고": "203 / 227.2 / 265"
+        },
+        {
+          "level": 20,
+          "class": "WARRIOR",
+          "hp_min": 204,
+          "hp_mean": 229.6666666667,
+          "hp_max": 250,
+          "mp_min": 147,
+          "mp_mean": 166.6666666667,
+          "mp_max": 192,
+          "n": 6,
+          "직업": "전사",
+          "HP 최저/평균/최고": "204 / 229.7 / 250",
+          "MP 최저/평균/최고": "147 / 166.7 / 192"
+        },
+        {
+          "level": 50,
+          "class": "MAGE",
+          "hp_min": 593,
+          "hp_mean": 669.0,
+          "hp_max": 802,
+          "mp_min": 1146,
+          "mp_mean": 1200.6666666667,
+          "mp_max": 1338,
+          "n": 6,
+          "직업": "마법사",
+          "HP 최저/평균/최고": "593 / 669.0 / 802",
+          "MP 최저/평균/최고": "1146 / 1200.7 / 1338"
+        },
+        {
+          "level": 50,
+          "class": "WARRIOR",
+          "hp_min": 1117,
+          "hp_mean": 1204.6666666667,
+          "hp_max": 1293,
+          "mp_min": 554,
+          "mp_mean": 634.8333333333,
+          "mp_max": 735,
+          "n": 6,
+          "직업": "전사",
+          "HP 최저/평균/최고": "1117 / 1204.7 / 1293",
+          "MP 최저/평균/최고": "554 / 634.8 / 735"
+        },
+        {
+          "level": 100,
+          "class": "MAGE",
+          "hp_min": 2379,
+          "hp_mean": 2813.6666666667,
+          "hp_max": 3059,
+          "mp_min": 6764,
+          "mp_mean": 6943.6666666667,
+          "mp_max": 7500,
+          "n": 6,
+          "직업": "마법사",
+          "HP 최저/평균/최고": "2379 / 2813.7 / 3059",
+          "MP 최저/평균/최고": "6764 / 6943.7 / 7500"
+        },
+        {
+          "level": 100,
+          "class": "WARRIOR",
+          "hp_min": 6422,
+          "hp_mean": 6889.5,
+          "hp_max": 7701,
+          "mp_min": 2319,
+          "mp_mean": 2647.8333333333,
+          "mp_max": 2872,
+          "n": 6,
+          "직업": "전사",
+          "HP 최저/평균/최고": "6422 / 6889.5 / 7701",
+          "MP 최저/평균/최고": "2319 / 2647.8 / 2872"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "local-study",
+      "label": "로컬 순수 엔진 시뮬레이션 · 2026-08-31",
+      "path": "tools/analysis/validate_stat_bonus_balance.py",
+      "query": {
+        "language": "python",
+        "engine": "Local Kotlin/JVM and Python/NumPy",
+        "description": "현재 소스의 실제 성장 경로, 후보 탐색, 독립 시드 검증 및 접속 간격 환산",
+        "sql": "#!/usr/bin/env python3\n\"\"\"Validate held-out exact engine replays and compute explicit login scenarios.\"\"\"\nfrom pathlib import Path\nimport hashlib\nimport json\nimport numpy as np\nimport pandas as pd\nfrom stat_bonus_balance import OUT, ROOT, CLASSES, LEVELS, bonuses, evaluate, prepare\n\nKEYS = ['class', 'seed_index', 'level']\n\n\ndef calendar_scenarios(d, params, variant, base_cap=8):\n    rows = []\n    for (hero, seed), trajectory in d.groupby(['class', 'seed_index']):\n        t = trajectory.sort_values('level').copy()\n        caps = bonuses(t, params)[0].to_numpy() if variant == 'selected' else np.full(len(t),base_cap)\n        dt = np.diff(t.seconds, prepend=0)\n        for gap in [4.,8.,12.,24.]:\n            for session in [1.,5.,12.]:\n                fg = session/60\n                bank = caps * min(session/12, 1)\n                active_fraction = (np.minimum(gap,bank) + fg)/(gap+fg)\n                inverse = 1/active_fraction\n                left = np.r_[inverse[0], inverse[:-1]]\n                # Monotonic HP caps bound elapsed calendar time between endpoint\n                # Riemann sums. Trapezoid estimate explicitly approximates the\n                # unrecorded within-segment capacity path; not a login replay.\n                low = np.cumsum(dt*inverse)/86400\n                high = np.cumsum(dt*left)/86400\n                days = (low+high)/2\n                assert np.all(low <= high+1e-9)\n                for i, (_,r) in enumerate(t.iterrows()):\n                    if r.level == 1: continue\n                    rows.append(dict(variant=variant,hero_class=hero,seed_index=int(seed),\n                        level=int(r.level),gap_h=gap,session_min=session,cap_h=caps[i],\n                        calendar_days=days[i],calendar_days_low=low[i],calendar_days_high=high[i],\n                        sale_gold=r.sale_gold,sale_gold_day=r.sale_gold/days[i],\n                        online_days=r.seconds/86400,kills=r.kills,casts=r.casts,attacks=r.attacks))\n    return pd.DataFrame(rows)\n\n\ndef main():\n    params=json.loads((OUT/'selected_parameters.json').read_text())\n    base=pd.read_csv(OUT/'holdout_baseline.csv').sort_values(KEYS)\n    selected=pd.read_csv(OUT/'holdout_selected.csv').sort_values(KEYS)\n    for d in [base,selected]:\n        assert d.shape == (288,26)\n        assert not d.isna().any().any()\n        assert not d.duplicated(KEYS).any()\n        assert set(d.seed_index)=={2,3,4,5}\n        assert set(d['class'])==set(CLASSES)\n        assert (d.groupby(['class','seed_index'])['level'].count()==12).all()\n        for col in ['seconds','kills','hp','mp','casts','attacks','sale_gold']:\n            assert (d.groupby(['class','seed_index'])[col].diff().dropna()>=0).all(),col\n    assert base[KEYS].equals(selected[KEYS])\n    assert (base.tales.to_numpy()==selected.tales.to_numpy()).all()\n    # No game-source edits introduced by analytical instrumentation.\n    hashes=json.loads((OUT/'engine_source_sha256.json').read_text())\n    for name,expected in hashes.items():\n        if name.startswith('app/'):\n            assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==expected,name\n    selected_calendar=selected\n    dense_path=OUT/'holdout_selected_dense.csv'\n    if dense_path.exists():\n        dense=pd.read_csv(dense_path).sort_values(KEYS)\n        assert len(dense)==2400 and not dense.isna().any().any()\n        assert not dense.duplicated(KEYS).any()\n        check=selected.merge(dense,on=KEYS,suffixes=('_sparse','_dense'),validate='one_to_one')\n        assert len(check)==288\n        for col in selected.columns.difference(KEYS):\n            assert np.allclose(check[col+'_sparse'],check[col+'_dense']),col\n        selected_calendar=dense\n    scenarios=pd.concat([calendar_scenarios(base,params,'baseline8'),\n                         calendar_scenarios(base,params,'old12',12),\n                         calendar_scenarios(selected_calendar,params,'selected')],ignore_index=True)\n    scenarios.to_csv(OUT/'validated_calendar_scenarios.csv',index=False)\n    group=['variant','level','gap_h','session_min','hero_class']\n    # Pool equal-level completion time across equal-size seed cohorts. Do NOT\n    # average arbitrary per-run rates or mix different completion levels.\n    ag=scenarios.groupby(group).agg(calendar_days=('calendar_days','mean'),\n        days_min=('calendar_days','min'),days_max=('calendar_days','max'),\n        sale_gold=('sale_gold','mean'),online_days=('online_days','mean'),n=('seed_index','size')).reset_index()\n    ag['progress_rate']=1/ag.calendar_days\n    ag['sale_gold_day']=ag.sale_gold/ag.calendar_days\n    paired=ag[ag.variant=='baseline8'].merge(ag[ag.variant=='selected'],\n        on=['level','gap_h','session_min','hero_class'],suffixes=('_base','_selected'),validate='one_to_one')\n    paired['progress_uplift_pct']=(paired.calendar_days_base/paired.calendar_days_selected-1)*100\n    paired['sale_uplift_pct']=(paired.sale_gold_day_selected/paired.sale_gold_day_base-1)*100\n    paired['days_saved_pct']=(1-paired.calendar_days_selected/paired.calendar_days_base)*100\n    paired.to_csv(OUT/'validated_class_comparison.csv',index=False)\n    gap_rows=[]\n    for key,g in ag.groupby(['variant','level','gap_h','session_min']):\n        gap_rows.append(dict(zip(['variant','level','gap_h','session_min'],key),\n            progress_gap_pct=(g.progress_rate.max()/g.progress_rate.min()-1)*100,\n            sale_gap_pct=(g.sale_gold_day.max()/g.sale_gold_day.min()-1)*100))\n    gaps=pd.DataFrame(gap_rows)\n    gaps.to_csv(OUT/'validated_class_gaps.csv',index=False)\n    # Sensitivity is screening-model robustness, not more independent engine\n    # trials. Vary each selected constant by +-20%, plus combat timing +-25%.\n    _,train=prepare()\n    sensitivity=[]\n    for key in params:\n        for scale in [.8,1.2]:\n            q={**params,key:params[key]*scale}\n            sensitivity.append(dict(change=f'{key} x{scale}',**evaluate(train,q)))\n    for scale in [.75,1.25]:\n        sensitivity.append(dict(change=f'combat_time x{scale}',**evaluate(train,params,combat_scale=scale)))\n    pd.DataFrame(sensitivity).to_csv(OUT/'sensitivity.csv',index=False)\n    # Holdout screening error diagnostic: transfer coefficients without retuning.\n    b=base.copy()\n    b['cycle_s']=b.groupby(['class','seed_index']).seconds.diff()/b.groupby(['class','seed_index']).kills.diff()\n    b=b[b.level.isin(LEVELS)].groupby(['level','class']).mean(numeric_only=True)\n    b=b.reindex(pd.MultiIndex.from_product([LEVELS,CLASSES],names=['level','class'])).reset_index()\n    holdout_proxy=evaluate(b,params)\n    # Boundary/monotonic property tests, including far beyond studied levels.\n    stats=np.r_[0,np.geomspace(1,1e18,2000)]\n    extremes=pd.DataFrame(dict(hp=stats,mp=stats,dex=stats,cha=stats,proc_pct=np.full(len(stats),20.)))\n    cap,prob,dex,cha=bonuses(extremes,params)\n    for a in [cap,prob,dex,cha]: assert (np.diff(a)>=-1e-12).all()\n    assert cap.min()==8 and cap.max()<=8+params['hp_hours']\n    assert prob.min()==.2 and prob.max()<=.28\n    assert dex.min()==0 and dex.max()<=params['dex_max']\n    assert cha.min()==0 and cha.max()<=params['cha_max']\n    assert np.all(5*(1-dex)>=5*(1-params['dex_max']))\n    # Current-engine seed control retains exact old behavior with hooks disabled.\n    control_path=OUT/'engine_control.csv'\n    control_ok=None\n    if control_path.exists():\n        old=pd.read_csv(OUT/'engine_trajectories.csv')\n        ctrl=pd.read_csv(control_path)\n        common=old.merge(ctrl,on=KEYS,suffixes=('_old','_ctrl'),validate='one_to_one')\n        assert len(common)==24\n        for col in old.columns.difference(KEYS):\n            assert np.allclose(common[col+'_old'],common[col+'_ctrl']),col\n        control_ok=True\n    stat_data=pd.concat([pd.read_csv(OUT/'engine_trajectories.csv'),base],ignore_index=True)\n    stat_bands=stat_data.groupby(['level','class']).agg(\n        hp_min=('hp','min'),hp_mean=('hp','mean'),hp_max=('hp','max'),\n        mp_min=('mp','min'),mp_mean=('mp','mean'),mp_max=('mp','max'),n=('seed_index','size')).reset_index()\n    stat_bands.to_csv(OUT/'hp_mp_sample_ranges.csv',index=False)\n    means=selected.groupby(['level','class']).mean(numeric_only=True).reset_index()\n    # Exact nonlinear bonus means: calculate per simulated character then average.\n    per=selected.copy()\n    per['cap_h'],per['raw_proc'],per['dex_bonus'],per['cha_bonus']=bonuses(per,params)\n    per['raw_proc_pct']=per.raw_proc*100\n    per['search_s']=5*(1-per.dex_bonus)\n    per['sale_bonus_pct']=100*per.cha_bonus\n    effects=per.groupby(['level','class'])[['hp','mp','dex','cha','cap_h','raw_proc_pct','search_s','sale_bonus_pct']].mean().reset_index()\n    effects.to_csv(OUT/'recommended_effects.csv',index=False)\n    full=gaps[(gaps.session_min==12)&gaps.level.isin([20,50,100])]\n    end=paired[(paired.level==100)&(paired.session_min==12)]\n    report=dict(status='Share with caveats',engine_control_exact_match=control_ok,\n        holdout_games=48,holdout_kills=int(base[base.level==100].kills.sum()+selected[selected.level==100].kills.sum()),\n        train_games=12,train_seeds=[0,1],holdout_seeds=[2,3,4,5],parameters=params,\n        maximum_calendar_integration_bound_pct=float(((scenarios.calendar_days_high/scenarios.calendar_days_low-1)*100).max()),\n        level100_integration_bound_pct=float(((scenarios[scenarios.level==100].calendar_days_high/scenarios[scenarios.level==100].calendar_days_low-1)*100).max()),\n        holdout_proxy=holdout_proxy,level100_full_charge=end[['gap_h','hero_class','progress_uplift_pct','days_saved_pct','sale_uplift_pct']].to_dict('records'),\n        checkpoint_gaps=full.to_dict('records'),\n        checks=['row completeness/uniqueness/nulls','disjoint train/holdout seeds','source hashes unchanged',\n                'monotonic capped bonuses 0..1e18','calendar endpoint integration bounds','separate old12/baseline8',\n                'pooled numerator/denominator aggregation','no post-holdout parameter retuning'])\n    (OUT/'validation_summary.json').write_text(json.dumps(report,indent=2)+'\\n')\n    print('Validation:',report['status'],'control=',control_ok)\n    print('Integration bound Lv100',report['level100_integration_bound_pct'])\n    print(full[full.gap_h.isin([8,12])].round(3).to_string(index=False))\n    print(end[end.gap_h==12][['hero_class','calendar_days_base','calendar_days_selected','progress_uplift_pct','sale_uplift_pct']].round(3).to_string(index=False))\n\n\nif __name__=='__main__': main()\n",
+        "tables_used": [
+          "docs/audits/2026-08-31-stat-bonus-balance/holdout_baseline.csv",
+          "docs/audits/2026-08-31-stat-bonus-balance/holdout_selected_dense.csv"
+        ],
+        "filters": [
+          "Six classes; seeds 2..5 held out; checkpoints 1..100; no live user data"
+        ],
+        "metric_definitions": {
+          "progress_uplift": "baseline mean completion days / selected mean completion days - 1; same level goal",
+          "progress_gap": "max class completion rate / min class completion rate - 1",
+          "sale_gold_day": "mean cumulative item sale gold / mean calendar completion days; excludes quest and drop gold",
+          "cap_h": "mean of 8 + 2*individual maxHP/(individual maxHP+350), hours"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "id": "mage35-growth",
+  "title": "8시간 간격 접속: 마법사 35%안의 성장속도",
+  "chart": {
+    "type": "line",
+    "x": "level",
+    "y": "speed_pct",
+    "series": "plan",
+    "xLabel": "도달 레벨",
+    "yLabel": "팔라딘 대비 빠른 정도 (%)",
+    "showXAxisLabel": true
+  },
+  "rows": [
+    {
+      "level": 20,
+      "plan": "마법사 30%",
+      "speed_pct": 0.2703
+    },
+    {
+      "level": 30,
+      "plan": "마법사 30%",
+      "speed_pct": 0.3215
+    },
+    {
+      "level": 40,
+      "plan": "마법사 30%",
+      "speed_pct": 0.6972
+    },
+    {
+      "level": 50,
+      "plan": "마법사 30%",
+      "speed_pct": 0.958
+    },
+    {
+      "level": 60,
+      "plan": "마법사 30%",
+      "speed_pct": 0.9532
+    },
+    {
+      "level": 70,
+      "plan": "마법사 30%",
+      "speed_pct": 1.0328
+    },
+    {
+      "level": 80,
+      "plan": "마법사 30%",
+      "speed_pct": 1.3056
+    },
+    {
+      "level": 90,
+      "plan": "마법사 30%",
+      "speed_pct": 1.7075
+    },
+    {
+      "level": 100,
+      "plan": "마법사 30%",
+      "speed_pct": 2.1703
+    },
+    {
+      "level": 20,
+      "plan": "마법사 35%",
+      "speed_pct": 0.3285
+    },
+    {
+      "level": 30,
+      "plan": "마법사 35%",
+      "speed_pct": 0.4467
+    },
+    {
+      "level": 40,
+      "plan": "마법사 35%",
+      "speed_pct": 0.9128
+    },
+    {
+      "level": 50,
+      "plan": "마법사 35%",
+      "speed_pct": 1.2939
+    },
+    {
+      "level": 60,
+      "plan": "마법사 35%",
+      "speed_pct": 1.4593
+    },
+    {
+      "level": 70,
+      "plan": "마법사 35%",
+      "speed_pct": 1.769
+    },
+    {
+      "level": 80,
+      "plan": "마법사 35%",
+      "speed_pct": 2.3416
+    },
+    {
+      "level": 90,
+      "plan": "마법사 35%",
+      "speed_pct": 3.0853
+    },
+    {
+      "level": 100,
+      "plan": "마법사 35%",
+      "speed_pct": 3.9284
+    },
+    {
+      "level": 20,
+      "plan": "레인저",
+      "speed_pct": -0.1406
+    },
+    {
+      "level": 30,
+      "plan": "레인저",
+      "speed_pct": -0.0433
+    },
+    {
+      "level": 40,
+      "plan": "레인저",
+      "speed_pct": 0.1134
+    },
+    {
+      "level": 50,
+      "plan": "레인저",
+      "speed_pct": 0.2521
+    },
+    {
+      "level": 60,
+      "plan": "레인저",
+      "speed_pct": 0.6449
+    },
+    {
+      "level": 70,
+      "plan": "레인저",
+      "speed_pct": 1.1425
+    },
+    {
+      "level": 80,
+      "plan": "레인저",
+      "speed_pct": 1.7
+    },
+    {
+      "level": 90,
+      "plan": "레인저",
+      "speed_pct": 2.3146
+    },
+    {
+      "level": 100,
+      "plan": "레인저",
+      "speed_pct": 2.9726
+    }
+  ],
+  "source": {
+    "label": "로컬 순수 엔진 비교",
+    "files": [
+      {
+        "label": "mage35_dense.csv"
+      },
+      {
+        "label": "ten_hour_independent_dense.csv"
+      },
+      {
+        "label": "review_mage35.py"
+      }
+    ],
+    "filters": [
+      "난수 seed: 6~13",
+      "직업당 성장 경로: 8개",
+      "접속 간격: 8시간",
+      "접속 시 충전: 12분"
+    ],
+    "metricDefinitions": [
+      {
+        "name": "상대 성장속도",
+        "definition": "같은 목표 레벨까지의 평균 소요시간으로 비교한 팔라딘 대비 성장속도입니다.",
+        "formula": "(팔라딘 평균 소요시간 / 해당 직업 평균 소요시간 − 1) × 100"
+      }
+    ],
+    "caveats": [
+      "실제 이용자 로그가 아닌 소규모 엔진 시뮬레이션입니다.",
+      "접속 간격의 영향은 시간저장량 환산이며 전체 접속 이벤트를 재생하지 않았습니다.",
+      "마법사의 MP 보너스만 최대 +10%p에서 +15%p로 변경했고 나머지 직업의 경로는 재사용했습니다.",
+      "HP 기본 8시간·최대 10시간, 탐색 최소 4초, 판매 보너스 최대 20%를 유지했습니다."
+    ]
+  },
+  "height": 320,
+  "theme": "codex-classic",
+  "generatedAt": "2026-08-31T23:17:43.961721+09:00"
+}

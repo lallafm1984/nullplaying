@@ -1,0 +1,398 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "all-class-benefits",
+      "title": "100레벨 종합 혜택",
+      "queries": [
+        {
+          "id": "all-class-effects",
+          "source": {
+            "label": "전 직업 신규 성장 경로",
+            "files": [
+              {
+                "label": "all-heldout.csv"
+              },
+              {
+                "label": "final_class_bonus_review.py"
+              }
+            ],
+            "filters": [
+              "직업: 6종",
+              "신규 난수 seed: 14~29",
+              "직업당 전체 전투 경로: 16개",
+              "목표 레벨: 100",
+              "접속 시 충전: 12분"
+            ],
+            "caveats": [
+              "실제 이용자 로그가 아닌 로컬 엔진 시뮬레이션입니다.",
+              "접속 간격 영향은 레벨별 저장시간 환산이며 실제 접속 이벤트 재생이 아닙니다.",
+              "HP 기본 8시간·최대 10시간, 마법사 기본 확률 35%, 탐색 최소 4초, 판매 보너스 최대 20%를 적용한 기획안입니다.",
+              "값은 직업별 16개 캐릭터의 효과를 먼저 계산한 뒤 평균한 값입니다.",
+              "스킬 확률은 연속 15회 일반공격 후 확정 발동을 포함하지 않은 기본 확률입니다.",
+              "가방 증가율을 성장속도나 골드 증가율에 직접 합산하지 않았습니다."
+            ],
+            "metricDefinitions": [
+              {
+                "name": "HP 보유시간",
+                "definition": "HP는 모든 직업의 오프라인 보유시간을 기본 8시간에서 최대 10시간까지 늘립니다.",
+                "formula": "8 + 2 × min(HP/6000,1)^0.8 시간"
+              },
+              {
+                "name": "MP 기본 확률",
+                "definition": "MP는 기존 스킬 확률에 보너스를 더하며, 마법사는 최대 +15%p·상한 35%, 다른 직업은 최대 +10%p·상한 30%입니다.",
+                "formula": "min(직업 상한, 기존 확률 + 직업 보너스 × min(MP/6000,1))"
+              },
+              {
+                "name": "DEX 탐색",
+                "definition": "DEX는 탐색 5초를 최소 4초까지 단축합니다. 발견 연출 2초는 유지합니다.",
+                "formula": "5 − min(DEX/150,1) 초"
+              },
+              {
+                "name": "CHA 판매",
+                "definition": "CHA는 아이템 판매 금액에만 최대 20% 보너스를 줍니다.",
+                "formula": "20 × min(CHA/150,1) %"
+              },
+              {
+                "name": "STR 가방",
+                "definition": "STR는 레벨별 기본 가방에 추가 칸을 주며, 같은 레벨의 최대 가방은 기본 용량의 두 배 미만입니다.",
+                "formula": "B=15+floor((레벨−1)×3/5); 가방=B+min(floor(STR/2),B−1)"
+              }
+            ]
+          },
+          "rows": [
+            {
+              "hero_class": "전사",
+              "cap_h": 10.0,
+              "raw_proc_pct": 24.574583,
+              "search_s": 4.66125,
+              "sale_bonus_pct": 6.425,
+              "bag": 146.9375,
+              "hp": 7048.75,
+              "mp": 2744.75
+            },
+            {
+              "hero_class": "도적",
+              "cap_h": 9.144318,
+              "raw_proc_pct": 24.424583,
+              "search_s": 4.005833,
+              "sale_bonus_pct": 6.45,
+              "bag": 147.0,
+              "hp": 2988.5625,
+              "mp": 2654.75
+            },
+            {
+              "hero_class": "레인저",
+              "cap_h": 9.068477,
+              "raw_proc_pct": 28.033229,
+              "search_s": 4.000833,
+              "sale_bonus_pct": 6.775,
+              "bag": 97.1875,
+              "hp": 2745.25,
+              "mp": 4819.9375
+            },
+            {
+              "hero_class": "마법사",
+              "cap_h": 9.057679,
+              "raw_proc_pct": 35.0,
+              "search_s": 4.669167,
+              "sale_bonus_pct": 6.775,
+              "bag": 96.8125,
+              "hp": 2711.0,
+              "mp": 7035.4375
+            },
+            {
+              "hero_class": "성직자",
+              "cap_h": 9.058306,
+              "raw_proc_pct": 28.206146,
+              "search_s": 4.669167,
+              "sale_bonus_pct": 19.875,
+              "bag": 96.8125,
+              "hp": 2713.0,
+              "mp": 4923.6875
+            },
+            {
+              "hero_class": "팔라딘",
+              "cap_h": 9.092297,
+              "raw_proc_pct": 24.58125,
+              "search_s": 4.66125,
+              "sale_bonus_pct": 19.933333,
+              "bag": 146.9375,
+              "hp": 2820.5625,
+              "mp": 2748.75
+            }
+          ],
+          "columns": [
+            {
+              "field": "hero_class",
+              "label": "직업"
+            },
+            {
+              "field": "cap_h",
+              "label": "보유시간 (h)"
+            },
+            {
+              "field": "raw_proc_pct",
+              "label": "기본 확률 (%)"
+            },
+            {
+              "field": "search_s",
+              "label": "탐색 (초)"
+            },
+            {
+              "field": "sale_bonus_pct",
+              "label": "판매 보너스 (%)"
+            },
+            {
+              "field": "bag",
+              "label": "가방 (칸)"
+            }
+          ],
+          "preview": {
+            "kind": "aggregate",
+            "note": "직업별 16개 신규 경로의 100레벨 평균",
+            "totalRows": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "all-class-efficiency",
+      "title": "성장과 판매수입의 균형",
+      "queries": [
+        {
+          "id": "all-class-scenarios",
+          "source": {
+            "label": "전 직업 신규 성장 경로",
+            "files": [
+              {
+                "label": "all-heldout.csv"
+              },
+              {
+                "label": "final_class_bonus_review.py"
+              }
+            ],
+            "filters": [
+              "직업: 6종",
+              "목표 레벨: 100",
+              "접속 간격: 8·12시간",
+              "접속 시 충전: 1·5·12분"
+            ],
+            "caveats": [
+              "실제 이용자 로그가 아닌 로컬 엔진 시뮬레이션입니다.",
+              "접속 간격 영향은 레벨별 저장시간 환산이며 실제 접속 이벤트 재생이 아닙니다.",
+              "HP 기본 8시간·최대 10시간, 마법사 기본 확률 35%, 탐색 최소 4초, 판매 보너스 최대 20%를 적용한 기획안입니다.",
+              "충전이 1~5분에 그치면 8시간 접속에서도 보유시간·충전량이 중요한 전사가 성장에 유리합니다.",
+              "판매수입은 누적 아이템 판매만 포함하며 퀘스트 골드·지출·총재산을 뜻하지 않습니다."
+            ],
+            "metricDefinitions": [
+              {
+                "name": "직업 간 격차",
+                "definition": "각 조건에서 가장 높은 직업과 낮은 직업의 성장속도 또는 평균 판매수입 비율을 비교합니다.",
+                "formula": "(최고 효율 / 최저 효율 − 1) × 100"
+              }
+            ],
+            "evidenceFlow": [
+              {
+                "kind": "validation",
+                "title": "교차 확인",
+                "detail": "이전 8개 seed와 신규 16개 seed 모두 완충 시 8시간 간격은 마법사, 12시간 간격은 전사가 성장 1위였습니다. 시간저장량 계산 두 구현은 일치했고, 100레벨 구간 상하한 차이는 최대 0.267%였습니다."
+              }
+            ]
+          },
+          "rows": [
+            {
+              "gap_h": 8.0,
+              "session_min": 1.0,
+              "growth_spread_pct": 5.260083174027663,
+              "sale_spread_pct": 8.060118718142895,
+              "fastest": "전사",
+              "slowest": "팔라딘",
+              "highest_sale": "성직자",
+              "lowest_sale": "도적"
+            },
+            {
+              "gap_h": 8.0,
+              "session_min": 5.0,
+              "growth_spread_pct": 5.260083174027708,
+              "sale_spread_pct": 8.060118718142872,
+              "fastest": "전사",
+              "slowest": "팔라딘",
+              "highest_sale": "성직자",
+              "lowest_sale": "도적"
+            },
+            {
+              "gap_h": 8.0,
+              "session_min": 12.0,
+              "growth_spread_pct": 3.56055741804302,
+              "sale_spread_pct": 10.794547454806303,
+              "fastest": "마법사",
+              "slowest": "전사",
+              "highest_sale": "성직자",
+              "lowest_sale": "전사"
+            },
+            {
+              "gap_h": 12.0,
+              "session_min": 1.0,
+              "growth_spread_pct": 5.260083174027663,
+              "sale_spread_pct": 8.060118718142872,
+              "fastest": "전사",
+              "slowest": "팔라딘",
+              "highest_sale": "성직자",
+              "lowest_sale": "도적"
+            },
+            {
+              "gap_h": 12.0,
+              "session_min": 5.0,
+              "growth_spread_pct": 5.260083174027663,
+              "sale_spread_pct": 8.06011871814285,
+              "fastest": "전사",
+              "slowest": "팔라딘",
+              "highest_sale": "성직자",
+              "lowest_sale": "도적"
+            },
+            {
+              "gap_h": 12.0,
+              "session_min": 12.0,
+              "growth_spread_pct": 5.260083174027685,
+              "sale_spread_pct": 8.060118718142872,
+              "fastest": "전사",
+              "slowest": "팔라딘",
+              "highest_sale": "성직자",
+              "lowest_sale": "도적"
+            }
+          ],
+          "columns": [
+            "gap_h",
+            "session_min",
+            "growth_spread_pct",
+            "sale_spread_pct",
+            "fastest",
+            "slowest",
+            "highest_sale",
+            "lowest_sale"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "all-class-caps",
+      "title": "상한과 검증 범위",
+      "queries": [
+        {
+          "id": "all-class-cap-counts",
+          "source": {
+            "label": "특화 상한 및 경계값 검증",
+            "files": [
+              {
+                "label": "summary.json"
+              },
+              {
+                "label": "growth-tail-iid-checks.log"
+              },
+              {
+                "label": "unchanged-engine-regression.log"
+              },
+              {
+                "label": "ClassBonusTailProbe.kt"
+              }
+            ],
+            "filters": [
+              "목표 레벨: 100",
+              "전체 전투 재생: 직업당 16개"
+            ],
+            "metricDefinitions": [
+              {
+                "name": "상한 도달",
+                "definition": "상한 도달 수는 신규 전투 경로 16개 중 100레벨에 해당 혜택의 최대치에 도달한 캐릭터 수입니다."
+              }
+            ],
+            "caveats": [
+              "특화 직업의 모든 캐릭터가 100레벨에 상한에 닿는 것은 아닙니다.",
+              "HP·DEX·CHA 수식에 직업 잠금이 없으므로 샘플의 비특화 상한 0건이 모든 성장운에서의 배타성을 보장하지는 않습니다.",
+              "추가 60,000개 성장 표본은 성장 이벤트 간 독립 난수를 가정한 민감도 분석이며 실제 전투 경로나 플레이어 확률이 아닙니다.",
+              "게임 코드·DB·기기 등록·배포는 이번 검증에서 변경하지 않았습니다."
+            ],
+            "evidenceFlow": [
+              {
+                "kind": "validation",
+                "title": "수치 경계",
+                "detail": "실제 시뮬레이션 훅의 624개 경계값 검사와, 변경 없는 엔진의 회귀 테스트 113개가 통과했습니다. HP 보유시간의 단조성·상한과 가방·기존 스킬 확률 공식도 독립 계산과 일치했습니다."
+              },
+              {
+                "kind": "validation",
+                "title": "보조 표본 제외",
+                "detail": "성장 함수만 같은 난수 상태로 연속 호출한 초기 자료는 실제 전투의 난수 호출 순서와 달라 제외했습니다. 전체 전투 재생 96개는 영향을 받지 않습니다."
+              }
+            ]
+          },
+          "rows": [
+            {
+              "hero_class": "전사",
+              "samples": 16,
+              "hp_10h": 16,
+              "mage_35": 0,
+              "search_4s": 0,
+              "sale_20pct": 0,
+              "bag_max": 15
+            },
+            {
+              "hero_class": "도적",
+              "samples": 16,
+              "hp_10h": 0,
+              "mage_35": 0,
+              "search_4s": 14,
+              "sale_20pct": 0,
+              "bag_max": 16
+            },
+            {
+              "hero_class": "레인저",
+              "samples": 16,
+              "hp_10h": 0,
+              "mage_35": 0,
+              "search_4s": 15,
+              "sale_20pct": 0,
+              "bag_max": 0
+            },
+            {
+              "hero_class": "마법사",
+              "samples": 16,
+              "hp_10h": 0,
+              "mage_35": 16,
+              "search_4s": 0,
+              "sale_20pct": 0,
+              "bag_max": 0
+            },
+            {
+              "hero_class": "성직자",
+              "samples": 16,
+              "hp_10h": 0,
+              "mage_35": 0,
+              "search_4s": 0,
+              "sale_20pct": 15,
+              "bag_max": 0
+            },
+            {
+              "hero_class": "팔라딘",
+              "samples": 16,
+              "hp_10h": 0,
+              "mage_35": 0,
+              "search_4s": 0,
+              "sale_20pct": 14,
+              "bag_max": 15
+            }
+          ],
+          "columns": [
+            "hero_class",
+            "samples",
+            "hp_10h",
+            "mage_35",
+            "search_4s",
+            "sale_20pct",
+            "bag_max"
+          ]
+        }
+      ]
+    }
+  ]
+}

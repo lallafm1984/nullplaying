@@ -1,0 +1,516 @@
+{
+  "status": "Share with caveats",
+  "engine_control_exact_match": true,
+  "holdout_games": 48,
+  "holdout_kills": 33676703,
+  "train_games": 12,
+  "train_seeds": [
+    0,
+    1
+  ],
+  "holdout_seeds": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "parameters": {
+    "hp_hours": 2.0,
+    "hp_k": 350.0,
+    "mp_pp": 8.0,
+    "mp_k": 750.0,
+    "dex_max": 0.15,
+    "dex_k": 35.0,
+    "cha_max": 0.15,
+    "cha_k": 20.0
+  },
+  "maximum_calendar_integration_bound_pct": 0.9125732725598024,
+  "level100_integration_bound_pct": 0.14752144157035296,
+  "holdout_proxy": {
+    "hp_hours": 2.0,
+    "hp_k": 350.0,
+    "mp_pp": 8.0,
+    "mp_k": 750.0,
+    "dex_max": 0.15,
+    "dex_k": 35.0,
+    "cha_max": 0.15,
+    "cha_k": 20.0,
+    "score": 0.05549531137688234,
+    "max_progress_gap": 0.031819257255989886,
+    "mean_progress_gap": 0.018152112597508797,
+    "max_sale_gap": 0.03827605194303052,
+    "baseline_max_gap": 0.019515791585774656,
+    "min_uplift": 0.012250808883245368,
+    "max_uplift": 0.3378992625528867
+  },
+  "level100_full_charge": [
+    {
+      "gap_h": 4.0,
+      "hero_class": "CLERIC",
+      "progress_uplift_pct": 6.413729806266044,
+      "days_saved_pct": 6.027163804842395,
+      "sale_uplift_pct": 16.61345817059503
+    },
+    {
+      "gap_h": 4.0,
+      "hero_class": "MAGE",
+      "progress_uplift_pct": 6.415483345758299,
+      "days_saved_pct": 6.028712311453333,
+      "sale_uplift_pct": 16.615379786392182
+    },
+    {
+      "gap_h": 4.0,
+      "hero_class": "PALADIN",
+      "progress_uplift_pct": 5.575267822532326,
+      "days_saved_pct": 5.28084648755438,
+      "sale_uplift_pct": 18.733106651301657
+    },
+    {
+      "gap_h": 4.0,
+      "hero_class": "RANGER",
+      "progress_uplift_pct": 7.003487384528384,
+      "days_saved_pct": 6.545101992200131,
+      "sale_uplift_pct": 17.29242636146855
+    },
+    {
+      "gap_h": 4.0,
+      "hero_class": "ROGUE",
+      "progress_uplift_pct": 6.5313978578124265,
+      "days_saved_pct": 6.130960439034039,
+      "sale_uplift_pct": 16.476002383175057
+    },
+    {
+      "gap_h": 4.0,
+      "hero_class": "WARRIOR",
+      "progress_uplift_pct": 5.575187746578991,
+      "days_saved_pct": 5.280774645612352,
+      "sale_uplift_pct": 15.609268411954535
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "CLERIC",
+      "progress_uplift_pct": 6.413729806266044,
+      "days_saved_pct": 6.027163804842395,
+      "sale_uplift_pct": 16.61345817059503
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "MAGE",
+      "progress_uplift_pct": 6.415483345758299,
+      "days_saved_pct": 6.028712311453333,
+      "sale_uplift_pct": 16.615379786392182
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "PALADIN",
+      "progress_uplift_pct": 5.575267822532326,
+      "days_saved_pct": 5.28084648755438,
+      "sale_uplift_pct": 18.733106651301657
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "RANGER",
+      "progress_uplift_pct": 7.003487384528384,
+      "days_saved_pct": 6.545101992200131,
+      "sale_uplift_pct": 17.29242636146855
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "ROGUE",
+      "progress_uplift_pct": 6.5313978578124265,
+      "days_saved_pct": 6.130960439034039,
+      "sale_uplift_pct": 16.476002383175057
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "WARRIOR",
+      "progress_uplift_pct": 5.575187746578991,
+      "days_saved_pct": 5.280774645612352,
+      "sale_uplift_pct": 15.609268411954535
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "CLERIC",
+      "progress_uplift_pct": 24.846278031045756,
+      "days_saved_pct": 19.901496803026188,
+      "sale_uplift_pct": 36.81276135544829
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "MAGE",
+      "progress_uplift_pct": 24.845244788054387,
+      "days_saved_pct": 19.90083389257904,
+      "sale_uplift_pct": 36.811629076384556
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "PALADIN",
+      "progress_uplift_pct": 24.003375782644397,
+      "days_saved_pct": 19.357034138101213,
+      "sale_uplift_pct": 39.45790851955429
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "RANGER",
+      "progress_uplift_pct": 25.850550146870543,
+      "days_saved_pct": 20.540673137068012,
+      "sale_uplift_pct": 37.95173172819837
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "ROGUE",
+      "progress_uplift_pct": 25.19368279211389,
+      "days_saved_pct": 20.123765217409893,
+      "sale_uplift_pct": 36.88039384140447
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "WARRIOR",
+      "progress_uplift_pct": 26.344079800384577,
+      "days_saved_pct": 20.851059932532255,
+      "sale_uplift_pct": 38.35207822661313
+    },
+    {
+      "gap_h": 24.0,
+      "hero_class": "CLERIC",
+      "progress_uplift_pct": 24.84627803104573,
+      "days_saved_pct": 19.901496803026177,
+      "sale_uplift_pct": 36.81276135544829
+    },
+    {
+      "gap_h": 24.0,
+      "hero_class": "MAGE",
+      "progress_uplift_pct": 24.845244788054345,
+      "days_saved_pct": 19.900833892579005,
+      "sale_uplift_pct": 36.81162907638449
+    },
+    {
+      "gap_h": 24.0,
+      "hero_class": "PALADIN",
+      "progress_uplift_pct": 24.003375782644397,
+      "days_saved_pct": 19.357034138101202,
+      "sale_uplift_pct": 39.45790851955429
+    },
+    {
+      "gap_h": 24.0,
+      "hero_class": "RANGER",
+      "progress_uplift_pct": 25.85055014687059,
+      "days_saved_pct": 20.540673137068033,
+      "sale_uplift_pct": 37.95173172819841
+    },
+    {
+      "gap_h": 24.0,
+      "hero_class": "ROGUE",
+      "progress_uplift_pct": 25.19368279211387,
+      "days_saved_pct": 20.123765217409883,
+      "sale_uplift_pct": 36.88039384140447
+    },
+    {
+      "gap_h": 24.0,
+      "hero_class": "WARRIOR",
+      "progress_uplift_pct": 26.344079800384556,
+      "days_saved_pct": 20.851059932532245,
+      "sale_uplift_pct": 38.35207822661311
+    }
+  ],
+  "checkpoint_gaps": [
+    {
+      "variant": "baseline8",
+      "level": 20,
+      "gap_h": 4.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.8580462436213363,
+      "sale_gap_pct": 1.8649740875005705
+    },
+    {
+      "variant": "baseline8",
+      "level": 20,
+      "gap_h": 8.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.8580462436213363,
+      "sale_gap_pct": 1.8649740875005705
+    },
+    {
+      "variant": "baseline8",
+      "level": 20,
+      "gap_h": 12.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.8580462436213585,
+      "sale_gap_pct": 1.8649740875005705
+    },
+    {
+      "variant": "baseline8",
+      "level": 20,
+      "gap_h": 24.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.8580462436213363,
+      "sale_gap_pct": 1.8649740875005705
+    },
+    {
+      "variant": "baseline8",
+      "level": 50,
+      "gap_h": 4.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.1906208713447386,
+      "sale_gap_pct": 1.2475669621788255
+    },
+    {
+      "variant": "baseline8",
+      "level": 50,
+      "gap_h": 8.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.1906208713447386,
+      "sale_gap_pct": 1.2475669621788255
+    },
+    {
+      "variant": "baseline8",
+      "level": 50,
+      "gap_h": 12.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.1906208713447164,
+      "sale_gap_pct": 1.2475669621788255
+    },
+    {
+      "variant": "baseline8",
+      "level": 50,
+      "gap_h": 24.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.1906208713446942,
+      "sale_gap_pct": 1.2475669621788033
+    },
+    {
+      "variant": "baseline8",
+      "level": 100,
+      "gap_h": 4.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 0.5003697750370018,
+      "sale_gap_pct": 0.45488810652192235
+    },
+    {
+      "variant": "baseline8",
+      "level": 100,
+      "gap_h": 8.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 0.5003697750370018,
+      "sale_gap_pct": 0.45488810652192235
+    },
+    {
+      "variant": "baseline8",
+      "level": 100,
+      "gap_h": 12.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 0.5003697750370018,
+      "sale_gap_pct": 0.45488810652192235
+    },
+    {
+      "variant": "baseline8",
+      "level": 100,
+      "gap_h": 24.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 0.5003697750370018,
+      "sale_gap_pct": 0.45488810652192235
+    },
+    {
+      "variant": "old12",
+      "level": 20,
+      "gap_h": 4.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.8580462436213363,
+      "sale_gap_pct": 1.8649740875005705
+    },
+    {
+      "variant": "old12",
+      "level": 20,
+      "gap_h": 8.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.8580462436213363,
+      "sale_gap_pct": 1.8649740875005705
+    },
+    {
+      "variant": "old12",
+      "level": 20,
+      "gap_h": 12.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.8580462436213363,
+      "sale_gap_pct": 1.8649740875005705
+    },
+    {
+      "variant": "old12",
+      "level": 20,
+      "gap_h": 24.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.8580462436213363,
+      "sale_gap_pct": 1.8649740875005705
+    },
+    {
+      "variant": "old12",
+      "level": 50,
+      "gap_h": 4.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.1906208713447386,
+      "sale_gap_pct": 1.2475669621788255
+    },
+    {
+      "variant": "old12",
+      "level": 50,
+      "gap_h": 8.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.1906208713447386,
+      "sale_gap_pct": 1.2475669621788255
+    },
+    {
+      "variant": "old12",
+      "level": 50,
+      "gap_h": 12.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.1906208713447386,
+      "sale_gap_pct": 1.2475669621788255
+    },
+    {
+      "variant": "old12",
+      "level": 50,
+      "gap_h": 24.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.1906208713447164,
+      "sale_gap_pct": 1.2475669621788477
+    },
+    {
+      "variant": "old12",
+      "level": 100,
+      "gap_h": 4.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 0.5003697750370018,
+      "sale_gap_pct": 0.45488810652192235
+    },
+    {
+      "variant": "old12",
+      "level": 100,
+      "gap_h": 8.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 0.5003697750370018,
+      "sale_gap_pct": 0.45488810652192235
+    },
+    {
+      "variant": "old12",
+      "level": 100,
+      "gap_h": 12.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 0.5003697750370018,
+      "sale_gap_pct": 0.45488810652192235
+    },
+    {
+      "variant": "old12",
+      "level": 100,
+      "gap_h": 24.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 0.5003697750370018,
+      "sale_gap_pct": 0.45488810652192235
+    },
+    {
+      "variant": "selected",
+      "level": 20,
+      "gap_h": 4.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.7526897714313927,
+      "sale_gap_pct": 3.2459693461690975
+    },
+    {
+      "variant": "selected",
+      "level": 20,
+      "gap_h": 8.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.7526897714313927,
+      "sale_gap_pct": 3.2459693461690975
+    },
+    {
+      "variant": "selected",
+      "level": 20,
+      "gap_h": 12.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 2.230421212520839,
+      "sale_gap_pct": 3.494971892036003
+    },
+    {
+      "variant": "selected",
+      "level": 20,
+      "gap_h": 24.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 2.230421212520839,
+      "sale_gap_pct": 3.4949718920359585
+    },
+    {
+      "variant": "selected",
+      "level": 50,
+      "gap_h": 4.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.2162189600211093,
+      "sale_gap_pct": 3.3577084677641977
+    },
+    {
+      "variant": "selected",
+      "level": 50,
+      "gap_h": 8.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.2162189600211093,
+      "sale_gap_pct": 3.3577084677641977
+    },
+    {
+      "variant": "selected",
+      "level": 50,
+      "gap_h": 12.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 2.518771767330219,
+      "sale_gap_pct": 3.602652139854201
+    },
+    {
+      "variant": "selected",
+      "level": 50,
+      "gap_h": 24.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 2.518771767330197,
+      "sale_gap_pct": 3.6026521398542233
+    },
+    {
+      "variant": "selected",
+      "level": 100,
+      "gap_h": 4.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.1751138993366883,
+      "sale_gap_pct": 2.800837026077563
+    },
+    {
+      "variant": "selected",
+      "level": 100,
+      "gap_h": 8.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.1751138993366883,
+      "sale_gap_pct": 2.800837026077563
+    },
+    {
+      "variant": "selected",
+      "level": 100,
+      "gap_h": 12.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.789719116636923,
+      "sale_gap_pct": 2.39708969475827
+    },
+    {
+      "variant": "selected",
+      "level": 100,
+      "gap_h": 24.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 1.7897191166368787,
+      "sale_gap_pct": 2.39708969475827
+    }
+  ],
+  "checks": [
+    "row completeness/uniqueness/nulls",
+    "disjoint train/holdout seeds",
+    "source hashes unchanged",
+    "monotonic capped bonuses 0..1e18",
+    "calendar endpoint integration bounds",
+    "separate old12/baseline8",
+    "pooled numerator/denominator aggregation",
+    "no post-holdout parameter retuning"
+  ]
+}

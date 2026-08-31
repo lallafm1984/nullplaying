@@ -1,0 +1,585 @@
+{
+  "file": "envelope-matched.csv",
+  "rows": 9600,
+  "games": 96,
+  "evaluated_levels": "20..100",
+  "checked_hook_rows": 9600,
+  "seed_indices": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "level100": {
+    "CLERIC": {
+      "cap_h": 9.058306013496297,
+      "raw_proc_pct": 28.206145833333334,
+      "search_s": 4.6691666666666665,
+      "sale_bonus_pct": 19.875,
+      "bag": 96.8125,
+      "hp": 2713.0,
+      "mp": 4923.6875
+    },
+    "MAGE": {
+      "cap_h": 9.057679455989602,
+      "raw_proc_pct": 32.941197640104264,
+      "search_s": 4.6691666666666665,
+      "sale_bonus_pct": 6.775,
+      "bag": 96.8125,
+      "hp": 2711.0,
+      "mp": 7035.4375
+    },
+    "PALADIN": {
+      "cap_h": 9.09229660520697,
+      "raw_proc_pct": 24.58125,
+      "search_s": 4.66125,
+      "sale_bonus_pct": 19.933333333333334,
+      "bag": 146.9375,
+      "hp": 2820.5625,
+      "mp": 2748.75
+    },
+    "RANGER": {
+      "cap_h": 9.068476599144894,
+      "raw_proc_pct": 28.033229166666665,
+      "search_s": 4.0008333333333335,
+      "sale_bonus_pct": 6.775,
+      "bag": 97.1875,
+      "hp": 2745.25,
+      "mp": 4819.9375
+    },
+    "ROGUE": {
+      "cap_h": 9.1443183984198,
+      "raw_proc_pct": 24.424583333333334,
+      "search_s": 4.005833333333333,
+      "sale_bonus_pct": 6.45,
+      "bag": 147.0,
+      "hp": 2988.5625,
+      "mp": 2654.75
+    },
+    "WARRIOR": {
+      "cap_h": 10.0,
+      "raw_proc_pct": 24.574583333333333,
+      "search_s": 4.66125,
+      "sale_bonus_pct": 6.425,
+      "bag": 146.9375,
+      "hp": 7048.75,
+      "mp": 2744.75
+    }
+  },
+  "level_checkpoints": {
+    "1": {
+      "CLERIC": {
+        "cap_h": 8.01050162353799,
+        "raw_proc_pct": 9.516562500000001,
+        "search_s": 4.93,
+        "sale_bonus_pct": 1.6083333333333334,
+        "bag": 19.8125,
+        "hp": 8.5,
+        "mp": 9.9375
+      },
+      "MAGE": {
+        "cap_h": 8.008462164113054,
+        "raw_proc_pct": 9.131837798925718,
+        "search_s": 4.93,
+        "sale_bonus_pct": 1.6083333333333334,
+        "bag": 19.8125,
+        "hp": 6.5,
+        "mp": 9.9375
+      },
+      "PALADIN": {
+        "cap_h": 8.012443602478525,
+        "raw_proc_pct": 9.263229166666667,
+        "search_s": 4.93,
+        "sale_bonus_pct": 1.6083333333333334,
+        "bag": 19.8125,
+        "hp": 10.5,
+        "mp": 7.9375
+      },
+      "RANGER": {
+        "cap_h": 8.012443602478525,
+        "raw_proc_pct": 9.325729166666667,
+        "search_s": 4.93,
+        "sale_bonus_pct": 1.6083333333333334,
+        "bag": 19.8125,
+        "hp": 10.5,
+        "mp": 7.9375
+      },
+      "ROGUE": {
+        "cap_h": 8.01050162353799,
+        "raw_proc_pct": 9.134895833333333,
+        "search_s": 4.93,
+        "sale_bonus_pct": 1.6083333333333334,
+        "bag": 19.8125,
+        "hp": 8.5,
+        "mp": 5.9375
+      },
+      "WARRIOR": {
+        "cap_h": 8.012443602478525,
+        "raw_proc_pct": 9.2565625,
+        "search_s": 4.93,
+        "sale_bonus_pct": 1.6083333333333334,
+        "bag": 19.8125,
+        "hp": 10.5,
+        "mp": 3.9375
+      }
+    },
+    "20": {
+      "CLERIC": {
+        "cap_h": 8.120070788486313,
+        "raw_proc_pct": 12.6496875,
+        "search_s": 4.904583333333333,
+        "sale_bonus_pct": 3.8120834005882047,
+        "bag": 33.0,
+        "hp": 180.3125,
+        "mp": 202.3125
+      },
+      "MAGE": {
+        "cap_h": 8.11905495987531,
+        "raw_proc_pct": 12.442030139010365,
+        "search_s": 4.904583333333333,
+        "sale_bonus_pct": 2.216666666666667,
+        "bag": 33.0,
+        "hp": 178.3125,
+        "mp": 230.875
+      },
+      "PALADIN": {
+        "cap_h": 8.122706168060775,
+        "raw_proc_pct": 12.537604166666666,
+        "search_s": 4.902916666666667,
+        "sale_bonus_pct": 3.7765000269019486,
+        "bag": 39.75,
+        "hp": 185.0625,
+        "mp": 172.5625
+      },
+      "RANGER": {
+        "cap_h": 8.122701946698898,
+        "raw_proc_pct": 12.458958333333333,
+        "search_s": 4.822424998654903,
+        "sale_bonus_pct": 2.216666666666667,
+        "bag": 33.125,
+        "hp": 185.25,
+        "mp": 200.375
+      },
+      "ROGUE": {
+        "cap_h": 8.121495426685138,
+        "raw_proc_pct": 12.2821875,
+        "search_s": 4.821933330643138,
+        "sale_bonus_pct": 2.225,
+        "bag": 39.375,
+        "hp": 183.125,
+        "mp": 169.3125
+      },
+      "WARRIOR": {
+        "cap_h": 8.139441094064146,
+        "raw_proc_pct": 12.4059375,
+        "search_s": 4.902916666666667,
+        "sale_bonus_pct": 2.1833333333333336,
+        "bag": 39.75,
+        "hp": 238.25,
+        "mp": 168.5625
+      }
+    },
+    "40": {
+      "CLERIC": {
+        "cap_h": 8.255081872862878,
+        "raw_proc_pct": 17.307708333333334,
+        "search_s": 4.864166666666667,
+        "sale_bonus_pct": 6.821605677210492,
+        "bag": 48.25,
+        "hp": 458.25,
+        "mp": 597.125
+      },
+      "MAGE": {
+        "cap_h": 8.25418717474641,
+        "raw_proc_pct": 16.85353362095129,
+        "search_s": 4.864166666666667,
+        "sale_bonus_pct": 3.091666666666667,
+        "bag": 48.25,
+        "hp": 456.25,
+        "mp": 744.875
+      },
+      "PALADIN": {
+        "cap_h": 8.260970078467512,
+        "raw_proc_pct": 16.746666666666666,
+        "search_s": 4.8620833333333335,
+        "sale_bonus_pct": 6.674537591241203,
+        "bag": 63.0625,
+        "hp": 470.9375,
+        "mp": 448.0
+      },
+      "RANGER": {
+        "cap_h": 8.26008223824389,
+        "raw_proc_pct": 17.1003125,
+        "search_s": 4.66502312043794,
+        "sale_bonus_pct": 3.033333333333333,
+        "bag": 48.4375,
+        "hp": 469.375,
+        "mp": 585.1875
+      },
+      "ROGUE": {
+        "cap_h": 8.26436718120302,
+        "raw_proc_pct": 16.484895833333333,
+        "search_s": 4.670439787104606,
+        "sale_bonus_pct": 2.9916666666666667,
+        "bag": 62.0,
+        "hp": 478.75,
+        "mp": 440.9375
+      },
+      "WARRIOR": {
+        "cap_h": 8.381718038181118,
+        "raw_proc_pct": 16.6775,
+        "search_s": 4.8620833333333335,
+        "sale_bonus_pct": 2.8916666666666666,
+        "bag": 63.0625,
+        "hp": 757.8125,
+        "mp": 444.0
+      }
+    },
+    "60": {
+      "CLERIC": {
+        "cap_h": 8.45127415940155,
+        "raw_proc_pct": 22.375,
+        "search_s": 4.80375,
+        "sale_bonus_pct": 10.770543763370476,
+        "bag": 64.5,
+        "hp": 935.0625,
+        "mp": 1425.0
+      },
+      "MAGE": {
+        "cap_h": 8.450498477936994,
+        "raw_proc_pct": 22.871048638996843,
+        "search_s": 4.80375,
+        "sale_bonus_pct": 4.241666666666667,
+        "bag": 64.5,
+        "hp": 933.0625,
+        "mp": 1899.4375
+      },
+      "PALADIN": {
+        "cap_h": 8.469237887941278,
+        "raw_proc_pct": 21.5678125,
+        "search_s": 4.80625,
+        "sale_bonus_pct": 10.662581783089603,
+        "bag": 90.9375,
+        "hp": 980.625,
+        "mp": 940.6875
+      },
+      "RANGER": {
+        "cap_h": 8.45879145006785,
+        "raw_proc_pct": 22.325729166666665,
+        "search_s": 4.466852343192897,
+        "sale_bonus_pct": 4.175,
+        "bag": 64.625,
+        "hp": 954.4375,
+        "mp": 1395.4375
+      },
+      "ROGUE": {
+        "cap_h": 8.484356522477054,
+        "raw_proc_pct": 21.533958333333334,
+        "search_s": 4.469731874554317,
+        "sale_bonus_pct": 4.1,
+        "bag": 90.4375,
+        "hp": 1020.25,
+        "mp": 920.375
+      },
+      "WARRIOR": {
+        "cap_h": 8.793705719967747,
+        "raw_proc_pct": 21.561145833333335,
+        "search_s": 4.80625,
+        "sale_bonus_pct": 4.058333333333334,
+        "bag": 90.9375,
+        "hp": 1925.8125,
+        "mp": 936.6875
+      }
+    },
+    "80": {
+      "CLERIC": {
+        "cap_h": 8.723465722054964,
+        "raw_proc_pct": 24.754375,
+        "search_s": 4.739166666666667,
+        "sale_bonus_pct": 15.146859800066743,
+        "bag": 80.5,
+        "hp": 1686.75,
+        "mp": 2852.625
+      },
+      "MAGE": {
+        "cap_h": 8.722776467263479,
+        "raw_proc_pct": 26.709713627285794,
+        "search_s": 4.739166666666667,
+        "sale_bonus_pct": 5.4750000000000005,
+        "bag": 80.5,
+        "hp": 1684.75,
+        "mp": 3973.9375
+      },
+      "PALADIN": {
+        "cap_h": 8.753285519793327,
+        "raw_proc_pct": 22.850729166666667,
+        "search_s": 4.737916666666667,
+        "sale_bonus_pct": 15.0595007156134,
+        "bag": 121.625,
+        "hp": 1772.3125,
+        "mp": 1710.4375
+      },
+      "RANGER": {
+        "cap_h": 8.733459949102356,
+        "raw_proc_pct": 24.663645833333334,
+        "search_s": 4.2385909871079965,
+        "sale_bonus_pct": 5.441666666666666,
+        "bag": 80.8125,
+        "hp": 1715.625,
+        "mp": 2798.1875
+      },
+      "ROGUE": {
+        "cap_h": 8.787404239235846,
+        "raw_proc_pct": 22.76625,
+        "search_s": 4.244007653774663,
+        "sale_bonus_pct": 5.275,
+        "bag": 119.4375,
+        "hp": 1872.9375,
+        "mp": 1659.75
+      },
+      "WARRIOR": {
+        "cap_h": 9.341027554911618,
+        "raw_proc_pct": 22.8440625,
+        "search_s": 4.737916666666667,
+        "sale_bonus_pct": 5.133333333333334,
+        "bag": 121.625,
+        "hp": 4009.375,
+        "mp": 1706.4375
+      }
+    },
+    "90": {
+      "CLERIC": {
+        "cap_h": 8.88456604999924,
+        "raw_proc_pct": 26.3628125,
+        "search_s": 4.708333333333333,
+        "sale_bonus_pct": 17.45646429256586,
+        "bag": 88.6875,
+        "hp": 2168.4375,
+        "mp": 3817.6875
+      },
+      "MAGE": {
+        "cap_h": 8.88391067550223,
+        "raw_proc_pct": 29.53763453673794,
+        "search_s": 4.708333333333333,
+        "sale_bonus_pct": 6.083333333333334,
+        "bag": 88.6875,
+        "hp": 2166.4375,
+        "mp": 5395.625
+      },
+      "PALADIN": {
+        "cap_h": 8.918582270711154,
+        "raw_proc_pct": 23.668125,
+        "search_s": 4.7075,
+        "sale_bonus_pct": 17.452824609112636,
+        "bag": 134.75,
+        "hp": 2271.25,
+        "mp": 2200.875
+      },
+      "RANGER": {
+        "cap_h": 8.894577681580317,
+        "raw_proc_pct": 26.236875,
+        "search_s": 4.121877459952043,
+        "sale_bonus_pct": 6.041666666666667,
+        "bag": 89.125,
+        "hp": 2198.8125,
+        "mp": 3742.125
+      },
+      "ROGUE": {
+        "cap_h": 8.96134355073601,
+        "raw_proc_pct": 23.5503125,
+        "search_s": 4.1267601187050404,
+        "sale_bonus_pct": 5.875,
+        "bag": 134.375,
+        "hp": 2403.75,
+        "mp": 2130.1875
+      },
+      "WARRIOR": {
+        "cap_h": 9.657878705979995,
+        "raw_proc_pct": 23.661458333333332,
+        "search_s": 4.7075,
+        "sale_bonus_pct": 5.808333333333334,
+        "bag": 134.75,
+        "hp": 5422.625,
+        "mp": 2196.875
+      }
+    },
+    "100": {
+      "CLERIC": {
+        "cap_h": 9.058306013496297,
+        "raw_proc_pct": 28.206145833333334,
+        "search_s": 4.6691666666666665,
+        "sale_bonus_pct": 19.875,
+        "bag": 96.8125,
+        "hp": 2713.0,
+        "mp": 4923.6875
+      },
+      "MAGE": {
+        "cap_h": 9.057679455989602,
+        "raw_proc_pct": 32.941197640104264,
+        "search_s": 4.6691666666666665,
+        "sale_bonus_pct": 6.775,
+        "bag": 96.8125,
+        "hp": 2711.0,
+        "mp": 7035.4375
+      },
+      "PALADIN": {
+        "cap_h": 9.09229660520697,
+        "raw_proc_pct": 24.58125,
+        "search_s": 4.66125,
+        "sale_bonus_pct": 19.933333333333334,
+        "bag": 146.9375,
+        "hp": 2820.5625,
+        "mp": 2748.75
+      },
+      "RANGER": {
+        "cap_h": 9.068476599144894,
+        "raw_proc_pct": 28.033229166666665,
+        "search_s": 4.0008333333333335,
+        "sale_bonus_pct": 6.775,
+        "bag": 97.1875,
+        "hp": 2745.25,
+        "mp": 4819.9375
+      },
+      "ROGUE": {
+        "cap_h": 9.1443183984198,
+        "raw_proc_pct": 24.424583333333334,
+        "search_s": 4.005833333333333,
+        "sale_bonus_pct": 6.45,
+        "bag": 147.0,
+        "hp": 2988.5625,
+        "mp": 2654.75
+      },
+      "WARRIOR": {
+        "cap_h": 10.0,
+        "raw_proc_pct": 24.574583333333333,
+        "search_s": 4.66125,
+        "sale_bonus_pct": 6.425,
+        "bag": 146.9375,
+        "hp": 7048.75,
+        "mp": 2744.75
+      }
+    }
+  },
+  "cap_hits": [
+    {
+      "hero_class": "WARRIOR",
+      "samples": 16,
+      "reached_by100": 16,
+      "reached_by_end": 16,
+      "max_level": 100,
+      "first_min": 100,
+      "first_max": 100,
+      "first_median": 100.0
+    },
+    {
+      "hero_class": "MAGE",
+      "samples": 16,
+      "reached_by100": 0,
+      "reached_by_end": 0,
+      "max_level": 100,
+      "first_min": null,
+      "first_max": null,
+      "first_median": null
+    },
+    {
+      "hero_class": "ROGUE",
+      "samples": 16,
+      "reached_by100": 14,
+      "reached_by_end": 14,
+      "max_level": 100,
+      "first_min": 100,
+      "first_max": 100,
+      "first_median": 100.0
+    },
+    {
+      "hero_class": "RANGER",
+      "samples": 16,
+      "reached_by100": 15,
+      "reached_by_end": 15,
+      "max_level": 100,
+      "first_min": 100,
+      "first_max": 100,
+      "first_median": 100.0
+    },
+    {
+      "hero_class": "CLERIC",
+      "samples": 16,
+      "reached_by100": 15,
+      "reached_by_end": 15,
+      "max_level": 100,
+      "first_min": 100,
+      "first_max": 100,
+      "first_median": 100.0
+    },
+    {
+      "hero_class": "PALADIN",
+      "samples": 16,
+      "reached_by100": 14,
+      "reached_by_end": 14,
+      "max_level": 100,
+      "first_min": 100,
+      "first_max": 100,
+      "first_median": 100.0
+    }
+  ],
+  "max_growth_spread_pct": 4.633978011504691,
+  "max_sale_spread_pct": 9.911478811602459,
+  "key_scenarios": [
+    {
+      "level": 100,
+      "gap_h": 8,
+      "session_min": 1,
+      "growth_spread_pct": 4.633978011504669,
+      "sale_spread_pct": 7.621654868444061,
+      "fastest": "WARRIOR",
+      "slowest": "PALADIN",
+      "highest_sale": "CLERIC",
+      "lowest_sale": "MAGE"
+    },
+    {
+      "level": 100,
+      "gap_h": 8,
+      "session_min": 12,
+      "growth_spread_pct": 2.8659019080013337,
+      "sale_spread_pct": 9.911478811602459,
+      "fastest": "RANGER",
+      "slowest": "WARRIOR",
+      "highest_sale": "CLERIC",
+      "lowest_sale": "WARRIOR"
+    },
+    {
+      "level": 100,
+      "gap_h": 12,
+      "session_min": 1,
+      "growth_spread_pct": 4.633978011504669,
+      "sale_spread_pct": 7.621654868444061,
+      "fastest": "WARRIOR",
+      "slowest": "PALADIN",
+      "highest_sale": "CLERIC",
+      "lowest_sale": "MAGE"
+    },
+    {
+      "level": 100,
+      "gap_h": 12,
+      "session_min": 12,
+      "growth_spread_pct": 4.633978011504691,
+      "sale_spread_pct": 7.621654868444061,
+      "fastest": "WARRIOR",
+      "slowest": "PALADIN",
+      "highest_sale": "CLERIC",
+      "lowest_sale": "MAGE"
+    }
+  ]
+}

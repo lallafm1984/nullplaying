@@ -1,0 +1,12 @@
+{
+  "curve": "linear_cap",
+  "hp_hours": 2.0,
+  "hp_k": 6000.0,
+  "mp_pp": 10.0,
+  "mp_k": 6000.0,
+  "dex_max": 0.2,
+  "dex_k": 150.0,
+  "cha_max": 0.2,
+  "cha_k": 150.0,
+  "hp_power": 0.8
+}

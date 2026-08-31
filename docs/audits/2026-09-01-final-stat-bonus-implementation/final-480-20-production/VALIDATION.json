@@ -1,0 +1,122 @@
+{
+  "checked_at": "2026-09-01T02:35:04.977004+09:00",
+  "base_minutes": 480,
+  "charge_minutes": 20,
+  "games": 24,
+  "rows": 2400,
+  "seed_range": [
+    46,
+    49
+  ],
+  "live_source_hash_check": "PASS",
+  "formulas_and_bounds": "PASS",
+  "continuous_progression_vs_720_12": "All non-capacity columns exactly match at every level",
+  "max_growth_spread_20_100": 7.6910834603402645,
+  "max_sale_spread_20_100": 8.84008031835739,
+  "level100_effects": {
+    "CLERIC": {
+      "bonus_cap_h": 8.451535763888888,
+      "bonus_proc_pct": 27.7225,
+      "bonus_search_s": 4.5025,
+      "bonus_sale_pct": 15.0
+    },
+    "MAGE": {
+      "bonus_cap_h": 8.451535763888888,
+      "bonus_proc_pct": 33.1325,
+      "bonus_search_s": 4.5025,
+      "bonus_sale_pct": 4.95
+    },
+    "PALADIN": {
+      "bonus_cap_h": 8.500332430555556,
+      "bonus_proc_pct": 23.155,
+      "bonus_search_s": 4.53,
+      "bonus_sale_pct": 15.0
+    },
+    "RANGER": {
+      "bonus_cap_h": 8.470722013888889,
+      "bonus_proc_pct": 28.002499999999998,
+      "bonus_search_s": 3.5,
+      "bonus_sale_pct": 4.925
+    },
+    "ROGUE": {
+      "bonus_cap_h": 8.459501111111111,
+      "bonus_proc_pct": 23.035,
+      "bonus_search_s": 3.5,
+      "bonus_sale_pct": 4.425
+    },
+    "WARRIOR": {
+      "bonus_cap_h": 10.0,
+      "bonus_proc_pct": 23.155,
+      "bonus_search_s": 4.53,
+      "bonus_sale_pct": 4.775
+    }
+  },
+  "key_scenarios": [
+    {
+      "level": 100,
+      "gap_h": 8,
+      "session_min": 1,
+      "growth_spread_pct": 7.691083460340242,
+      "sale_spread_pct": 5.792999171000202,
+      "fastest": "WARRIOR",
+      "slowest": "PALADIN",
+      "highest_sale": "CLERIC"
+    },
+    {
+      "level": 100,
+      "gap_h": 8,
+      "session_min": 12,
+      "growth_spread_pct": 7.691083460340242,
+      "sale_spread_pct": 5.792999171000224,
+      "fastest": "WARRIOR",
+      "slowest": "PALADIN",
+      "highest_sale": "CLERIC"
+    },
+    {
+      "level": 100,
+      "gap_h": 8,
+      "session_min": 20,
+      "growth_spread_pct": 5.386702834104784,
+      "sale_spread_pct": 8.84008031835739,
+      "fastest": "RANGER",
+      "slowest": "PALADIN",
+      "highest_sale": "CLERIC"
+    },
+    {
+      "level": 100,
+      "gap_h": 12,
+      "session_min": 1,
+      "growth_spread_pct": 7.691083460340242,
+      "sale_spread_pct": 5.792999171000224,
+      "fastest": "WARRIOR",
+      "slowest": "PALADIN",
+      "highest_sale": "CLERIC"
+    },
+    {
+      "level": 100,
+      "gap_h": 12,
+      "session_min": 12,
+      "growth_spread_pct": 7.691083460340242,
+      "sale_spread_pct": 5.792999171000202,
+      "fastest": "WARRIOR",
+      "slowest": "PALADIN",
+      "highest_sale": "CLERIC"
+    },
+    {
+      "level": 100,
+      "gap_h": 12,
+      "session_min": 20,
+      "growth_spread_pct": 7.691083460340198,
+      "sale_spread_pct": 5.792999171000202,
+      "fastest": "WARRIOR",
+      "slowest": "PALADIN",
+      "highest_sale": "CLERIC"
+    }
+  ],
+  "caveats": [
+    "Four deterministic seeds per class, not a player experiment.",
+    "Calendar values approximate recurring sessions using adjacent level capacities.",
+    "Foreground progress is simulated continuously; partial charging is a separate calendar model.",
+    "The user-selected class-identity design does not meet the old 6% equal-efficiency threshold."
+  ]
+}

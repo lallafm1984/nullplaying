@@ -1,0 +1,9 @@
+{
+  "analysis_validation": "passed_with_caveats",
+  "mcp_manifest_validation": "failed_python_source_not_accepted_by_sql_only_validator",
+  "mcp_render_attempted": false,
+  "site_published": false,
+  "fallback": "REPORT.md with complete numerical tables",
+  "notebook_code_cells": "plain_python_sequential_passed",
+  "notebook_jupyter_kernel": "not_run_missing_local_dependencies"
+}

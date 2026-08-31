@@ -1,0 +1,27 @@
+{
+  "all_eight_stats_and_footer_visible_without_scrolling": [
+    "ko",
+    "en",
+    "ja"
+  ],
+  "creation_and_adventurer_copy_identical": true,
+  "badge_touch_target_dp_at_least": 48,
+  "creation_total_right_aligned": true,
+  "screen_px": [
+    1080,
+    2340
+  ],
+  "density_dpi": 420,
+  "system_font_scale": 1.0,
+  "apk_sha256": "3ced37662cc53192ea4b8931a8dc51a5ed865aca0769ffa3e1e8893fecd2229d",
+  "english_japanese_capture_apk_sha256": "e164af052a8b74f84a6d70fefed7c2a1082bed549a2cc26d8140846afa023a10",
+  "english_japanese_capture_scope": "Before heading-only total alignment; popup and translations unchanged.",
+  "screenshots": {
+    "creation-guide-ko-compact.png": "7e842f31fa41321c8951e26f36684f565613c82d3147cdf0880af560cc562776",
+    "adventurer-guide-ko-compact.png": "6aafefe2e52aafb979f2c8898111a103b82b6b4f47d409fa3bfc8089aed36574",
+    "adventurer-guide-en-compact.png": "d3fc20734d8fe25427ad6fac373592497ea637015e136ccf474195f00146bf6a",
+    "adventurer-guide-ja-compact.png": "007f96d319a760cc4d0cd216ecc10c6fa1adeec43b062fb76cd1f8d1deecd661",
+    "creation-ko-badge.png": "44c1ff1668df79b0581601326448815623006205aa32a70fdfa53bde1f927a68",
+    "adventurer-ko-badge.png": "ca6f08e1e57c8c9466a2dc0c0b698136c8b540eb25a448d1d7e8966e422db57d"
+  }
+}

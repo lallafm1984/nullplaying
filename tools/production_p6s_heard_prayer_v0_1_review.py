@@ -258,9 +258,9 @@ def main() -> int:
 
     expected_audit = {
         "serial": "emulator-5554", "avdName": "alarmquest-qa", "androidRelease": "15", "apiLevel": "35",
-        "packageName": "com.alarmquest", "versionName": "0.1.0", "versionCode": "1", "targetSdk": "36",
+        "packageName": "com.nullplaying", "versionName": "0.1.0", "versionCode": "1", "targetSdk": "36",
         "apkSizeBytes": str(APK_SIZE), "apkSha256": APK_SHA, "installResult": "Success", "pmClearResult": "Success",
-        "launchState": "COLD", "topResumedActivity": "com.alarmquest/.MainActivity", "freshRosterEmpty": "true",
+        "launchState": "COLD", "topResumedActivity": "com.nullplaying/.MainActivity", "freshRosterEmpty": "true",
         "androidRuntimeFatalCount": "0", "emulatorScreenshotSha256": SCREEN_SHA, "emulatorUiDumpSha256": UI_SHA,
         "engineTests": "783", "appDebugTests": "88", "appReleaseTests": "88", "totalTests": "959",
         "testFailures": "0", "testErrors": "0", "testSkipped": "0", "lintErrors": "0", "lintWarnings": "22",
@@ -282,14 +282,14 @@ def main() -> int:
         check(f"audit:{key}", audit.get(key) == expected, audit.get(key))
 
     if args.with_emulator:
-        version = adb("shell", "dumpsys", "package", "com.alarmquest")
+        version = adb("shell", "dumpsys", "package", "com.nullplaying")
         activity = adb("shell", "dumpsys", "activity", "activities")
         crash = adb("logcat", "-d", "-b", "crash")
         check("emulator:device", "emulator-5554" in subprocess.run(("adb", "devices"), text=True,
               capture_output=True, check=False).stdout, "emulator-5554")
         check("emulator:version", "versionName=0.1.0" in version, "0.1.0")
         check("emulator:target", "targetSdk=36" in version, "36")
-        check("emulator:focus", "com.alarmquest/.MainActivity" in activity, "MainActivity")
+        check("emulator:focus", "com.nullplaying/.MainActivity" in activity, "MainActivity")
         check("emulator:android", adb("shell", "getprop", "ro.build.version.release") == "15", "15")
         check("emulator:api", adb("shell", "getprop", "ro.build.version.sdk") == "35", "35")
         check("emulator:crash", "FATAL EXCEPTION" not in crash, "0")

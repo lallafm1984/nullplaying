@@ -1,0 +1,16 @@
+{
+  "variant": "baseline",
+  "samples": 1,
+  "seed_offset": 14,
+  "level": 100,
+  "mage_threshold": 8000,
+  "classes": "",
+  "output": "baseline-identity.csv",
+  "started_at": "2026-09-01T00:43:05.150767+09:00",
+  "finished_at": "2026-09-01T00:43:12.991132+09:00",
+  "duration_seconds": 7.840450958996371,
+  "output_sha256": "a258058f8f91eeebcb9b94524bb020890805409917686c1acbb1e15b6680ff46",
+  "network": "OS sandbox denied",
+  "database_files": "OS sandbox denied",
+  "app_started": false
+}

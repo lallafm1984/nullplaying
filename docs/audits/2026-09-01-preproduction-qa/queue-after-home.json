@@ -1,0 +1,14 @@
+{
+  "label": "after-home",
+  "emulator": "emulator-5556",
+  "network_routes": [],
+  "airplane_mode_on": true,
+  "remote_auth_session_present": false,
+  "queued_session_logs": 3,
+  "unique_event_ids": true,
+  "queued_reasons": {
+    "background": 3
+  },
+  "pending_ranking_present": true,
+  "pending_ranking_entry_count": 0
+}

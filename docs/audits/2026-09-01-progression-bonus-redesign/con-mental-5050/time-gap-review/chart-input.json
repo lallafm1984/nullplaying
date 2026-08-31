@@ -1,0 +1,609 @@
+{
+  "schemaVersion": 1,
+  "id": "con-time-gap",
+  "title": "100레벨: CON에 따른 추가 모험시간",
+  "chart": {
+    "type": "line",
+    "x": "con",
+    "y": "bonus_min",
+    "series": "series",
+    "xLabel": "CON",
+    "yLabel": "기본 8시간 외 보너스 (분)",
+    "showXAxisLabel": true
+  },
+  "rows": [
+    {
+      "con": 0,
+      "series": "현재 0.6",
+      "bonus_min": 0.0
+    },
+    {
+      "con": 5,
+      "series": "현재 0.6",
+      "bonus_min": 15.59224
+    },
+    {
+      "con": 10,
+      "series": "현재 0.6",
+      "bonus_min": 23.63342
+    },
+    {
+      "con": 15,
+      "series": "현재 0.6",
+      "bonus_min": 30.14264
+    },
+    {
+      "con": 20,
+      "series": "현재 0.6",
+      "bonus_min": 35.82156
+    },
+    {
+      "con": 25,
+      "series": "현재 0.6",
+      "bonus_min": 40.95345
+    },
+    {
+      "con": 30,
+      "series": "현재 0.6",
+      "bonus_min": 45.68769
+    },
+    {
+      "con": 35,
+      "series": "현재 0.6",
+      "bonus_min": 50.11495
+    },
+    {
+      "con": 40,
+      "series": "현재 0.6",
+      "bonus_min": 54.29533
+    },
+    {
+      "con": 45,
+      "series": "현재 0.6",
+      "bonus_min": 58.2712
+    },
+    {
+      "con": 50,
+      "series": "현재 0.6",
+      "bonus_min": 62.07382
+    },
+    {
+      "con": 55,
+      "series": "현재 0.6",
+      "bonus_min": 65.72704
+    },
+    {
+      "con": 60,
+      "series": "현재 0.6",
+      "bonus_min": 69.2496
+    },
+    {
+      "con": 65,
+      "series": "현재 0.6",
+      "bonus_min": 72.65651
+    },
+    {
+      "con": 70,
+      "series": "현재 0.6",
+      "bonus_min": 75.96006
+    },
+    {
+      "con": 75,
+      "series": "현재 0.6",
+      "bonus_min": 79.17047
+    },
+    {
+      "con": 80,
+      "series": "현재 0.6",
+      "bonus_min": 82.29633
+    },
+    {
+      "con": 85,
+      "series": "현재 0.6",
+      "bonus_min": 85.34495
+    },
+    {
+      "con": 90,
+      "series": "현재 0.6",
+      "bonus_min": 88.32263
+    },
+    {
+      "con": 95,
+      "series": "현재 0.6",
+      "bonus_min": 91.23483
+    },
+    {
+      "con": 100,
+      "series": "현재 0.6",
+      "bonus_min": 94.08632
+    },
+    {
+      "con": 105,
+      "series": "현재 0.6",
+      "bonus_min": 96.88133
+    },
+    {
+      "con": 110,
+      "series": "현재 0.6",
+      "bonus_min": 99.62357
+    },
+    {
+      "con": 115,
+      "series": "현재 0.6",
+      "bonus_min": 102.31639
+    },
+    {
+      "con": 120,
+      "series": "현재 0.6",
+      "bonus_min": 104.96276
+    },
+    {
+      "con": 125,
+      "series": "현재 0.6",
+      "bonus_min": 107.56538
+    },
+    {
+      "con": 130,
+      "series": "현재 0.6",
+      "bonus_min": 110.12667
+    },
+    {
+      "con": 135,
+      "series": "현재 0.6",
+      "bonus_min": 112.64885
+    },
+    {
+      "con": 140,
+      "series": "현재 0.6",
+      "bonus_min": 115.13393
+    },
+    {
+      "con": 145,
+      "series": "현재 0.6",
+      "bonus_min": 117.58375
+    },
+    {
+      "con": 150,
+      "series": "현재 0.6",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 155,
+      "series": "현재 0.6",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 160,
+      "series": "현재 0.6",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 165,
+      "series": "현재 0.6",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 170,
+      "series": "현재 0.6",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 175,
+      "series": "현재 0.6",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 180,
+      "series": "현재 0.6",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 0,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 0.0
+    },
+    {
+      "con": 5,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 4.0
+    },
+    {
+      "con": 10,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 8.0
+    },
+    {
+      "con": 15,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 12.0
+    },
+    {
+      "con": 20,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 16.0
+    },
+    {
+      "con": 25,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 20.0
+    },
+    {
+      "con": 30,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 24.0
+    },
+    {
+      "con": 35,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 28.0
+    },
+    {
+      "con": 40,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 32.0
+    },
+    {
+      "con": 45,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 36.0
+    },
+    {
+      "con": 50,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 40.0
+    },
+    {
+      "con": 55,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 44.0
+    },
+    {
+      "con": 60,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 48.0
+    },
+    {
+      "con": 65,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 52.0
+    },
+    {
+      "con": 70,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 56.0
+    },
+    {
+      "con": 75,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 60.0
+    },
+    {
+      "con": 80,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 64.0
+    },
+    {
+      "con": 85,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 68.0
+    },
+    {
+      "con": 90,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 72.0
+    },
+    {
+      "con": 95,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 76.0
+    },
+    {
+      "con": 100,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 80.0
+    },
+    {
+      "con": 105,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 84.0
+    },
+    {
+      "con": 110,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 88.0
+    },
+    {
+      "con": 115,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 92.0
+    },
+    {
+      "con": 120,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 96.0
+    },
+    {
+      "con": 125,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 100.0
+    },
+    {
+      "con": 130,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 104.0
+    },
+    {
+      "con": 135,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 108.0
+    },
+    {
+      "con": 140,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 112.0
+    },
+    {
+      "con": 145,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 116.0
+    },
+    {
+      "con": 150,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 155,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 160,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 165,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 170,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 175,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 180,
+      "series": "완만한 강화 1.0",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 0,
+      "series": "강한 특화 1.2",
+      "bonus_min": 0.0
+    },
+    {
+      "con": 5,
+      "series": "강한 특화 1.2",
+      "bonus_min": 2.02598
+    },
+    {
+      "con": 10,
+      "series": "강한 특화 1.2",
+      "bonus_min": 4.65449
+    },
+    {
+      "con": 15,
+      "series": "강한 특화 1.2",
+      "bonus_min": 7.57149
+    },
+    {
+      "con": 20,
+      "series": "강한 특화 1.2",
+      "bonus_min": 10.6932
+    },
+    {
+      "con": 25,
+      "series": "강한 특화 1.2",
+      "bonus_min": 13.97654
+    },
+    {
+      "con": 30,
+      "series": "강한 특화 1.2",
+      "bonus_min": 17.39471
+    },
+    {
+      "con": 35,
+      "series": "강한 특화 1.2",
+      "bonus_min": 20.92924
+    },
+    {
+      "con": 40,
+      "series": "강한 특화 1.2",
+      "bonus_min": 24.56652
+    },
+    {
+      "con": 45,
+      "series": "강한 특화 1.2",
+      "bonus_min": 28.29611
+    },
+    {
+      "con": 50,
+      "series": "강한 특화 1.2",
+      "bonus_min": 32.10966
+    },
+    {
+      "con": 55,
+      "series": "강한 특화 1.2",
+      "bonus_min": 36.00037
+    },
+    {
+      "con": 60,
+      "series": "강한 특화 1.2",
+      "bonus_min": 39.96255
+    },
+    {
+      "con": 65,
+      "series": "강한 특화 1.2",
+      "bonus_min": 43.9914
+    },
+    {
+      "con": 70,
+      "series": "강한 특화 1.2",
+      "bonus_min": 48.08276
+    },
+    {
+      "con": 75,
+      "series": "강한 특화 1.2",
+      "bonus_min": 52.23303
+    },
+    {
+      "con": 80,
+      "series": "강한 특화 1.2",
+      "bonus_min": 56.43905
+    },
+    {
+      "con": 85,
+      "series": "강한 특화 1.2",
+      "bonus_min": 60.69801
+    },
+    {
+      "con": 90,
+      "series": "강한 특화 1.2",
+      "bonus_min": 65.00739
+    },
+    {
+      "con": 95,
+      "series": "강한 특화 1.2",
+      "bonus_min": 69.36495
+    },
+    {
+      "con": 100,
+      "series": "강한 특화 1.2",
+      "bonus_min": 73.76863
+    },
+    {
+      "con": 105,
+      "series": "강한 특화 1.2",
+      "bonus_min": 78.21659
+    },
+    {
+      "con": 110,
+      "series": "강한 특화 1.2",
+      "bonus_min": 82.70713
+    },
+    {
+      "con": 115,
+      "series": "강한 특화 1.2",
+      "bonus_min": 87.23869
+    },
+    {
+      "con": 120,
+      "series": "강한 특화 1.2",
+      "bonus_min": 91.80984
+    },
+    {
+      "con": 125,
+      "series": "강한 특화 1.2",
+      "bonus_min": 96.41925
+    },
+    {
+      "con": 130,
+      "series": "강한 특화 1.2",
+      "bonus_min": 101.06569
+    },
+    {
+      "con": 135,
+      "series": "강한 특화 1.2",
+      "bonus_min": 105.74802
+    },
+    {
+      "con": 140,
+      "series": "강한 특화 1.2",
+      "bonus_min": 110.46517
+    },
+    {
+      "con": 145,
+      "series": "강한 특화 1.2",
+      "bonus_min": 115.21614
+    },
+    {
+      "con": 150,
+      "series": "강한 특화 1.2",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 155,
+      "series": "강한 특화 1.2",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 160,
+      "series": "강한 특화 1.2",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 165,
+      "series": "강한 특화 1.2",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 170,
+      "series": "강한 특화 1.2",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 175,
+      "series": "강한 특화 1.2",
+      "bonus_min": 120.0
+    },
+    {
+      "con": 180,
+      "series": "강한 특화 1.2",
+      "bonus_min": 120.0
+    }
+  ],
+  "height": 300,
+  "theme": "codex-classic",
+  "generatedAt": "2026-09-01T01:18:47.775636+09:00",
+  "source": {
+    "label": "전사 모험시간 차이 민감도 검토",
+    "files": [
+      {
+        "label": "matched.csv"
+      },
+      {
+        "label": "heldout.csv"
+      },
+      {
+        "label": "con_time_gap_review.py"
+      }
+    ],
+    "filters": [
+      "레벨: 100",
+      "CON: 0~180",
+      "곡선 지수: 0.6/1.0/1.2"
+    ],
+    "metricDefinitions": [
+      {
+        "name": "모험시간 상한",
+        "definition": "CON에 따른 시간 저장 상한. 기본8시간을 포함한다.",
+        "formula": "H=8+2×min(CON/150,1)^q×(0.15+0.85×x^1.2), x=clamp((L−1)/99,0,1)"
+      },
+      {
+        "name": "성장 격차",
+        "definition": "20~100레벨, 접속간격8종과접속시간3종에서 가장 느린 직업평균 도달시간을 가장 빠른 직업평균과 비교한 최대값.",
+        "formula": "(최대도달시간/최소도달시간−1)×100"
+      }
+    ],
+    "caveats": [
+      "실측 분포가 아니라 후보 공식의 계산 곡선이다.",
+      "능력치와 레벨 성장식은 변경하지 않는다."
+    ]
+  }
+}

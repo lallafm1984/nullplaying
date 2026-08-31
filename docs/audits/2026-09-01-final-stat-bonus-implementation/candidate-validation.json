@@ -1,0 +1,71 @@
+{
+  "checked_at": "2026-09-01T01:53:30.928782+09:00",
+  "new_games": 48,
+  "rows": 5760,
+  "seed_range": [
+    38,
+    45
+  ],
+  "level_range": [
+    1,
+    120
+  ],
+  "formula_checks": "PASS",
+  "mage_first_cap_levels": {
+    "38": 112,
+    "39": 112,
+    "40": 107,
+    "41": 107,
+    "42": 109,
+    "43": 108,
+    "44": 110,
+    "45": 111
+  },
+  "max_growth_spread_20_100": 7.006468490237983,
+  "max_growth_spread_20_120": 9.526242646706562,
+  "max_sale_spread_20_120": 10.29538964919916,
+  "means": {
+    "CLERIC": {
+      "bonus_cap_h": 8.524976325777683,
+      "bonus_proc_pct": 27.830320281177347,
+      "bonus_search_s": 4.53,
+      "bonus_sale_pct": 14.85
+    },
+    "MAGE": {
+      "bonus_cap_h": 8.524976325777683,
+      "bonus_proc_pct": 33.03572007634319,
+      "bonus_search_s": 4.53,
+      "bonus_sale_pct": 4.825
+    },
+    "PALADIN": {
+      "bonus_cap_h": 8.492132610757348,
+      "bonus_proc_pct": 22.957270876517008,
+      "bonus_search_s": 4.495,
+      "bonus_sale_pct": 14.825
+    },
+    "RANGER": {
+      "bonus_cap_h": 8.524976325777683,
+      "bonus_proc_pct": 27.550440833244714,
+      "bonus_search_s": 3.505,
+      "bonus_sale_pct": 4.825
+    },
+    "ROGUE": {
+      "bonus_cap_h": 8.494033273789798,
+      "bonus_proc_pct": 22.948023198511997,
+      "bonus_search_s": 3.5,
+      "bonus_sale_pct": 4.3875
+    },
+    "WARRIOR": {
+      "bonus_cap_h": 9.956318667271335,
+      "bonus_proc_pct": 22.957270876517008,
+      "bonus_search_s": 4.495,
+      "bonus_sale_pct": 4.65
+    }
+  },
+  "caveats": [
+    "Synthetic seeds, not a player experiment",
+    "Calendar efficiency is a recurring-session approximation",
+    "Class identity takes priority; the old 6% uniform-efficiency rule is not met",
+    "Sale floating-point boundary underpayment must be fixed and tested before integration approval"
+  ]
+}

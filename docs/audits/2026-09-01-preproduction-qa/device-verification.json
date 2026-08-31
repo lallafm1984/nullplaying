@@ -1,0 +1,17 @@
+{
+  "emulator": "emulator-5556",
+  "system": "Android 15 / API 35 arm64-v8a",
+  "pixels": "1080x2400",
+  "density_dpi": 420,
+  "page_size_bytes": 4096,
+  "installed_package": "com.nullplaying",
+  "installed_version_code": 14,
+  "installed_version_name": "0.4.1",
+  "installed_apk_sha256": "758ec6fe7cd9b1fdba1ac017c4e1f31e8c39b635e94cd2c5ea19fa009935bb99",
+  "installed_apk_matches_aab_derived_apk": true,
+  "upgrade_from_version_code": 13,
+  "crash_buffer": "empty",
+  "last_anr": "ACTIVITY MANAGER LAST ANR (dumpsys activity lastanr)\n  <no ANR has occurred since boot>",
+  "network_routes": [],
+  "packaged_english_scene_translation": "Prologue Scene {{1}}"
+}

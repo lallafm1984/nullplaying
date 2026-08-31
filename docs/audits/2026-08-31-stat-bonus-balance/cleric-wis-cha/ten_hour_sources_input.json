@@ -1,0 +1,290 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "ten-hour-growth-review",
+      "title": "10시간 상한과 성장속도 격차",
+      "queries": [
+        {
+          "id": "independent-growth-gap",
+          "source": {
+            "label": "로컬 엔진 성장 시뮬레이션",
+            "files": [
+              {
+                "label": "ten_hour_independent_dense.csv"
+              },
+              {
+                "label": "ten_hour_balance.py"
+              }
+            ],
+            "filters": [
+              "직업: 6종",
+              "독립 난수 경로: 직업당 8개",
+              "목표: 100레벨",
+              "접속 간격: 8·12·24시간",
+              "접속 시 충전: 12분"
+            ],
+            "metricDefinitions": [
+              {
+                "name": "성장속도 격차",
+                "definition": "같은 목표 레벨까지의 직업별 평균 소요시간을 비교한 성장속도 격차입니다.",
+                "formula": "(가장 빠른 직업의 성장속도 / 가장 느린 직업의 성장속도 - 1) × 100"
+              }
+            ],
+            "caveats": [
+              "직업당 8개 독립 성장 경로이며 전체 난수나 실제 이용자 집단의 결과를 보장하지 않습니다.",
+              "전투 경로는 순수 엔진 재생, 접속 간격 효과는 레벨별 시간저장량 환산입니다.",
+              "HP 곡선만 비교하고 MP 30%, 탐색 최소 4초, 판매 보너스 최대 20%는 유지했습니다.",
+              "성직자는 WIS/CHA로 변경해 다시 재생했고, 변경 없는 다른 직업의 동일 난수 결과는 재사용했습니다."
+            ],
+            "evidenceFlow": [
+              {
+                "kind": "validation",
+                "title": "수치 대조",
+                "detail": "시간저장량 환산의 두 구현이 동일한 결과를 냈으며, 100레벨 적분 상하한 차이는 최대 0.266%입니다."
+              }
+            ]
+          },
+          "rows": [
+            {
+              "plan": "기존 12시간",
+              "gap_h": 8.0,
+              "growth_gap_pct": 2.9726
+            },
+            {
+              "plan": "기존 12시간",
+              "gap_h": 12.0,
+              "growth_gap_pct": 10.6188
+            },
+            {
+              "plan": "기존 12시간",
+              "gap_h": 24.0,
+              "growth_gap_pct": 10.6188
+            },
+            {
+              "plan": "10시간 비례식",
+              "gap_h": 8.0,
+              "growth_gap_pct": 2.9726
+            },
+            {
+              "plan": "10시간 비례식",
+              "gap_h": 12.0,
+              "growth_gap_pct": 5.9296
+            },
+            {
+              "plan": "10시간 비례식",
+              "gap_h": 24.0,
+              "growth_gap_pct": 5.9296
+            },
+            {
+              "plan": "10시간 권장식",
+              "gap_h": 8.0,
+              "growth_gap_pct": 2.9726
+            },
+            {
+              "plan": "10시간 권장식",
+              "gap_h": 12.0,
+              "growth_gap_pct": 5.5062
+            },
+            {
+              "plan": "10시간 권장식",
+              "gap_h": 24.0,
+              "growth_gap_pct": 5.5062
+            }
+          ],
+          "columns": [
+            {
+              "field": "plan",
+              "label": "설정"
+            },
+            {
+              "field": "gap_h",
+              "label": "접속 간격 (시간)"
+            },
+            {
+              "field": "growth_gap_pct",
+              "label": "성장속도 격차 (%)"
+            }
+          ],
+          "preview": {
+            "kind": "aggregate",
+            "note": "직업별 평균 소요시간으로 계산한 100레벨 비교",
+            "totalRows": 9
+          }
+        },
+        {
+          "id": "hp-curve-candidates",
+          "source": {
+            "label": "HP 후보 곡선 비교",
+            "files": [
+              {
+                "label": "ten_hour_candidate_grid.csv"
+              },
+              {
+                "label": "ten_hour_selection.json"
+              }
+            ],
+            "metricDefinitions": [
+              {
+                "name": "후보 선택",
+                "definition": "기본 8시간과 최대 10시간을 유지하는 96개 HP 곡선 중, 개성 기준을 만족한 15개를 비교했습니다.",
+                "calculationSummary": "최저 격차와 0.25%p 이내인 후보에서는 기존 HP 기준 6,000을 우선합니다."
+              }
+            ],
+            "filters": [
+              "보정 경로: 직업당 4개",
+              "목표 레벨: 20~100",
+              "HP 기준: 5,000~6,250",
+              "곡선 지수: 0.5~2.0"
+            ],
+            "caveats": [
+              "전체 가능한 공식의 전역 최적값이 아니라 지정한 후보 범위의 비교입니다.",
+              "비특화 HP 추가시간 30~75분을 보정 기준으로 삼았으나, 독립 표본 1개는 76.23분으로 1.23분 초과했습니다."
+            ]
+          },
+          "rows": [
+            {
+              "choice": "탐색 최저 격차",
+              "hp_threshold": 6250,
+              "hp_power": 0.8,
+              "growth_gap_pct": 5.236968631059935
+            },
+            {
+              "choice": "권장값",
+              "hp_threshold": 6000,
+              "hp_power": 0.8,
+              "growth_gap_pct": 5.334267516867208
+            }
+          ],
+          "columns": [
+            "choice",
+            "hp_threshold",
+            "hp_power",
+            "growth_gap_pct"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ten-hour-class-identity",
+      "title": "100레벨 직업별 보너스",
+      "queries": [
+        {
+          "id": "independent-class-effects",
+          "source": {
+            "label": "100레벨 직업별 효과",
+            "files": [
+              {
+                "label": "ten_hour_class_effects.csv"
+              }
+            ],
+            "metricDefinitions": [
+              {
+                "name": "HP 보유시간",
+                "definition": "HP 보유시간은 기본 8시간에 최대 2시간이 더해집니다.",
+                "formula": "8 + 2 × min(HP / 6000, 1)^0.8 시간"
+              },
+              {
+                "name": "MP 확률",
+                "definition": "기존 기본 발동 확률에 MP 보너스가 최대 10%p 더해지며, 총 기본 확률은 30%가 상한입니다.",
+                "formula": "min(30, 기존 확률 + 10 × min(MP / 6000, 1)) %"
+              },
+              {
+                "name": "DEX 탐색",
+                "definition": "탐색 시간은 DEX에 따라 5초에서 최소 4초까지 줄고, 발견 연출 2초는 유지됩니다.",
+                "formula": "5 - min(DEX / 150, 1) 초"
+              },
+              {
+                "name": "CHA 판매",
+                "definition": "아이템 판매 보너스만 CHA에 따라 최대 20% 증가하며 퀘스트 보상과 드롭 골드에는 붙지 않습니다.",
+                "formula": "20 × min(CHA / 150, 1) %"
+              }
+            ],
+            "filters": [
+              "직업: 6종",
+              "독립 난수 경로: 직업당 8개",
+              "목표: 100레벨"
+            ],
+            "caveats": [
+              "표는 각 성장 경로의 효과를 계산한 후 평균한 값입니다.",
+              "HP 특화 8/8 · MP 특화 8/8 · DEX 특화 15/16 · CHA 특화 13/16 경로가 상한에 도달했습니다. 비특화 직업의 상한 도달은 없었습니다.",
+              "일부 낮은 성장 경로는 100레벨에도 상한 직전입니다. 모든 난수에서의 도달이나 직업 잠금을 보장하지 않습니다.",
+              "연속 일반공격 후 확정 발동 규칙을 유지하므로 기본 발동 확률과 실제 시전 비율은 다릅니다."
+            ]
+          },
+          "rows": [
+            {
+              "class": "전사",
+              "cap_h": 10.0,
+              "raw_proc_pct": 24.649167,
+              "search_s": 4.689167,
+              "sale_bonus_pct": 6.533333
+            },
+            {
+              "class": "도적",
+              "cap_h": 9.099265,
+              "raw_proc_pct": 24.392083,
+              "search_s": 4.000833,
+              "sale_bonus_pct": 6.4
+            },
+            {
+              "class": "레인저",
+              "cap_h": 9.135711,
+              "raw_proc_pct": 28.248958,
+              "search_s": 4.0,
+              "sale_bonus_pct": 6.266667
+            },
+            {
+              "class": "마법사",
+              "cap_h": 9.135265,
+              "raw_proc_pct": 30.0,
+              "search_s": 4.685833,
+              "sale_bonus_pct": 6.3
+            },
+            {
+              "class": "성직자",
+              "cap_h": 9.13588,
+              "raw_proc_pct": 28.176458,
+              "search_s": 4.685833,
+              "sale_bonus_pct": 19.833333
+            },
+            {
+              "class": "팔라딘",
+              "cap_h": 9.082381,
+              "raw_proc_pct": 24.655833,
+              "search_s": 4.689167,
+              "sale_bonus_pct": 19.9
+            }
+          ],
+          "columns": [
+            {
+              "field": "class",
+              "label": "직업"
+            },
+            {
+              "field": "cap_h",
+              "label": "보유시간 (시간)"
+            },
+            {
+              "field": "raw_proc_pct",
+              "label": "기본 발동 확률 (%)"
+            },
+            {
+              "field": "search_s",
+              "label": "탐색 시간 (초)"
+            },
+            {
+              "field": "sale_bonus_pct",
+              "label": "판매 보너스 (%)"
+            }
+          ],
+          "preview": {
+            "kind": "aggregate",
+            "note": "직업별 8개 성장 경로의 평균 효과",
+            "totalRows": 6
+          }
+        }
+      ]
+    }
+  ]
+}

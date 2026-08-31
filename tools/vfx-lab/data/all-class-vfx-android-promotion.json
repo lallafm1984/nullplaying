@@ -34,7 +34,7 @@
     "path": "app/build/outputs/apk/debug/app-debug.apk",
     "sizeBytes": 79120117,
     "sha256": "7fee90806d0b0b7cacea2a0aefa4e4aaa2ef31ac14318e7daca0af36f0808259",
-    "package": "com.alarmquest",
+    "package": "com.nullplaying",
     "activity": ".MainActivity",
     "versionCode": 9,
     "versionName": "0.4.0",

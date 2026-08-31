@@ -1,0 +1,38 @@
+{
+  "training_seeds": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "candidate_count": 96,
+  "feasible_count": 15,
+  "evaluated_levels": "20..100",
+  "comparison": "max/min of class-pooled equal-level completion rates",
+  "cap_and_identity_guardrails": "HP cap 10h; non-specialist bonus 30..75m at Lv100; warrior mean bonus >=3m at Lv20 and >=15m at Lv50",
+  "simplest_within_best_pp": 0.25,
+  "best": {
+    "hp_k": 6250,
+    "hp_power": 0.8,
+    "feasible": true,
+    "max_growth_gap_pct": 5.236968631059935,
+    "max_sale_gap_pct": 10.510385672907985,
+    "level100_gap12": 5.236968631059913,
+    "off_bonus_min_minutes": 55.41059144732422,
+    "off_bonus_max_minutes": 72.49837433601463,
+    "warrior_level20_minutes": 8.691897856025257,
+    "warrior_level50_minutes": 32.87661127337216
+  },
+  "selected": {
+    "hp_k": 6000,
+    "hp_power": 0.8,
+    "feasible": true,
+    "max_growth_gap_pct": 5.334267516867208,
+    "max_sale_gap_pct": 10.510385672907985,
+    "level100_gap12": 5.334267516867164,
+    "off_bonus_min_minutes": 57.250040648768774,
+    "off_bonus_max_minutes": 74.90508166930816,
+    "warrior_level20_minutes": 8.980440247519184,
+    "warrior_level50_minutes": 33.968006524233196
+  }
+}

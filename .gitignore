@@ -18,6 +18,7 @@ local.properties
 /keys/*.jks
 /keys/*.keystore
 /keys/*.pass
+/app/google-services.json
 node_modules/
 __pycache__/
 *.py[cod]
@@ -25,6 +26,7 @@ __pycache__/
 # Reproducible packages, device state, and QA captures
 *.apk
 *.aab
+*.apks
 *.ap_
 *.db
 *.db-*
@@ -32,6 +34,10 @@ __pycache__/
 tmp/
 artifacts/
 design-audits/
+/docs/audits/**/*.jar
+
+# Local advertising revenue research; not for the public source repository
+/output/admob-2026-09-01/
 tools/vfx-lab/evidence/
 tools/vfx-lab/temp-assets/
 tools/vfx-lab/.runtime/

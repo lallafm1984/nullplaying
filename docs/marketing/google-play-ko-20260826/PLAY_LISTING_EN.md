@@ -1,0 +1,63 @@
+# Google Play listing — English
+
+## App name
+
+`NULL PLAYING: Fully Idle RPG`
+
+## Short description
+
+75 / 80 characters
+
+> A fully idle RPG where your hero battles, grows, and gears up on their own.
+
+## Full description
+
+> WHAT IF AN RPG NEEDED NO PLAYING?
+>
+> NULL PLAYING is a fully idle RPG built around one simple idea: once your hero begins the journey, the adventure runs itself.
+>
+> Your hero finds enemies, fights, gains experience, collects loot, returns to town, sells what they do not need, equips stronger gear, learns skills, and moves on to the next quest—all without battle commands or constant tapping.
+>
+> YOU DO NOTHING. THE HERO DOES EVERYTHING.
+>
+> Create a hero, roll their starting stats, and begin the adventure. From there, watch a unique journey take shape on its own.
+>
+> EVERY PART OF GROWTH IS AUTOMATIC
+>
+> • Automatic battles, loot, returns to town, sales, and equipment upgrades
+> • Up to 20 skills for each class, learned and mastered through use
+> • Stronger gear compared and equipped automatically
+> • Levels, stats, combat power, and records that keep building over time
+>
+> THE ADVENTURE CONTINUES WHILE YOU ARE AWAY
+>
+> Offline adventure time can be stored for up to 12 hours. Close the app and your hero keeps battling and growing for as long as stored time remains. Return to discover what changed.
+>
+> A STORY THAT WRITES ITSELF
+>
+> • A unique prologue for each of the six classes
+> • 24 authored chapters with five acts each
+> • 18 Border Guardian stories after the main journey
+> • An endless labyrinth with increasingly difficult gates
+> • Adventure records that preserve the path your hero has taken
+>
+> WATCH, LEAVE, RETURN
+>
+> There is no need to grind through battles or sort every item by hand. Check in for a moment, leave whenever you like, and return to a stronger hero standing deeper in the story.
+>
+> Do nothing. The adventure is already playing.
+
+## Graphic copy
+
+- Feature graphic: `JUST WATCH IT GROW`
+- Feature support: `YOUR HERO GROWS ON THEIR OWN`
+- Phone 1: `DO NOTHING. / THE ADVENTURE CONTINUES.`
+- Phone 2: `COME BACK. / THEY'RE STRONGER.`
+- Phone 3: `GEAR UPGRADES / ITSELF.`
+- Phone 4: `YOUR TIME / BECOMES A STORY.`
+
+## Console limits checked
+
+- App name: 30 characters maximum
+- Short description: 80 characters maximum
+- Full description: 4,000 characters maximum

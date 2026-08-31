@@ -154,12 +154,12 @@ def main() -> int:
     if args.with_device:
         devices = run(["adb", "devices", "-l"])
         check("SM-S931N online", "model:SM_S931N" in devices.stdout and " device " in devices.stdout, devices.stdout.strip())
-        version = run(["adb", "shell", "dumpsys", "package", "com.alarmquest"])
+        version = run(["adb", "shell", "dumpsys", "package", "com.nullplaying"])
         check("device version code", "versionCode=1" in version.stdout, "1")
         check("device version name", "versionName=0.1.0" in version.stdout, "0.1.0")
         focus = run(["adb", "shell", "dumpsys", "activity", "activities"])
         focused_lines = [line.strip() for line in focus.stdout.splitlines() if "mFocusedApp=" in line]
-        check("MainActivity focused", any("com.alarmquest/.MainActivity" in line for line in focused_lines), " | ".join(focused_lines))
+        check("MainActivity focused", any("com.nullplaying/.MainActivity" in line for line in focused_lines), " | ".join(focused_lines))
         fatal = run(["adb", "shell", "logcat", "-d", "-t", "300", "AndroidRuntime:E", "*:S"])
         check("no AndroidRuntime fatal", not fatal.stdout.strip(), "fatal=0")
 

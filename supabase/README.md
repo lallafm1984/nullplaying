@@ -1,5 +1,17 @@
 # Supabase setup
 
+## Production data and QA isolation
+
+Never leave test data in the production database. `debug` and `migrationTest` builds have empty
+Supabase endpoint/key fields, and `SupabaseGameService` rejects all network requests when
+`BuildConfig.DEBUG` is true. They do not create anonymous users, profiles, rankings, subscriber
+events, or session logs. Firebase Remote Config testing remains available independently.
+Use local/in-memory data for automated tests. Do not install a production-connected release build
+for routine emulator QA. Existing production test data may only be removed after identifying exact
+test user IDs and checking related rows; preserve real users, administrators, devices, and system rankings.
+
+## Project setup
+
 1. Create a Supabase project and enable **Authentication > Providers > Anonymous Sign-Ins**.
 2. Run the SQL files in `migrations/` in filename order in the SQL editor.
 3. Add the following non-service credentials to the untracked root `local.properties`:

@@ -1,0 +1,173 @@
+{
+  "profile": "CON power1.2; CHA15; INT/WIS50:50; DEX3.5",
+  "games": 144,
+  "rows": 14400,
+  "cohorts": [
+    {
+      "cohort": "matched.csv",
+      "games": 96,
+      "max_growth_spread_pct": 7.4015468820188834,
+      "max_sale_spread_pct": 8.761968459964198,
+      "key_scenarios": [
+        {
+          "level": 100,
+          "gap_h": 8,
+          "session_min": 1,
+          "growth_spread_pct": 7.401546882018817,
+          "sale_spread_pct": 5.2967059205741185,
+          "fastest": "WARRIOR",
+          "slowest": "PALADIN",
+          "highest_sale": "CLERIC",
+          "lowest_sale": "ROGUE"
+        },
+        {
+          "level": 100,
+          "gap_h": 8,
+          "session_min": 12,
+          "growth_spread_pct": 4.873514002377122,
+          "sale_spread_pct": 8.761968459964198,
+          "fastest": "RANGER",
+          "slowest": "WARRIOR",
+          "highest_sale": "CLERIC",
+          "lowest_sale": "WARRIOR"
+        },
+        {
+          "level": 100,
+          "gap_h": 12,
+          "session_min": 1,
+          "growth_spread_pct": 7.4015468820188834,
+          "sale_spread_pct": 5.296705920574096,
+          "fastest": "WARRIOR",
+          "slowest": "PALADIN",
+          "highest_sale": "CLERIC",
+          "lowest_sale": "ROGUE"
+        },
+        {
+          "level": 100,
+          "gap_h": 12,
+          "session_min": 12,
+          "growth_spread_pct": 7.401546882018772,
+          "sale_spread_pct": 5.296705920574141,
+          "fastest": "WARRIOR",
+          "slowest": "PALADIN",
+          "highest_sale": "CLERIC",
+          "lowest_sale": "ROGUE"
+        }
+      ]
+    },
+    {
+      "cohort": "heldout.csv",
+      "games": 48,
+      "max_growth_spread_pct": 7.768192786665273,
+      "max_sale_spread_pct": 8.51964793632083,
+      "key_scenarios": [
+        {
+          "level": 100,
+          "gap_h": 8,
+          "session_min": 1,
+          "growth_spread_pct": 7.768192786665251,
+          "sale_spread_pct": 5.0947668007713,
+          "fastest": "WARRIOR",
+          "slowest": "PALADIN",
+          "highest_sale": "CLERIC",
+          "lowest_sale": "ROGUE"
+        },
+        {
+          "level": 100,
+          "gap_h": 8,
+          "session_min": 12,
+          "growth_spread_pct": 5.323304059010181,
+          "sale_spread_pct": 8.51964793632083,
+          "fastest": "RANGER",
+          "slowest": "WARRIOR",
+          "highest_sale": "CLERIC",
+          "lowest_sale": "WARRIOR"
+        },
+        {
+          "level": 100,
+          "gap_h": 12,
+          "session_min": 1,
+          "growth_spread_pct": 7.768192786665251,
+          "sale_spread_pct": 5.094766800771322,
+          "fastest": "WARRIOR",
+          "slowest": "PALADIN",
+          "highest_sale": "CLERIC",
+          "lowest_sale": "ROGUE"
+        },
+        {
+          "level": 100,
+          "gap_h": 12,
+          "session_min": 12,
+          "growth_spread_pct": 7.768192786665251,
+          "sale_spread_pct": 5.094766800771278,
+          "fastest": "WARRIOR",
+          "slowest": "PALADIN",
+          "highest_sale": "CLERIC",
+          "lowest_sale": "ROGUE"
+        }
+      ]
+    }
+  ],
+  "level100": {
+    "WARRIOR": {
+      "con": 162.83333333333334,
+      "mental": 48.958333333333336,
+      "cap_h": 9.990078702326972,
+      "raw_proc_pct": 23.147966657359017,
+      "search_s": 4.490833333333334,
+      "sale_bonus_pct": 4.7875000000000005,
+      "bag": 146.95833333333334
+    },
+    "ROGUE": {
+      "con": 52.833333333333336,
+      "mental": 48.041666666666664,
+      "cap_h": 8.57277223548512,
+      "raw_proc_pct": 23.07588718428109,
+      "search_s": 3.5058333333333334,
+      "sale_bonus_pct": 4.654166666666667,
+      "bag": 147.0
+    },
+    "RANGER": {
+      "con": 49.125,
+      "mental": 105.08333333333333,
+      "cap_h": 8.52514303398255,
+      "raw_proc_pct": 27.86653863416737,
+      "search_s": 3.5033333333333334,
+      "sale_bonus_pct": 4.9750000000000005,
+      "bag": 97.25
+    },
+    "MAGE": {
+      "con": 49.166666666666664,
+      "mental": 162.27083333333334,
+      "cap_h": 8.525660309806048,
+      "raw_proc_pct": 33.24686163486937,
+      "search_s": 4.496666666666667,
+      "sale_bonus_pct": 4.9875,
+      "bag": 97.04166666666667
+    },
+    "CLERIC": {
+      "con": 49.166666666666664,
+      "mental": 105.41666666666667,
+      "cap_h": 8.525660309806048,
+      "raw_proc_pct": 27.896590210575994,
+      "search_s": 4.496666666666667,
+      "sale_bonus_pct": 14.9375,
+      "bag": 97.04166666666667
+    },
+    "PALADIN": {
+      "con": 48.041666666666664,
+      "mental": 48.958333333333336,
+      "cap_h": 8.511481411449454,
+      "raw_proc_pct": 23.147966657359017,
+      "search_s": 4.490833333333334,
+      "sale_bonus_pct": 14.9625,
+      "bag": 146.95833333333334
+    }
+  },
+  "boundary": "Strong specialization / CHA15 / DEX3500ms boundary checks: 3336 PASS",
+  "stat_identity_rows": 14400,
+  "app_changed": false,
+  "db_access": false,
+  "old_guardrail_growth_pct": 6,
+  "new_hard_guardrail_approved": false
+}

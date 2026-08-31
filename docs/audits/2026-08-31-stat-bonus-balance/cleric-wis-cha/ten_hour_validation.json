@@ -1,0 +1,229 @@
+{
+  "selected_parameters": {
+    "curve": "linear_cap",
+    "hp_hours": 2.0,
+    "hp_k": 6000.0,
+    "mp_pp": 10.0,
+    "mp_k": 6000.0,
+    "dex_max": 0.2,
+    "dex_k": 150.0,
+    "cha_max": 0.2,
+    "cha_k": 150.0,
+    "hp_power": 0.8
+  },
+  "independent_seeds": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "independent_games": 48,
+  "cap_checks": {
+    "cap_h": {
+      "specialist_at_cap": 8,
+      "specialist_count": 8,
+      "other_at_cap": 0,
+      "other_count": 40
+    },
+    "raw_proc_pct": {
+      "specialist_at_cap": 8,
+      "specialist_count": 8,
+      "other_at_cap": 0,
+      "other_count": 40
+    },
+    "search_s": {
+      "specialist_at_cap": 15,
+      "specialist_count": 16,
+      "other_at_cap": 0,
+      "other_count": 32
+    },
+    "sale_bonus_pct": {
+      "specialist_at_cap": 13,
+      "specialist_count": 16,
+      "other_at_cap": 0,
+      "other_count": 32
+    }
+  },
+  "level100_effects": {
+    "CLERIC": {
+      "cap_h": 9.13588,
+      "raw_proc_pct": 28.176458,
+      "search_s": 4.685833,
+      "sale_bonus_pct": 19.833333
+    },
+    "MAGE": {
+      "cap_h": 9.135265,
+      "raw_proc_pct": 30.0,
+      "search_s": 4.685833,
+      "sale_bonus_pct": 6.3
+    },
+    "PALADIN": {
+      "cap_h": 9.082381,
+      "raw_proc_pct": 24.655833,
+      "search_s": 4.689167,
+      "sale_bonus_pct": 19.9
+    },
+    "RANGER": {
+      "cap_h": 9.135711,
+      "raw_proc_pct": 28.248958,
+      "search_s": 4.0,
+      "sale_bonus_pct": 6.266667
+    },
+    "ROGUE": {
+      "cap_h": 9.099265,
+      "raw_proc_pct": 24.392083,
+      "search_s": 4.000833,
+      "sale_bonus_pct": 6.4
+    },
+    "WARRIOR": {
+      "cap_h": 10.0,
+      "raw_proc_pct": 24.649167,
+      "search_s": 4.689167,
+      "sale_bonus_pct": 6.533333
+    }
+  },
+  "level100_gaps": [
+    {
+      "cohort": "independent",
+      "variant": "previous_12h",
+      "level": 100,
+      "gap_h": 8.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 2.9726145907753354,
+      "sale_gap_pct": 10.597380666901678
+    },
+    {
+      "cohort": "independent",
+      "variant": "previous_12h",
+      "level": 100,
+      "gap_h": 12.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 10.618805066913218,
+      "sale_gap_pct": 8.497682034918874
+    },
+    {
+      "cohort": "independent",
+      "variant": "previous_12h",
+      "level": 100,
+      "gap_h": 24.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 10.618805066913218,
+      "sale_gap_pct": 8.497682034918853
+    },
+    {
+      "cohort": "independent",
+      "variant": "linear_10h",
+      "level": 100,
+      "gap_h": 8.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 2.9726145907753354,
+      "sale_gap_pct": 10.597380666901678
+    },
+    {
+      "cohort": "independent",
+      "variant": "linear_10h",
+      "level": 100,
+      "gap_h": 12.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 5.929580041507276,
+      "sale_gap_pct": 8.44328912766661
+    },
+    {
+      "cohort": "independent",
+      "variant": "linear_10h",
+      "level": 100,
+      "gap_h": 24.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 5.929580041507276,
+      "sale_gap_pct": 8.443289127666631
+    },
+    {
+      "cohort": "independent",
+      "variant": "recommended_10h",
+      "level": 100,
+      "gap_h": 8.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 2.9726145907753354,
+      "sale_gap_pct": 10.597380666901678
+    },
+    {
+      "cohort": "independent",
+      "variant": "recommended_10h",
+      "level": 100,
+      "gap_h": 12.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 5.506151326265263,
+      "sale_gap_pct": 8.446695384623348
+    },
+    {
+      "cohort": "independent",
+      "variant": "recommended_10h",
+      "level": 100,
+      "gap_h": 24.0,
+      "session_min": 12.0,
+      "progress_gap_pct": 5.506151326265263,
+      "sale_gap_pct": 8.446695384623325
+    }
+  ],
+  "bootstrap_gap_intervals": [
+    {
+      "gap_h": 8.0,
+      "low_pct": 2.470419729166684,
+      "high_pct": 3.5834002123258326
+    },
+    {
+      "gap_h": 12.0,
+      "low_pct": 5.267235991380714,
+      "high_pct": 5.7071176467804685
+    },
+    {
+      "gap_h": 24.0,
+      "low_pct": 5.267235991380714,
+      "high_pct": 5.707117646780491
+    }
+  ],
+  "fastest_slowest": [
+    {
+      "gap_h": 8.0,
+      "fastest": "RANGER",
+      "slowest": "PALADIN"
+    },
+    {
+      "gap_h": 12.0,
+      "fastest": "WARRIOR",
+      "slowest": "PALADIN"
+    }
+  ],
+  "max_gap20_to100": {
+    "linear_10h": 5.929580041507321,
+    "previous_12h": 10.618805066913218,
+    "recommended_10h": 5.506151326265285
+  },
+  "level100_calendar_bound_max_pct": 0.2652674610877259,
+  "app_source_hash_unchanged": true,
+  "calendar_independent_implementation_match": true,
+  "independent_hp_guardrails": {
+    "other_bonus_min_minutes": 59.26271159288788,
+    "other_bonus_max_minutes": 76.2341925986852,
+    "paths_exceeding_75m": 1,
+    "warrior_level20_minutes": 9.104684098031445,
+    "warrior_level50_minutes": 34.743615149243425
+  },
+  "caveats": [
+    "Parameter search changed HP curve only; other three cap curves retained",
+    "HP calendar benefits are time-bank conversions, not logged player sessions",
+    "Paired seed bootstrap is simulation uncertainty, not a player-population confidence interval",
+    "Specialist-only reaching cap verified in samples, not all possible RNG outcomes",
+    "Cleric was replayed; the unchanged other classes retain their same-seed source-verified paths."
+  ],
+  "cleric_stat_pair": "WIS/CHA",
+  "replayed_changed_class_games": 12,
+  "unchanged_class_independent_paths_reused": 40,
+  "app_source_change": [
+    "app/src/simple/java/com/nullplaying/model/SimpleGameModels.kt"
+  ]
+}

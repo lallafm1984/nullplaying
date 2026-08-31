@@ -1,0 +1,62 @@
+[
+  {
+    "classes": [
+      "MAGE"
+    ],
+    "parameters": "mage-parameters.json",
+    "output": "mage-heldout.csv",
+    "started_at": "2026-08-31T23:27:30.265721+09:00",
+    "finished_at": "2026-08-31T23:27:55.121488+09:00",
+    "duration_seconds": 24.855494499999622,
+    "seeds": [
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ]
+  },
+  {
+    "classes": [
+      "WARRIOR",
+      "ROGUE",
+      "RANGER",
+      "CLERIC",
+      "PALADIN"
+    ],
+    "parameters": "common-parameters.json",
+    "output": "others-heldout.csv",
+    "started_at": "2026-08-31T23:27:55.121773+09:00",
+    "finished_at": "2026-08-31T23:29:39.692952+09:00",
+    "duration_seconds": 104.56996145900484,
+    "seeds": [
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ]
+  }
+]

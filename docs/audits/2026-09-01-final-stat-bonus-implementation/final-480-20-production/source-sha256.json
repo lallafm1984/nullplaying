@@ -1,0 +1,23 @@
+{
+  "app/src/simple/java/com/nullplaying/engine/AdventureTaleCatalog.kt": "1a409b8110154d04e932f4ade127589db91288c972b2fc1434e449b5d6dc94e7",
+  "app/src/simple/java/com/nullplaying/engine/ClassEquipmentCatalog.kt": "e4f83fb20ac252749b1727f96555cbed54783d48fdda8e91d382a67eff5649e6",
+  "app/src/simple/java/com/nullplaying/engine/GuardianEpilogueCatalog.kt": "ddb1e9328405f45399195b2529fb11f8b5e25232cb220022b89a6bf5df062de4",
+  "app/src/simple/java/com/nullplaying/engine/LabyrinthProgression.kt": "3ff4fed3f776dec3713777b127c9bb12d9242211b78d43994c76eeb768e8be79",
+  "app/src/simple/java/com/nullplaying/engine/LabyrinthTaleCatalog.kt": "f8af4b63796e6d8f3b99e44efdf2e01f328a0750a63488e74a7727c200f75838",
+  "app/src/simple/java/com/nullplaying/engine/MonsterModifierCompatibility.kt": "ab9291a2b46095ce7ff961706afb16e3c3d550fb448f5eec678c90e0081c36db",
+  "app/src/simple/java/com/nullplaying/engine/NorthernGlassMonsterCatalog.kt": "a629da1921671b2c8325e9442917c7cc737aad69d06b5c32226976c356db8f6e",
+  "app/src/simple/java/com/nullplaying/engine/NorthernGlassTaleCatalog.kt": "c326075e91982b9346cb2b1342445f3923ed43f66c46de6affcf8654a5fc8201",
+  "app/src/simple/java/com/nullplaying/engine/OfflineAdventureConfig.kt": "729026edcde7a46cad00c956005444e1b8ddddeb362ecc81e88f8d4928e89e76",
+  "app/src/simple/java/com/nullplaying/engine/PostgameMonsterCatalog.kt": "de281980e8f18cc87caabaab89dc34abea74d392ef279d6c5300f03575192353",
+  "app/src/simple/java/com/nullplaying/engine/QuestMonsterCatalog.kt": "2319c4c4f116fb4ac2612d45475ab4b975176fa1c6b34f5091d4af1b895394ff",
+  "app/src/simple/java/com/nullplaying/engine/SimpleContent.kt": "4e787f229e2026f9c49c4929b9b65efc69ec849fd7c817e8699bcff3bcddd346",
+  "docs/audits/2026-09-01-final-stat-bonus-implementation/final-480-20-production/SimpleGameEngine.counted.kt": "a9434a11e3b40193f71dc3a221f1c1f91e3d9f43cccbb246a566568d50c5e71c",
+  "app/src/simple/java/com/nullplaying/engine/SkillCatalog.kt": "5189659e451a24ab3fe779a2efe993830dca90514a57f9645351ce527b64c6c4",
+  "app/src/simple/java/com/nullplaying/engine/StarterPrologueCatalog.kt": "4fe1409f391b5aff29064ef4476ed30d77da8ebca2835d8dfba9f6f704c3110b",
+  "app/src/simple/java/com/nullplaying/engine/StarterPrologueMonsterCatalog.kt": "4b4627efc5a34e8f04085f69fdc5a9a40500393784849823231264a8826ba127",
+  "app/src/simple/java/com/nullplaying/engine/StatBonusRules.kt": "79b8241f1739628e9adb30a1d9fe08c3d7f215065aa0d0c28722f7c68bab78b1",
+  "app/src/simple/java/com/nullplaying/model/SimpleGameModels.kt": "36a5ab05f4604341f920d61d1798ce4ccf026c23ffc4324e429ab5b7092b9716",
+  "docs/audits/2026-09-01-final-stat-bonus-implementation/final-480-20-production/Counters.kt": "2e999824aa8de7728f339bb456f47f61540d312ef859927a4248a2f748de5f33",
+  "docs/audits/2026-09-01-final-stat-bonus-implementation/final-480-20-production/ProductionProbe.kt": "847b19f9910cf3152bd2d9c2636e7ccb21a1d0323df1bce21f46846e07dd05c9",
+  "app/src/simple/java/com/nullplaying/engine/SimpleGameEngine.kt": "f50f4e5afae6b129a6f847a326793cb41c591303133e21f71ac426f1582c4f22"
+}

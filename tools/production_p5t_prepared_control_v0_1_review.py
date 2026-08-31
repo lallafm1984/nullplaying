@@ -258,7 +258,7 @@ def main() -> int:
     for field in (
         "verificationTarget=android-emulator", "avdName=alarmquest-qa", "androidRelease=15",
         "apiLevel=35", "installResult=Success", "pmClearResult=Success", "launchState=COLD",
-        "coldTotalTimeMs=4433", "topResumedActivity=com.alarmquest/.MainActivity",
+        "coldTotalTimeMs=4433", "topResumedActivity=com.nullplaying/.MainActivity",
         "freshRosterEmpty=true", "androidRuntimeFatalCount=0", "engineTests=522",
         "appTests=176", "totalTests=698", "activeDefinitionsExecutable=58",
         "semanticFamilies=14", "featureDefaultEnabled=false", "liveSettlementEnabled=false",
@@ -274,11 +274,11 @@ def main() -> int:
         sdk = run(["adb", "-s", "emulator-5554", "shell", "getprop", "ro.build.version.sdk"])
         check("android release", release.stdout.strip() == "15", release.stdout.strip())
         check("API", sdk.stdout.strip() == "35", sdk.stdout.strip())
-        version = run(["adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.alarmquest"])
+        version = run(["adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.nullplaying"])
         check("version", "versionCode=1" in version.stdout and "versionName=0.1.0" in version.stdout, "0.1.0(1)")
         check("target sdk", "targetSdk=36" in version.stdout, "36")
         focus = run(["adb", "-s", "emulator-5554", "shell", "dumpsys", "activity", "activities"])
-        check("focus", "topResumedActivity" in focus.stdout and "com.alarmquest/.MainActivity" in focus.stdout, "MainActivity")
+        check("focus", "topResumedActivity" in focus.stdout and "com.nullplaying/.MainActivity" in focus.stdout, "MainActivity")
         ui = ""
         for _ in range(3):
             run(["adb", "-s", "emulator-5554", "shell", "uiautomator", "dump", "/sdcard/p5t-review-ui.xml"])

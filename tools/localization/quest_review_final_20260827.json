@@ -1,0 +1,22 @@
+{
+  "거꾸로 난 발자국": {
+    "en": "Footprints Leading Out",
+    "ja": "外へ続く足跡"
+  },
+  "다음 적의 흔적을 찾고 있습니다": {
+    "en": "Tracking the next enemy",
+    "ja": "次の敵の痕跡を追っている"
+  },
+  "빈 막사에서 끌려간 때와 인원을 확인했다.": {
+    "en": "The evidence revealed when the soldiers were taken from the empty barracks and how many were missing.",
+    "ja": "兵士たちが無人の兵舎から連れ去られた時刻と、行方不明者の数を突き止めた。"
+  },
+  "안쪽 발자국에서 내부자의 개입을 확인했다.": {
+    "en": "Footprints leading out from within the fortress confirmed that someone on the inside was involved.",
+    "ja": "砦の内側から外へ続く足跡により、内通者の関与が判明した。"
+  },
+  "잿빛 국경": {
+    "en": "Ashen Frontier",
+    "ja": "灰の国境"
+  }
+}

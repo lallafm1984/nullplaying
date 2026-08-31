@@ -1,0 +1,15 @@
+{
+  "samples": 4,
+  "seed_offset": 46,
+  "level": 100,
+  "base_minutes": 720,
+  "charge_minutes": 12,
+  "run_name": "remote-base-production",
+  "started_at": "2026-09-01T02:26:00.056837+09:00",
+  "elapsed_seconds": 38.3217174579986,
+  "output_sha256": "4bdaefa271cfe58a096dce6395490fe51598de6829f70f24a5282fbfd2747f31",
+  "network": "OS sandbox denied",
+  "database_files": "OS sandbox denied",
+  "app_started": false,
+  "instrumentation": "Only attack/cast counters; no balance replacement"
+}

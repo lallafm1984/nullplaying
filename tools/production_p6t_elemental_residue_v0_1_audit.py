@@ -439,7 +439,7 @@ def main() -> int:
     ui_root = ET.parse(UI).getroot()
     ui_text = UI.read_text(encoding="utf-8")
     check("artifact:ui hierarchy", ui_root.tag == "hierarchy", ui_root.tag)
-    check("artifact:ui package", 'package="com.alarmquest"' in ui_text, "com.alarmquest")
+    check("artifact:ui package", 'package="com.nullplaying"' in ui_text, "com.nullplaying")
     check("artifact:empty roster", "아직 캐릭터가 없습니다" in ui_text, "empty roster")
     check("artifact:create character", "새 캐릭터" in ui_text, "create")
 
@@ -449,7 +449,7 @@ def main() -> int:
         "avdName": "alarmquest-qa",
         "androidRelease": "15",
         "apiLevel": "35",
-        "packageName": "com.alarmquest",
+        "packageName": "com.nullplaying",
         "versionName": "0.1.0",
         "versionCode": "1",
         "targetSdk": "36",
@@ -462,8 +462,8 @@ def main() -> int:
         "coldLaunchWaitTimeMs": "5565",
         "warmLaunchState": "WARM_BRING_TO_FRONT",
         "warmBringToFrontWaitTimeMs": "199",
-        "topResumedActivity": "com.alarmquest/.MainActivity",
-        "warmTopResumedActivity": "com.alarmquest/.MainActivity",
+        "topResumedActivity": "com.nullplaying/.MainActivity",
+        "warmTopResumedActivity": "com.nullplaying/.MainActivity",
         "freshRosterEmpty": "true",
         "androidRuntimeFatalCount": "0",
         "androidRuntimeErrorCount": "0",
@@ -569,13 +569,13 @@ def main() -> int:
 
     if args.with_emulator:
         devices = subprocess.run(("adb", "devices"), text=True, capture_output=True, check=False).stdout
-        package = adb("shell", "dumpsys", "package", "com.alarmquest")
+        package = adb("shell", "dumpsys", "package", "com.nullplaying")
         activity = adb("shell", "dumpsys", "activity", "activities")
         crash = adb("logcat", "-d", "-b", "crash")
         check("emulator:device", "emulator-5554" in devices, "emulator-5554")
         check("emulator:version", "versionName=0.1.0" in package, "0.1.0")
         check("emulator:target", "targetSdk=36" in package, "36")
-        check("emulator:focus", "com.alarmquest/.MainActivity" in activity, "MainActivity")
+        check("emulator:focus", "com.nullplaying/.MainActivity" in activity, "MainActivity")
         check("emulator:android", adb("shell", "getprop", "ro.build.version.release") == "15", "15")
         check("emulator:api", adb("shell", "getprop", "ro.build.version.sdk") == "35", "35")
         check("emulator:crash", "FATAL EXCEPTION" not in crash and "AndroidRuntime" not in crash, "0")

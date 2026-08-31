@@ -1,0 +1,75 @@
+[
+  {
+    "width": 736,
+    "colorScheme": "light",
+    "overflow": false,
+    "paths": 3,
+    "text": "ta-inline-chart-content{grid-area:1/1;align-self:start;min-width:0}.data-inline-chart-content .component-header{min-width:0}.data-inline-chart-content .component-title-text{overflow-wrap:anywhere;min-width:0}.data-inline-chart-stage>.source-sidebar-layer--contained{z-index:1}@container (width<=520px){.source-sidebar-layer--contained .source-tabs{row-gap:var(--space-2);flex-wrap:wrap;overflow:visible}.source-sidebar-layer--contained .source-tabs .tab-active-indicator{display:none}.source-sidebar-layer--contained .source-tabs [role=tab][aria-selected=true]{border-color:var(--text)}}\n:host { color-scheme: inherit; }12시간 간격 접속: 레벨별 직업 성장 격차20406080100036912성장속도 격차 (%)도달 레벨기존 12시간10시간 비례식10시간 권장식",
+    "buttons": [
+      "View data source",
+      "Toggle 기존 12시간",
+      "Toggle 10시간 비례식",
+      "Toggle 10시간 권장식"
+    ],
+    "charts": 1,
+    "errors": [],
+    "sourcePreview": true,
+    "network": "blocked"
+  },
+  {
+    "width": 736,
+    "colorScheme": "dark",
+    "overflow": false,
+    "paths": 3,
+    "text": "ta-inline-chart-content{grid-area:1/1;align-self:start;min-width:0}.data-inline-chart-content .component-header{min-width:0}.data-inline-chart-content .component-title-text{overflow-wrap:anywhere;min-width:0}.data-inline-chart-stage>.source-sidebar-layer--contained{z-index:1}@container (width<=520px){.source-sidebar-layer--contained .source-tabs{row-gap:var(--space-2);flex-wrap:wrap;overflow:visible}.source-sidebar-layer--contained .source-tabs .tab-active-indicator{display:none}.source-sidebar-layer--contained .source-tabs [role=tab][aria-selected=true]{border-color:var(--text)}}\n:host { color-scheme: inherit; }12시간 간격 접속: 레벨별 직업 성장 격차20406080100036912성장속도 격차 (%)도달 레벨기존 12시간10시간 비례식10시간 권장식",
+    "buttons": [
+      "View data source",
+      "Toggle 기존 12시간",
+      "Toggle 10시간 비례식",
+      "Toggle 10시간 권장식"
+    ],
+    "charts": 1,
+    "errors": [],
+    "sourcePreview": true,
+    "network": "blocked"
+  },
+  {
+    "width": 360,
+    "colorScheme": "light",
+    "overflow": false,
+    "paths": 3,
+    "text": "ta-inline-chart-content{grid-area:1/1;align-self:start;min-width:0}.data-inline-chart-content .component-header{min-width:0}.data-inline-chart-content .component-title-text{overflow-wrap:anywhere;min-width:0}.data-inline-chart-stage>.source-sidebar-layer--contained{z-index:1}@container (width<=520px){.source-sidebar-layer--contained .source-tabs{row-gap:var(--space-2);flex-wrap:wrap;overflow:visible}.source-sidebar-layer--contained .source-tabs .tab-active-indicator{display:none}.source-sidebar-layer--contained .source-tabs [role=tab][aria-selected=true]{border-color:var(--text)}}\n:host { color-scheme: inherit; }12시간 간격 접속: 레벨별 직업 성장 격차20406080100036912성장속도 격차 (%)도달 레벨기존 12시간10시간 비례식10시간 권장식",
+    "buttons": [
+      "View data source",
+      "Toggle 기존 12시간",
+      "Toggle 10시간 비례식",
+      "Toggle 10시간 권장식"
+    ],
+    "charts": 1,
+    "errors": [],
+    "sourcePreview": true,
+    "network": "blocked"
+  },
+  {
+    "width": 360,
+    "colorScheme": "dark",
+    "overflow": false,
+    "paths": 3,
+    "text": "ta-inline-chart-content{grid-area:1/1;align-self:start;min-width:0}.data-inline-chart-content .component-header{min-width:0}.data-inline-chart-content .component-title-text{overflow-wrap:anywhere;min-width:0}.data-inline-chart-stage>.source-sidebar-layer--contained{z-index:1}@container (width<=520px){.source-sidebar-layer--contained .source-tabs{row-gap:var(--space-2);flex-wrap:wrap;overflow:visible}.source-sidebar-layer--contained .source-tabs .tab-active-indicator{display:none}.source-sidebar-layer--contained .source-tabs [role=tab][aria-selected=true]{border-color:var(--text)}}\n:host { color-scheme: inherit; }12시간 간격 접속: 레벨별 직업 성장 격차20406080100036912성장속도 격차 (%)도달 레벨기존 12시간10시간 비례식10시간 권장식",
+    "buttons": [
+      "View data source",
+      "Toggle 기존 12시간",
+      "Toggle 10시간 비례식",
+      "Toggle 10시간 권장식"
+    ],
+    "charts": 1,
+    "errors": [],
+    "sourcePreview": true,
+    "network": "blocked"
+  },
+  {
+    "receipt": true,
+    "expanded": true,
+    "errors": []
+  }
+]

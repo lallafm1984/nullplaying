@@ -1,0 +1,25 @@
+# Selected Korean Relic Campaign — ImageGen prompts
+
+All four generated images are textless background art. Korean copy and real
+emulator UI are composited by `build_selected_relic_campaign.py`.
+
+Common reference roles:
+
+- Image 1: approved `NULL PLAYING` feature graphic; palette and world style
+- Image 2: selected portrait Option 1; campaign composition reference
+
+## 1. Automatic adventure — hourglass
+
+> Use case: ads-marketing. Asset type: textless background art for a Google Play 1080×1920 portrait screenshot. Create the production background for the selected “Relic of Time” direction. Use a near-black gothic cavern with deep amethyst crystals, twisted roots, distant ruined spires and antique-gold magical light. Show one monumental ornate magical hourglass in the upper-right and exactly one small hooded hero seen from behind beside it. Golden sand transforms into a winding rune path leading downward. Keep the upper-left calm and dark for later headline typography. Keep the entire lower 68% as a quiet, near-black vertical insertion zone for a real gameplay screenshot; only elegant roots, crystals and gold particles may frame its far outer edges. The art must feel like one continuous world, not a rectangular poster. Artwork only: no words, letters, numbers, logo, UI, screenshot, phone mockup, card, badge, advertisement banner, watermark or pseudo-text. Exactly one hero; no duplicate person, afterimage, ghost, face close-up or extra figure. Keep the hourglass and hero out of the lower screenshot insertion zone.
+
+## 2. Growth — arcane astrolabe
+
+> Use case: ads-marketing. Asset type: textless background art for a Google Play 1080×1920 portrait screenshot. Extend the selected “Relic of Time” campaign into a growth/mastery image. Use the same near-black gothic cavern and amethyst crystal world with a distant ruined citadel. Show one monumental arcane astrolabe in the upper-right, built from concentric antique-gold rings, six luminous rune nodes and a violet crystal core. Exactly one small hooded hero from behind stands before it. Fine golden energy rises through the rings like measured growth; no literal numbers. Keep the upper-left dark and low-detail for later headline typography. Preserve the entire lower 68% as a quiet, near-black insertion zone for a real gameplay screenshot, framed only by organic obsidian roots and sparse purple crystals at the far edges. Artwork only: no words, letters, numbers, logo, UI, screenshot, phone mockup, card, badge, advertisement banner, watermark or pseudo-text. Exactly one hero; no duplicate, afterimage, ghost or extra figure. Keep the astrolabe and hero out of the lower screenshot zone.
+
+## 3. Equipment — orbital relic
+
+> Use case: ads-marketing. Asset type: textless background art for a Google Play 1080×1920 portrait screenshot. Extend the selected “Relic of Time” campaign into an automatic-equipment image. Use the same near-black gothic cavern, distant dark citadel, purple crystals and antique-gold rune light. In the upper-right, arrange one pointed mage hat, one jeweled ring, one armored glove, one folded dark robe and one closed spellbook around a small violet crystal core using delicate gold rune paths. Exactly one small hooded hero viewed from behind stands below the orbit. Objects must be physically separate and immediately recognizable; no floating human parts. Keep the upper-left dark and simple for later headline typography. Keep the entire lower 68% quiet and near-black for a real gameplay screenshot, framed only at the extreme edges by obsidian roots, crystals and sparse gold particles. Artwork only: no words, letters, numbers, logo, UI, screenshot, phone mockup, card, badge, advertisement banner, watermark or pseudo-text. Exactly one hero; no duplicate, afterimage, ghost, extra figure or mannequin. Keep all floating equipment and the hero out of the lower screenshot insertion zone.
+
+## 4. Chronicle — enchanted book
+
+> Use case: ads-marketing. Asset type: textless background art for a Google Play 1080×1920 portrait screenshot. Extend the selected “Relic of Time” campaign into an automatic-chronicle image. Use the same near-black gothic cavern, enormous memory-tree roots, distant purple-lit ruins and restrained antique-gold magic. Show one monumental open black-vellum chronicle in the upper-right on a rough obsidian lectern. Its pages contain only abstract glowing root veins, a wax seal and a gold thread path—absolutely no writing or letter-like marks. Exactly one small hooded hero viewed from behind stands beside the book. A gold ribbon of light flows out of the book and downward. Keep the upper-left calm and dark for later headline typography. Keep the entire lower 68% quiet and near-black for a real gameplay screenshot, with only edge roots, a few purple crystals and the gold ribbon framing it. Artwork only: no words, letters, numbers, logo, UI, screenshot, phone mockup, card, badge, advertisement banner, watermark or pseudo-text. Exactly one hero; no duplicate, afterimage, ghost or extra figure. Keep the book and hero out of the lower screenshot insertion zone.

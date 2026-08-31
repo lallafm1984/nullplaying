@@ -1,0 +1,418 @@
+{
+  "artifacts": [
+    {
+      "file": "app/build/outputs/bundle/release/app-release.aab",
+      "bytes": 70196917,
+      "sha256": "11b01eb9a6febb79d610d51ee370f826408bed1ea20f5d59c3cd092679c9e05b",
+      "zip_crc": "PASS",
+      "native_libraries": [
+        {
+          "file": "base/lib/arm64-v8a/libandroidx.graphics.path.so",
+          "abi": "arm64-v8a",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 7232,
+              "virtual_address": 23616,
+              "alignment": 16384
+            },
+            {
+              "offset": 8144,
+              "virtual_address": 40912,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": true
+        },
+        {
+          "file": "base/lib/arm64-v8a/libdatastore_shared_counter.so",
+          "abi": "arm64-v8a",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 4544,
+              "virtual_address": 20928,
+              "alignment": 16384
+            },
+            {
+              "offset": 5160,
+              "virtual_address": 37928,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": true
+        },
+        {
+          "file": "base/lib/armeabi-v7a/libandroidx.graphics.path.so",
+          "abi": "armeabi-v7a",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 5312,
+              "virtual_address": 21696,
+              "alignment": 16384
+            },
+            {
+              "offset": 5772,
+              "virtual_address": 38540,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": null
+        },
+        {
+          "file": "base/lib/armeabi-v7a/libdatastore_shared_counter.so",
+          "abi": "armeabi-v7a",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 2704,
+              "virtual_address": 19088,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": null
+        },
+        {
+          "file": "base/lib/x86/libandroidx.graphics.path.so",
+          "abi": "x86",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 7456,
+              "virtual_address": 23840,
+              "alignment": 16384
+            },
+            {
+              "offset": 7912,
+              "virtual_address": 40680,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": null
+        },
+        {
+          "file": "base/lib/x86/libdatastore_shared_counter.so",
+          "abi": "x86",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 3600,
+              "virtual_address": 19984,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": null
+        },
+        {
+          "file": "base/lib/x86_64/libandroidx.graphics.path.so",
+          "abi": "x86_64",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 7872,
+              "virtual_address": 24256,
+              "alignment": 16384
+            },
+            {
+              "offset": 8808,
+              "virtual_address": 41576,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": true
+        },
+        {
+          "file": "base/lib/x86_64/libdatastore_shared_counter.so",
+          "abi": "x86_64",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 3872,
+              "virtual_address": 20256,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": true
+        }
+      ]
+    },
+    {
+      "file": "docs/audits/2026-09-01-preproduction-qa/release-v14-from-aab.apk",
+      "bytes": 70733980,
+      "sha256": "758ec6fe7cd9b1fdba1ac017c4e1f31e8c39b635e94cd2c5ea19fa009935bb99",
+      "zip_crc": "PASS",
+      "native_libraries": [
+        {
+          "file": "lib/arm64-v8a/libandroidx.graphics.path.so",
+          "abi": "arm64-v8a",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 7232,
+              "virtual_address": 23616,
+              "alignment": 16384
+            },
+            {
+              "offset": 8144,
+              "virtual_address": 40912,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": true
+        },
+        {
+          "file": "lib/arm64-v8a/libdatastore_shared_counter.so",
+          "abi": "arm64-v8a",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 4544,
+              "virtual_address": 20928,
+              "alignment": 16384
+            },
+            {
+              "offset": 5160,
+              "virtual_address": 37928,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": true
+        },
+        {
+          "file": "lib/armeabi-v7a/libandroidx.graphics.path.so",
+          "abi": "armeabi-v7a",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 5312,
+              "virtual_address": 21696,
+              "alignment": 16384
+            },
+            {
+              "offset": 5772,
+              "virtual_address": 38540,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": null
+        },
+        {
+          "file": "lib/armeabi-v7a/libdatastore_shared_counter.so",
+          "abi": "armeabi-v7a",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 2704,
+              "virtual_address": 19088,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": null
+        },
+        {
+          "file": "lib/x86/libandroidx.graphics.path.so",
+          "abi": "x86",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 7456,
+              "virtual_address": 23840,
+              "alignment": 16384
+            },
+            {
+              "offset": 7912,
+              "virtual_address": 40680,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": null
+        },
+        {
+          "file": "lib/x86/libdatastore_shared_counter.so",
+          "abi": "x86",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 3600,
+              "virtual_address": 19984,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": null
+        },
+        {
+          "file": "lib/x86_64/libandroidx.graphics.path.so",
+          "abi": "x86_64",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 7872,
+              "virtual_address": 24256,
+              "alignment": 16384
+            },
+            {
+              "offset": 8808,
+              "virtual_address": 41576,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": true
+        },
+        {
+          "file": "lib/x86_64/libdatastore_shared_counter.so",
+          "abi": "x86_64",
+          "load_segments": [
+            {
+              "offset": 0,
+              "virtual_address": 0,
+              "alignment": 16384
+            },
+            {
+              "offset": 3872,
+              "virtual_address": 20256,
+              "alignment": 16384
+            }
+          ],
+          "gnu_relro": true,
+          "64_bit_16kb_compatible": true
+        }
+      ]
+    }
+  ],
+  "unit_tests": {
+    "Debug": {
+      "tests": 339,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "Release": {
+      "tests": 339,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "MigrationTest": {
+      "tests": 339,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "lint": {
+    "debug": {
+      "severity_counts": {
+        "Warning": 35,
+        "Hint": 1
+      },
+      "issue_counts": {
+        "ApplySharedPref": 4,
+        "InlinedApi": 1,
+        "UnusedAttribute": 1,
+        "GradleDependency": 5,
+        "LockedOrientationActivity": 1,
+        "DiscouragedApi": 1,
+        "ObsoleteSdkInt": 1,
+        "IconLauncherShape": 1,
+        "MonochromeLauncherIcon": 2,
+        "UseKtx": 18,
+        "KtxExtensionAvailable": 1
+      }
+    },
+    "release": {
+      "severity_counts": {
+        "Warning": 34
+      },
+      "issue_counts": {
+        "ApplySharedPref": 4,
+        "InlinedApi": 1,
+        "UnusedAttribute": 1,
+        "AndroidGradlePluginVersion": 1,
+        "GradleDependency": 2,
+        "LockedOrientationActivity": 1,
+        "NewerVersionAvailable": 1,
+        "DiscouragedApi": 1,
+        "ObsoleteSdkInt": 1,
+        "IconLauncherShape": 1,
+        "MonochromeLauncherIcon": 2,
+        "UseKtx": 18
+      }
+    }
+  }
+}

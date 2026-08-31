@@ -2,7 +2,7 @@
 
 - 작성 기준일: 2026년 8월 26일
 - 대상 앱: NULL PLAYING(구 AlarmQuest)
-- 패키지: `com.alarmquest`
+- 패키지: `com.nullplaying`
 - 검토한 앱 버전: `0.4.0` (`versionCode 9`)
 - 검토한 광고 SDK: GMA Next-Gen SDK `com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.4.0`
 - 검토한 동의 SDK: Google UMP `com.google.android.ump:user-messaging-platform:4.0.0`
@@ -12,6 +12,8 @@
 이 문서는 Play Console의 **앱 콘텐츠 > Data Safety** 입력을 위한 내부 작성안입니다. Play Console에 제출했다는 증거가 아니며, 앱 코드·SDK·배포 지역이 바뀔 때 다시 검토해야 합니다.
 
 ## 1. 현재 구현 기준 핵심 답변
+
+2026-08-31 추가: Firebase Remote Config와 필수 Firebase Installations를 포함합니다. 설정 제공을 위한 설치 식별자(FID), 국가·언어·시간대, 플랫폼·OS·SDK 버전, Firebase 앱 ID와 패키지 이름을 처리합니다. 기존 기기 또는 기타 ID, 앱 기능 및 서비스 유지·개선 관련 공개 항목에 이를 포함해 검토해야 합니다. Firebase Auth / Analytics SDK는 추가하지 않았습니다. 공식 근거: [Firebase Android SDK 데이터 공개](https://firebase.google.com/docs/android/play-data-disclosure). 로컬 정책 문서는 갱신했으며 공개 웹 정책 및 Play Console 제출은 별도 출시 확인 항목입니다.
 
 | Play Console 질문 | 현재 답변 | 근거·주의사항 |
 | --- | --- | --- |

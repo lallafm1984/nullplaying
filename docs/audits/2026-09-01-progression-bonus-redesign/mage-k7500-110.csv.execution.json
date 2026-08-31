@@ -1,0 +1,16 @@
+{
+  "variant": "level_envelope",
+  "samples": 16,
+  "seed_offset": 14,
+  "level": 110,
+  "mage_threshold": 7500.0,
+  "classes": "MAGE",
+  "output": "mage-k7500-110.csv",
+  "started_at": "2026-09-01T00:42:04.156532+09:00",
+  "finished_at": "2026-09-01T00:42:34.114091+09:00",
+  "duration_seconds": 29.95783500000107,
+  "output_sha256": "83e97c4df9f57bb10bcb1a58c17f8ca10f10ba037d49ff692905b8532ac8dd88",
+  "network": "OS sandbox denied",
+  "database_files": "OS sandbox denied",
+  "app_started": false
+}

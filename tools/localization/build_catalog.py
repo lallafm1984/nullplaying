@@ -23,6 +23,10 @@ MODEL_TOKEN = re.compile(r"\[990000([1-9][0-9]*)]")
 CATALOG_TOKEN = re.compile(r"\{\{([1-9][0-9]*)}}")
 
 NON_DISPLAY_LITERALS = {
+    "^제([1-9][0-9]*)구역 관문지기 · (.+)$",
+    "${definition.baseName}의 $form",
+    "의 $form",
+    "{{1}}의 {{2}}",
     "^초월 [1-9][0-9]*단식(?= )",
     "초월 ([1-9][0-9]*)단식",
     "매사냥",
@@ -33,6 +37,26 @@ NON_DISPLAY_LITERALS = {
     "신관",
     "왕실",
     "현자",
+    "관찰 일지",
+    "그림자 ",
+    "둥지 부스러기",
+    "먹이 흔적",
+    "발자국 석고",
+    "별빛 ",
+    "생태 기록",
+    "선혈 표본",
+    "수호 ",
+    "왕실 ",
+    "외피 조각",
+    "용맹 ",
+    "음영 스케치",
+    "이동로 표식",
+    "잔해",
+    "재가루",
+    "조직 표본",
+    "탈피 조각",
+    "활동 기록",
+    "흔적",
 }
 
 
@@ -51,26 +75,27 @@ MANUAL_EN = {
     "잔여 시간이 0이 되면 기기 알림": "Notify me when time runs out",
     "소진 알림 꺼짐": "Depletion alerts are off",
     "기기 알림 권한을 허용해야 알림을 받을 수 있습니다.": "Allow notifications on your device to receive alerts.",
+    "기기 알림 권한이 필요합니다.": "Notification permission is required.",
+    "시스템 설정에서 기기 알림 권한이 꺼져 있습니다.": "Notification permission is blocked in system settings.",
+    "시스템 설정에서 앱 알림이 꺼져 있습니다.": "App notifications are off in system settings.",
+    "시스템 알림 설정 열기": "Open system notification settings",
+    "시스템 알림 설정을 열지 못했습니다.": "Couldn't open system notification settings.",
     "모험가 관리": "Adventurer management",
+    "모험가": "Adventurer",
     "모험가 선택 화면으로": "Go to adventurer selection",
+    "모험가 선택 화면으로 이동": "Go to adventurer selection",
+    "{{1}}. {{2}}. 모험가 선택 화면으로 이동": "{{1}}. {{2}}. Go to adventurer selection.",
+    "모험가 화면으로 돌아가기": "Back to adventurer screen",
+    "모험가 삭제": "Delete adventurer",
+    "모험가를 삭제할까요?": "Delete this adventurer?",
     "게임 정보": "Game info",
     "개인정보처리방침": "Privacy Policy",
     "개인정보처리방침을 열지 못했습니다.": "Couldn't open the privacy policy.",
-    "데이터 삭제 요청": "Delete data",
-    "이 기기에 연결된 익명 인증 및 저장 데이터의 삭제를 요청할 수 있습니다.": "You can request deletion of the anonymous authentication and saved data linked to this device.",
-    "삭제 요청 페이지에서 이 ID를 함께 보내 주세요.": "Include this ID on the deletion request page.",
-    "삭제 요청 페이지로 이동": "Open request page",
     "닫기": "Close",
-    "삭제 요청 페이지를 열지 못했습니다.": "Couldn't open the deletion request page.",
     "익명 사용자 ID를 확인할 수 없습니다": "Couldn't verify the anonymous user ID",
     "저장된 익명 사용자와 서버 사용자가 일치하지 않습니다": "The stored anonymous user doesn't match the server user",
     "광고 개인정보 선택": "Ad privacy choices",
     "광고 개인정보 설정을 열지 못했습니다.": "Couldn't open ad privacy settings.",
-    "데이터 식별 ID": "Data identifier",
-    "데이터 식별 ID 복사": "Copy data identifier",
-    "데이터 식별 ID를 복사했습니다.": "Data identifier copied.",
-    "데이터 삭제 요청 시 개인정보처리방침의 안내에 따라 이 ID를 함께 보내 주세요.": "When requesting data deletion, include this ID as explained in the Privacy Policy.",
-    "서버 연결 후 데이터 식별 ID를 표시합니다.": "Your data identifier will appear after connecting to the server.",
     "버전 {{1}}": "Version {{1}}",
     "설정 화면에서도 자동 모험은 계속 진행됩니다.": "Auto-adventure continues while Settings is open.",
     "{{1}}의 오프라인 모험 시간이 모두 소진되었습니다.": "{{1}}'s offline adventure time has run out.",
@@ -91,11 +116,47 @@ MANUAL_EN = {
     "호칭": "Title",
     "순위 없음": "Unranked",
     "순위 미집계": "Unranked",
+    "순위 집계 중": "Ranking pending",
+    "유일한 왕좌": "Sole Sovereign",
+    "왕좌에 닿은 자": "One Who Reached the Throne",
+    "천상의 수호자": "Celestial Guardian",
+    "전설의 선봉": "Legendary Vanguard",
+    "별을 베는 자": "Starcleaver",
+    "불굴의 정복자": "Unyielding Conqueror",
+    "황금의 개척자": "Golden Pioneer",
+    "새벽의 추적자": "Dawn Tracker",
+    "은빛의 영웅": "Silver Hero",
+    "별빛의 계승자": "Heir to the Starlight",
+    "황금의 선구자": "Golden Trailblazer",
+    "은빛 추적자": "Silver Tracker",
+    "청동 길잡이": "Bronze Guide",
+    "별빛의 도전자": "Starlit Challenger",
+    "새벽의 모험가": "Dawn Adventurer",
+    "여정을 걷는 자": "Wayfarer",
     "다시 시도": "Retry",
     "확인": "Confirm",
+    "보기": "View",
     "랭킹을 불러오는 중": "Loading rankings",
     "모험가 랭킹": "Adventurer rankings",
     "능력치": "Stats",
+    "능력치 안내": "Stat Guide",
+    "모든 직업에 적용되는 효과입니다.": "These benefits apply to every class.",
+    "직업의 주·보조 능력치는 공격력·전투력과 기본 스킬 발동률에도 영향을 줍니다.": "Your class's primary and secondary stats also affect damage, combat power, and base skill trigger chance.",
+    "STR · 힘": "STR · Strength",
+    "CON · 체력": "CON · Constitution",
+    "DEX · 민첩": "DEX · Dexterity",
+    "INT · 지능": "INT · Intelligence",
+    "WIS · 지혜": "WIS · Wisdom",
+    "CHA · 매력": "CHA · Charisma",
+    "HP MAX · 최대 HP": "HP MAX · Maximum HP",
+    "MP MAX · 최대 MP": "MP MAX · Maximum MP",
+    "가방에 더 많은 전리품을 담을 수 있습니다.": "Carry more loot in your bag.",
+    "오프라인 모험시간이 늘어나고, 최대 HP 성장에 도움이 됩니다.": "Adventure offline for longer and gain more maximum HP as you grow.",
+    "몬스터를 더 빨리 찾습니다.": "Find monsters faster.",
+    "스킬이 더 자주 발동하며, 최대 MP 성장에 도움이 됩니다.": "Trigger skills more often and gain more maximum MP as you grow.",
+    "전리품을 더 높은 가격에 판매합니다.": "Sell loot for more gold.",
+    "CON에 따라 성장하는 최대 체력입니다.": "Your maximum health, which grows based on CON.",
+    "INT와 WIS에 따라 성장하는 최대 마나입니다.": "Your maximum mana, which grows based on INT and WIS.",
     "스킬": "Skills",
     "장착 장비": "Equipped gear",
     "현재 깊이": "Current depth",
@@ -109,7 +170,16 @@ MANUAL_EN = {
     "새로운 모험": "New adventure",
     "모험가 생성": "Create adventurer",
     "모험가 이름 (2~8자)": "Adventurer name (2–8 chars)",
+    "아직 모험가가 없습니다": "No adventurer yet",
+    "첫 모험가를 만들어 멈춰 있던 세계를 깨워 보세요.": "Create your first adventurer and awaken the frozen world.",
+    "직업 선택": "Choose a class",
     "능력치 굴림": "Stat Roll",
+    "이 능력치로 모험 시작": "Start adventure with these stats",
+    "주 능력치": "Primary",
+    "보조 능력치": "Secondary",
+    "다음 모험가 슬롯 · Lv.{{1}}에 영구 해금": "Next adventurer slot · Permanently unlocks at Lv.{{1}}",
+    "아래로 스크롤": "Scroll down",
+    "아래에 더 많은 모험 기록이 있습니다": "More adventure records below",
     "다시 굴리기": "Reroll",
     "이전": "Previous",
     "다음": "Next",
@@ -144,6 +214,7 @@ MANUAL_EN = {
     "파이터": "Fighter",
     "시프": "Thief",
     "레인져": "Ranger",
+    "레인저": "Ranger",
     "메이지": "Mage",
     "클래릭": "Cleric",
     "팔라딘": "Paladin",
@@ -189,6 +260,7 @@ MANUAL_EN = {
     "{{1}}, {{2}}, 레벨 {{3}}, 전투력 ": "{{1}}, {{2}}, level {{3}}, power ",
     "{{1}} 스킬 {{2}}개 · 스킬을 누르면 즉시 재생": "{{1}} skills: {{2}} · Tap a skill to play it",
     "제{{1}}구역 · 제{{2}}관문 · {{3}}": "Sector {{1}} · Gate {{2}} · {{3}}",
+    "제{{1}} 수문장": "Gatekeeper {{1}}",
     "{{1}} · 장비력 {{2}} · {{3}}": "{{1}} · gear power {{2}} · {{3}}",
     "{{1}}, {{2}}, 레벨 {{3}}, ": "{{1}}, {{2}}, level {{3}}, ",
     "{{1}} · {{2}}막  {{3}}": "{{1}} · Act {{2}}  {{3}}",
@@ -199,12 +271,15 @@ MANUAL_EN = {
     "{{1}}위, ": "Rank {{1}}, ",
     "현재 장면 {{1}}, {{2}}": "Current scene {{1}}, {{2}}",
     "제{{1}}권 제{{2}}장": "Volume {{1}}, Chapter {{2}}",
-    "제{{1}}권 · {{2}}": "Volume {{1}} · {{2}}",
+    "제{{1}}권 · {{2}}": "Book {{1}} · {{2}}",
     "제{{1}}구역 관문지기 · {{2}}": "Sector {{1}} Gatekeeper · {{2}}",
     "제{{1}}구역 · {{2}}": "Sector {{1}} · {{2}}",
     "{{1}}막 · {{2}}": "Act {{1}} · {{2}}",
     "제{{1}}장  {{2}}": "Chapter {{1}}  {{2}}",
     "매의 급강하": "Hawk Dive",
+    "검댕 뿔토끼": "Sooty Horned Rabbit",
+    "{{1}}의 둥지 부스러기": "{{1}} Nest Debris",
+    "{{1}}의 발자국 석고": "{{1}} Footprint Cast",
     "거미 독낭": "Spider Venom Sac",
     "그림자보다 빠르게": "Faster Than Shadow",
     "깊이의 무게": "Weight of the Depths",
@@ -330,13 +405,16 @@ MANUAL_EN = {
     "레인져 창": "Ranger Spear",
     "레인져 두건": "Ranger Hood",
     "레인져 사냥복": "Ranger Hunting Garb",
+    "레인저 창": "Ranger Spear",
+    "레인저 두건": "Ranger Hood",
+    "레인저 사냥복": "Ranger Hunting Garb",
     "매사냥 코트": "Falconer's Coat",
     "사냥 장갑": "Hunting Gloves",
     "활시위 손목띠": "Bowstring Wristguard",
     "매사냥 장갑": "Falconer's Gloves",
-    "순찰 전투화": "Ranger Combat Boots",
+    "순찰 전투화": "Patrol Boots",
     "매눈 목걸이": "Hawk-Eye Necklace",
-    "순찰 인장": "Ranger Sigil",
+    "순찰 인장": "Patrol Sigil",
     "마도사 로브": "Mage Robe",
     "마도사 신발": "Mage Shoes",
     "메이지 관": "Mage Circlet",
@@ -348,7 +426,7 @@ MANUAL_EN = {
     "별빛 덧신": "Starlit Slippers",
     "성가대 모자": "Choir Cap",
     "성유 손목띠": "Holy-Oil Wristband",
-    "신관 비단신": "High Priest's Silk Shoes",
+    "신관 비단신": "Priest's Silk Shoes",
     "성상 목걸이": "Holy-Icon Necklace",
     "성가 브로치": "Hymn Brooch",
     "클래릭 관": "Cleric Circlet",
@@ -399,16 +477,16 @@ MANUAL_EN = {
     "봉인 나방": "Sealed Moth",
     "{{1}}막": "Act {{1}}",
     "{{1}}의 잔해": "Remains of {{1}}",
-    "{{1}} 표본": "{{1}} Sample",
+    "{{1}} 표본": "{{1}} Specimen",
     "{{1}}의 흔적": "Traces of {{1}}",
     "{{1}}의 외피 조각": "Shell Fragment of {{1}}",
     "{{1}}의 조직 표본": "Tissue Sample of {{1}}",
-    "{{1}}의 둥지 부스러기": "Nest Debris from {{1}}",
-    "{{1}}의 발자국 석고": "Footprint Cast of {{1}}",
+    "{{1}}의 둥지 부스러기": "{{1}} Nest Debris",
+    "{{1}}의 발자국 석고": "{{1}} Footprint Cast",
     "{{1}}의 먹이 흔적": "Feeding Traces of {{1}}",
     "{{1}}의 재가루": "Ash Residue from {{1}}",
-    "{{1}}의 생태 기록": "Ecological Record of {{1}}",
-    "{{1}}의 활동 기록": "Activity Record of {{1}}",
+    "{{1}}의 생태 기록": "Field Notes on {{1}}",
+    "{{1}}의 활동 기록": "Field Notes on {{1}}",
     "{{1}}의 탈피 조각": "Shed Skin of {{1}}",
     "{{1}}의 선혈 표본": "Fresh Blood Sample of {{1}}",
     "{{1}}의 음영 스케치": "Silhouette Sketch of {{1}}",
@@ -417,6 +495,7 @@ MANUAL_EN = {
     "{{1}} 발견": "{{1}} Spotted",
     "발견했습니다": "Spotted",
     "‘{{1}}’의 레벨, 장비, 가방, 기술, 퀘스트를 포함한 모든 모험 기록이 영구 삭제됩니다.\n\n삭제한 기록은 복구할 수 없습니다.": "All adventure data for ‘{{1}}’—including level, gear, bag, skills, and quests—will be permanently deleted.\n\nDeleted data cannot be recovered.",
+    "‘{{1}}’의 레벨, 장비, 가방, 스킬, 퀘스트를 포함한 모든 모험 기록이 영구 삭제됩니다.\n\n삭제한 기록은 복구할 수 없습니다.": "All adventure data for ‘{{1}}’—including level, gear, bag, skills, and quests—will be permanently deleted.\n\nDeleted data cannot be recovered.",
 }
 
 
@@ -435,26 +514,27 @@ MANUAL_JA = {
     "잔여 시간이 0이 되면 기기 알림": "残り時間が0になると通知します",
     "소진 알림 꺼짐": "終了通知はオフです",
     "기기 알림 권한을 허용해야 알림을 받을 수 있습니다.": "通知を受け取るには端末の通知権限を許可してください。",
+    "기기 알림 권한이 필요합니다.": "通知権限が必要です。",
+    "시스템 설정에서 기기 알림 권한이 꺼져 있습니다.": "システム設定で通知権限がブロックされています。",
+    "시스템 설정에서 앱 알림이 꺼져 있습니다.": "システム設定でアプリの通知がオフになっています。",
+    "시스템 알림 설정 열기": "システムの通知設定を開く",
+    "시스템 알림 설정을 열지 못했습니다.": "システムの通知設定を開けませんでした。",
     "모험가 관리": "冒険者の管理",
+    "모험가": "冒険者",
     "모험가 선택 화면으로": "冒険者選択画面へ",
+    "모험가 선택 화면으로 이동": "冒険者選択画面へ移動",
+    "{{1}}. {{2}}. 모험가 선택 화면으로 이동": "{{1}}。{{2}}。冒険者選択画面へ移動。",
+    "모험가 화면으로 돌아가기": "冒険者画面に戻る",
+    "모험가 삭제": "冒険者を削除",
+    "모험가를 삭제할까요?": "この冒険者を削除しますか？",
     "게임 정보": "ゲーム情報",
     "개인정보처리방침": "プライバシーポリシー",
     "개인정보처리방침을 열지 못했습니다.": "プライバシーポリシーを開けませんでした。",
-    "데이터 삭제 요청": "データ削除",
-    "이 기기에 연결된 익명 인증 및 저장 데이터의 삭제를 요청할 수 있습니다.": "この端末に紐付く匿名認証と保存データの削除を申請できます。",
-    "삭제 요청 페이지에서 이 ID를 함께 보내 주세요.": "削除申請ページでこのIDを添えてください。",
-    "삭제 요청 페이지로 이동": "削除申請を開く",
     "닫기": "閉じる",
-    "삭제 요청 페이지를 열지 못했습니다.": "削除申請ページを開けませんでした。",
     "익명 사용자 ID를 확인할 수 없습니다": "匿名ユーザーIDを確認できません",
     "저장된 익명 사용자와 서버 사용자가 일치하지 않습니다": "保存済みの匿名ユーザーとサーバーのユーザーが一致しません",
     "광고 개인정보 선택": "広告のプライバシー設定",
     "광고 개인정보 설정을 열지 못했습니다.": "広告のプライバシー設定を開けませんでした。",
-    "데이터 식별 ID": "データ識別ID",
-    "데이터 식별 ID 복사": "データ識別IDをコピー",
-    "데이터 식별 ID를 복사했습니다.": "データ識別IDをコピーしました。",
-    "데이터 삭제 요청 시 개인정보처리방침의 안내에 따라 이 ID를 함께 보내 주세요.": "データ削除を依頼する際は、プライバシーポリシーの案内に従ってこのIDを添えてください。",
-    "서버 연결 후 데이터 식별 ID를 표시합니다.": "サーバー接続後にデータ識別IDが表示されます。",
     "버전 {{1}}": "バージョン {{1}}",
     "설정 화면에서도 자동 모험은 계속 진행됩니다.": "設定画面でも自動冒険は進行します。",
     "{{1}}의 오프라인 모험 시간이 모두 소진되었습니다.": "{{1}}のオフライン冒険時間がすべて終了しました。",
@@ -475,11 +555,47 @@ MANUAL_JA = {
     "호칭": "称号",
     "순위 없음": "順位なし",
     "순위 미집계": "未集計",
+    "순위 집계 중": "順位集計中",
+    "유일한 왕좌": "唯一の覇者",
+    "왕좌에 닿은 자": "王座に至りし者",
+    "천상의 수호자": "天上の守護者",
+    "전설의 선봉": "伝説の先鋒",
+    "별을 베는 자": "星を断つ者",
+    "불굴의 정복자": "不屈の征服者",
+    "황금의 개척자": "黄金の開拓者",
+    "새벽의 추적자": "暁の追跡者",
+    "은빛의 영웅": "銀の英雄",
+    "별빛의 계승자": "星明かりの継承者",
+    "황금의 선구자": "黄金の先駆者",
+    "은빛 추적자": "銀の追跡者",
+    "청동 길잡이": "青銅の案内人",
+    "별빛의 도전자": "星明かりの挑戦者",
+    "새벽의 모험가": "暁の冒険者",
+    "여정을 걷는 자": "旅路を歩む者",
     "다시 시도": "再試行",
     "확인": "確認",
+    "보기": "表示",
     "랭킹을 불러오는 중": "ランキングを読み込み中",
     "모험가 랭킹": "冒険者ランキング",
     "능력치": "能力値",
+    "능력치 안내": "能力値ガイド",
+    "모든 직업에 적용되는 효과입니다.": "どの職業でも得られる効果です。",
+    "직업의 주·보조 능력치는 공격력·전투력과 기본 스킬 발동률에도 영향을 줍니다.": "職業の主能力値・補助能力値は、攻撃力・戦闘力や基本スキル発動率にも影響します。",
+    "STR · 힘": "STR · 筋力",
+    "CON · 체력": "CON · 体力",
+    "DEX · 민첩": "DEX · 敏捷性",
+    "INT · 지능": "INT · 知力",
+    "WIS · 지혜": "WIS · 知恵",
+    "CHA · 매력": "CHA · 魅力",
+    "HP MAX · 최대 HP": "HP MAX · 最大HP",
+    "MP MAX · 최대 MP": "MP MAX · 最大MP",
+    "가방에 더 많은 전리품을 담을 수 있습니다.": "バッグに入る戦利品の数が増えます。",
+    "오프라인 모험시간이 늘어나고, 최대 HP 성장에 도움이 됩니다.": "オフラインで冒険できる時間が延び、最大HPも成長しやすくなります。",
+    "몬스터를 더 빨리 찾습니다.": "モンスターをより早く見つけられます。",
+    "스킬이 더 자주 발동하며, 최대 MP 성장에 도움이 됩니다.": "スキルが発動しやすくなり、最大MPも成長しやすくなります。",
+    "전리품을 더 높은 가격에 판매합니다.": "戦利品をより高く売れるようになります。",
+    "CON에 따라 성장하는 최대 체력입니다.": "CONに応じて成長する、体力の最大値です。",
+    "INT와 WIS에 따라 성장하는 최대 마나입니다.": "INTとWISに応じて成長する、マナの最大値です。",
     "스킬": "スキル",
     "장착 장비": "装備中",
     "현재 깊이": "現在の深度",
@@ -493,7 +609,16 @@ MANUAL_JA = {
     "새로운 모험": "新しい冒険",
     "모험가 생성": "冒険者を作成",
     "모험가 이름 (2~8자)": "冒険者名（2～8文字）",
+    "아직 모험가가 없습니다": "まだ冒険者がいません",
+    "첫 모험가를 만들어 멈춰 있던 세계를 깨워 보세요.": "最初の冒険者を作り、止まっていた世界を目覚めさせましょう。",
+    "직업 선택": "クラスを選択",
     "능력치 굴림": "能力値決定",
+    "이 능력치로 모험 시작": "この能力値で冒険を始める",
+    "주 능력치": "主要",
+    "보조 능력치": "副",
+    "다음 모험가 슬롯 · Lv.{{1}}에 영구 해금": "次の冒険者枠 · Lv.{{1}}で永久解放",
+    "아래로 스크롤": "下にスクロール",
+    "아래에 더 많은 모험 기록이 있습니다": "この下にも冒険記録があります",
     "다시 굴리기": "振り直す",
     "이전": "前へ",
     "다음": "次へ",
@@ -528,6 +653,7 @@ MANUAL_JA = {
     "파이터": "ファイター",
     "시프": "シーフ",
     "레인져": "レンジャー",
+    "레인저": "レンジャー",
     "메이지": "メイジ",
     "클래릭": "クレリック",
     "팔라딘": "パラディン",
@@ -582,6 +708,7 @@ MANUAL_JA = {
     "내 순위 {{1}}, {{2}}, 호칭 {{3}}, 전투력 {{4}}": "自分の順位は{{1}}、{{2}}、称号{{3}}、戦闘力{{4}}",
     "{{1}}, {{2}}, 레벨 {{3}}, 전투력 ": "{{1}}、{{2}}、レベル{{3}}、戦闘力 ",
     "제{{1}}구역 · 제{{2}}관문 · {{3}}": "第{{1}}区域 · 第{{2}}関門 · {{3}}",
+    "제{{1}} 수문장": "第{{1}}の門番",
     "{{1}} · 장비력 {{2}} · {{3}}": "{{1}} · 装備力{{2}} · {{3}}",
     "{{1}}, {{2}}, 레벨 {{3}}, ": "{{1}}、{{2}}、レベル{{3}}、",
     " {{1}}. {{2}}회 중 {{3}}회 완료. 자동 진행 중.": " {{1}}。{{2}}回中{{3}}回完了。自動進行中。",
@@ -601,6 +728,9 @@ MANUAL_JA = {
     "현재 장면 {{1}}, {{2}}": "現在のシーン：{{1}}、{{2}}",
     "제{{1}}장  {{2}}": "第{{1}}章  {{2}}",
     "매의 급강하": "鷹の急降下",
+    "검댕 뿔토끼": "煤けた角ウサギ",
+    "{{1}}의 둥지 부스러기": "{{1}}の巣材",
+    "{{1}}의 발자국 석고": "{{1}}の足跡石膏型",
     "거미 독낭": "クモの毒嚢",
     "그림자보다 빠르게": "影より速く",
     "깊이의 무게": "深層の重み",
@@ -729,13 +859,16 @@ MANUAL_JA = {
     "레인져 창": "レンジャーの槍",
     "레인져 두건": "レンジャーの頭巾",
     "레인져 사냥복": "レンジャーの狩猟服",
+    "레인저 창": "レンジャーの槍",
+    "레인저 두건": "レンジャーの頭巾",
+    "레인저 사냥복": "レンジャーの狩猟服",
     "매사냥 코트": "鷹匠のコート",
     "사냥 장갑": "狩猟用手袋",
     "활시위 손목띠": "弦の腕当て",
     "매사냥 장갑": "鷹匠の手袋",
-    "순찰 전투화": "巡回戦闘靴",
+    "순찰 전투화": "巡察の戦闘靴",
     "매눈 목걸이": "鷹の目の首飾り",
-    "순찰 인장": "巡回の印",
+    "순찰 인장": "巡察の印章",
     "마도사 로브": "魔術師のローブ",
     "마도사 신발": "魔術師の靴",
     "메이지 관": "メイジの冠",
@@ -802,12 +935,12 @@ MANUAL_JA = {
     "{{1}}의 흔적": "{{1}}の痕跡",
     "{{1}}의 외피 조각": "{{1}}の外皮片",
     "{{1}}의 조직 표본": "{{1}}の組織標本",
-    "{{1}}의 둥지 부스러기": "{{1}}の巣の破片",
-    "{{1}}의 발자국 석고": "{{1}}の足跡の石膏型",
+    "{{1}}의 둥지 부스러기": "{{1}}の巣材",
+    "{{1}}의 발자국 석고": "{{1}}の足跡石膏型",
     "{{1}}의 먹이 흔적": "{{1}}の食痕",
     "{{1}}의 재가루": "{{1}}の灰",
     "{{1}}의 생태 기록": "{{1}}の生態記録",
-    "{{1}}의 활동 기록": "{{1}}の活動記録",
+    "{{1}}의 활동 기록": "{{1}}の行動記録",
     "{{1}}의 탈피 조각": "{{1}}の抜け殻",
     "{{1}}의 선혈 표본": "{{1}}の血液標本",
     "{{1}}의 음영 스케치": "{{1}}のシルエット画",
@@ -816,6 +949,7 @@ MANUAL_JA = {
     "{{1}} 발견": "{{1}}を発見",
     "발견했습니다": "発見",
     "‘{{1}}’의 레벨, 장비, 가방, 기술, 퀘스트를 포함한 모든 모험 기록이 영구 삭제됩니다.\n\n삭제한 기록은 복구할 수 없습니다.": "‘{{1}}’のレベル、装備、バッグ、スキル、クエストを含むすべての冒険記録が完全に削除されます。\n\n削除した記録は復元できません。",
+    "‘{{1}}’의 레벨, 장비, 가방, 스킬, 퀘스트를 포함한 모든 모험 기록이 영구 삭제됩니다.\n\n삭제한 기록은 복구할 수 없습니다.": "‘{{1}}’のレベル、装備、バッグ、スキル、クエストを含むすべての冒険記録が完全に削除されます。\n\n削除した記録は復元できません。",
 }
 
 
@@ -904,7 +1038,7 @@ MANUAL_EN.update({
     "순찰대를 따른": "Following the Patrol",
     "신호탑 그늘에 숨은": "Hidden in the Signal Tower's Shadow",
     "아래를 향한 거울에 비친": "Reflected in a Downward-Facing Mirror",
-    "약속 없는 네 번째 빛에 깨어난": "Awakened by the Promiseless Fourth Light",
+    "약속 없는 네 번째 빛에 깨어난": "Awakened by the Unpromised Fourth Light",
     "양군의 재를 먹은": "Feeding on Both Armies' Ashes",
     "열 번째 장에서 깨어난": "Awakened in Chapter Ten",
     "열세 번째 돌 아래의": "Beneath the Thirteenth Stone",
@@ -1020,10 +1154,10 @@ MANUAL_JA.update({
     "북쪽 신호탑을 바라보는": "北の信号塔を見つめる",
     "불씨 씨앗을 품은": "火種の種を宿した",
     "비밀 계단을 지키는": "秘密の階段を守る",
-    "빈 병영을 배회하는": "空の兵舎をさまよう",
+    "빈 병영을 배회하는": "無人の兵舎をさまよう",
     "빈 수레 밑에 숨은": "空の荷車の下に隠れた",
     "빈 진지에 남은": "無人の陣地に残った",
-    "빈 초소를 배회하는": "空の詰所をさまよう",
+    "빈 초소를 배회하는": "無人の詰所をさまよう",
     "빈 하늘을 등진": "空虚な空を背にした",
     "살아 움직이는 문에 숨은": "動く扉に潜む",
     "새로 난 길을 따르는": "新たに開いた道をたどる",
@@ -1188,11 +1322,11 @@ MANUAL_EN.update({
     "현자 장화": "Sage's Boots",
     "기도 머리띠": "Prayer Circlet",
     "성유 가면": "Consecrated Mask",
-    "신관 관": "High Priest's Circlet",
+    "신관 관": "Priest's Circlet",
     "사제복": "Priest's Robes",
     "성유 망토": "Consecrated Cloak",
     "치유 장갑": "Healer's Gloves",
-    "신관 손갑": "High Priest's Gauntlets",
+    "신관 손갑": "Priest's Gauntlets",
     "성유 장화": "Consecrated Boots",
     "수호 판금": "Guardian Plate",
     "왕실 갑주": "Royal Plate",
@@ -1268,11 +1402,11 @@ MANUAL_JA.update({
     "현자 후드": "賢者のフード",
     "기도 머리띠": "祈りの額飾り",
     "성유 가면": "聖別の仮面",
-    "신관 관": "大神官の冠",
+    "신관 관": "神官の冠",
     "사제복": "司祭のローブ",
     "성유 망토": "聖別の外套",
     "치유 장갑": "治癒の手袋",
-    "신관 손갑": "大神官の手甲",
+    "신관 손갑": "神官の手甲",
     "성유 장화": "聖別のブーツ",
     "수호 판금": "守護者の板金鎧",
     "왕실 갑주": "王室の甲冑",
@@ -1447,6 +1581,27 @@ def load_existing_catalog(path: Path) -> dict[str, str]:
     return existing
 
 
+def load_structured_review_overrides(paths: list[Path]) -> dict[str, dict[str, str]]:
+    combined: dict[str, dict[str, str]] = {}
+    for path in paths:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            raise RuntimeError(f"Review override root must be an object: {path}")
+        for source, targets in payload.items():
+            if not isinstance(source, str) or not isinstance(targets, dict):
+                raise RuntimeError(f"Invalid review override entry in {path}: {source!r}")
+            if set(targets) != {"en", "ja"} or not all(
+                isinstance(targets[language], str) and targets[language].strip()
+                for language in ("en", "ja")
+            ):
+                raise RuntimeError(f"Review override requires non-empty en/ja targets: {source!r}")
+            previous = combined.get(source)
+            if previous is not None and previous != targets:
+                raise RuntimeError(f"Conflicting review overrides for {source!r}")
+            combined[source] = {"en": targets["en"], "ja": targets["ja"]}
+    return combined
+
+
 def validate_translations(
     language: str,
     sources: list[str],
@@ -1509,9 +1664,26 @@ def main() -> None:
         if review_overrides_path.exists()
         else {}
     )
+    quest_review_overrides = load_structured_review_overrides(
+        sorted((args.project / "tools/localization").glob("quest_review_*.json")),
+    )
+    unknown_quest_sources = sorted(set(quest_review_overrides) - set(sources))
+    if unknown_quest_sources:
+        preview = "\n".join(repr(source) for source in unknown_quest_sources[:20])
+        raise RuntimeError(
+            f"Quest review overrides contain {len(unknown_quest_sources)} unknown sources:\n{preview}",
+        )
+    effective_manual_en = {
+        **MANUAL_EN,
+        **{source: targets["en"] for source, targets in quest_review_overrides.items()},
+    }
+    effective_manual_ja = {
+        **MANUAL_JA,
+        **{source: targets["ja"] for source, targets in quest_review_overrides.items()},
+    }
     pending = []
     for source in sources:
-        manually_translated = source in MANUAL_EN and source in MANUAL_JA
+        manually_translated = source in effective_manual_en and source in effective_manual_ja
         reviewed = source in review_overrides and all(
             language in review_overrides[source] for language in ("en", "ja")
         )
@@ -1531,23 +1703,23 @@ def main() -> None:
         generated_en = dict(zip(pending, new_english))
         generated_ja = dict(zip(pending, new_japanese))
     english = [
-        MANUAL_EN.get(
+        effective_manual_en.get(
             source,
             review_overrides.get(source, {}).get("en", generated_en.get(source, existing_en.get(source, ""))),
         )
         for source in sources
     ]
     japanese = [
-        MANUAL_JA.get(
+        effective_manual_ja.get(
             source,
             review_overrides.get(source, {}).get("ja", generated_ja.get(source, existing_ja.get(source, ""))),
         )
         for source in sources
     ]
-    validate_translations("en", sources, english, MANUAL_EN)
-    validate_translations("ja", sources, japanese, MANUAL_JA)
-    write_catalog(raw_root / "localization_en.tsv", sources, english, MANUAL_EN)
-    write_catalog(raw_root / "localization_ja.tsv", sources, japanese, MANUAL_JA)
+    validate_translations("en", sources, english, effective_manual_en)
+    validate_translations("ja", sources, japanese, effective_manual_ja)
+    write_catalog(raw_root / "localization_en.tsv", sources, english, effective_manual_en)
+    write_catalog(raw_root / "localization_ja.tsv", sources, japanese, effective_manual_ja)
     print(f"Wrote {len(sources)} entries per language.")
 
 

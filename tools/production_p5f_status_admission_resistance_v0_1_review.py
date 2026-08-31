@@ -162,7 +162,7 @@ def main() -> int:
     check("emulator API", "androidRelease=15" in audit and "apiLevel=35" in audit, "15 API 35")
     check("emulator install", "installResult=Success" in audit and "pmClearResult=Success" in audit, "Success")
     check("fresh roster", "freshRosterEmpty=true" in audit and "아직 캐릭터가 없습니다" in audit, "empty")
-    check("cold focus", "launchState=COLD" in audit and "mFocusedApp=com.alarmquest/.MainActivity" in audit, "focused")
+    check("cold focus", "launchState=COLD" in audit and "mFocusedApp=com.nullplaying/.MainActivity" in audit, "focused")
     check("fatal zero", "androidRuntimeFatalCount=0" in audit, "0")
 
     if args.with_emulator:
@@ -170,10 +170,10 @@ def main() -> int:
         check("emulator online", "emulator-5554" in devices.stdout and " device " in devices.stdout, devices.stdout.strip())
         boot = run(["adb", "-s", "emulator-5554", "shell", "getprop", "sys.boot_completed"])
         check("emulator booted", boot.stdout.strip() == "1", boot.stdout.strip())
-        version = run(["adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.alarmquest"])
+        version = run(["adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.nullplaying"])
         check("emulator app version", "versionCode=1" in version.stdout and "versionName=0.1.0" in version.stdout, "0.1.0(1)")
         activities = run(["adb", "-s", "emulator-5554", "shell", "dumpsys", "activity", "activities"])
-        check("emulator focus", "com.alarmquest/.MainActivity" in activities.stdout, "MainActivity")
+        check("emulator focus", "com.nullplaying/.MainActivity" in activities.stdout, "MainActivity")
         fatal = run(["adb", "-s", "emulator-5554", "logcat", "-d", "-t", "500", "AndroidRuntime:E", "*:S"])
         check("emulator fatal zero", not fatal.stdout.strip(), "fatal=0")
 

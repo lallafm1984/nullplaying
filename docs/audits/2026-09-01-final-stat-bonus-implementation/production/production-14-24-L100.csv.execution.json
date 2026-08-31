@@ -1,0 +1,12 @@
+{
+  "samples": 24,
+  "seed_offset": 14,
+  "level": 100,
+  "started_at": "2026-09-01T02:01:01.310141+09:00",
+  "elapsed_seconds": 234.60417466599756,
+  "output_sha256": "8d4f25d55c9cbdd1832b92dd25f1cc6d7fb2f6a6b0c739b6bdbc11a48f58c5c4",
+  "network": "OS sandbox denied",
+  "database_files": "OS sandbox denied",
+  "app_started": false,
+  "instrumentation": "Only attack/cast counters; no balance replacement"
+}

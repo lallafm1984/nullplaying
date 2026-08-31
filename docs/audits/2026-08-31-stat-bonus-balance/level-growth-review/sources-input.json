@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "level-growth",
+      "title": "증가 공식과 레벨별 평균 혜택",
+      "queries": [
+        {
+          "id": "level-growth-records",
+          "source": {
+            "label": "최종 기획안의 레벨별 성장",
+            "files": [
+              {
+                "label": "all-heldout.csv"
+              },
+              {
+                "label": "final_class_bonus_review.py"
+              },
+              {
+                "label": "SimpleGameEngine.kt"
+              },
+              {
+                "label": "SimpleGameModels.kt"
+              }
+            ],
+            "filters": [
+              "직업: 6종",
+              "난수 seed: 14~29",
+              "직업별 전체 전투 경로: 16개"
+            ],
+            "caveats": [
+              "실제 이용자 데이터가 아닌 기존 로컬 엔진 시뮬레이션입니다.",
+              "레벨마다 각 캐릭터의 보너스를 계산한 뒤 직업별 평균을 냈습니다. 표본의 최고값은 이론적 상한이 아닙니다.",
+              "레벨업 외에 모험담 완료로도 성장합니다. 이 경로의 100레벨 모험담 완료는 129회입니다.",
+              "보너스는 기획안이며 운영 앱에 적용된 값이 아닙니다. 이번 계산은 DB·기기·앱 실행 없이 이루어졌습니다.",
+              "증분은 직전 표시 레벨과의 차이이며 매 레벨 일정한 증가량이 아닙니다."
+            ],
+            "metricDefinitions": [
+              {
+                "name": "HP 보유시간",
+                "definition": "HP에 따른 오프라인 보유시간의 상한은 모든 레벨에서 10시간이며 HP 6000부터 포화됩니다.",
+                "formula": "8 + 2 × min(HP/6000,1)^0.8 시간"
+              },
+              {
+                "name": "MP 스킬 확률",
+                "definition": "마법사의 기본 스킬 확률은 최대 35%, 다른 직업은 최대 30%입니다. MP 보너스는 6000부터 포화됩니다.",
+                "formula": "min(20+A, P0 + A × min(MP/6000,1)); A=마법사 15, 나머지 10"
+              },
+              {
+                "name": "DEX 탐색",
+                "definition": "DEX는 탐색 시간을 5초에서 최소 4초까지 줄이며 DEX 150부터 포화됩니다.",
+                "formula": "5 − min(DEX/150,1) 초"
+              },
+              {
+                "name": "CHA 판매",
+                "definition": "CHA는 아이템 판매 보너스를 최대 20%까지 늘리며 CHA 150부터 포화됩니다.",
+                "formula": "20 × min(CHA/150,1) %"
+              },
+              {
+                "name": "STR 가방 상한",
+                "definition": "가방의 이론적 상한은 레벨에 따라 증가합니다. 실제 가방은 STR에 따라 이 상한 이하입니다.",
+                "formula": "B=15+floor((레벨−1)×3/5); 가방=B+min(floor(STR/2),B−1); 상한=2B−1"
+              }
+            ],
+            "evidenceFlow": [
+              {
+                "kind": "validation",
+                "title": "공식 확인",
+                "detail": "앱 소스 해시 17개가 기존 검증 시점과 일치했습니다. 9600행의 HP·DEX·CHA 효과를 독립 스칼라식으로 대조했고, 가방·기존 스킬 확률 공식과 단조 성장도 확인했습니다."
+              }
+            ]
+          },
+          "rows": [
+            {
+              "level": 1,
+              "previous_level": 1,
+              "bag_cap": 29,
+              "warrior_h": 8.012444,
+              "warrior_h_delta": null,
+              "mage_pct": 9.149844,
+              "mage_pct_delta": null,
+              "rogue_s": 4.93,
+              "rogue_s_delta": null,
+              "ranger_s": 4.93,
+              "ranger_s_delta": null,
+              "cleric_pct": 1.608333,
+              "cleric_pct_delta": null,
+              "paladin_pct": 1.608333,
+              "paladin_pct_delta": null
+            },
+            {
+              "level": 10,
+              "previous_level": 1,
+              "bag_cap": 39,
+              "warrior_h": 8.073784,
+              "warrior_h_delta": 0.06134,
+              "mage_pct": 10.795,
+              "mage_pct_delta": 1.645156,
+              "rogue_s": 4.87625,
+              "rogue_s_delta": -0.05375,
+              "ranger_s": 4.880417,
+              "ranger_s_delta": -0.049583,
+              "cleric_pct": 2.758333,
+              "cleric_pct_delta": 1.15,
+              "paladin_pct": 2.725,
+              "paladin_pct_delta": 1.116667
+            },
+            {
+              "level": 20,
+              "previous_level": 10,
+              "bag_cap": 51,
+              "warrior_h": 8.151284,
+              "warrior_h_delta": 0.0775,
+              "mage_pct": 12.764688,
+              "mage_pct_delta": 1.969688,
+              "rogue_s": 4.816667,
+              "rogue_s_delta": -0.059583,
+              "ranger_s": 4.818333,
+              "ranger_s_delta": -0.062083,
+              "cleric_pct": 3.983333,
+              "cleric_pct_delta": 1.225,
+              "paladin_pct": 3.875,
+              "paladin_pct_delta": 1.15
+            },
+            {
+              "level": 30,
+              "previous_level": 20,
+              "bag_cap": 63,
+              "warrior_h": 8.252558,
+              "warrior_h_delta": 0.101274,
+              "mage_pct": 14.914375,
+              "mage_pct_delta": 2.149687,
+              "rogue_s": 4.745833,
+              "rogue_s_delta": -0.070833,
+              "ranger_s": 4.7425,
+              "ranger_s_delta": -0.075833,
+              "cleric_pct": 5.433333,
+              "cleric_pct_delta": 1.45,
+              "paladin_pct": 5.175,
+              "paladin_pct_delta": 1.3
+            },
+            {
+              "level": 40,
+              "previous_level": 30,
+              "bag_cap": 75,
+              "warrior_h": 8.381973,
+              "warrior_h_delta": 0.129415,
+              "mage_pct": 17.737188,
+              "mage_pct_delta": 2.822813,
+              "rogue_s": 4.662917,
+              "rogue_s_delta": -0.082917,
+              "ranger_s": 4.65875,
+              "ranger_s_delta": -0.08375,
+              "cleric_pct": 7.033333,
+              "cleric_pct_delta": 1.6,
+              "paladin_pct": 6.808333,
+              "paladin_pct_delta": 1.633333
+            },
+            {
+              "level": 50,
+              "previous_level": 40,
+              "bag_cap": 87,
+              "warrior_h": 8.562515,
+              "warrior_h_delta": 0.180542,
+              "mage_pct": 21.404531,
+              "mage_pct_delta": 3.667344,
+              "rogue_s": 4.564583,
+              "rogue_s_delta": -0.098333,
+              "ranger_s": 4.562083,
+              "ranger_s_delta": -0.096667,
+              "cleric_pct": 8.991667,
+              "cleric_pct_delta": 1.958333,
+              "paladin_pct": 8.875,
+              "paladin_pct_delta": 2.066667
+            },
+            {
+              "level": 60,
+              "previous_level": 50,
+              "bag_cap": 99,
+              "warrior_h": 8.805533,
+              "warrior_h_delta": 0.243018,
+              "mage_pct": 24.748594,
+              "mage_pct_delta": 3.344063,
+              "rogue_s": 4.44875,
+              "rogue_s_delta": -0.115833,
+              "ranger_s": 4.44125,
+              "ranger_s_delta": -0.120833,
+              "cleric_pct": 11.333333,
+              "cleric_pct_delta": 2.341667,
+              "paladin_pct": 11.183333,
+              "paladin_pct_delta": 2.308333
+            },
+            {
+              "level": 70,
+              "previous_level": 60,
+              "bag_cap": 111,
+              "warrior_h": 9.098957,
+              "warrior_h_delta": 0.293424,
+              "mage_pct": 27.016875,
+              "mage_pct_delta": 2.268281,
+              "rogue_s": 4.3175,
+              "rogue_s_delta": -0.13125,
+              "ranger_s": 4.313333,
+              "ranger_s_delta": -0.127917,
+              "cleric_pct": 13.708333,
+              "cleric_pct_delta": 2.375,
+              "paladin_pct": 13.441667,
+              "paladin_pct_delta": 2.258333
+            },
+            {
+              "level": 80,
+              "previous_level": 70,
+              "bag_cap": 123,
+              "warrior_h": 9.448168,
+              "warrior_h_delta": 0.349211,
+              "mage_pct": 29.934844,
+              "mage_pct_delta": 2.917969,
+              "rogue_s": 4.17875,
+              "rogue_s_delta": -0.13875,
+              "ranger_s": 4.182083,
+              "ranger_s_delta": -0.13125,
+              "cleric_pct": 16.4,
+              "cleric_pct_delta": 2.691667,
+              "paladin_pct": 15.925,
+              "paladin_pct_delta": 2.483333
+            },
+            {
+              "level": 90,
+              "previous_level": 80,
+              "bag_cap": 135,
+              "warrior_h": 9.843823,
+              "warrior_h_delta": 0.395655,
+              "mage_pct": 33.489063,
+              "mage_pct_delta": 3.554219,
+              "rogue_s": 4.06375,
+              "rogue_s_delta": -0.115,
+              "ranger_s": 4.044167,
+              "ranger_s_delta": -0.137917,
+              "cleric_pct": 18.858333,
+              "cleric_pct_delta": 2.458333,
+              "paladin_pct": 18.65,
+              "paladin_pct_delta": 2.725
+            },
+            {
+              "level": 100,
+              "previous_level": 90,
+              "bag_cap": 147,
+              "warrior_h": 10.0,
+              "warrior_h_delta": 0.156177,
+              "mage_pct": 35.0,
+              "mage_pct_delta": 1.510937,
+              "rogue_s": 4.005833,
+              "rogue_s_delta": -0.057917,
+              "ranger_s": 4.000833,
+              "ranger_s_delta": -0.043333,
+              "cleric_pct": 19.875,
+              "cleric_pct_delta": 1.016667,
+              "paladin_pct": 19.933333,
+              "paladin_pct_delta": 1.283333
+            }
+          ],
+          "columns": [
+            {
+              "field": "level",
+              "label": "레벨"
+            },
+            {
+              "field": "warrior_h",
+              "label": "전사 보유시간 (h)"
+            },
+            {
+              "field": "mage_pct",
+              "label": "마법사 확률 (%)"
+            },
+            {
+              "field": "rogue_s",
+              "label": "도적 탐색 (초)"
+            },
+            {
+              "field": "ranger_s",
+              "label": "레인저 탐색 (초)"
+            },
+            {
+              "field": "cleric_pct",
+              "label": "성직자 판매 (%)"
+            },
+            {
+              "field": "paladin_pct",
+              "label": "팔라딘 판매 (%)"
+            },
+            {
+              "field": "bag_cap",
+              "label": "가방 이론 상한 (칸)"
+            }
+          ],
+          "preview": {
+            "kind": "aggregate",
+            "note": "직업별 16개 경로의 해당 레벨 평균. 가방 상한만 레벨 공식으로 산출.",
+            "totalRows": 11
+          }
+        }
+      ]
+    },
+    {
+      "id": "cap-arrival",
+      "title": "상한 도달 시점과 예외",
+      "queries": [
+        {
+          "id": "first-cap-level",
+          "source": {
+            "label": "최종 기획안의 레벨별 성장",
+            "files": [
+              {
+                "label": "all-heldout.csv"
+              },
+              {
+                "label": "final_class_bonus_review.py"
+              },
+              {
+                "label": "SimpleGameEngine.kt"
+              },
+              {
+                "label": "SimpleGameModels.kt"
+              }
+            ],
+            "filters": [
+              "직업: 6종",
+              "난수 seed: 14~29",
+              "직업별 전체 전투 경로: 16개"
+            ],
+            "caveats": [
+              "실제 이용자 데이터가 아닌 기존 로컬 엔진 시뮬레이션입니다.",
+              "레벨마다 각 캐릭터의 보너스를 계산한 뒤 직업별 평균을 냈습니다. 표본의 최고값은 이론적 상한이 아닙니다.",
+              "레벨업 외에 모험담 완료로도 성장합니다. 이 경로의 100레벨 모험담 완료는 129회입니다.",
+              "보너스는 기획안이며 운영 앱에 적용된 값이 아닙니다. 이번 계산은 DB·기기·앱 실행 없이 이루어졌습니다.",
+              "HP·DEX·CHA는 직업 잠금이나 100레벨 제한이 없습니다. 표본 결과가 모든 성장운에서의 독점이나 도달을 보장하지 않습니다."
+            ],
+            "metricDefinitions": [
+              {
+                "name": "최초 상한 도달",
+                "definition": "100레벨까지 특화 혜택의 상한에 도달한 경로에서 최초 도달 레벨을 계산했습니다. 미도달 경로는 도달 시점 범위에서 제외했습니다."
+              }
+            ]
+          },
+          "rows": [
+            {
+              "hero_class": "전사",
+              "reached": 16,
+              "samples": 16,
+              "earliest": 91,
+              "latest_among_reached": 100,
+              "median_among_reached": 94.0
+            },
+            {
+              "hero_class": "도적",
+              "reached": 14,
+              "samples": 16,
+              "earliest": 86,
+              "latest_among_reached": 100,
+              "median_among_reached": 94.0
+            },
+            {
+              "hero_class": "레인저",
+              "reached": 15,
+              "samples": 16,
+              "earliest": 88,
+              "latest_among_reached": 98,
+              "median_among_reached": 92.0
+            },
+            {
+              "hero_class": "마법사",
+              "reached": 16,
+              "samples": 16,
+              "earliest": 92,
+              "latest_among_reached": 97,
+              "median_among_reached": 94.5
+            },
+            {
+              "hero_class": "성직자",
+              "reached": 15,
+              "samples": 16,
+              "earliest": 90,
+              "latest_among_reached": 98,
+              "median_among_reached": 93.0
+            },
+            {
+              "hero_class": "팔라딘",
+              "reached": 14,
+              "samples": 16,
+              "earliest": 90,
+              "latest_among_reached": 100,
+              "median_among_reached": 93.5
+            }
+          ],
+          "columns": [
+            "hero_class",
+            "reached",
+            "samples",
+            "earliest",
+            "latest_among_reached",
+            "median_among_reached"
+          ]
+        }
+      ]
+    }
+  ]
+}

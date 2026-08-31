@@ -1,0 +1,6 @@
+(version 1)
+(allow default)
+; Keep local ADB/console available; the emulator cannot reach external servers.
+(deny network-outbound)
+(allow network-outbound (remote ip "localhost:*"))
+(allow network-outbound (remote unix-socket))

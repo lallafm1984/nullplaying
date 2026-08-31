@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 1,
+  "id": "ten-hour-growth-balance",
+  "title": "12시간 간격 접속: 레벨별 직업 성장 격차",
+  "description": "12시간 간격 접속 · 매번 12분 충전 · 낮을수록 균등",
+  "chart": {
+    "type": "line",
+    "x": "level",
+    "y": "gap_pct",
+    "series": "plan",
+    "xLabel": "도달 레벨",
+    "yLabel": "성장속도 격차 (%)",
+    "showXAxisLabel": true
+  },
+  "rows": [
+    {
+      "level": 20,
+      "plan": "기존 12시간",
+      "gap_pct": 0.9606
+    },
+    {
+      "level": 30,
+      "plan": "기존 12시간",
+      "gap_pct": 1.0417
+    },
+    {
+      "level": 40,
+      "plan": "기존 12시간",
+      "gap_pct": 1.2316
+    },
+    {
+      "level": 50,
+      "plan": "기존 12시간",
+      "gap_pct": 1.8453
+    },
+    {
+      "level": 60,
+      "plan": "기존 12시간",
+      "gap_pct": 3.0198
+    },
+    {
+      "level": 70,
+      "plan": "기존 12시간",
+      "gap_pct": 4.5193
+    },
+    {
+      "level": 80,
+      "plan": "기존 12시간",
+      "gap_pct": 6.3864
+    },
+    {
+      "level": 90,
+      "plan": "기존 12시간",
+      "gap_pct": 8.5495
+    },
+    {
+      "level": 100,
+      "plan": "기존 12시간",
+      "gap_pct": 10.6188
+    },
+    {
+      "level": 20,
+      "plan": "10시간 비례식",
+      "gap_pct": 0.9499
+    },
+    {
+      "level": 30,
+      "plan": "10시간 비례식",
+      "gap_pct": 1.04
+    },
+    {
+      "level": 40,
+      "plan": "10시간 비례식",
+      "gap_pct": 1.222
+    },
+    {
+      "level": 50,
+      "plan": "10시간 비례식",
+      "gap_pct": 1.3569
+    },
+    {
+      "level": 60,
+      "plan": "10시간 비례식",
+      "gap_pct": 1.6035
+    },
+    {
+      "level": 70,
+      "plan": "10시간 비례식",
+      "gap_pct": 2.4066
+    },
+    {
+      "level": 80,
+      "plan": "10시간 비례식",
+      "gap_pct": 3.4531
+    },
+    {
+      "level": 90,
+      "plan": "10시간 비례식",
+      "gap_pct": 4.7045
+    },
+    {
+      "level": 100,
+      "plan": "10시간 비례식",
+      "gap_pct": 5.9296
+    },
+    {
+      "level": 20,
+      "plan": "10시간 권장식",
+      "gap_pct": 0.9567
+    },
+    {
+      "level": 30,
+      "plan": "10시간 권장식",
+      "gap_pct": 1.0402
+    },
+    {
+      "level": 40,
+      "plan": "10시간 권장식",
+      "gap_pct": 1.2259
+    },
+    {
+      "level": 50,
+      "plan": "10시간 권장식",
+      "gap_pct": 1.3517
+    },
+    {
+      "level": 60,
+      "plan": "10시간 권장식",
+      "gap_pct": 1.8254
+    },
+    {
+      "level": 70,
+      "plan": "10시간 권장식",
+      "gap_pct": 2.5857
+    },
+    {
+      "level": 80,
+      "plan": "10시간 권장식",
+      "gap_pct": 3.5018
+    },
+    {
+      "level": 90,
+      "plan": "10시간 권장식",
+      "gap_pct": 4.5384
+    },
+    {
+      "level": 100,
+      "plan": "10시간 권장식",
+      "gap_pct": 5.5062
+    }
+  ],
+  "source": {
+    "label": "로컬 엔진 성장 시뮬레이션",
+    "files": [
+      {
+        "label": "ten_hour_independent_dense.csv"
+      },
+      {
+        "label": "ten_hour_balance.py"
+      }
+    ],
+    "filters": [
+      "직업: 6종",
+      "독립 난수 경로: 직업당 8개",
+      "접속 간격: 12시간",
+      "접속 시 충전: 12분"
+    ],
+    "metricDefinitions": [
+      {
+        "name": "성장속도 격차",
+        "definition": "같은 목표 레벨까지의 직업별 평균 소요시간을 비교한 성장속도 격차입니다.",
+        "formula": "(가장 빠른 직업의 성장속도 / 가장 느린 직업의 성장속도 - 1) × 100"
+      }
+    ],
+    "caveats": [
+      "직업당 8개 독립 성장 경로이며 전체 난수나 실제 이용자 집단의 결과를 보장하지 않습니다.",
+      "전투 경로는 순수 엔진 재생, 접속 간격 효과는 레벨별 시간저장량 환산입니다.",
+      "HP 곡선만 비교하고 MP 30%, 탐색 최소 4초, 판매 보너스 최대 20%는 유지했습니다."
+    ]
+  },
+  "height": 330,
+  "theme": "codex-classic",
+  "generatedAt": "2026-08-31T22:48:42.127925+09:00"
+}

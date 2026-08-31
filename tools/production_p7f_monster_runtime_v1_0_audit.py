@@ -446,7 +446,7 @@ def main() -> int:
         "r8:historical-physical-reset-evidence",
         all(anchor in reset_audit for anchor in (
             "deviceModel=SM_S931N", "pmClearResult=Success", "freshRosterEmpty=true",
-            "resumedActivity=com.alarmquest/.MainActivity", "androidRuntimeFatalCount=0",
+            "resumedActivity=com.nullplaying/.MainActivity", "androidRuntimeFatalCount=0",
         )),
         "SM-S931N reset rehearsal baseline",
     )
@@ -471,12 +471,12 @@ def main() -> int:
     if args.with_emulator:
         emulator = "emulator-5554"
         check("device:emulator-connected", emulator in connected, connected)
-        _, package = command("adb", "-s", emulator, "shell", "dumpsys", "package", "com.alarmquest")
+        _, package = command("adb", "-s", emulator, "shell", "dumpsys", "package", "com.nullplaying")
         _, focus = command("adb", "-s", emulator, "shell", "dumpsys", "activity", "activities")
         _, crashes = command("adb", "-s", emulator, "logcat", "-d", "-b", "crash")
         check("device:version", "versionName=0.1.0" in package and "versionCode=1" in package, "0.1.0(1)")
-        check("device:focus", "topResumedActivity" in focus and "com.alarmquest/.MainActivity" in focus, "com.alarmquest/.MainActivity")
-        check("device:crash-buffer", "com.alarmquest" not in crashes, "no AlarmQuest crash")
+        check("device:focus", "topResumedActivity" in focus and "com.nullplaying/.MainActivity" in focus, "com.nullplaying/.MainActivity")
+        check("device:crash-buffer", "com.nullplaying" not in crashes, "no AlarmQuest crash")
     if args.require_physical:
         check("device:physical", bool(physical), physical)
     else:

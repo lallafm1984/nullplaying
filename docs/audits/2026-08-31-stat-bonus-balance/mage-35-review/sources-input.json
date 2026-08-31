@@ -1,0 +1,238 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "mage35-identity",
+      "title": "마법사 35%와 직업 개성",
+      "queries": [
+        {
+          "id": "mage35-level100",
+          "source": {
+            "label": "100레벨 효과",
+            "files": [
+              {
+                "label": "level100_effects.csv"
+              },
+              {
+                "label": "SimpleGameEngine.kt"
+              },
+              {
+                "label": "BalanceSimulationHooks.kt"
+              }
+            ],
+            "filters": [
+              "목표 레벨: 100",
+              "성장 경로: 직업당 8개",
+              "성직자 주·보조 스탯: WIS·CHA"
+            ],
+            "metricDefinitions": [
+              {
+                "name": "스킬 기본 확률",
+                "definition": "스킬 기본 확률은 기존 스탯 확률에 MP 보너스를 더한 값이며 연속 미발동 보정 이전 확률입니다.",
+                "formula": "마법사: min(35, 기존 확률 + 15 × min(MP/6000,1)); 다른 직업: min(30, 기존 확률 + 10 × min(MP/6000,1))"
+              },
+              {
+                "name": "확정 발동",
+                "definition": "일반 공격이 15회 연속되면 다음 공격에 스킬이 확정 발동하므로, 확률이 고정된 장기 평균은 기본 확률보다 조금 높습니다.",
+                "formula": "p / (1 − (1−p)^16)"
+              }
+            ],
+            "caveats": [
+              "상한만 35%로 올리면 기존 +10%p 보너스로는 30%에 머뭅니다. 비교안에서는 마법사 MP 보너스도 +15%p로 올렸습니다.",
+              "마법사가 기본 35%에 도달했을 때 확정 발동을 포함한 장기 이론 비율은 약 35.04%입니다.",
+              "기획용 보너스이며 앱 및 DB에 적용하지 않았습니다."
+            ]
+          },
+          "rows": [
+            {
+              "직업": "성직자",
+              "기본확률_pct": 28.176458333333333,
+              "판매보너스_pct": 19.833333333333332
+            },
+            {
+              "직업": "마법사",
+              "기본확률_pct": 35.0,
+              "판매보너스_pct": 6.300000000000001
+            },
+            {
+              "직업": "팔라딘",
+              "기본확률_pct": 24.655833333333334,
+              "판매보너스_pct": 19.9
+            },
+            {
+              "직업": "레인저",
+              "기본확률_pct": 28.248958333333334,
+              "판매보너스_pct": 6.2666666666666675
+            },
+            {
+              "직업": "도적",
+              "기본확률_pct": 24.392083333333332,
+              "판매보너스_pct": 6.4
+            },
+            {
+              "직업": "전사",
+              "기본확률_pct": 24.649166666666666,
+              "판매보너스_pct": 6.533333333333333
+            }
+          ],
+          "columns": [
+            "직업",
+            "기본확률_pct",
+            "판매보너스_pct"
+          ],
+          "preview": {
+            "kind": "aggregate",
+            "note": "100레벨 직업별 8개 경로의 평균",
+            "totalRows": 6
+          }
+        }
+      ]
+    },
+    {
+      "id": "mage35-efficiency",
+      "title": "스킬 사용과 성장 효율",
+      "queries": [
+        {
+          "id": "mage35-lategame",
+          "source": {
+            "label": "90→100레벨 구간 카운터",
+            "files": [
+              {
+                "label": "mage35_dense.csv"
+              },
+              {
+                "label": "ten_hour_independent_dense.csv"
+              },
+              {
+                "label": "review_mage35.py"
+              }
+            ],
+            "filters": [
+              "직업: 마법사",
+              "구간: 90→100레벨",
+              "난수 seed: 6~13"
+            ],
+            "metricDefinitions": [
+              {
+                "name": "실제 스킬 비율",
+                "definition": "실제 스킬 비율은 구간 내 총 스킬 사용 횟수를 총 공격 횟수로 나눈 값입니다."
+              },
+              {
+                "name": "시간당 처치·시전",
+                "definition": "시간당 처치·시전은 해당 구간의 총 횟수를 실제 엔진 진행 시간으로 나눈 값입니다. 오프라인 대기시간은 포함하지 않습니다."
+              }
+            ],
+            "caveats": [
+              "성장 중 확률이 증가하므로 90→100레벨 구간 평균은 100레벨 고정 확률과 다릅니다.",
+              "같은 초기 난수를 사용했으나 스킬 선택에 따라 전투 난수 경로는 달라집니다."
+            ]
+          },
+          "rows": [
+            {
+              "variant": "mage30",
+              "pooled_cast_pct": 29.836436873681507,
+              "pooled_kills_per_hour": 192.06619935723865,
+              "pooled_casts_per_hour": 316.42154009666723,
+              "mean_segment_seconds": 2371020.0,
+              "mean_total_seconds": 13743817.5
+            },
+            {
+              "variant": "mage35",
+              "pooled_cast_pct": 34.67742202840522,
+              "pooled_kills_per_hour": 198.81606003850638,
+              "pooled_casts_per_hour": 349.34905895142174,
+              "mean_segment_seconds": 2290530.0,
+              "mean_total_seconds": 13511325.0
+            }
+          ],
+          "columns": [
+            "variant",
+            "pooled_cast_pct",
+            "pooled_kills_per_hour",
+            "pooled_casts_per_hour"
+          ]
+        },
+        {
+          "id": "mage35-growth",
+          "source": {
+            "label": "로컬 순수 엔진 비교",
+            "files": [
+              {
+                "label": "mage35_dense.csv"
+              },
+              {
+                "label": "ten_hour_independent_dense.csv"
+              },
+              {
+                "label": "review_mage35.py"
+              }
+            ],
+            "filters": [
+              "목표 레벨: 100",
+              "난수 seed: 6~13",
+              "접속 간격: 8·12시간",
+              "접속 시 충전: 12분"
+            ],
+            "metricDefinitions": [
+              {
+                "name": "상대 성장속도",
+                "definition": "같은 목표 레벨까지의 평균 소요시간으로 비교한 팔라딘 대비 성장속도입니다.",
+                "formula": "(팔라딘 평균 소요시간 / 해당 직업 평균 소요시간 − 1) × 100"
+              }
+            ],
+            "caveats": [
+              "실제 이용자 로그가 아닌 소규모 엔진 시뮬레이션입니다.",
+              "접속 간격의 영향은 시간저장량 환산이며 전체 접속 이벤트를 재생하지 않았습니다.",
+              "마법사의 MP 보너스만 최대 +10%p에서 +15%p로 변경했고 나머지 직업의 경로는 재사용했습니다.",
+              "HP 기본 8시간·최대 10시간, 탐색 최소 4초, 판매 보너스 최대 20%를 유지했습니다."
+            ],
+            "evidenceFlow": [
+              {
+                "kind": "validation",
+                "title": "독립 계산 대조",
+                "detail": "행별 시간저장량 환산과 배열 계산의 결과가 일치했고, 다른 직업의 입력 경로 및 앱 소스 해시가 유지되었습니다."
+              }
+            ]
+          },
+          "rows": [
+            {
+              "variant": "mage30",
+              "gap_h": 8.0,
+              "class_growth_spread_pct": 2.9726145907753354,
+              "fastest": "RANGER",
+              "slowest": "PALADIN"
+            },
+            {
+              "variant": "mage35",
+              "gap_h": 8.0,
+              "class_growth_spread_pct": 3.9283711997157855,
+              "fastest": "MAGE",
+              "slowest": "PALADIN"
+            },
+            {
+              "variant": "mage30",
+              "gap_h": 12.0,
+              "class_growth_spread_pct": 5.506151326265263,
+              "fastest": "WARRIOR",
+              "slowest": "PALADIN"
+            },
+            {
+              "variant": "mage35",
+              "gap_h": 12.0,
+              "class_growth_spread_pct": 5.506151326265263,
+              "fastest": "WARRIOR",
+              "slowest": "PALADIN"
+            }
+          ],
+          "columns": [
+            "variant",
+            "gap_h",
+            "class_growth_spread_pct",
+            "fastest",
+            "slowest"
+          ]
+        }
+      ]
+    }
+  ]
+}

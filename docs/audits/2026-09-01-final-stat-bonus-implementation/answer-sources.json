@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "remote-config-final",
+      "title": "로그 ON · 기본 8시간 · 완충 20분",
+      "queries": [
+        {
+          "id": "published-config",
+          "source": {
+            "label": "Firebase Remote Config 버전 2",
+            "links": [{"label": "게시된 Remote Config", "url": "https://console.firebase.google.com/u/1/project/nullplaying-2d131/config/env/firebase"}],
+            "filters": ["프로젝트: nullplaying-2d131", "클라이언트 템플릿 버전: 2"],
+            "caveats": ["콘솔 게시는 앱 배포가 아니다. 새 로그 스위치와 CON 가중치는 해당 코드를 포함한 앱 업데이트가 필요하다."]
+          },
+          "capturedAt": "2026-09-01T02:36:56.078+09:00",
+          "columns": [{"field":"parameter","label":"매개변수"},{"field":"value","label":"게시값"}],
+          "rows": [
+            {"parameter":"app_session_logs_enabled","value":"true"},
+            {"parameter":"offline_adventure_capacity_minutes","value":"480분"},
+            {"parameter":"offline_adventure_charge_minutes","value":"20분"}
+          ]
+        },
+        {
+          "id": "charging-rules",
+          "summary": "CON 보너스는 원격 기본 저장 시간에 최대 25%를 더하며, 충전은 직업별 최대 시간에 비례해 이루어진다. 기존에 적립한 잔여 시간은 새 상한이 낮아져도 소진될 때까지 보존한다.",
+          "source": {
+            "label": "최종 엔진 구현 및 검토 기록",
+            "files": ["StatBonusRules.kt", "SimpleGameEngine.kt", "OfflineAdventureConfig.kt", "docs/audits/2026-09-01-final-stat-bonus-implementation/REVIEW.md"],
+            "caveats": ["빈 저장량에서 능력치와 설정이 고정된 충전 기준이다."]
+          },
+          "methods": [{"language":"calculation","code":"최대 저장 시간 = 8시간 × (1 + 0.25) = 10시간\n1분 충전 = 현재 최대 저장 시간 ÷ 20\n8시간 상한: 480분 ÷ 20 = 24분\n10시간 상한: 600분 ÷ 20 = 30분"}]
+        }
+      ]
+    },
+    {
+      "id": "offline-verification",
+      "title": "운영 DB 데이터 없이 코드 검증",
+      "queries": [
+        {
+          "id": "tests-and-build",
+          "summary": "순수 JVM 테스트 177개와 디버그 APK 빌드, debug 단위 테스트 및 release Kotlin 컴파일이 통과했다. 최종 설정의 실제 엔진 24경로·2,400행과 90개 충전 설정 조합을 검증했다.",
+          "source": {
+            "label": "로컬 테스트 및 빌드 결과",
+            "files": ["docs/audits/2026-09-01-final-stat-bonus-implementation/after/tests.log", "docs/audits/2026-09-01-final-stat-bonus-implementation/final-480-20-production/VALIDATION.json", "docs/audits/2026-09-01-final-stat-bonus-implementation/REVIEW.md"],
+            "caveats": ["순수 테스트와 시뮬레이션은 네트워크·DB 파일 접근을 차단했다. Android 앱 및 DB 클라이언트를 실행하지 않았으며 실제 기기에서 로그 송신을 확인한 결과는 아니다."]
+          }
+        }
+      ]
+    }
+  ]
+}

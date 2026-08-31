@@ -1,0 +1,303 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "specialization-benefits",
+      "title": "최신 직업별 보너스",
+      "queries": [
+        {
+          "id": "level100",
+          "source": {
+            "label": "직업 특화 강화·DEX3.5초 비교",
+            "files": [
+              {
+                "label": "4초안 matched.csv"
+              },
+              {
+                "label": "4초안 heldout.csv"
+              },
+              {
+                "label": "3.5초안 matched.csv"
+              },
+              {
+                "label": "3.5초안 heldout.csv"
+              },
+              {
+                "label": "SpecializationDexBonusHooks.kt"
+              },
+              {
+                "label": "specialization_review.py"
+              }
+            ],
+            "filters": [
+              "직업: 6종",
+              "동일시드비교: 직업당24쌍",
+              "기본8시간·최대10시간",
+              "CON지수: 1.2",
+              "CHA판매상한: 15%",
+              "INT/WIS비중: 50/50"
+            ],
+            "caveats": [
+              "합성엔진재생이며실제사용자실험이아니다.",
+              "캘린더효율은반복충전근사이다.",
+              "앱·DB·기기등록에반영하지않았다."
+            ]
+          },
+          "rows": [
+            {
+              "hero_class": "전사",
+              "con": 162.83333333333334,
+              "mental": 48.958333333333336,
+              "cap_h": 9.990078702326972,
+              "raw_proc_pct": 23.147966657359017,
+              "search_s": 4.490833333333334,
+              "sale_bonus_pct": 4.7875000000000005,
+              "bag": 146.95833333333334
+            },
+            {
+              "hero_class": "도적",
+              "con": 52.833333333333336,
+              "mental": 48.041666666666664,
+              "cap_h": 8.57277223548512,
+              "raw_proc_pct": 23.07588718428109,
+              "search_s": 3.5058333333333334,
+              "sale_bonus_pct": 4.654166666666667,
+              "bag": 147.0
+            },
+            {
+              "hero_class": "레인저",
+              "con": 49.125,
+              "mental": 105.08333333333333,
+              "cap_h": 8.52514303398255,
+              "raw_proc_pct": 27.86653863416737,
+              "search_s": 3.5033333333333334,
+              "sale_bonus_pct": 4.9750000000000005,
+              "bag": 97.25
+            },
+            {
+              "hero_class": "마법사",
+              "con": 49.166666666666664,
+              "mental": 162.27083333333334,
+              "cap_h": 8.525660309806048,
+              "raw_proc_pct": 33.24686163486937,
+              "search_s": 4.496666666666667,
+              "sale_bonus_pct": 4.9875,
+              "bag": 97.04166666666667
+            },
+            {
+              "hero_class": "성직자",
+              "con": 49.166666666666664,
+              "mental": 105.41666666666667,
+              "cap_h": 8.525660309806048,
+              "raw_proc_pct": 27.896590210575994,
+              "search_s": 4.496666666666667,
+              "sale_bonus_pct": 14.9375,
+              "bag": 97.04166666666667
+            },
+            {
+              "hero_class": "팔라딘",
+              "con": 48.041666666666664,
+              "mental": 48.958333333333336,
+              "cap_h": 8.511481411449454,
+              "raw_proc_pct": 23.147966657359017,
+              "search_s": 4.490833333333334,
+              "sale_bonus_pct": 14.9625,
+              "bag": 146.95833333333334
+            }
+          ],
+          "preview": {
+            "kind": "aggregate",
+            "note": "각직업100레벨24경로평균"
+          },
+          "columns": [
+            {
+              "field": "hero_class",
+              "label": "직업"
+            },
+            {
+              "field": "cap_h",
+              "label": "모험시간(h)"
+            },
+            {
+              "field": "raw_proc_pct",
+              "label": "스킬(%)"
+            },
+            {
+              "field": "search_s",
+              "label": "탐색(초)"
+            },
+            {
+              "field": "sale_bonus_pct",
+              "label": "판매추가(%)"
+            },
+            {
+              "field": "bag",
+              "label": "가방(칸)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "specialization-balance",
+      "title": "시간 특화와 성장 격차 비교",
+      "queries": [
+        {
+          "id": "balance",
+          "source": {
+            "label": "직업 특화 강화·DEX3.5초 비교",
+            "files": [
+              {
+                "label": "4초안 matched.csv"
+              },
+              {
+                "label": "4초안 heldout.csv"
+              },
+              {
+                "label": "3.5초안 matched.csv"
+              },
+              {
+                "label": "3.5초안 heldout.csv"
+              },
+              {
+                "label": "SpecializationDexBonusHooks.kt"
+              },
+              {
+                "label": "specialization_review.py"
+              }
+            ],
+            "filters": [
+              "직업: 6종",
+              "동일시드비교: 직업당24쌍",
+              "기본8시간·최대10시간",
+              "CON지수: 1.2",
+              "CHA판매상한: 15%",
+              "INT/WIS비중: 50/50",
+              "평가레벨: 20~100",
+              "접속간격: 4/6/8/9/10/12/16/24시간",
+              "접속시간: 1/5/12분"
+            ],
+            "caveats": [
+              "합성엔진재생이며실제사용자실험이아니다.",
+              "캘린더효율은반복충전근사이다.",
+              "앱·DB·기기등록에반영하지않았다."
+            ],
+            "metricDefinitions": [
+              {
+                "name": "최대격차",
+                "definition": "각접속조건·목표레벨에서최고효율직업평균대비최저효율직업평균의격차중최대값. 판매는아이템판매수입/환산기간이며퀘스트골드와보유재산을제외한다."
+              }
+            ]
+          },
+          "rows": [
+            {
+              "cohort": "matched.csv",
+              "growth_pct": 7.4015468820188834,
+              "sale_pct": 8.761968459964198
+            },
+            {
+              "cohort": "heldout.csv",
+              "growth_pct": 7.768192786665273,
+              "sale_pct": 8.51964793632083
+            }
+          ],
+          "columns": [
+            {
+              "field": "cohort",
+              "label": "표본집단"
+            },
+            {
+              "field": "growth_pct",
+              "label": "성장최대격차(%)"
+            },
+            {
+              "field": "sale_pct",
+              "label": "판매최대격차(%)"
+            }
+          ]
+        },
+        {
+          "id": "dex-paired",
+          "source": {
+            "label": "직업 특화 강화·DEX3.5초 비교",
+            "files": [
+              {
+                "label": "4초안 matched.csv"
+              },
+              {
+                "label": "4초안 heldout.csv"
+              },
+              {
+                "label": "3.5초안 matched.csv"
+              },
+              {
+                "label": "3.5초안 heldout.csv"
+              },
+              {
+                "label": "SpecializationDexBonusHooks.kt"
+              },
+              {
+                "label": "specialization_review.py"
+              }
+            ],
+            "filters": [
+              "직업: 6종",
+              "동일시드비교: 직업당24쌍",
+              "기본8시간·최대10시간",
+              "CON지수: 1.2",
+              "CHA판매상한: 15%",
+              "INT/WIS비중: 50/50"
+            ],
+            "caveats": [
+              "합성엔진재생이며실제사용자실험이아니다.",
+              "캘린더효율은반복충전근사이다.",
+              "앱·DB·기기등록에반영하지않았다."
+            ],
+            "metricDefinitions": [
+              {
+                "name": "도달시간 감소",
+                "definition": "100레벨까지의진행시간을DEX4초안과비교.판매누적총액변화는시간당수입변화와다르다."
+              }
+            ]
+          },
+          "rows": [
+            {
+              "hero_class": "전사",
+              "reduction_pct": 0.5575695550927517
+            },
+            {
+              "hero_class": "도적",
+              "reduction_pct": 1.5594972466852375
+            },
+            {
+              "hero_class": "레인저",
+              "reduction_pct": 1.5888281099646129
+            },
+            {
+              "hero_class": "마법사",
+              "reduction_pct": 0.5783938063686378
+            },
+            {
+              "hero_class": "성직자",
+              "reduction_pct": 0.568449371013735
+            },
+            {
+              "hero_class": "팔라딘",
+              "reduction_pct": 0.5579764093568529
+            }
+          ],
+          "columns": [
+            {
+              "field": "hero_class",
+              "label": "직업"
+            },
+            {
+              "field": "reduction_pct",
+              "label": "도달시간감소(%)"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,930 @@
+{
+  "{{1}} 귀환 매듭을 모아 회랑 안쪽에 둥지를 만들었다.": {
+    "en": "{{1}} gathered the return knots and built a nest deep in the corridor.",
+    "ja": "{{1}}は帰還の結び目を集め、回廊の奥に巣を作った。"
+  },
+  "{{1}} 떠내려가지 않는 잔해를 모아 수문 한가운데 둥지를 만들었다.": {
+    "en": "{{1}} gathered debris that would not drift away and built a nest in the middle of the sluice.",
+    "ja": "{{1}}は流されない瓦礫を集め、水門の中央に巣を作った。"
+  },
+  "{{1}} 떠다니는 기록을 모아 수문의 순서를 복원하고 제{{2}}구역의 수위를 안전한 높이까지 낮췄다.": {
+    "en": "{{1}} gathered the floating records, restored the sluices' sequence, and lowered the water level in Sector {{2}} to a safe height.",
+    "ja": "{{1}}は漂う記録を集め、水門の順番を復元して、第{{2}}区域の水位を安全な高さまで下げた。"
+  },
+  "{{1}} 모은 금속 조각 사이에서 낯선 깊이 표식의 군패가 나왔다.": {
+    "en": "Among the metal scraps {{1}} had gathered lay a military tag bearing an unfamiliar depth mark.",
+    "ja": "{{1}}が集めた金属片の中から、見慣れない深度標識の入った軍牌が出てきた。"
+  },
+  "{{1}} 무너진 북문 앞에서 손잡이가 닳은 검을 발견했다.": {
+    "en": "{{1}} found a sword with a worn hilt before the ruined north gate.",
+    "ja": "{{1}}は崩れた北門の前で、柄のすり減った剣を見つけた。"
+  },
+  "{{1}} 백야 감시자를 쓰러뜨리고 리브를 구했다. 오르반은 소리가 사라져야 다음 음이 시작될 수 있음을 증명해 마지막 열쇠 ‘끝나는 음’을 완성했다.": {
+    "en": "{{1}} defeated the White Night Warden and rescued Liv. Orban proved that one sound must end before the next can begin, completing the final key, the 'Ending Note.'",
+    "ja": "{{1}}は白夜の監視者を倒し、リヴを救った。オルバンは、ひとつの音が消えてこそ次の音が始まると証明し、最後の鍵「終わる音」を完成させた。"
+  },
+  "{{1}} 비어 있는 예배당에 들어서자 작은 등불 하나가 흔들렸다.": {
+    "en": "As {{1}} entered the empty chapel, a single lamp flickered.",
+    "ja": "{{1}}が人気のない礼拝堂に入ると、小さな灯火がひとつ揺れた。"
+  },
+  "{{1}} 새벽 시장의 지붕에서 눈을 떴다.": {
+    "en": "{{1}} awoke on the rooftops of the dawn market.",
+    "ja": "{{1}}は早朝の市場の屋根で目を覚ました。"
+  },
+  "{{1}} 숲 가장자리에 닿자 익숙한 새의 울음이 끊겼다.": {
+    "en": "As {{1}} reached the forest's edge, a familiar birdsong fell silent.",
+    "ja": "{{1}}が森の端に着くと、聞き慣れた鳥の声が途絶えた。"
+  },
+  "{{1}} 쌓아 둔 밧줄과 식량을 끌고 나선 틈으로 도망쳤다.": {
+    "en": "{{1}} seized the stockpiled ropes and rations and fled through a gap in the spiral.",
+    "ja": "{{1}}は蓄えてあった縄と食料を引きずり、らせんの隙間へ逃げ込んだ。"
+  },
+  "{{1}} 쓰러진 흔적을 모아 더 큰 꽃봉오리를 키웠다.": {
+    "en": "{{1}} gathered the remnants of fallen enemies and fed them into a larger bud.",
+    "ja": "{{1}}は倒れた敵の痕跡を集め、さらに大きなつぼみを育てた。"
+  },
+  "{{1}} 위아래가 바뀌는 순간마다 안전줄을 끊으려 달려들었다.": {
+    "en": "{{1}} lunged for the safety line whenever up and down exchanged places.",
+    "ja": "{{1}}は上下が入れ替わるたびに、命綱を断ち切ろうと飛びかかった。"
+  },
+  "{{1}} 이름과 숫자가 적힌 부분만 골라 갉아먹었다.": {
+    "en": "{{1}} gnawed away only the sections bearing names and numbers.",
+    "ja": "{{1}}は、名前と数字が書かれた部分だけを選んでかじり取った。"
+  },
+  "{{1}} 투명한 벽 안팎을 오가며 공명음을 흐트러뜨렸다.": {
+    "en": "{{1}} passed in and out of the transparent walls, disrupting the resonance.",
+    "ja": "{{1}}は透明な壁の内外を行き来し、共鳴音を乱した。"
+  },
+  "{{1}} 파문 속 망령을 해산하고 지워진 별자리의 마지막 좌표를 복원했다. 좌표는 국경의 폐쇄된 관측소를 가리켰다.": {
+    "en": "{{1}} dispersed the wraiths within the ripple and restored the erased constellation's final coordinates. They pointed to the sealed border observatory.",
+    "ja": "{{1}}は波紋の中の亡霊を払い、消された星座の最後の座標を復元した。その座標は国境の閉鎖された観測所を指していた。"
+  },
+  "{{1}} 파헤친 벽 틈에서 오래된 청동 가루가 흘러나왔다.": {
+    "en": "Old bronze dust spilled from a crack {{1}} had torn open in the wall.",
+    "ja": "{{1}}が掘り広げた壁の隙間から、古い青銅の粉が流れ出した。"
+  },
+  "{{1}} 푸른 불씨를 물어 나르며 꺼진 화로를 다시 깨웠다.": {
+    "en": "{{1}} carried blue embers in its jaws, rekindling the cold furnaces.",
+    "ja": "{{1}}は青い火種をくわえて運び、消えた炉を再び目覚めさせた。"
+  },
+  "가짜 오르반이 울린 종은 흠 없이 아름다웠지만 소리가 사라지지 않아 다음 음을 막았다.": {
+    "en": "The false Orban's bell was flawless and beautiful, but its sound never faded, smothering the next note.",
+    "ja": "偽物のオルバンが鳴らした鐘は欠点のない美しさだったが、音が消えず、次の音を塞いでしまった。"
+  },
+  "강이 자연의 흐름이 아니라 탑의 유리 펌프에 끌려가고 있음을 확인했다.": {
+    "en": "Confirmed that the river was being drawn against its natural course by the tower's glass pumps.",
+    "ja": "川が自然に流れているのではなく、塔のガラス製ポンプに引き寄せられていると確かめた。"
+  },
+  "개방 순서를 뒤집어 역류를 멈추고 아래층의 압력을 풀었다.": {
+    "en": "Reversed the opening sequence, stopped the backflow, and released the pressure below.",
+    "ja": "開放順を逆にして逆流を止め、下層の圧力を逃がした。"
+  },
+  "거대한 물레는 봄물을 갈아 투명한 잎과 병사와 벽을 끊임없이 만들어 냈다.": {
+    "en": "The great waterwheel ground spring water into an endless supply of transparent leaves, soldiers, and walls.",
+    "ja": "巨大な水車は春の水を砕き、透明な葉と兵士と壁を絶え間なく作り出していた。"
+  },
+  "거대한 유리뿔 짐승이 지나간 길을 삼킬 때마다 지도에서 선 하나가 사라졌다.": {
+    "en": "Each time the great glass-antlered beast devoured a road it had crossed, another line vanished from the map.",
+    "ja": "巨大なガラス角の獣が通った道を飲み込むたび、地図から線が一本ずつ消えた。"
+  },
+  "거울 우물의 그림자를 물리치고 유리 탑에 갇힌 리브의 경고를 온전히 들었다.": {
+    "en": "Defeated the shadow beneath the Mirror Well and heard Liv's warning from the Glass Tower in full.",
+    "ja": "鏡の井戸の影を倒し、ガラスの塔に囚われたリヴの警告を最後まで聞いた。"
+  },
+  "고서의 빈자리에서 국경 관측소로 이어진 별자리 한 줄을 되살렸다.": {
+    "en": "Restored a missing line of the constellation in the ancient tome, revealing a path to the border observatory.",
+    "ja": "古書の空白から、国境の観測所へ続く星座の一筋を蘇らせた。"
+  },
+  "공동묘지의 열두 묘표 뒤에서 비가 오지 않아도 젖어 있는 열세 번째 돌이 발견됐다.": {
+    "en": "Behind the cemetery's twelve markers stood a thirteenth stone, wet even when no rain had fallen.",
+    "ja": "共同墓地の十二基の墓標の後ろで、雨も降っていないのに濡れた十三番目の石が見つかった。"
+  },
+  "공명핵이 깨어날 때마다 동굴의 길과 벽이 서로 자리를 바꿨다.": {
+    "en": "Each time the resonance core awakened, the cavern's paths and walls traded places.",
+    "ja": "共鳴核が目覚めるたび、洞窟の道と壁が位置を入れ替えた。"
+  },
+  "괴물을 왕으로 삼기 전에 청했던 도움": {
+    "en": "The Aid He Sought Before Making a Monster King",
+    "ja": "怪物を王とする前に求めた救い"
+  },
+  "귀환종을 거꾸로 걸어 울림을 되돌리고 화로를 다음 원정까지 봉인했다.": {
+    "en": "Hung the Return Bell upside down to reverse its resonance and sealed the furnace until the next expedition.",
+    "ja": "帰還の鐘を逆さに吊るして響きを逆転させ、次の遠征まで炉を封印した。"
+  },
+  "귀환종을 짧게 울려 꽃가루를 가라앉히고 다섯 매듭을 다시 확인했다.": {
+    "en": "Rang the Return Bell once to settle the pollen, then checked the five knots again.",
+    "ja": "帰還の鐘を短く鳴らして花粉を沈め、五つの結び目を確かめ直した。"
+  },
+  "긁힌 방패에서 문지기들의 이름과 북쪽으로 끌려간 흔적을 확인했다.": {
+    "en": "Found the gatekeepers' names scratched into the shields, along with signs that they had been dragged north.",
+    "ja": "傷だらけの盾から門番たちの名と、北へ引きずられた痕跡を確かめた。"
+  },
+  "기록에서 지워진 별자리 한 줄이 파문의 방향을 가리켰다.": {
+    "en": "A line of the constellation erased from the records pointed in the direction of the ripple.",
+    "ja": "記録から消された星座の一筋が、波紋の方角を指し示した。"
+  },
+  "기억나무가 감추고 있던 오래된 하강로": {
+    "en": "The Ancient Descent Hidden by the Memory Tree",
+    "ja": "記憶の木が隠していた古い降下路"
+  },
+  "기억은 같지만 선택은 다른 얼굴": {
+    "en": "Same Memories, Different Choices",
+    "ja": "同じ記憶、異なる選択"
+  },
+  "기억을 품은 수액": {
+    "en": "Memory-Laden Sap",
+    "ja": "記憶を宿す樹液"
+  },
+  "기억하면서도 변해 가는 사람들": {
+    "en": "People Who Remember and Still Change",
+    "ja": "記憶しながら、それでも変わっていく人々"
+  },
+  "기와 사이의 흔적을 지우는 자들을 쫓아 도난 경로를 밝힌다.": {
+    "en": "Pursue those erasing the trail between the roof tiles and uncover the thief's route.",
+    "ja": "瓦の間の痕跡を消す者たちを追い、盗難の経路を暴く。"
+  },
+  "길먹는 사슴을 쓰러뜨리고 그 뿔에 갇힌 라움 마을의 귀환로를 되찾았다.": {
+    "en": "Defeated the Path-Eating Deer and reclaimed Raum's road home from within its antlers.",
+    "ja": "道喰いの鹿を倒し、その角に閉じ込められたラウムへの帰還路を取り戻した。"
+  },
+  "깊이를 세는 표식": {
+    "en": "Markers That Count the Depth",
+    "ja": "深さを数える印"
+  },
+  "깨지는 숲의 밤": {
+    "en": "The Night the Forest Shattered",
+    "ja": "森が砕ける夜"
+  },
+  "깨진 인장 주변의 마물들을 물리쳐 훼손된 흔적을 조사한다.": {
+    "en": "Defeat the monsters around the shattered sigil and examine the signs of its desecration.",
+    "ja": "壊れた印の周囲の魔物を倒し、毀損の痕跡を調べる。"
+  },
+  "꺼지지 않은 불빛 아래에서 누군가의 희미한 신음이 들려왔다.": {
+    "en": "A faint moan came from beneath the lamp that still burned.",
+    "ja": "消えずに燃える灯火の下から、かすかなうめき声が聞こえた。"
+  },
+  "꽃가루를 마신 순찰대원들이 방금 지나온 막의 순서를 잊었다.": {
+    "en": "The patrol members who inhaled the pollen forgot the order of the acts they had just crossed.",
+    "ja": "花粉を吸い込んだ巡回隊員たちは、たった今通過した幕の順番を忘れた。"
+  },
+  "끊긴 새의 울음": {
+    "en": "The Silenced Birdsong",
+    "ja": "途絶えた鳥の声"
+  },
+  "끝나 사라지는 종소리로 감시자의 갑옷을 비우고 리브와 세 번째 열쇠를 구했다.": {
+    "en": "Emptied the Warden's armor with a bell tone that ended and faded, rescuing Liv and the third key.",
+    "ja": "鳴って消える鐘の音で監視者の鎧を空にし、リヴと三つ目の鍵を救い出した。"
+  },
+  "끝문 너머에는 처음 본 것과 닮았지만 더 굵은 뿌리가 자라고 있었다.": {
+    "en": "Beyond the final gate grew roots like those first encountered, but far thicker.",
+    "ja": "終端の門の向こうには、最初に見たものに似た、さらに太い根が育っていた。"
+  },
+  "끝없는 하강 앞에 세운 귀환과 보급의 기준점": {
+    "en": "A Point of Return and Resupply at the Brink of an Endless Descent",
+    "ja": "果てのない降下路の手前に築かれた、帰還と補給の拠点"
+  },
+  "나무껍질 속 이름": {
+    "en": "Names Within the Bark",
+    "ja": "樹皮の中の名"
+  },
+  "나선의 위협을 몰아내고 무너진 균형추를 원래 자리에 돌려놓았다.": {
+    "en": "Drove off the threat within the spiral and restored the fallen counterweight to its place.",
+    "ja": "らせんに巣食う脅威を退け、崩れた釣り合い重りを元の位置に戻した。"
+  },
+  "나이테 속 이름": {
+    "en": "Names Within the Tree Rings",
+    "ja": "年輪の中の名"
+  },
+  "남겨진 귀환 규칙": {
+    "en": "The Surviving Rule of Return",
+    "ja": "残された帰還の規則"
+  },
+  "남은 단서: 창문마다 목소리가 갇힌 북방 마을 라움.": {
+    "en": "Remaining lead: Raum, a northern village where a voice is trapped in every window.",
+    "ja": "残る手がかり：すべての窓に声が閉じ込められた北方の村、ラウム。"
+  },
+  "남은 선택: 첫 씨앗을 가진 아셀보다 먼저 유리 심장의 해동을 시작해야 한다.": {
+    "en": "The choice that remains: We must begin thawing the Glass Heart before Asel, bearer of the first seed, does.",
+    "ja": "残された選択：最初の種を持つアセルより先に、ガラスの心臓の解凍を始めなければならない。"
+  },
+  "남은 징조: 계단 아래 수로가 지상과 반대 방향으로 흐른다.": {
+    "en": "Remaining omen: The channel beneath the stairs flows in the opposite direction from the waterways on the surface.",
+    "ja": "残る兆し：階段の下の水路は、地上と逆の方向に流れている。"
+  },
+  "남은 징조: 열쇠와 맞물리는 지하문은 손잡이도 이음새도 보이지 않는다.": {
+    "en": "Remaining omen: The underground door that fits the key has neither a handle nor a visible seam.",
+    "ja": "残る兆し：鍵と噛み合う地下扉には、取っ手も継ぎ目も見えない。"
+  },
+  "네 계절 중 도려내진 한 장": {
+    "en": "One Page Cut from the Four Seasons",
+    "ja": "四季から切り取られた一頁"
+  },
+  "네 번째 불빛": {
+    "en": "The Fourth Light",
+    "ja": "四つ目の光"
+  },
+  "네 번째 음의 간격을 재어 봉인 아래 빈 공간의 크기를 계산했다.": {
+    "en": "Measured the fourth note's return interval to calculate the size of the hollow beneath the seal.",
+    "ja": "四つ目の音が返る間隔を測り、封印の下にある空洞の広さを割り出した。"
+  },
+  "니아가 우물 아래 숨은 물길을 열어 목소리를 가둔 유리막을 약하게 만들었다.": {
+    "en": "Nia opened the hidden waterway beneath the well, weakening the glass membrane that imprisoned the voices.",
+    "ja": "ニアは井戸の下に隠された水路を開き、声を封じたガラス膜を弱めた。"
+  },
+  "니아의 지도에도 없는 오솔길에는 국경 말이 아닌 세 개의 선이 새겨져 있었다.": {
+    "en": "A trail absent from even Nia's map bore three carved lines instead of words in the border tongue.",
+    "ja": "ニアの地図にさえない小道には、国境の言葉ではなく三本の線が刻まれていた。"
+  },
+  "다음 구역: 공명핵 아래에서 종 없는 주조장의 망치 소리가 들린다.": {
+    "en": "Next sector: Hammers ring from a bell-less foundry beneath the resonance core.",
+    "ja": "次の区域：共鳴核の下から、鐘のない鋳造所の槌音が聞こえる。"
+  },
+  "다음 구역: 물 아래 드러난 유리맥 동굴에서 푸른 박동이 이어진다.": {
+    "en": "Next sector: A blue pulse beats on within the glass-vein cavern revealed beneath the water.",
+    "ja": "次の区域：水の下に現れたガラス脈の洞窟で、青い鼓動が続いている。"
+  },
+  "다음 구역: 물에 잠긴 기록수로가 더 깊은 길을 비춘다.": {
+    "en": "Next sector: The flooded archive channel illuminates the way deeper.",
+    "ja": "次の区域：水没した記録水路が、さらに深い道を照らす。"
+  },
+  "다음 구역: 미궁은 새로운 뿌리문의 회랑으로 이어지며 원정을 계속 부른다.": {
+    "en": "Next sector: The Labyrinth leads back into a new Root-Gate Corridor, calling the expedition ever onward.",
+    "ja": "次の区域：迷宮は新たな根の門の回廊へと続き、遠征隊をさらなる奥へ誘う。"
+  },
+  "다음 구역: 식은 쇳물이 재가 피는 정원 쪽으로 흐른다.": {
+    "en": "Next sector: Cooled molten iron flows toward the garden where ash blooms.",
+    "ja": "次の区域：冷えた鉄の湯が、灰の花咲く庭へ流れている。"
+  },
+  "답장이 예정일 전에 국경에 도착했다면 베른의 파국을 피할 가능성이 있었음을 알아냈다.": {
+    "en": "Learned that Bern's ruin might have been averted had the reply reached the border before the appointed day.",
+    "ja": "返書が予定日より前に国境へ届いていれば、ベルンの破滅は避けられたかもしれないと分かった。"
+  },
+  "대답 없는 거리": {
+    "en": "The Unanswering Streets",
+    "ja": "返事のない通り"
+  },
+  "도둑의 퇴로를 막고 빼앗긴 관측소 봉인을 되찾았다.": {
+    "en": "Blocked the thief's escape and recovered the stolen observatory seal.",
+    "ja": "盗人の退路を断ち、奪われた観測所の封印を取り戻した。"
+  },
+  "돌계단 아래에는 상처 입은 전령이 봉투를 품고 쓰러져 있었다.": {
+    "en": "A wounded messenger lay beneath the stone steps, clutching an envelope to their chest.",
+    "ja": "石段の下には、傷ついた伝令が封筒を抱きしめて倒れていた。"
+  },
+  "돌아오는 오솔길": {
+    "en": "The Trail That Loops Back",
+    "ja": "引き返す小道"
+  },
+  "돌아온 이름들": {
+    "en": "Names Reclaimed",
+    "ja": "取り戻した名前"
+  },
+  "돌아온 진동을 기록해 계단 너머에 끝을 알 수 없는 구조물이 있음을 확인했다.": {
+    "en": "Recorded the returning vibration and confirmed that a structure of unknown depth lay beyond the stairs.",
+    "ja": "返ってきた振動を記録し、階段の向こうに果ての知れない構造物があると確かめた。"
+  },
+  "돌아올 길의 맹세": {
+    "en": "Oath of the Road Home",
+    "ja": "帰り道の誓い"
+  },
+  "동의의 목소리 역시 백야 첫날의 기억을 복제한 것임을 밝혀냈다.": {
+    "en": "Revealed that the voices expressing consent were also copies of memories from the White Night's first day.",
+    "ja": "同意の声さえも、白夜初日の記憶を複製したものだと突き止めた。"
+  },
+  "동전을 노리는 골목 무리를 피해 지붕길의 첫 흔적을 확보한다.": {
+    "en": "Evade the alley gang after the coin and secure the first clue along the rooftops.",
+    "ja": "銀貨を狙う路地裏の一団をかわし、屋根道の最初の手がかりを確保する。"
+  },
+  "되살아난 인장 앞에서 스스로 선택한 수호를 맹세하고 첫 의뢰를 받았다.": {
+    "en": "Before the awakened sigil, vowed to uphold the protection freely chosen and accepted the first commission.",
+    "ja": "目覚めた印の前で自ら選んだ守護を誓い、最初の依頼を受けた。"
+  },
+  "되살아난 인장의 지시: 국경의 더 큰 균열과 실종된 순찰대를 조사하라.": {
+    "en": "The awakened sigil's command: Investigate the greater breach at the border and the missing patrol.",
+    "ja": "目覚めた印の指示：国境のさらに大きな亀裂と、消えた巡回隊を調査せよ。"
+  },
+  "두 로웬은 같은 상처와 기억을 말했지만 한 명은 이름 대신 병사의 수만 기억했다.": {
+    "en": "Both Rowens recounted the same wounds and memories, but one remembered only the soldiers' numbers, not their names.",
+    "ja": "二人のロウェンは同じ傷と記憶を語ったが、一人は名前ではなく兵士の数しか覚えていなかった。"
+  },
+  "두 명의 로웬": {
+    "en": "Two Rowens",
+    "ja": "二人のロウェン"
+  },
+  "두 번째 답장에는 국경의 종으로 재를 잠재울 구체적인 방법과 합류 시각이 적혀 있었다.": {
+    "en": "The second reply detailed how to lull the ash with the border bells and gave a rendezvous time.",
+    "ja": "二通目の返書には、国境の鐘で灰を鎮める具体的な方法と、合流時刻が記されていた。"
+  },
+  "둥지를 걷어 내고 차축에 새겨진 미궁 경계 표식을 확인했다.": {
+    "en": "Cleared away the nest and found a Labyrinth boundary mark carved into the axle.",
+    "ja": "巣を取り除き、車軸に刻まれた迷宮境界の印を確かめた。"
+  },
+  "땅속 수레": {
+    "en": "The Underground Cart",
+    "ja": "地下の荷車"
+  },
+  "뛰는 유리": {
+    "en": "Beating Glass",
+    "ja": "鼓動するガラス"
+  },
+  "로웬과 라움 주민들이 명부를 이어 읽어 사라지던 이름과 기억을 서로에게 붙들어 주었다.": {
+    "en": "Rowen and the people of Raum took turns reading the roster aloud, anchoring one another's fading names and memories.",
+    "ja": "ロウェンとラウムの住民たちは名簿を順に読み上げ、消えかけた名と記憶を互いにつなぎ止めた。"
+  },
+  "로웬과 마엘이 지상 귀환종을 잡고 {{1}} 첫 계단 앞에 섰다.": {
+    "en": "Rowen and Mael gripped the surface Return Bell as {{1}} stood before the first stair.",
+    "ja": "ロウェンとマエルが地上の帰還の鐘を握る中、{{1}}は最初の階段の前に立った。"
+  },
+  "로웬이 기억 잎의 이름을 기록해 해동 뒤 돌려줄 순서를 마련했다.": {
+    "en": "Rowen recorded the names on the memory leaves and established the order in which they would be returned after the thaw.",
+    "ja": "ロウェンは記憶の葉の名を記録し、解凍後に返す順序を定めた。"
+  },
+  "로웬이 남긴 밧줄과 니아가 찾은 옛 교각으로 추격자보다 먼저 계곡을 건넜다.": {
+    "en": "Using Rowen's rope and the old bridge supports Nia found, crossed the ravine ahead of the pursuers.",
+    "ja": "ロウェンが残した縄とニアが見つけた古い橋脚を使い、追撃者より先に谷を渡った。"
+  },
+  "로웬이 이름을 읽어 주자 갇혀 있던 발자국들이 한 방향으로 움직이기 시작했다.": {
+    "en": "When Rowen read the names aloud, the trapped footprints began moving in one direction.",
+    "ja": "ロウェンが名を読み上げると、閉じ込められていた足跡が一つの方角へ動き始めた。"
+  },
+  "로웬이 전사자의 이름을 직접 부르자 사람을 숫자로만 아는 복제가 갈라졌다.": {
+    "en": "When Rowen spoke the fallen soldiers' names, the copy that knew people only as numbers split apart.",
+    "ja": "ロウェンが戦死者たちの名を直接呼ぶと、人を数としてしか知らない複製が裂けた。"
+  },
+  "리브의 몸은 유리벽 안에, 목소리는 라움의 모든 창문에 흩어져 있었다.": {
+    "en": "Liv's body was sealed within a glass wall, while her voice was scattered across every window in Raum.",
+    "ja": "リヴの身体はガラス壁の中に、声はラウムのすべての窓に散らばっていた。"
+  },
+  "마력을 먹는 어둠을 주문으로 걷어 내고 좌표실로 향한다.": {
+    "en": "Dispel the magic-devouring darkness and press on to the coordinate chamber.",
+    "ja": "魔力を喰らう闇を術で払い、座標室へ向かう。"
+  },
+  "마르지 않는 돌": {
+    "en": "The Stone That Never Dries",
+    "ja": "乾かない石"
+  },
+  "마엘은 아셀의 명령을 어기고 국경에 세 번의 불빛을 보낸 사람이 자신이라고 털어놓았다.": {
+    "en": "Mael confessed that he had defied Asel's orders and sent the three flashes to the border.",
+    "ja": "マエルは、アセルの命令に逆らって国境へ三度の光を送ったのは自分だと打ち明けた。"
+  },
+  "마엘의 신호 기록을 통해 리브가 백야 장치를 멈추다 탑 꼭대기에 갇혔음을 확인했다.": {
+    "en": "Mael's signal logs confirmed that Liv had been trapped atop the tower while trying to stop the White Night device.",
+    "ja": "マエルの信号記録から、リヴが白夜の装置を止めようとして塔の頂に囚われたと確かめた。"
+  },
+  "마을로 달려드는 그림자와 그 추종자들을 한 걸음도 통과시키지 않는다.": {
+    "en": "Let neither the shadow charging the village nor a single one of its followers pass.",
+    "ja": "村へ駆ける影も、その従者も、一歩たりとも通さない。"
+  },
+  "마지막 습격을 막고 국경 수비대의 표식을 되찾는다.": {
+    "en": "Repel the final assault and reclaim the border guard's insignia.",
+    "ja": "最後の襲撃を防ぎ、国境守備隊の記章を取り戻す。"
+  },
+  "마지막 장에는 ‘이름을 믿지 말고 종과 매듭을 믿어라’라고 적혀 있었다.": {
+    "en": "The last page read: 'Trust not names, but bells and knots.'",
+    "ja": "最後の頁には「名を信じるな。鐘と結び目を信じよ」と記されていた。"
+  },
+  "마지막 지상 야영지": {
+    "en": "The Last Surface Camp",
+    "ja": "最後の地上野営地"
+  },
+  "망치로 두드린 길바닥에서 구간마다 다른 울림이 돌아왔다.": {
+    "en": "Each stretch of road returned a different echo when struck with a hammer.",
+    "ja": "道を槌で叩くと、区間ごとに異なる響きが返ってきた。"
+  },
+  "먼저 도착해 있던 자신의 흔적": {
+    "en": "Traces of Yourself That Arrived First",
+    "ja": "先回りしていた自分の痕跡"
+  },
+  "명부의 빈 줄": {
+    "en": "The Blank Line in the Roster",
+    "ja": "名簿の空白"
+  },
+  "모두의 이름으로": {
+    "en": "In Everyone's Name",
+    "ja": "すべての人の名において"
+  },
+  "모습 대신 귀환줄의 무게를 따라 실제 통로 하나를 구분했다.": {
+    "en": "Ignored the reflections and followed the weight of the return line to identify the one true passage.",
+    "ja": "映る姿ではなく帰還綱の重さをたどり、本物の通路を一つ見分けた。"
+  },
+  "목소리만 남은 리브": {
+    "en": "Liv, Reduced to a Voice",
+    "ja": "声だけとなったリヴ"
+  },
+  "무너진 수레와 쇠사슬을 점거한 무리를 쓰러뜨려 귀환로를 연다.": {
+    "en": "Defeat the horde occupying the wrecked carts and chains to reopen the road home.",
+    "ja": "壊れた荷車と鎖を占拠する一団を倒し、帰還路を開く。"
+  },
+  "문밖의 발자국을 따라 북문을 에워싼 짐승들을 밀어낸다.": {
+    "en": "Follow the tracks beyond the gate and drive back the beasts surrounding the north gate.",
+    "ja": "門外の足跡を追い、北門を取り囲む獣たちを追い払う。"
+  },
+  "묻힌 군패": {
+    "en": "The Buried Military Tag",
+    "ja": "埋められた軍牌"
+  },
+  "묻힌 첫 단": {
+    "en": "The Buried First Step",
+    "ja": "埋もれた最初の一段"
+  },
+  "물길을 임시 탈출로로 바꿔 주민들을 심장 균열에서 안전하게 빼냈다.": {
+    "en": "Turned the waterways into temporary escape routes and led the villagers safely away from the fissure in the Heart.",
+    "ja": "水路を一時的な脱出路に変え、住民たちを心臓の亀裂から安全に逃がした。"
+  },
+  "물길이 열린 다음 아침, 야영지에는 로웬과 니아와 오르반이 각각 두 명씩 서 있었다.": {
+    "en": "The morning after the waterways opened, two Rowens, two Nias, and two Orbans stood in the camp.",
+    "ja": "水路が開いた翌朝、野営地にはロウェンもニアもオルバンも、それぞれ二人ずつ立っていた。"
+  },
+  "물의 방향을 표시해 미궁이 지상의 수로를 끌어당기는 지점을 찾았다.": {
+    "en": "Marked the water's course and found where the Labyrinth was pulling on the surface channels.",
+    "ja": "水の向きを記し、迷宮が地上の水路を引き込む地点を見つけた。"
+  },
+  "미끼를 노리는 포식자들을 막아 붙잡힌 짐승을 구한다.": {
+    "en": "Fend off the predators drawn to the bait and free the trapped beast.",
+    "ja": "餌を狙う捕食者たちを防ぎ、捕らわれた獣を救う。"
+  },
+  "바퀴자국은 커다란 표지석 앞에서 갑자기 사라졌다.": {
+    "en": "The wheel tracks vanished abruptly before a great marker stone.",
+    "ja": "車輪の跡は、大きな標石の前で不意に消えていた。"
+  },
+  "반복의 기준이 되는 해시계를 깨고 정오의 기사를 쓰러뜨려 정원에 첫 그림자를 만들었다.": {
+    "en": "Shattered the sundial anchoring the loop, defeated the Knight of Noon, and cast the garden's first shadow.",
+    "ja": "繰り返しの基準となる日時計を壊し、正午の騎士を倒して、庭に最初の影を生んだ。"
+  },
+  "발을 디딜 때마다 뿌리문이 다른 방향을 향했다.": {
+    "en": "With every step, the root gate turned to face a different direction.",
+    "ja": "足を踏み出すたび、根の門は別の方向へ向きを変えた。"
+  },
+  "방 안에서 낸 소리는 사라지지 않고 벽 속에 쌓여 수천 개의 옛말로 되돌아왔다.": {
+    "en": "Sounds made in the chamber never faded; they piled within the walls and returned as thousands of ancient words.",
+    "ja": "部屋で発せられた音は消えず、壁の中に積み重なり、幾千もの古い言葉となって返ってきた。"
+  },
+  "방패에 남은 이름": {
+    "en": "Names on the Shields",
+    "ja": "盾に残る名"
+  },
+  "백야를 푸는 첫 열쇠: 정원 아래로 빼앗겨 흐르지 못하는 봄의 물.": {
+    "en": "The first key to ending the White Night: the spring water stolen away beneath the garden and held motionless.",
+    "ja": "白夜を解く最初の鍵：庭の下に奪われ、流れを止められた春の水。"
+  },
+  "버려진 방패를 지키는 포식자들 사이에서 사라진 문지기들의 이름을 확인한다.": {
+    "en": "Search among the predators guarding the abandoned shields for the missing gatekeepers' names.",
+    "ja": "打ち捨てられた盾を守る捕食者たちを倒し、消えた門番たちの名を確かめる。"
+  },
+  "베른의 편지는 병력 대신 물과 약과 피난처를 요청하며 국경 사람들의 이름을 적고 있었다.": {
+    "en": "Bern's letter asked not for soldiers but for water, medicine, and shelter, listing the names of the people at the border.",
+    "ja": "ベルンの手紙は兵ではなく、水と薬と避難所を求め、国境の人々の名を書き連ねていた。"
+  },
+  "베른이 처음부터 재의 왕을 택한 것이 아니라 북방 원조를 먼저 구했음을 확인했다.": {
+    "en": "Confirmed that Bern had sought aid from the North before turning to the Ash King.",
+    "ja": "ベルンは最初から灰の王を選んだのではなく、先に北方の支援を求めていたと確かめた。"
+  },
+  "보호막의 틈으로 들어오는 적을 막으며 균열의 위치를 찾는다.": {
+    "en": "Hold back the enemies entering through the barrier and locate the breaches.",
+    "ja": "結界の隙間から侵入する敵を防ぎながら、亀裂の位置を探る。"
+  },
+  "봄 지도는 불탄 것이 아니라 누군가 가장자리까지 정교하게 도려내 가져갔다.": {
+    "en": "The map of spring had not burned; someone had carefully cut it out, right to the edges, and taken it.",
+    "ja": "春の地図は焼けたのではなく、誰かが縁まで精密に切り抜いて持ち去っていた。"
+  },
+  "봉인된 지령: 실종된 순찰대가 남긴 내부자의 흔적을 추적하라.": {
+    "en": "Sealed orders: Follow the trail of the insider tied to the missing patrol.",
+    "ja": "封じられた指令：消えた巡回隊が残した内通者の痕跡を追え。"
+  },
+  "봉인을 든 도둑의 앞길을 끊으며 추격자 무리를 각개격파한다.": {
+    "en": "Cut off the seal thief's path and defeat the pursuers one group at a time.",
+    "ja": "封印を持つ盗人の先回りをし、追撃者たちを個別に撃破する。"
+  },
+  "봉인의 열쇠": {
+    "en": "The Sealing Key",
+    "ja": "封印の鍵"
+  },
+  "봉인의 주인을 노리는 마지막 추적자들을 처리하고 문서를 연다.": {
+    "en": "Defeat the last pursuers hunting the seal's owner and open the document.",
+    "ja": "封印の持ち主を狙う最後の追撃者たちを退け、文書を開く。"
+  },
+  "봉투를 빼앗으려는 마지막 무리를 물리치고 구조 요청을 지킨다.": {
+    "en": "Defeat the last group trying to seize the envelope and safeguard the plea for rescue.",
+    "ja": "封筒を奪おうとする最後の一団を退け、救援要請を守る。"
+  },
+  "부러진 성문": {
+    "en": "The Broken Gate",
+    "ja": "壊れた城門"
+  },
+  "북문을 가로막던 짐승을 몰아내고 성문 밖으로 이어진 발자국을 찾았다.": {
+    "en": "Drove off the beasts blocking the north gate and found tracks leading beyond the walls.",
+    "ja": "北門を塞いでいた獣を追い払い、城門の外へ続く足跡を見つけた。"
+  },
+  "북쪽으로 걸어도 같은 이정표가 앞에서 나타나고, 베어 낸 표식은 다시 붙어 있었다.": {
+    "en": "However far they walked north, the same signpost reappeared ahead, and every mark they cut away restored itself.",
+    "ja": "北へ歩いても同じ道標が再び前に現れ、削り取った印も元に戻っていた。"
+  },
+  "불안정한 파편을 봉인하고 파문이 북쪽에서 역류한다는 사실을 알아냈다.": {
+    "en": "Sealed the unstable shards and discovered that the magical ripple was flowing backward from the north.",
+    "ja": "不安定な破片を封じ、波紋が北から逆流していると突き止めた。"
+  },
+  "비밀 문서를 지켜 내고 누구보다 먼저 국경의 실종 사건을 맡았다.": {
+    "en": "Protected the secret documents and became the first to take on the border disappearances.",
+    "ja": "秘密文書を守り抜き、誰よりも早く国境の失踪事件を請け負った。"
+  },
+  "빈 겨울은 사람의 얼굴보다 서로를 부르는 이름부터 삼켰다.": {
+    "en": "Hollow Winter devoured the names people used for one another before it took their faces.",
+    "ja": "虚ろな冬は人の顔より先に、互いを呼ぶ名前から飲み込んだ。"
+  },
+  "빙결 수문장을 쓰러뜨리고 봄물을 숲으로 흘려 첫 번째 해제 열쇠를 완성했다.": {
+    "en": "Defeated the Frozen Sluicekeeper and released the spring water into the forest, completing the first key to breaking the spell.",
+    "ja": "氷結の水門番を倒し、春の水を森へ流して、最初の解放の鍵を完成させた。"
+  },
+  "빛의 간격이 오래된 수호대 구조 규약과 일치함을 확인했다.": {
+    "en": "Confirmed that the intervals of light matched an old guardian distress code.",
+    "ja": "光の間隔が、古い守護隊の救難規約と一致すると確かめた。"
+  },
+  "빛의 방패로 피난 시간을 벌고 가장 큰 틈 앞에 홀로 남았다.": {
+    "en": "Bought time for the evacuation with a shield of light and stood alone before the largest breach.",
+    "ja": "光の盾で避難の時間を稼ぎ、最大の亀裂の前にひとり残った。"
+  },
+  "빛이 사라지기 전에 아치의 봉인문과 안전 표식을 모두 베꼈다.": {
+    "en": "Copied every seal inscription and safety mark on the arch before the light faded.",
+    "ja": "光が消える前に、アーチの封印文と安全標識をすべて写し取った。"
+  },
+  "뿌리문의 회랑": {
+    "en": "The Root-Gate Corridor",
+    "ja": "根の門の回廊"
+  },
+  "뿌리의 문지기": {
+    "en": "Gatekeeper of the Roots",
+    "ja": "根の門番"
+  },
+  "새벽종의 박자에 맞춰 멈추는 순간을 찾아 안전 표식을 남겼다.": {
+    "en": "Found the moment the corridor stopped in time with the Dawn Bells and left a safety mark.",
+    "ja": "暁の鐘の拍子に合わせて回廊が止まる瞬間を見極め、安全標識を残した。"
+  },
+  "서로 다른 상처를 가진 종소리를 겹쳐 유리 군대의 부활 주기를 끊었다.": {
+    "en": "Layered the tones of bells bearing different cracks and broke the Glass Army's cycle of resurrection.",
+    "ja": "それぞれ異なる傷を持つ鐘の音を重ね、ガラスの軍勢の復活周期を断ち切った。"
+  },
+  "성벽을 긁는 우두머리와 그 무리를 정면에서 막아선다.": {
+    "en": "Stand against the leader clawing at the walls and its horde head-on.",
+    "ja": "城壁を引っかく首領とその群れを正面から食い止める。"
+  },
+  "세 새벽종의 음을 차례로 내자 언제나 낯선 네 번째 음이 답했다.": {
+    "en": "Whenever the three Dawn Bells sounded in sequence, an unfamiliar fourth note answered.",
+    "ja": "三つの暁の鐘を順に鳴らすと、いつも聞き覚えのない四つ目の音が応えた。"
+  },
+  "세 새벽종의 잔향으로 별빛 없이도 끝문이 있는 단을 찾아냈다.": {
+    "en": "Used the lingering tones of the three Dawn Bells to find the landing with the final gate, even without starlight.",
+    "ja": "三つの暁の鐘の余韻を追い、星明かりがなくとも終端の門がある踊り場を見つけた。"
+  },
+  "세 선이 물길과 안전한 발판을 표시한다는 사실을 알아내 북방길을 열었다.": {
+    "en": "Discovered that the three lines marked waterways and safe footing, opening the road north.",
+    "ja": "三本の線が水路と安全な足場を示すと突き止め、北方への道を開いた。"
+  },
+  "세 수문이 열리자 물길을 막던 얼음이 갑옷을 두른 수문장으로 뭉쳐 일어났다.": {
+    "en": "When the three sluices opened, the ice blocking the channels fused into a single armored gatekeeper.",
+    "ja": "三つの水門が開くと、水路を塞いでいた氷がひとつに集まり、鎧をまとった水門番となって立ち上がった。"
+  },
+  "세 열쇠가 가리키는 곳: 숲의 모든 기억을 먹으며 뛰는 유리 심장.": {
+    "en": "Where the three keys point: the beating Glass Heart that devours every memory in the forest.",
+    "ja": "三つの鍵が指す場所：森のすべての記憶を喰らいながら鼓動するガラスの心臓。"
+  },
+  "세 열쇠를 꽂자 아셀이 남긴 최후의 문지기가 기억 잎을 갑옷처럼 두르고 깨어났다.": {
+    "en": "When the three keys were inserted, Asel's final gatekeeper awoke clad in memory leaves like armor.",
+    "ja": "三つの鍵を差すと、アセルが残した最後の門番が、記憶の葉を鎧のようにまとって目覚めた。"
+  },
+  "세라의 군패를 두드릴 때마다 서로 다른 열여덟 울림이 돌아왔다.": {
+    "en": "Each strike against Sera's military tag drew eighteen distinct echoes in reply.",
+    "ja": "セラの軍牌を叩くたび、それぞれ異なる十八の響きが返ってきた。"
+  },
+  "속 빈 길": {
+    "en": "The Hollow Road",
+    "ja": "空洞の道"
+  },
+  "속이 빈 구간을 표시해 지하 운반로의 방향을 이었다.": {
+    "en": "Marked the hollow stretches and traced the underground transport route.",
+    "ja": "空洞の区間に印をつけ、地下運搬路の方向をつないだ。"
+  },
+  "쇠사슬을 끊고 도망친 사람들이 돌아올 수 있는 길을 다시 열었다.": {
+    "en": "Broke the chains and reopened the road so those who had fled could return.",
+    "ja": "鎖を断ち、逃げた人々が戻れる道を開き直した。"
+  },
+  "수레의 제동 장치를 풀고 실종된 마부가 빠져나간 옆 통로를 열었다.": {
+    "en": "Released the cart's brake and opened the side passage used by the missing carter.",
+    "ja": "荷車の制動装置を外し、消えた御者が抜け出した横道を開いた。"
+  },
+  "수면을 들여다본 순찰대원들의 얼굴이 한 사람씩 흐려졌다.": {
+    "en": "The faces of the patrol members looking into the water blurred away one by one.",
+    "ja": "水面をのぞき込んだ巡回隊員たちの顔が、ひとりずつかすんでいった。"
+  },
+  "수문을 닫자 물은 멈췄지만 마지막 한 줄기만 묘지 쪽으로 흘렀다.": {
+    "en": "Closing the sluice stopped the water, except for one last stream flowing toward the cemetery.",
+    "ja": "水門を閉じると水は止まったが、最後の一筋だけが墓地の方へ流れた。"
+  },
+  "수비대의 표식을 되찾아 북문에 걸고 첫 국경 의뢰를 받아들였다.": {
+    "en": "Reclaimed the border guard's insignia, hung it on the north gate, and accepted the first border commission.",
+    "ja": "守備隊の記章を取り戻して北門に掲げ、最初の国境依頼を引き受けた。"
+  },
+  "숲 너머에서 짧은 불빛 세 개가 같은 간격으로 반복됐다.": {
+    "en": "Beyond the forest, three brief flashes repeated at regular intervals.",
+    "ja": "森の向こうで、三つの短い光が同じ間隔で繰り返された。"
+  },
+  "숲을 살린 겨울과 숲을 먹은 보호": {
+    "en": "The Winter That Saved the Forest, and the Protection That Devoured It",
+    "ja": "森を救った冬と、森を喰らった守護"
+  },
+  "숲의 침묵을 만든 무리를 몰아내고 피 묻은 깃털을 발견했다.": {
+    "en": "Drove off the creatures that had silenced the forest and found a bloodstained feather.",
+    "ja": "森を沈黙させた群れを追い払い、血に染まった羽根を見つけた。"
+  },
+  "스스로 선택한 첫 번째 수호": {
+    "en": "The First Protection Freely Chosen",
+    "ja": "自ら選んだ最初の守護"
+  },
+  "식탁과 빨랫줄은 사람이 방금 떠난 모습이었지만 모든 시계는 같은 정오를 가리켰다.": {
+    "en": "The table and clotheslines looked as though their owners had just left, yet every clock showed the same noon.",
+    "ja": "食卓と物干し綱は人がたった今離れたばかりのようだったが、すべての時計は同じ正午を指していた。"
+  },
+  "신호탑의 우두머리 짐승을 쓰러뜨리고 북방 길잡이 마엘을 구했다.": {
+    "en": "Defeated the alpha beast at the signal tower and rescued Mael, the northern guide.",
+    "ja": "信号塔を支配する獣を倒し、北方の案内人マエルを救った。"
+  },
+  "심장이 한 번 울릴 때마다 숲의 잎 하나가 투명해지고 주민 한 명이 어제 일을 잊었다.": {
+    "en": "With every beat of the heart, one leaf in the forest turned clear and one villager forgot the day before.",
+    "ja": "心臓が一度鼓動するたび、森の葉が一枚透明になり、住民がひとり昨日の出来事を忘れた。"
+  },
+  "아래에서 뜬 별": {
+    "en": "The Star That Rose from Below",
+    "ja": "地下から昇った星"
+  },
+  "아셀과 리브가 빈 겨울의 균열을 잠시 붙들어 {{1}} 첫 씨앗을 심을 시간을 만들었다.": {
+    "en": "Asel and Liv held the fissure in Hollow Winter long enough for {{1}} to plant the first seed.",
+    "ja": "アセルとリヴは虚ろな冬の亀裂をしばし押さえ、{{1}}が最初の種を植える時間を稼いだ。"
+  },
+  "아셀은 숲이 다시 상처 입는 것을 볼 수 없다며 유리 심장과 한 몸이 되어 길을 막았다.": {
+    "en": "Unable to bear seeing the forest wounded again, Asel became one with the Glass Heart and barred the way.",
+    "ja": "森が再び傷つく姿は見られないと、アセルはガラスの心臓と一体化して道を塞いだ。"
+  },
+  "아셀의 지팡이에 봄의 씨앗이 박혀 있고 정원 아래에서 물소리가 난다는 사실을 찾아냈다.": {
+    "en": "Discovered a seed of spring embedded in Asel's staff and heard water running beneath the garden.",
+    "ja": "アセルの杖に春の種が埋め込まれ、庭の下から水の音がすると突き止めた。"
+  },
+  "안전줄을 설치하고 첫 쉼터까지 내려가 역류하는 수로를 확인했다.": {
+    "en": "Set a safety line, descended to the first shelter, and confirmed that the channel was flowing backward.",
+    "ja": "命綱を設置して最初の休息所まで下り、水路が逆流していると確かめた。"
+  },
+  "야영지의 기록에서 숲의 시간이 백야가 시작된 날에 멈췄음을 확인했다.": {
+    "en": "The camp records confirmed that time in the forest had stopped on the day the White Night began.",
+    "ja": "野営地の記録から、森の時間が白夜の始まった日に止まったと確かめた。"
+  },
+  "약탈자를 몰아내고 불씨를 귀환등에 옮겨 화로의 열을 낮췄다.": {
+    "en": "Drove off the raider and transferred the embers to a return lamp, cooling the furnace.",
+    "ja": "略奪者を追い払い、火種を帰還灯に移して炉の熱を下げた。"
+  },
+  "엎지른 물이 계단 아래가 아니라 어두운 벽 쪽으로 기어 올라갔다.": {
+    "en": "Spilled water crawled up the dark wall instead of running down the stairs.",
+    "ja": "こぼれた水は階段を下るのではなく、暗い壁を這い上がった。"
+  },
+  "역풍 속에서도 종소리와 짐승의 피 냄새가 같은 방향에서 흘러왔다.": {
+    "en": "Even against the wind, the bell and the scent of beast blood came from the same direction.",
+    "ja": "向かい風の中でも、鐘の音と獣の血の匂いは同じ方角から流れてきた。"
+  },
+  "열린 첫 구역": {
+    "en": "The First Sector Opened",
+    "ja": "開かれた第一区域"
+  },
+  "열세 번째 묘표": {
+    "en": "The Thirteenth Grave Marker",
+    "ja": "十三番目の墓標"
+  },
+  "열쇠를 벽에 대지 않고 세 새벽종의 음 사이에 놓아 문양을 깨웠다.": {
+    "en": "Held the key between the three Dawn Bells' notes instead of against the wall, awakening the sigil.",
+    "ja": "鍵を壁に当てるのではなく、三つの暁の鐘の音の間に置き、紋様を目覚めさせた。"
+  },
+  "예배당을 덮친 어둠을 밀어내 등불과 사람들의 길을 지킨다.": {
+    "en": "Drive back the darkness engulfing the chapel and protect the lamp and the people's escape route.",
+    "ja": "礼拝堂を覆う闇を押し返し、灯火と人々の道を守る。"
+  },
+  "오래된 훈련장 바닥에서 {{1}}의 손길에 빛바랜 인장이 깨어났다.": {
+    "en": "At {{1}}'s touch, the faded sigil on the old training-ground floor awakened.",
+    "ja": "古びた訓練場の床で、{{1}}が触れると色あせた印が目覚めた。"
+  },
+  "오를수록 더 깊어지고 내려갈수록 입구가 가까워지는 계단": {
+    "en": "A Stairway That Descends as You Climb and Returns to the Entrance as You Go Down",
+    "ja": "上るほど深くなり、下るほど入口へ近づく階段"
+  },
+  "완벽한 전적이 아닌 이후에 바꾼 선택을 말해 그림자의 기억에 금을 냈다.": {
+    "en": "Spoke not of a perfect record but of the choices changed afterward, cracking the shadow's memory.",
+    "ja": "完璧な戦績ではなく、その後に改めた選択を語り、影の記憶にひびを入れた。"
+  },
+  "울림만 남아 스스로 무기를 찍어 내는 지하 공방": {
+    "en": "An underground workshop where lingering echoes forge weapons on their own.",
+    "ja": "残響だけが残り、自ら武器を鍛え上げる地下工房"
+  },
+  "유리 군대가 퇴로를 닫자 니아는 되찾은 봄물을 거리와 계곡으로 흘려보냈다.": {
+    "en": "When the Glass Army sealed the retreat, Nia released the reclaimed spring water through the streets and ravines.",
+    "ja": "ガラスの軍勢が退路を塞ぐと、ニアは取り戻した春の水を通りと谷へ流した。"
+  },
+  "유리 껍질만 걷어 내 기억나무를 다치지 않고 첫 단을 열었다.": {
+    "en": "Removed only the glass shell, uncovering the first step without harming the Memory Tree.",
+    "ja": "ガラスの殻だけを取り除き、記憶の木を傷つけずに最初の一段を開いた。"
+  },
+  "유리 물레의 축을 멈춰 숲의 기억이 더 이상 병사로 가공되지 않게 했다.": {
+    "en": "Stopped the glass waterwheel's axle so the forest's memories could no longer be forged into soldiers.",
+    "ja": "ガラスの水車の車軸を止め、森の記憶がこれ以上兵士に加工されないようにした。"
+  },
+  "유리 심장 안에는 라움 주민과 길 잃은 여행자들의 기억 잎이 장작처럼 쌓여 있었다.": {
+    "en": "Inside the Glass Heart, memory leaves from Raum's villagers and lost travelers were stacked like firewood.",
+    "ja": "ガラスの心臓の中には、ラウムの住民と道に迷った旅人たちの記憶の葉が、薪のように積み上げられていた。"
+  },
+  "유리 잎을 창에 대어 가장 가까운 주민의 목소리를 잠시 되돌려 놓았다.": {
+    "en": "Pressed the glass leaf to the window and briefly restored the nearest villager's voice.",
+    "ja": "ガラスの葉を窓に当て、最も近い住民の声を一時的に取り戻した。"
+  },
+  "유리 잎의 그림자를 이용해 빛이 조작하지 못하는 실제 층수를 찾아냈다.": {
+    "en": "Used the glass leaf's shadow to determine the tower's true floor count, beyond the light's illusions.",
+    "ja": "ガラスの葉の影を使い、光の操作が及ばない塔の本当の階数を突き止めた。"
+  },
+  "유리맥 동굴": {
+    "en": "The Glass-Vein Cavern",
+    "ja": "ガラス脈の洞窟"
+  },
+  "유리벽마다 조금 다른 {{1}} 서로 다른 길을 가리켰다.": {
+    "en": "Each glass wall held a slightly different {{1}}, each pointing down a different path.",
+    "ja": "ガラス壁ごとに少しずつ異なる{{1}}が映り、それぞれ別の道を指していた。"
+  },
+  "인장을 더럽힌 무리를 몰아내고 보호막이 북쪽부터 약해졌음을 확인했다.": {
+    "en": "Drove off the creatures defiling the sigil and confirmed that the barrier had begun weakening in the north.",
+    "ja": "印を穢した群れを追い払い、結界が北側から弱まっていると確かめた。"
+  },
+  "자국을 삼킨 돌": {
+    "en": "The Stone That Swallowed the Tracks",
+    "ja": "車輪の跡を飲み込んだ石"
+  },
+  "잘린 면에 남은 정원사의 칼자국으로 아셀이 봄을 직접 옮겼음을 밝혀냈다.": {
+    "en": "The gardener's blade marks along the cut revealed that Asel had moved spring himself.",
+    "ja": "切断面に残る庭師の刃跡から、アセルが春を自ら移したと突き止めた。"
+  },
+  "잠긴 기록수로": {
+    "en": "The Flooded Archive Channel",
+    "ja": "水没した記録水路"
+  },
+  "장부를 베끼는 것": {
+    "en": "The Thing That Copies the Ledger",
+    "ja": "帳簿を書き写すもの"
+  },
+  "전령을 노리는 추격자들을 막으며 치료할 시간을 번다.": {
+    "en": "Hold off the messenger's pursuers and buy time to tend the wounds.",
+    "ja": "伝令を狙う追撃者たちを食い止め、治療の時間を稼ぐ。"
+  },
+  "정원의 위협을 몰아내고 흔적이 모이는 검은 뿌리를 드러냈다.": {
+    "en": "Drove off the garden's threat and exposed the black root gathering the fallen traces.",
+    "ja": "庭の脅威を退け、倒れた痕跡が集まる黒い根を暴いた。"
+  },
+  "정원의 하루가 열두 번의 대화 뒤 처음으로 되감긴다는 주기를 알아냈다.": {
+    "en": "Discovered that the garden's day resets after every twelve conversations.",
+    "ja": "庭の一日は、十二回の会話の後に巻き戻ると突き止めた。"
+  },
+  "정원지기 아셀": {
+    "en": "Asel the Gardener",
+    "ja": "庭師アセル"
+  },
+  "정원지기의 두 손": {
+    "en": "The Gardener's Two Hands",
+    "ja": "庭師の両手"
+  },
+  "젖지 않는 종이들이 물결을 거슬러 같은 책장으로 모였다.": {
+    "en": "Sheets of paper that never grew wet drifted against the current and gathered on a single shelf.",
+    "ja": "決して濡れない紙が流れに逆らい、ひとつの書架に集まった。"
+  },
+  "종 없는 주조장": {
+    "en": "The Bell-Less Foundry",
+    "ja": "鐘のない鋳造所"
+  },
+  "좌표실에서 태어난 망령들과 싸우며 파문의 중심을 안정시킨다.": {
+    "en": "Fight the wraiths born in the coordinate chamber and stabilize the ripple's core.",
+    "ja": "座標室で生まれた亡霊たちと戦い、波紋の中心を安定させる。"
+  },
+  "지붕 위의 은빛 동전": {
+    "en": "The Silver Coin on the Rooftop",
+    "ja": "屋根の上の銀貨"
+  },
+  "지붕길 끝에서 되찾은 비밀 봉인": {
+    "en": "The Secret Seal Recovered at the End of the Rooftop Path",
+    "ja": "屋根道の果てで取り戻した秘密の封印"
+  },
+  "지상 흙으로 안전 원을 만들고 그 안에서 문을 열어 정원을 통과했다.": {
+    "en": "Formed a safety circle with soil from the surface, opened the gate from within it, and crossed the garden.",
+    "ja": "地上の土で安全圏を作り、その中から門を開いて庭を通過した。"
+  },
+  "지워진 발자국 주변의 짐승들을 물리치며 풀잎의 결을 읽는다.": {
+    "en": "Drive off the beasts around the erased tracks and read the grain of the grass.",
+    "ja": "消された足跡の周りの獣を退けながら、草の葉の紋理を読む。"
+  },
+  "지키려는 손이 마지막으로 부순 것": {
+    "en": "What the Hand of Protection Finally Broke",
+    "ja": "守ろうとする手が、最後に壊したもの"
+  },
+  "진짜 니아가 즉석에서 만든 우회로로 일행을 이끌어 복제 지도를 무너뜨렸다.": {
+    "en": "The real Nia led the party along a detour she devised on the spot, causing the duplicate map to collapse.",
+    "ja": "本物のニアはその場で作った迂回路へ一行を導き、複製地図を崩壊させた。"
+  },
+  "창문에 비친 주민들은 입을 움직였지만 유리 바깥으로는 아무 소리도 나오지 않았다.": {
+    "en": "The villagers reflected in the windows moved their lips, but no sound passed through the glass.",
+    "ja": "窓に映る住民たちは口を動かしていたが、ガラスの外には何も聞こえなかった。"
+  },
+  "천장에서 내려온 밧줄 끝에는 매달려 있어야 할 종이 없었다.": {
+    "en": "No bell hung from the end of the rope descending from the ceiling.",
+    "ja": "天井から垂れる縄の先には、あるはずの鐘がなかった。"
+  },
+  "첫 녹음을 불러오는 씨앗이 흰 정원으로 옮겨졌다는 운반 기록을 찾았다.": {
+    "en": "Found a shipping record showing that the seed which summons the first green growth had been taken to the White Garden.",
+    "ja": "最初の新緑を呼び覚ます種が、白い庭へ運ばれたという輸送記録を見つけた。"
+  },
+  "첫 답장은 유리 잎을 길잡이로 삼아 세 종과 함께 북쪽으로 오라고 안내했다.": {
+    "en": "The first reply instructed Bern to use the glass leaf as a guide and come north with the three bells.",
+    "ja": "最初の返書には、ガラスの葉を道しるべに、三つの鐘とともに北へ来るよう記されていた。"
+  },
+  "첫 샘은 얼음 안에서도 계속 솟아올랐지만 한 방울도 강으로 빠져나가지 못했다.": {
+    "en": "The first spring kept welling even within the ice, yet not a single drop could escape into the river.",
+    "ja": "最初の泉は氷の中でも湧き続けたが、一滴たりとも川へ流れ出せなかった。"
+  },
+  "첫 정식 임무: 새벽이 되어도 돌아오지 않은 국경 순찰대를 찾아라.": {
+    "en": "First official mission: Find the border patrol that failed to return by dawn.",
+    "ja": "最初の正式任務：夜明けになっても戻らない国境巡回隊を探せ。"
+  },
+  "첫 주문으로 어둠을 밀어내고 봉인된 좌표실의 문을 열었다.": {
+    "en": "Drove back the darkness with the first spell and opened the sealed coordinate chamber.",
+    "ja": "最初の術で闇を押し返し、封じられた座標室の扉を開いた。"
+  },
+  "큰 꽃마다 지나온 문지기의 얼굴이 잠깐씩 되살아났다.": {
+    "en": "Within each great flower, the face of a gatekeeper from an earlier sector flickered back to life.",
+    "ja": "大きな花の一つ一つに、これまで過ぎてきた門番の顔がつかの間蘇った。"
+  },
+  "타격 간격 사이로 지나가 모루 아래의 동력관을 찾아냈다.": {
+    "en": "Slipped between the hammer blows and found the power conduit beneath the anvil.",
+    "ja": "槌打の間隔をすり抜け、金床の下にある動力管を見つけた。"
+  },
+  "투명한 수액 속에서 오래전 수호대의 그림자가 같은 길을 반복했다.": {
+    "en": "Within the clear sap, shadows of the old guardian squad retraced the same path endlessly.",
+    "ja": "透明な樹液の中で、かつての守護隊の影が同じ道を繰り返していた。"
+  },
+  "파문 속의 망령": {
+    "en": "Wraith in the Ripple",
+    "ja": "波紋の中の亡霊"
+  },
+  "파문의 핵을 꿰뚫어 기록에 없던 망령의 발생을 멈췄다.": {
+    "en": "Pierced the ripple's core and stopped the unrecorded wraiths from emerging.",
+    "ja": "波紋の核を貫き、記録にない亡霊の出現を止めた。"
+  },
+  "표식의 간격을 재어 공동묘지 아래로 이어지는 우회로를 계산했다.": {
+    "en": "Measured the spacing of the markers to plot a detour beneath the cemetery.",
+    "ja": "印の間隔を測り、共同墓地の下へ続く迂回路を算出した。"
+  },
+  "표지석 아래의 빈 공간과 내려가는 낡은 승강 장치를 찾아냈다.": {
+    "en": "Found a hollow beneath the marker stone and an ancient lift descending into it.",
+    "ja": "標石の下に空洞と、地下へ下る古びた昇降装置を見つけた。"
+  },
+  "풀린 첫 봉인": {
+    "en": "The First Seal Broken",
+    "ja": "解かれた最初の封印"
+  },
+  "풀잎과 부러진 가지로 누군가 북쪽 흔적을 고의로 지웠음을 밝혀냈다.": {
+    "en": "The bent grass and broken branches revealed that someone had deliberately erased the trail north.",
+    "ja": "草の葉と折れた枝から、誰かが北への痕跡を意図的に消したと突き止めた。"
+  },
+  "피난 행렬을 덮치는 어둠 앞에 서서 끝까지 사람들을 보호한다.": {
+    "en": "Stand before the darkness descending on the refugee column and protect the people to the end.",
+    "ja": "避難民の列に襲いかかる闇の前に立ち、最後まで人々を守る。"
+  },
+  "현재 깊이를 장부와 귀환종에 새기고 다음 회랑으로 안전하게 넘어갔다.": {
+    "en": "Inscribed the current depth in both the ledger and the Return Bell, then crossed safely into the next corridor.",
+    "ja": "現在の深度を帳簿と帰還の鐘に刻み、次の回廊へ無事に進んだ。"
+  },
+  "현재 원정의 표식만 푸른 실로 구분해 거짓 길을 걷어 냈다.": {
+    "en": "Marked only the current expedition's trail with blue thread and stripped away the false paths.",
+    "ja": "今回の遠征の印だけを青い糸で見分け、偽りの道を排除した。"
+  },
+  "현재 위치와 다음 유리맥을 지도에 표시하고 기록수로를 통과했다.": {
+    "en": "Marked the current position and the next glass vein on the map, then cleared the archive channel.",
+    "ja": "現在地と次のガラス脈を地図に記し、記録水路を通過した。"
+  },
+  "화살로 덫줄을 끊고 고립된 이들이 건널 수 있는 길을 표시했다.": {
+    "en": "Cut the tripwires with arrows and marked a safe route for those who had been cut off.",
+    "ja": "矢で罠の縄を断ち、孤立した人々が渡れる道を示した。"
+  },
+  "회관 지하에는 네 개의 문이 있었지만 봄의 문만 벽처럼 매끈하게 굳어 있었다.": {
+    "en": "Four doors stood beneath the guildhall, but only spring's had hardened into a seamless wall.",
+    "ja": "会館の地下には四つの扉があったが、春の扉だけが継ぎ目のない壁のように固まっていた。"
+  },
+  "회전하는 회랑": {
+    "en": "The Rotating Corridor",
+    "ja": "回転する回廊"
+  },
+  "후일담: 국경과 북방 숲 사이에 열린 길을 지키는 반복 원정이 이어진다.": {
+    "en": "Epilogue: Expeditions continue to guard the road opened between the border and the northern forest.",
+    "ja": "後日譚：国境と北方の森の間に開かれた道を守るため、遠征は続いていく。"
+  },
+  "흐르지 않기에 투명해진 강": {
+    "en": "The River Made Clear by Stagnation",
+    "ja": "流れを失い、透明になった川"
+  }
+}

@@ -1,8 +1,8 @@
 # NULL PLAYING 개인정보처리방침
 
 - 시행일: 2026년 8월 26일
-- 최종 수정일: 2026년 8월 26일
-- 대상 앱: NULL PLAYING(구 AlarmQuest), Android 패키지 `com.alarmquest`
+- 최종 수정일: 2026년 8월 31일
+- 대상 앱: NULL PLAYING(구 AlarmQuest), Android 패키지 `com.nullplaying`
 - 개인정보처리자: 4LTree(포엘트리)
 
 4LTree(이하 "개발자")는 NULL PLAYING(이하 "앱")을 이용하는 동안 어떤 정보가 기기에 저장되고, 어떤 정보가 외부 서버로 전송되며, 이를 어떤 목적으로 처리하는지 이 방침을 통해 안내합니다.
@@ -49,7 +49,11 @@ Android 시스템 백업과 기기 간 전송은 비활성화되어 있습니다
 
 이 정보는 광고 제공·측정, 분석, 빈도 관리, 사기 및 무효 트래픽 방지에 사용될 수 있으며 전송 구간에서 암호화됩니다. 앱은 실행할 때마다 Google User Messaging Platform(UMP)으로 동의 상태를 갱신하고, 적용 지역에서 필요한 동의 폼을 마친 후 광고 요청 가능 상태인 경우에만 Google Mobile Ads를 초기화합니다. 개인정보 옵션 재진입이 필요한 이용자에게는 설정 화면에 “광고 개인정보 선택” 진입점을 표시합니다. 이용자는 Android 설정에서 광고 ID를 재설정하거나 삭제할 수 있습니다.
 
-### 1.4 개발자가 의도적으로 수집하지 않는 정보
+### 1.4 Firebase Remote Config가 처리하는 정보
+
+앱은 오프라인 모험 최대 저장 시간과 충전 시간을 원격으로 조절하기 위해 Google Firebase Remote Config를 사용합니다. 이 SDK와 필수 의존성인 Firebase Installations는 설치 식별자(Firebase Installation ID), 국가·언어 코드, 시간대, 플랫폼·OS·SDK 버전, Firebase 앱 ID 및 패키지 이름을 처리합니다. 설정 제공과 Firebase 서비스의 유지·개선을 위한 정보이며 HTTPS로 전송됩니다. 캐릭터 이름과 전체 게임 저장 데이터는 이 기능으로 Firebase에 보내지 않습니다. Firebase Authentication과 Google Analytics SDK는 이 기능을 위해 추가하지 않습니다.
+
+### 1.5 개발자가 의도적으로 수집하지 않는 정보
 
 앱은 다음 정보를 직접 요구하거나 의도적으로 수집하지 않습니다.
 
@@ -80,6 +84,7 @@ Android 시스템 백업과 기기 간 전송은 비활성화되어 있습니다
 | --- | --- | --- |
 | Supabase, Inc. | 익명 인증, 데이터베이스 호스팅, API 제공, 보안 및 장애 대응. 현재 앱 데이터베이스의 주 리전은 대한민국 서울입니다. | [Supabase Privacy](https://supabase.com/privacy) |
 | Google LLC | AdMob/GMA를 통한 광고 제공·측정, 분석, 사기 및 무효 트래픽 방지. 정보가 Google의 글로벌 인프라에서 처리될 수 있습니다. | [Google Privacy Policy](https://policies.google.com/privacy) |
+| Google LLC / Firebase | Remote Config 설정 제공과 설치 식별, 서비스 유지·개선. 정보가 Google의 글로벌 인프라에서 처리될 수 있습니다. | [Firebase Privacy and Security](https://firebase.google.com/support/privacy) |
 
 Supabase는 개발자의 지시에 따라 데이터를 처리하는 서비스 제공자로 사용됩니다. Google Mobile Ads는 광고 생태계에서 위 1.3의 정보를 수집하고 공유할 수 있습니다. 법령상 의무 이행, 이용자 보호 또는 권리 방어가 필요한 경우 관련 기관에 정보가 제공될 수 있습니다.
 
@@ -93,6 +98,7 @@ Supabase는 개발자의 지시에 따라 데이터를 처리하는 서비스 �
 | 익명 인증 사용자, 기기·앱 프로필, 랭킹 | 익명 인증 사용자가 삭제되거나 서비스가 종료될 때까지. 공개 개인정보처리방침의 이메일 경로로 데이터 삭제를 요청할 수 있습니다. |
 | 캐릭터 랭킹 | 앱에서 해당 캐릭터를 삭제하고 서버 동기화가 성공하면 삭제 |
 | 광고 관련 정보 | Google의 정책과 이용자의 광고·동의 설정에 따름 |
+| Firebase 설정 및 설치 정보 | 로컬 설정 캐시는 앱 데이터 삭제 시 제거되며 서버 처리·보유는 Firebase 정책에 따름 |
 | 문의 내용 | 문의 처리와 분쟁 대응에 필요한 기간 동안 보유한 뒤 삭제. 법령상 보존 의무가 있으면 해당 기간 동안 보유 |
 
 앱 삭제는 기기의 로컬 저장과 인증 토큰을 제거하지만, 이미 Supabase에 전송된 익명 인증 사용자 및 연결 데이터까지 즉시 삭제하지는 않습니다.
@@ -116,6 +122,7 @@ Supabase는 개발자의 지시에 따라 데이터를 처리하는 서비스 �
 개발자는 다음 조치를 적용합니다.
 
 - Supabase와 Google 광고 통신에 HTTPS/TLS 사용
+- Firebase Remote Config와 Installations 통신에 HTTPS 사용
 - Supabase Row Level Security를 통한 설치별 데이터 접근 통제
 - 앱에 공개용 키만 포함하고 관리자용 `service_role` 키는 포함하지 않음
 - 랭킹 쓰기 항목 검증과 최소 권한의 서버 함수 사용
@@ -147,3 +154,4 @@ Supabase는 개발자의 지시에 따라 데이터를 처리하는 서비스 �
 - [Google Play Data Safety 작성 안내](https://support.google.com/googleplay/android-developer/answer/10787469?hl=ko)
 - [Google Mobile Ads Next-Gen SDK 데이터 공개 안내](https://developers.google.com/admob/android/next-gen/privacy/play-data-disclosure?hl=ko)
 - [Google UMP Android 가이드](https://developers.google.com/admob/android/privacy?hl=ko)
+- [Firebase Android SDK 데이터 공개](https://firebase.google.com/docs/android/play-data-disclosure)

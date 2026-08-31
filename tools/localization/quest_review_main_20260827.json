@@ -1,0 +1,650 @@
+{
+  "{{1}} 국경 밖이 아니라 성벽 안쪽에서 시작된 발자국을 찾아냈다.": {
+    "en": "{{1}} found footprints that began inside the walls, not beyond the border.",
+    "ja": "{{1}}は、国境の外ではなく城壁の内側から始まった足跡を見つけた。"
+  },
+  "{{1}} 끌어 모은 금속 조각 사이에 군패와 편지 고리가 섞여 있었다.": {
+    "en": "Among the metal scraps {{1}} had gathered lay a military tag and a letter ring.",
+    "ja": "{{1}}が集めた金属片の中に、軍牌と手紙の留め輪が混じっていた。"
+  },
+  "{{1}} 몰아내 지나는 사람들이 다시 길을 이용할 수 있게 했다.": {
+    "en": "Drove off {{1}}, allowing travelers to use the road once more.",
+    "ja": "{{1}}を追い払い、人々が再びその道を通れるようにした。"
+  },
+  "{{1}} 몰아내고 버려진 주조장으로 통하는 수로를 다시 열었다.": {
+    "en": "Drove off {{1}} and reopened the waterway leading to the abandoned foundry.",
+    "ja": "{{1}}を追い払い、廃棄された鋳造所へ続く水路を再び開いた。"
+  },
+  "{{1}} 물밑의 재와 유리 뿌리를 걷어 내고 두 지역의 공동 수로를 다시 연결했다. 흐르는 물이 같은 아침을 알렸다.": {
+    "en": "{{1}} cleared the ash and glass roots from beneath the water and reconnected the waterway shared by the two regions. The flowing water heralded a morning they could share.",
+    "ja": "{{1}}は水底の灰とガラスの根を取り除き、二つの地域を結ぶ共同水路を再びつないだ。流れる水が、共に迎える朝を告げた。"
+  },
+  "{{1}} 사이로 옛 종의 금속 가루가 강바닥처럼 쌓여 있었다.": {
+    "en": "Amid the {{1}}, metal dust from ancient bells lay thick as a riverbed.",
+    "ja": "{{1}}の群れの間に、古い鐘の金属粉が川底のように降り積もっていた。"
+  },
+  "{{1}} 세관 바닥의 밀도를 두드려 군수품이 오간 비밀 통로를 찾아냈다.": {
+    "en": "By tapping across the customs-house floor, {{1}} found a secret passage once used to move military supplies.",
+    "ja": "{{1}}は税関の床を叩いて響きを確かめ、軍需品を運んでいた秘密通路を見つけた。"
+  },
+  "{{1}} 오래된 수로를 막은 {{2}} 몰아내고 벽 너머의 바람을 들었다.": {
+    "en": "{{1}} drove {{2}} from the old waterway and heard the wind beyond the wall.",
+    "ja": "{{1}}は古い水路を塞いでいた{{2}}を追い払い、壁の向こうから吹く風の音を聞いた。"
+  },
+  "{{1}} 적의 깃발을 들어 재의 무리를 유인하고 갇힌 생존자들을 빠져나오게 했다.": {
+    "en": "{{1}} raised the enemy banner to lure away the ash horde and free the trapped survivors.",
+    "ja": "{{1}}は敵の軍旗を掲げて灰の群れをおびき寄せ、閉じ込められた生存者たちを逃がした。"
+  },
+  "{{1}} 종탑 거울로 라움에 약속한 짧은 빛을 보냈다.": {
+    "en": "Using the bell-tower mirror, {{1}} sent the brief flash promised to Raum.",
+    "ja": "{{1}}は鐘楼の鏡を使い、ラウムと約束した短い光の合図を送った。"
+  },
+  "{{1}} 지도에서 지워진 초소와 성문 사이의 길을 다시 걸었다.": {
+    "en": "{{1}} retraced the road between the outpost erased from the map and the city gate.",
+    "ja": "{{1}}は、地図から消された前哨と城門の間の道をもう一度たどった。"
+  },
+  "{{1}} 지키던 틈에서 이름이 닳아 없어진 군패가 나왔다.": {
+    "en": "A military tag with its name worn away was found in a crevice guarded by {{1}}.",
+    "ja": "{{1}}が守っていた隙間から、名前が磨り減った軍牌が見つかった。"
+  },
+  "{{1}} 편지를 되찾으려는 자들을 따돌리고 마지막 봉인까지 지켜냈다.": {
+    "en": "{{1}} evaded those trying to seize the letter and kept even the final seal intact.",
+    "ja": "{{1}}は手紙を奪い返そうとする者たちをまき、最後の封印まで守り抜いた。"
+  },
+  "같은 인장이 찍힌 상반된 명령서": {
+    "en": "Conflicting Orders Bearing the Same Seal",
+    "ja": "同じ印章が押された相反する命令書"
+  },
+  "검은 천을 두른 수레들이 관처럼 보였지만, 바퀴 자국은 성채 쪽으로 깊게 파여 있었다.": {
+    "en": "The carts draped in black cloth looked like coffins, but their ruts ran deep toward the citadel.",
+    "ja": "黒布をかけた荷車は棺のように見えたが、車輪の轍は城塞へ向かって深く刻まれていた。"
+  },
+  "공문은 실종된 순찰대원에게 출정 다음 날 다시 출정하라고 명령하고 있었다.": {
+    "en": "The dispatch ordered a missing patrolman to march out again the day after his deployment.",
+    "ja": "公文は、行方不明の巡回兵に出征の翌日も再び出征するよう命じていた。"
+  },
+  "관처럼 꾸민 수레들이 장례지가 아닌 성채로 향함을 확인했다.": {
+    "en": "Confirmed that the carts disguised as coffins were headed for the citadel, not a burial ground.",
+    "ja": "棺に見せかけた荷車が、墓地ではなく城塞へ向かっていることを確かめた。"
+  },
+  "괴물의 흔적을 걷어 내 사절이 남긴 안전한 접근로를 구분했다.": {
+    "en": "Cleared away the monsters' tracks and identified the safe approach left by the envoy.",
+    "ja": "魔物の痕跡を取り除き、使節が残した安全な進入路を見分けた。"
+  },
+  "구해 둔 로웬과 생존자들이 서문을 버티는 동안 {{1}} 무너진 종탑으로 향했다.": {
+    "en": "While Rowen and the survivors held the West Gate, {{1}} headed for the fallen bell tower.",
+    "ja": "救い出したロウェンと生存者たちが西門を支える間、{{1}}は崩れた鐘楼へ向かった。"
+  },
+  "국경 밖 적진에는 깃발만 펄럭였고, 식탁과 화살통은 그대로 남아 있었다.": {
+    "en": "Beyond the border, only the enemy camp's banners still flew; its tables and quivers had been left untouched.",
+    "ja": "国境の外にある敵陣では軍旗だけがはためき、食卓も矢筒もそのまま残されていた。"
+  },
+  "국경 사람들의 소식에서 다시 살펴야 할 일과 길을 정했다.": {
+    "en": "Reports from the borderfolk revealed which matters and roads still demanded attention.",
+    "ja": "国境の人々から届いた知らせをもとに、再び確かめるべき出来事と道を定めた。"
+  },
+  "국경 수호록": {
+    "en": "Chronicle of the Border Guardians",
+    "ja": "国境守護録"
+  },
+  "국경과 라움의 물길이 만나는 수문에 검은 재와 흰 유리가 함께 굳어 역류를 만들었다.": {
+    "en": "At the sluice where the waterways of the border and Raum met, black ash and white glass had fused, forcing the current backward.",
+    "ja": "国境とラウムの水路が交わる水門で、黒い灰と白いガラスが固まり、逆流を引き起こしていた。"
+  },
+  "\uad6d\uacbd\uacfc \ub77c\uc6c0\uc758 \uc21c\ucc30\ub300\ub294 \ub2a6\uc5b4\uc9c4 \uc2e0\ud638\uc640 \uc0c8 \uc2e4\uc885\uc790 \uae30\ub85d\uc744 \ud55c \uc904\uc529 \ub9de\ucdc4\ub2e4.": {
+    "en": "The patrols from the border and Raum compared the delayed signal records and new missing-person reports line by line.",
+    "ja": "国境とラウムの巡回隊は、遅れた信号の記録と新たな行方不明者の記録を一行ずつ照合した。"
+  },
+  "국경에서 이어 온 모든 길이 사람들의 퇴로가 되었다. {{1}} 재의 왕을 깨뜨리자 베른은 처음으로 누구의 이름도 지우지 않은 철수 명령을 내렸다.": {
+    "en": "Every route opened along the journey became an evacuation path. When {{1}} shattered the Ash King, Bern issued his first retreat order without erasing a single name.",
+    "ja": "国境へと切り開いてきたすべての道が、人々の退路となった。{{1}}が灰の王を打ち破ると、ベルンは初めて、誰の名も消さない撤退命令を下した。"
+  },
+  "국경을 지키려 괴물을 왕으로 삼은 베른": {
+    "en": "Bern, Who Crowned a Monster to Defend the Border",
+    "ja": "国境を守るため魔物を王としたベルン"
+  },
+  "\uad6d\uacbd\uc758 \uc544\uce68\uc740 \uc2b9\ub9ac\uc758 \ud568\uc131\ubcf4\ub2e4 \ubb3c \uae37\ub294 \uc18c\ub9ac\uc640 \ubb38 \uc5ec\ub294 \uc18c\ub9ac\ub85c \uba3c\uc800 \ub3cc\uc544\uc654\ub2e4.": {
+    "en": "Morning returned to the border not with cries of victory, but with the sounds of drawing water and opening doors.",
+    "ja": "国境の朝は、勝利の喊声よりも先に、水をくむ音と扉を開ける音とともに戻ってきた。"
+  },
+  "군패의 부대 표식으로 돌아오지 못한 병사의 마지막 임무를 찾았다.": {
+    "en": "The unit emblem on the military tag revealed the final mission of a soldier who never returned.",
+    "ja": "軍牌の部隊章から、帰らなかった兵士の最後の任務を特定した。"
+  },
+  "귀환 표식을 유족에게 전하고 끝나지 않았던 임무를 마쳤다.": {
+    "en": "Delivered the return marker to the fallen soldier's family and brought the unfinished mission to an end.",
+    "ja": "帰還のしるしを遺族に届け、終わっていなかった任務を完了させた。"
+  },
+  "긁힌 이름 뒤에 남은 로웬의 계급장으로 편지의 수신인을 특정했다.": {
+    "en": "The imprint of Rowen's rank insignia beneath the scratched-out name identified the letter's recipient.",
+    "ja": "削り取られた名の下に残ったロウェンの階級章の跡から、手紙の宛先を特定した。"
+  },
+  "금 간 종을 울려 재의 무리를 멈추고 성벽의 사람들을 구했다.": {
+    "en": "Rang the cracked bell, halted the ash horde, and saved the people on the walls.",
+    "ja": "ひび割れた鐘を鳴らし、灰の群れを止め、城壁の人々を救った。"
+  },
+  "기록실 벽에서 서기관을 구하고 베른이 명령을 내렸다는 증언을 확보했다.": {
+    "en": "Rescued the scribe hidden inside the records-room wall and secured his testimony that Bern had given the order.",
+    "ja": "記録室の壁の中に隠れていた書記官を救い出し、ベルンが命令を下したという証言を得た。"
+  },
+  "\uae30\uc5b5\ub098\ubb34\uac00 \ubc14\uafbc \uc0c8 \uae38\uc744 \uc815\uc2dd \uacf5\ub3d9 \uc21c\ucc30\ub85c\ub85c \ub0a8\uae38\uc9c0 \uc810\uac80\ud588\ub2e4.": {
+    "en": "Checked whether the path newly altered by the Memory Tree should be formally registered as a joint patrol route.",
+    "ja": "記憶の木が作り変えた新しい道を、正式な共同巡回路として残すべきか点検した。"
+  },
+  "기억의 등불": {
+    "en": "Lanterns of Memory",
+    "ja": "記憶の灯"
+  },
+  "긴 비가 지나간 공동묘지에서 국경군과 북방 실종자의 묘표가 뒤섞여 드러났다.": {
+    "en": "After the long rains, grave markers belonging to border soldiers and northerners who had gone missing emerged jumbled together in the cemetery.",
+    "ja": "長雨の後、共同墓地から国境軍の兵士と北方の行方不明者の墓標が入り乱れて現れた。"
+  },
+  "길 위의 조우": {
+    "en": "Encounter on the Road",
+    "ja": "道中の遭遇"
+  },
+  "길목의 둥지": {
+    "en": "Nest at the Crossroads",
+    "ja": "辻の巣"
+  },
+  "길잡이 니아는 돈 대신 사라진 동료 한 명을 찾아 달라며 지도를 돌려주겠다고 했다.": {
+    "en": "The guide Nia offered to return the map if they found her missing companion instead of paying her in coin.",
+    "ja": "案内人のニアは、金の代わりに行方不明の仲間を一人探してくれれば、地図を返すと言った。"
+  },
+  "끊긴 보급표": {
+    "en": "Interrupted Supply Ledger",
+    "ja": "途切れた補給記録"
+  },
+  "끝내야 할 작은 일": {
+    "en": "A Small Matter Left to Settle",
+    "ja": "決着をつけるべき小さな仕事"
+  },
+  "남겨진 흔적": {
+    "en": "Lingering Traces",
+    "ja": "残された痕跡"
+  },
+  "남은 경고: 재의 무리가 잠들지 않는 성벽으로 향한다.": {
+    "en": "Warning: the ash horde is marching toward the Unsleeping Ramparts.",
+    "ja": "残された警告：灰の群れが「眠らぬ城壁」へ向かっている。"
+  },
+  "남은 단서: 첫 번째 새벽종과 종지기 오르반.": {
+    "en": "Remaining clue: the first Dawn Bell and Bellkeeper Orban.",
+    "ja": "残された手がかり：一つ目の暁の鐘と鐘守オルバン。"
+  },
+  "남은 단서: 폐쇄된 우물과 세 개의 검은 원.": {
+    "en": "Remaining clue: the sealed well and three black circles.",
+    "ja": "残された手がかり：封鎖された井戸と三つの黒い円。"
+  },
+  "남은 문제: 도둑맞은 두 새벽종을 되찾아야 한다.": {
+    "en": "Remaining task: reclaim the two stolen Dawn Bells.",
+    "ja": "残された課題：盗まれた二つの暁の鐘を取り戻す。"
+  },
+  "남은 소식: 공동 순찰로의 오래된 종이 북방 구조 신호를 울렸다.": {
+    "en": "Latest report: the old bell along the joint patrol route sounded a distress signal toward the North.",
+    "ja": "残された知らせ：共同巡回路の古い鐘が、北方へ向けて救難信号を鳴らした。"
+  },
+  "남은 소식: 공동묘지 아래에서 북방 실종자의 군패가 발견됐다.": {
+    "en": "Latest report: a military tag belonging to someone missing in the North was found beneath the cemetery.",
+    "ja": "残された知らせ：共同墓地の下から、北方で行方不明になった者の軍牌が見つかった。"
+  },
+  "남은 소식: 기억나무의 순찰로가 기존 지도와 다른 방향으로 열렸다.": {
+    "en": "Latest report: the Memory Tree's patrol route now follows a course absent from existing maps.",
+    "ja": "残された知らせ：記憶の木の巡回路が、既存の地図とは異なる方向へ開いた。"
+  },
+  "남은 소식: 새로 연 길 아래에서 보급 수레 한 대가 흔적도 없이 사라졌다.": {
+    "en": "Latest report: a supply cart vanished without a trace beneath the newly opened road.",
+    "ja": "残された知らせ：新たに開いた道の下で、補給荷車が一台、跡形もなく消えた。"
+  },
+  "남은 잔해와 위험을 정리해 그 일이 다시 사람을 해치지 않게 했다.": {
+    "en": "Cleared away the remaining debris and danger so the incident could harm no one again.",
+    "ja": "残された瓦礫と危険を取り除き、同じ出来事が再び人を傷つけないようにした。"
+  },
+  "늦은 종소리": {
+    "en": "A Bell One Beat Late",
+    "ja": "遅れて鳴った鐘"
+  },
+  "니아가 연 밀수로로 끊어진 다리를 우회해 행렬 앞을 막았다.": {
+    "en": "Using the smuggling tunnel Nia opened, they bypassed the severed bridge and cut off the procession.",
+    "ja": "ニアが開いた密輸路で落とされた橋を迂回し、行列の先回りをした。"
+  },
+  "니아가 훔친 길과 돌려준 진실": {
+    "en": "The Road Nia Stole, the Truth She Returned",
+    "ja": "ニアが盗んだ道、返した真実"
+  },
+  "니아와 사라진 동료를 찾는 대신 지도를 되돌려받기로 약속했다.": {
+    "en": "They promised Nia they would find her missing companion in exchange for the map's return.",
+    "ja": "ニアの消えた仲間を探す代わりに、地図を返してもらう約束を交わした。"
+  },
+  "니아의 동료와 국경군 보급함이 함께 묻힌 자리를 찾아 냈다.": {
+    "en": "Found the place where Nia's companion and a border-garrison supply chest had been buried together.",
+    "ja": "ニアの仲間と国境守備隊の補給箱が並んで埋められた場所を見つけた。"
+  },
+  "다른 잉크": {
+    "en": "Different Ink",
+    "ja": "異なるインク"
+  },
+  "다시 검어진 우물": {
+    "en": "The Well Runs Black Again",
+    "ja": "再び黒ずんだ井戸"
+  },
+  "다음 목적지: 종지기 오르반이 숨은 문 없는 예배당.": {
+    "en": "Next destination: the doorless chapel where Bellkeeper Orban is hiding.",
+    "ja": "次の目的地：鐘守オルバンが身を隠す、扉のない礼拝堂。"
+  },
+  "\ub367\uc50c\uc6b4 \uc790\uad6d\uc744 \uac77\uc5b4 \ub0b4\uace0 \uc218\ub808\uac00 \ub04c\ub824\uac04 \uc0db\uae38\uc744 \ucc3e\uc544\ub0c8\ub2e4.": {
+    "en": "Cleared away the false tracks and found the side road along which the cart had been dragged.",
+    "ja": "上書きされた偽の車輪跡を取り除き、荷車が引きずられた脇道を見つけた。"
+  },
+  "도착한 소식": {
+    "en": "News Arrives",
+    "ja": "届いた知らせ"
+  },
+  "돌공들은 해가 지기 전 모든 이름을 새길 수 없다고 말했다.": {
+    "en": "The stonemasons said they could not carve every name before sunset.",
+    "ja": "石工たちは、日没までにすべての名を刻むことはできないと言った。"
+  },
+  "\ub3d9\uc774 \ud144\ub294\ub370 \uc21c\ucc30\ub300\uc758 \uce68\uc0c1\uc740 \ucc28\uac11\uace0, \uc2dd\uc9c0 \uc54a\uc740 \ub4f1\ubd88\ub9cc \uc8fc\uc778\uc744 \uae30\ub2e4\ub838\ub2e4.": {
+    "en": "Dawn had broken, yet the patrol's beds were cold. Only a lamp still warm awaited its master.",
+    "ja": "夜は明けていたが、巡回隊の寝台は冷たかった。まだ温もりの残る灯だけが、主の帰りを待っていた。"
+  },
+  "되찾은 세 새벽종": {
+    "en": "The Three Dawn Bells Reclaimed",
+    "ja": "取り戻した三つの暁の鐘"
+  },
+  "두 번째 새벽종": {
+    "en": "Second Dawn Bell",
+    "ja": "二つ目の暁の鐘"
+  },
+  "두 번째 안전 답신": {
+    "en": "Second Safety Reply",
+    "ja": "二度目の安全応答"
+  },
+  "둥지를 치우고 빼앗긴 보급품을 온전히 되찾았다.": {
+    "en": "Cleared the nest and recovered the stolen supplies intact.",
+    "ja": "巣を片づけ、奪われた補給物資を損なわれていない状態で取り戻した。"
+  },
+  "등불 포식자": {
+    "en": "Lamp Devourer",
+    "ja": "灯喰らい"
+  },
+  "떼어 낸 청동 자국을 비교해 누군가 새벽종을 해체했음을 밝혀냈다.": {
+    "en": "By comparing the scars left where bronze had been pried away, they proved that someone had dismantled the Dawn Bell.",
+    "ja": "青銅を無理に剥がした跡を照合し、何者かが暁の鐘を解体したことを突き止めた。"
+  },
+  "라움에서 보내는 세 번의 안전 불빛이 약속한 시각보다 한 박자 늦게 나타났다.": {
+    "en": "The three safety lights from Raum appeared one beat later than promised.",
+    "ja": "ラウムから届くはずの三つの安全灯が、約束の時刻より一拍遅れて現れた。"
+  },
+  "라움에서 세 번의 불빛이 돌아와 새 순찰로의 안전을 확인했다.": {
+    "en": "Three answering lights returned from Raum, confirming that the new patrol route was safe.",
+    "ja": "ラウムから三度の応答灯が返り、新しい巡回路の安全が確認された。"
+  },
+  "라움의 첫 불빛은 공동 순찰대가 출발할 시각을 알리는 정기 신호였다.": {
+    "en": "Raum's first light was the regular signal marking the joint patrol's departure time.",
+    "ja": "ラウムの最初の灯は、共同巡回隊の出発時刻を知らせる定期信号だった。"
+  },
+  "로웬과 생존자들이 서문을 버티는 사이 무너진 종탑으로 통하는 길을 열었다.": {
+    "en": "While Rowen and the survivors held the West Gate, they opened a path to the fallen bell tower.",
+    "ja": "ロウェンと生存者たちが西門を持ちこたえる間に、崩れた鐘楼へ続く道を開いた。"
+  },
+  "로웬은 이름 없는 군패 앞에서 오래된 순찰 명부를 펼쳤다.": {
+    "en": "Before the nameless military tag, Rowen opened an old patrol roster.",
+    "ja": "ロウェンは名のない軍牌の前で、古い巡回名簿を開いた。"
+  },
+  "마을 우물에서 물 대신 미지근한 재가 솟자 닫힌 창문마다 빈 물통이 늘어섰다.": {
+    "en": "When lukewarm ash surged from the village well instead of water, empty buckets lined every shuttered window.",
+    "ja": "村の井戸から水の代わりに生温い灰が噴き出すと、閉ざされた窓の前に空の水桶が次々と並んだ。"
+  },
+  "마지막 경계병": {
+    "en": "The Last Sentry",
+    "ja": "最後の哨兵"
+  },
+  "마지막 귀환로": {
+    "en": "The Last Return Route",
+    "ja": "最後の帰還路"
+  },
+  "마지막 벽에는 경고가 새겨져 있었다. ‘세 종을 따로 울리면 문이 열리고, 함께 울리면 새벽이 온다.’": {
+    "en": "A warning was carved into the final wall: 'Ring the three bells apart and the gate will open. Ring them together and dawn will come.'",
+    "ja": "最後の壁には警告が刻まれていた。「三つの鐘を別々に鳴らせば門は開き、共に鳴らせば暁が来る」"
+  },
+  "마지막 새벽종": {
+    "en": "The Last Dawn Bell",
+    "ja": "最後の暁の鐘"
+  },
+  "마지막 새벽종은 재의 성채 안에 있다.": {
+    "en": "The last Dawn Bell lies within the Ashen Citadel.",
+    "ja": "最後の暁の鐘は、灰の城塞の中にある。"
+  },
+  "명령을 베낀 서기관은 기록실 벽 안에 숨어 있었고, 사령관 베른의 지시였다고 증언했다.": {
+    "en": "The scribe who copied the orders was hiding inside the records-room wall. He testified that Commander Bern had ordered the forgery.",
+    "ja": "命令書を書き写した書記官は記録室の壁の中に隠れており、司令官ベルンの指示だったと証言した。"
+  },
+  "모든 조작 명령이 베른에게 닿으며 그가 성채에서 문을 열려 함을 알았다.": {
+    "en": "Every forged order led back to Bern, revealing his plan to open the gate from within the citadel.",
+    "ja": "すべての偽造命令がベルンへとつながり、彼が城塞から門を開こうとしていることが分かった。"
+  },
+  "묘표의 재질과 새김법을 나눠 매장 시기와 부대를 구분했다.": {
+    "en": "Sorted the grave markers by material and carving style to determine each burial date and unit.",
+    "ja": "墓標を素材と刻み方で分類し、埋葬された時期と所属部隊を特定した。"
+  },
+  "무너진 다리": {
+    "en": "Collapsed Bridge",
+    "ja": "崩れた橋"
+  },
+  "무리를 몰아내고 유리 숲을 훼손하지 않는 통로를 열었다.": {
+    "en": "Drove off the horde and opened a passage that would not scar the Glass Forest.",
+    "ja": "群れを追い払い、ガラスの森を傷つけない通路を開いた。"
+  },
+  "묻힌 표지석을 세우고 끊겼던 귀환로를 기록에 되돌렸다.": {
+    "en": "Raised the buried waystone and restored the severed return route to the records.",
+    "ja": "埋もれた道標を立て直し、途絶えていた帰還路を記録に戻した。"
+  },
+  "\ubb3c \uae0b\ub294 \uc18c\ub9ac\uc640 \ubb38 \uc5ec\ub294 \uc18c\ub9ac\uac00 \ub3cc\uc544\uc624\uba70 \uad6d\uacbd\uc758 \uc628\uc804\ud55c \uc544\uce68\uc774 \uc2dc\uc791\ub410\ub2e4.": {
+    "en": "The sounds of drawing water and opening doors returned, and an unbroken morning began at the border.",
+    "ja": "水をくむ音と扉を開ける音が戻り、国境にいつもの朝が始まった。"
+  },
+  "물 아래에서 울린 첫 번째 종소리": {
+    "en": "The First Bell Toll Beneath the Water",
+    "ja": "水底で鳴った最初の鐘"
+  },
+  "밀수로로 알려진 길이 세 종탑과 성채를 잇는 군용 지하로임을 밝혀냈다.": {
+    "en": "Revealed that the so-called smuggling route was a military tunnel linking the three bell towers and the citadel.",
+    "ja": "密輸路と呼ばれていた道が、三つの鐘楼と城塞を結ぶ軍用地下道だと突き止めた。"
+  },
+  "밑줄에 답하는 종소리를 따라 잠긴 지하 수로의 입구를 찾았다.": {
+    "en": "Following the bell that answered the lowered rope, they found the entrance to the sealed underground waterway.",
+    "ja": "垂らした縄に応える鐘の音を追い、封鎖された地下水路の入り口を見つけた。"
+  },
+  "\ubc24\uc774 \uc624\uc790 \uc7ac\uc5d0\uc11c \ud0dc\uc5b4\ub09c \uac83\ub4e4\uc774 \uc131\ubcbd \uc544\ub798\ub85c \ubc00\ub824\uc640 \ud683\ubd88\uc758 \ube5b\uc744 \ud558\ub098\uc529 \uc0bc\ucf30\ub2e4.": {
+    "en": "When night fell, things born of ash surged beneath the walls and swallowed the torchlight one flame at a time.",
+    "ja": "夜が訪れると、灰から生まれたものたちが城壁の下へ押し寄せ、松明の火を一つずつ呑み込んだ。"
+  },
+  "베른은 국경을 지키기 위해 종의 힘이 필요하다고 적었다. 실패의 대가는 한 줄도 없었다.": {
+    "en": "Bern wrote that the bells' power was needed to defend the border. Not one line recorded the cost of failure.",
+    "ja": "ベルンは国境を守るために鐘の力が必要だと書いた。しかし、失敗の代償は一行たりとも記されていなかった。"
+  },
+  "베른의 기록에서 국경을 지킨다는 명분과 삭제된 피해 계산을 찾았다.": {
+    "en": "Bern's records contained his pretext of defending the border—and casualty estimates he had tried to erase.",
+    "ja": "ベルンの記録から、国境を守るという大義名分と、削除された被害試算が見つかった。"
+  },
+  "베른이 문을 붙들고 모든 이름을 남긴 첫 철수 명령으로 사람들을 살렸다.": {
+    "en": "Holding the gate, Bern saved the people with the first retreat order that preserved every name.",
+    "ja": "ベルンは門を支えながら、すべての名を残した初めての撤退命令で人々を救った。"
+  },
+  "베른이 왕도의 지원 거절 후 잠든 파수자를 깨우려 했다는 고백을 들었다.": {
+    "en": "Heard Bern confess that after the capital refused aid, he had tried to awaken the sleeping sentinel.",
+    "ja": "王都に援軍を拒まれた後、眠る番人を目覚めさせようとしたというベルンの告白を聞いた。"
+  },
+  "\ubd04\uc744 \ub418\ucc3e\uc740 \uae30\uc5b5\ub098\ubb34\uc758 \uc720\ub9ac \uc78e\uc774 \uae30\uc874 \uc9c0\ub3c4\uc5d0 \uc5c6\ub294 \uacf5\ub3d9 \uc21c\ucc30\ub85c\ub97c \ube44\ucdc4\ub2e4.": {
+    "en": "With spring restored, a glass leaf from the Memory Tree illuminated a joint patrol route absent from every existing map.",
+    "ja": "春を取り戻した記憶の木のガラスの葉が、既存の地図にはない共同巡回路を照らし出した。"
+  },
+  "북쪽 이정표": {
+    "en": "Northern Waystone",
+    "ja": "北の道標"
+  },
+  "비에 드러난 묘표": {
+    "en": "Grave Markers Bared by Rain",
+    "ja": "雨に暴かれた墓標"
+  },
+  "비에도 지워지지 않는 종이 새에서 봉인된 군 공문을 얻었다.": {
+    "en": "The rainproof paper bird carried a sealed military dispatch.",
+    "ja": "雨にも消えない紙の鳥から、封印された軍の公文を手に入れた。"
+  },
+  "빈 초소를 살펴 종을 울린 이가 사람이 아님을 확인했다.": {
+    "en": "Examined the empty outpost and confirmed that no human hand had rung the bell.",
+    "ja": "空の前哨を調べ、鐘を鳴らしたのが人間ではないことを確かめた。"
+  },
+  "빌린 깃발": {
+    "en": "Borrowed War Banner",
+    "ja": "借りた軍旗"
+  },
+  "새 이름 앞에 놓인 등불은 바람이 불어도 오래 꺼지지 않았다.": {
+    "en": "The lantern set before each restored name burned on, even in the wind.",
+    "ja": "取り戻した名の前に置かれた灯は、風が吹いても長く消えなかった。"
+  },
+  "새로 놓인 길 앞에서 첫 수레의 마부가 오래 망설였다.": {
+    "en": "The driver of the first cart hesitated for a long moment before the newly laid road.",
+    "ja": "新たに開かれた道の前で、最初の荷車の御者は長くためらった。"
+  },
+  "새로 열린 기억나무 공동 순찰로": {
+    "en": "The Newly Opened Joint Patrol Route of the Memory Tree",
+    "ja": "新たに開かれた記憶の木の共同巡回路"
+  },
+  "성벽의 등불을 옮겨 밤새 묘표에 빠진 이름을 새겼다.": {
+    "en": "Moved the lamps from the walls and spent the night carving the missing names into the grave markers.",
+    "ja": "城壁の灯を移し、夜を徹して墓標に抜け落ちていた名を刻んだ。"
+  },
+  "성채에서 한 번 울린 종이 하늘의 남은 빛을 껐다는 결과를 목격했다.": {
+    "en": "Witnessed a single toll from the citadel extinguish the last light in the sky.",
+    "ja": "城塞で鐘が一度鳴り、空に残っていた光が消えるのを目撃した。"
+  },
+  "성채에서 흘러든 마지막 재가 지하 웅덩이에서 단단히 굳어 있었다.": {
+    "en": "The last ash to flow from the citadel had hardened in an underground pool.",
+    "ja": "城塞から流れ込んだ最後の灰が、地下の水たまりで硬く固まっていた。"
+  },
+  "세 갈래 물길이 다시 움직였지만 어느 마을부터 열지 정해야 했다.": {
+    "en": "The three waterways were flowing again, but they still had to decide which village's sluice to open first.",
+    "ja": "三つの水路は再び流れ始めたが、どの村の水門から開けるか決めなければならなかった。"
+  },
+  "세 개의 상처 난 종이 함께 울린 아침": {
+    "en": "The Morning Three Wounded Bells Rang as One",
+    "ja": "傷ついた三つの鐘が共に鳴った朝"
+  },
+  "세 종을 따로 울리면 문이 열리고 함께 울리면 새벽이 온다는 원리를 해독했다.": {
+    "en": "Deciphered the rule: ring the three bells apart and the gate opens; ring them together and dawn comes.",
+    "ja": "三つの鐘を別々に鳴らせば門が開き、共に鳴らせば暁が来るという仕組みを解読した。"
+  },
+  "세 종을 함께 울려 재를 땅으로 돌려보내고 재의 문을 닫았다.": {
+    "en": "Rang the three bells together, sent the ash back to the earth, and sealed the Ashen Gate.",
+    "ja": "三つの鐘を共に鳴らし、灰を大地へ返し、灰の門を閉ざした。"
+  },
+  "세관 바닥에서 군수품을 옮겨 나른 군용 비밀 통로를 찾았다.": {
+    "en": "Found the secret military passage beneath the customs-house floor that had been used to move supplies.",
+    "ja": "税関の床下で、軍需品の運搬に使われていた軍用の秘密通路を見つけた。"
+  },
+  "수레 안의 종들이 재와 쇠사슬로 봉인된 채 운반되고 있음을 밝혀냈다.": {
+    "en": "Revealed that the bells inside the carts were being transported sealed in ash and bound with iron chains.",
+    "ja": "荷車の鐘が、灰で封じられ、鉄の鎖に縛られたまま運ばれていることを突き止めた。"
+  },
+  "수로 끝 주조장에는 종을 만들던 틀과 억지로 뜯어낸 청동 조각이 남아 있었다.": {
+    "en": "At the foundry beyond the waterway stood a bell mold and fragments of bronze torn away by force.",
+    "ja": "水路の先にある鋳造所には、鐘を造るための型と、無理に引き剥がされた青銅片が残っていた。"
+  },
+  "수문 이끼골렘": {
+    "en": "Sluice Moss Golem",
+    "ja": "水門の苔ゴーレム"
+  },
+  "수문 장치를 되살리고 아래쪽 점검로를 열었다.": {
+    "en": "Restored the sluice mechanism and opened the lower inspection passage.",
+    "ja": "水門の機構を復旧し、下層の点検路を開いた。"
+  },
+  "안개 갈퀴새": {
+    "en": "Mist Rakebird",
+    "ja": "霧の鉤爪鳥"
+  },
+  "\uc591\ucabd \uad70\ub300\uac00 \uac19\uc740 \uc7ac\uc758 \ubb34\ub9ac\uc5d0\uac8c \ucad3\uaca8\ub0ac\ub2e4\ub294 \uacf5\ud1b5 \ud754\uc801\uc744 \ucc3e\uc558\ub2e4.": {
+    "en": "Found matching traces showing that both armies had been driven off by the same ash horde.",
+    "ja": "両軍が同じ灰の群れに追い立てられたことを示す、共通の痕跡を見つけた。"
+  },
+  "여정 동안 열어 둔 수로·지하로·성벽길을 하나의 피난로로 연결했다.": {
+    "en": "Linked the waterway, underground passage, and rampart road opened during the journey into a single evacuation route.",
+    "ja": "旅の中で開いてきた水路・地下道・城壁路を、一本の避難路としてつないだ。"
+  },
+  "예배당 벽화에서 첫 새벽종을 울리면 숨겨진 길이 열린다는 문구를 확인했다.": {
+    "en": "The chapel mural bore an inscription saying the first Dawn Bell would open a hidden road.",
+    "ja": "礼拝堂の壁画に、最初の暁の鐘を鳴らせば隠された道が開くと刻まれていた。"
+  },
+  "오늘 생긴 흔적을 따라 위협의 발생지와 사라진 사람의 행선을 찾았다.": {
+    "en": "Followed the fresh traces to the source of the threat and the missing person's destination.",
+    "ja": "その日に残された新しい痕跡を追い、脅威の発生源と消えた人の行き先を突き止めた。"
+  },
+  "오르반은 종 아래 잠든 존재가 수호자가 아니라 오래전 국경을 재로 만든 왕이라고 밝혔다.": {
+    "en": "Orban revealed that the being asleep beneath the bell was no guardian, but the king who had reduced the border to ash long ago.",
+    "ja": "オルバンは、鐘の下に眠るものが守護者ではなく、かつて国境を灰に変えた王だと明かした。"
+  },
+  "오르반이 두 종소리를 한 박자로 묶어 {{1}} 마지막 종에 닿을 틈을 만들었다.": {
+    "en": "Orban bound the two bell tones into a single beat, giving {{1}} an opening to reach the final bell.",
+    "ja": "オルバンは二つの鐘の音を一拍に束ね、{{1}}が最後の鐘へたどり着く隙を作った。"
+  },
+  "우물의 재가 자연 현상이 아니며 마을 아래에서 올라오고 있음을 확인했다.": {
+    "en": "Confirmed that the ash in the well was no natural phenomenon, but was rising from beneath the village.",
+    "ja": "井戸の灰は自然現象ではなく、村の地下から湧き上がっていることを確かめた。"
+  },
+  "유리등 나방": {
+    "en": "Glass-Lantern Moth",
+    "ja": "ガラス灯蛾"
+  },
+  "유족과 순찰대가 함께 명부를 읽어 이름 없는 무덤을 남기지 않기로 했다.": {
+    "en": "The bereaved families and the patrol read the roster together, vowing to leave no grave without a name.",
+    "ja": "遺族と巡回隊は共に名簿を読み上げ、名のない墓を一つも残さないと誓った。"
+  },
+  "이름 없는 군패": {
+    "en": "Nameless Military Tag",
+    "ja": "名のない軍牌"
+  },
+  "이름을 되찾은 묘표": {
+    "en": "Grave Markers Given Back Their Names",
+    "ja": "名を取り戻した墓標"
+  },
+  "이름을 새기는 밤": {
+    "en": "The Night of Carving Names",
+    "ja": "名を刻む夜"
+  },
+  "잊힌 이름들로 비어 있던 왕의 갑옷": {
+    "en": "The King's Armor, Empty Save for Forgotten Names",
+    "ja": "忘れられた名だけが渦巻く、空の王の鎧"
+  },
+  "작은 종은 해 질 녘마다 같은 방향을 향해 한 번씩 흔들렸다.": {
+    "en": "At every sunset, the small bell swung once toward the same direction.",
+    "ja": "日没のたびに、小さな鐘はいつも同じ方角へ一度だけ揺れた。"
+  },
+  "장부의 빈 시각을 맞춰 수레가 사라진 밤과 길목을 특정했다.": {
+    "en": "Matched the blank times in the ledger to identify the night and crossroads where the cart vanished.",
+    "ja": "帳簿の空白の時刻を照合し、荷車が消えた夜と場所を特定した。"
+  },
+  "재더미 아래서 구한 로웬은 누군가 순찰대를 괴물에게 몰아넣었다고 말했다.": {
+    "en": "Rescued from beneath the ash heap, Rowen said someone had driven the patrol straight into the monsters.",
+    "ja": "灰の山の下から救い出されたロウェンは、何者かが巡回隊を魔物の群れへ追い込んだと語った。"
+  },
+  "재로 채워진 종과 성채로 사라진 마지막 수레": {
+    "en": "The Ash-Filled Bell and the Last Cart Lost to the Citadel",
+    "ja": "灰で満たされた鐘と、城塞へ消えた最後の荷車"
+  },
+  "재먼지 들쥐": {
+    "en": "Ash-Dust Field Mouse",
+    "ja": "灰塵の野ネズミ"
+  },
+  "재의 무리가 빛을 먹으며 서문으로 집결하는 규칙을 파악했다.": {
+    "en": "Discovered the pattern: the ash horde devoured light as it gathered at the West Gate.",
+    "ja": "灰の群れが光を喰らいながら西門へ集結する法則を見抜いた。"
+  },
+  "잿빛 박쥐": {
+    "en": "Ashen Bat",
+    "ja": "灰色コウモリ"
+  },
+  "적 경계병을 구하고 괴물이 성채에서 왔다는 증언과 군패를 얻었다.": {
+    "en": "Rescued an enemy sentry and obtained his testimony that the monsters had come from the citadel, along with his military tag.",
+    "ja": "敵の哨兵を救い、魔物が城塞から来たという証言と軍牌を得た。"
+  },
+  "적의 깃발로 재의 무리를 유인해 갇힌 양군의 생존자들을 구출했다.": {
+    "en": "Used the enemy banner to lure away the ash horde and rescue survivors trapped from both armies.",
+    "ja": "敵の軍旗で灰の群れをおびき寄せ、取り残された両軍の生存者を救出した。"
+  },
+  "전복된 수레에서 두 번째 새벽종을 되찾았지만 마지막 수레를 놓쳤다.": {
+    "en": "Recovered the second Dawn Bell from the overturned cart, but the last cart escaped.",
+    "ja": "横転した荷車から二つ目の暁の鐘を取り戻したが、最後の荷車は取り逃がした。"
+  },
+  "전해진 표식": {
+    "en": "The Delivered Marker",
+    "ja": "届けられたしるし"
+  },
+  "정시의 첫 불빛": {
+    "en": "The First Light on Time",
+    "ja": "定刻の最初の灯"
+  },
+  "종 안쪽에서 오래된 순찰대의 귀환 암호를 읽어 냈다.": {
+    "en": "Read an old patrol return cipher engraved inside the bell.",
+    "ja": "鐘の内側から、古い巡回隊の帰還暗号を読み取った。"
+  },
+  "\uc885\uc18c\ub9ac\uac00 \ud37c\uc9c0\uc790 \uc7ac\uc758 \ubb34\ub9ac\ub294 \uba48\ucdc4\uace0, \uc0ac\ub78c\ub4e4\uc740 \uc11c\ub85c\uc758 \uc5bc\uad74\uc744 \ub2e4\uc2dc \uc54c\uc544\ubcf4\uc558\ub2e4.": {
+    "en": "As the bell's toll spread, the ash horde stopped, and the people recognized one another again.",
+    "ja": "鐘の音が広がると灰の群れは止まり、人々は再び互いの顔を見分けた。"
+  },
+  "종탑 거울을 닦고 약속된 두 번째 안전 답신을 정확히 돌려보냈다.": {
+    "en": "Polished the bell-tower mirror and returned the promised second safety signal without error.",
+    "ja": "鐘楼の鏡を磨き、約束した二度目の安全応答を正確に送り返した。"
+  },
+  "죽은 순찰대원에게 다음 날 출정을 명령한 공문이 조작됐음을 밝혀냈다.": {
+    "en": "Revealed that the dispatch ordering a dead patrolman to march out the following day had been forged.",
+    "ja": "死んだ巡回兵に翌日の出征を命じた公文が、偽造されたものだと明かした。"
+  },
+  "지난 지도와 달라진 이정표에는 국경과 라움의 새 표식이 함께 새겨져 있었다.": {
+    "en": "The waystone, different from the one shown on the old map, bore the new marks of both the border and Raum.",
+    "ja": "以前の地図とは違う道標に、国境とラウムの新しいしるしが並んで刻まれていた。"
+  },
+  "지도 속 예배당에는 창도 문도 없었고, 벽화에는 첫 새벽종을 울리라는 문구가 새겨져 있었다.": {
+    "en": "The chapel marked on the map had neither windows nor doors, and its mural was inscribed: 'Ring the first Dawn Bell.'",
+    "ja": "地図に記された礼拝堂には窓も扉もなく、壁画には「最初の暁の鐘を鳴らせ」と刻まれていた。"
+  },
+  "창가의 은빛 단추로 지도를 가져간 이가 길잡이 니아임을 알아냈다.": {
+    "en": "The silver button left by the window revealed that the map had been taken by the guide Nia.",
+    "ja": "窓辺に残された銀のボタンから、地図を持ち去ったのが案内人ニアだと分かった。"
+  },
+  "창날에 괴물이 아닌 국경군의 칼자국이 남았다.": {
+    "en": "The spearhead bore blade marks from the border garrison, not marks left by a monster.",
+    "ja": "槍の穂先に残っていたのは、魔物の爪痕ではなく国境守備隊の刃傷だった。"
+  },
+  "창날의 국경군 칼자국이 순찰대의 매복에 내부자가 가담했음을 증명했다.": {
+    "en": "Blade marks from the border garrison on the spearhead proved that an insider had taken part in the ambush against the patrol.",
+    "ja": "槍の穂先に残る国境守備隊の刃傷から、巡回隊への待ち伏せに内通者が加わっていたことが判明した。"
+  },
+  "철수 명령서의 잉크에만 우물의 검은 재가 섞여 있음을 찾았다.": {
+    "en": "Found that only the retreat order's ink contained black ash from the well.",
+    "ja": "撤退命令書のインクだけに、井戸の黒い灰が混じっていることを突き止めた。"
+  },
+  "첫 번째 새벽종을 울려 비밀 계단을 열고 오르반이 숨은 지하 예배실에 도착했다.": {
+    "en": "Rang the first Dawn Bell, opened the secret stair, and reached the underground chapel where Orban was hiding.",
+    "ja": "最初の暁の鐘を鳴らして秘密の階段を開き、オルバンが身を隠す地下礼拝室へたどり着いた。"
+  },
+  "첫 번째 울림": {
+    "en": "The First Toll",
+    "ja": "最初の鐘音"
+  },
+  "첫 보급 수레가 성문을 통과하고 밤의 등불이 다시 켜졌다.": {
+    "en": "The first supply cart passed through the city gate, and the lamps of the night were lit once more.",
+    "ja": "最初の補給荷車が城門を通り、夜の灯が再びともった。"
+  },
+  "첫 수레": {
+    "en": "The First Cart",
+    "ja": "最初の荷車"
+  },
+  "추격대가 다리를 끊자 니아는 밀수로의 출구를 열어 행렬 앞을 가로질렀다.": {
+    "en": "When the pursuers cut the bridge, Nia opened an exit from the smuggling tunnel and intercepted the procession.",
+    "ja": "追撃隊が橋を落とすと、ニアは密輸路の出口を開いて行列の前へ回り込んだ。"
+  },
+  "통로 끝에는 니아의 동료와 국경군 보급함이 나란히 묻혀 있었다.": {
+    "en": "At the passage's end, Nia's companion and a border-garrison supply chest lay buried side by side.",
+    "ja": "通路の突き当たりに、ニアの仲間と国境守備隊の補給箱が並んで埋められていた。"
+  },
+  "편지의 수신인은 칼로 긁혀 있었지만 뒷장에는 로웬의 계급장이 눌려 있었다.": {
+    "en": "The recipient's name had been scratched out with a blade, but Rowen's rank insignia was impressed on the back of the letter.",
+    "ja": "手紙の宛名は刃物で削り取られていたが、裏面にはロウェンの階級章の跡が残っていた。"
+  },
+  "한 번 늦게 울린 종": {
+    "en": "The Bell That Rang One Beat Late",
+    "ja": "一拍遅れて鳴った鐘"
+  },
+  "한 번 울린 흔적": {
+    "en": "Trace of a Single Toll",
+    "ja": "一度の鐘音が残した痕"
+  },
+  "화살촉의 국경사령부 표식으로 전쟁의 발화점이 국경 안쪽임을 확인했다.": {
+    "en": "The Border Command emblem on the arrowhead proved that the spark of war lay within the border.",
+    "ja": "矢じりに刻まれた国境司令部の紋章から、戦争の火種が国境の内側にあることを確かめた。"
+  },
+  "후일담: 국경의 새 삶과 북쪽에서 온 낯선 징조가 이어진다.": {
+    "en": "Epilogue: new life stirs at the border, and strange omens arrive from the North.",
+    "ja": "後日譚：国境の新たな暮らし、そして北から届く未知の兆し。"
+  }
+}

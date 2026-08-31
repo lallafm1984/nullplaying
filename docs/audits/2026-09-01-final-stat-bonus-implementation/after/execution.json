@@ -1,0 +1,22 @@
+{
+  "started_at": "2026-09-01T02:31:34.612468+09:00",
+  "elapsed_seconds": 19.203360416999203,
+  "test_classes": [
+    "AdventureTaleCatalogTest",
+    "ClassEquipmentCatalogTest",
+    "ClericStatContractTest",
+    "LabyrinthProgressionTest",
+    "OfflineAdventureConfigTest",
+    "PostgameJourneyTest",
+    "QuestMonsterCatalogTest",
+    "SimpleGameEngineTest",
+    "StatBonusRulesTest",
+    "SessionLogLifecycleTest",
+    "RankingSubmissionPolicyTest",
+    "GameProgressNotificationsTest"
+  ],
+  "exit_code": 0,
+  "network": "OS sandbox denied",
+  "database_files": "OS sandbox denied",
+  "app_started": false
+}

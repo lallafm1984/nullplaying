@@ -1,0 +1,87 @@
+[
+  {
+    "width": 736,
+    "colorScheme": "light",
+    "overflow": false,
+    "paths": 6,
+    "text": "ive}.data-inline-chart-content{grid-area:1/1;align-self:start;min-width:0}.data-inline-chart-content .component-header{min-width:0}.data-inline-chart-content .component-title-text{overflow-wrap:anywhere;min-width:0}.data-inline-chart-stage>.source-sidebar-layer--contained{z-index:1}@container (width<=520px){.source-sidebar-layer--contained .source-tabs{row-gap:var(--space-2);flex-wrap:wrap;overflow:visible}.source-sidebar-layer--contained .source-tabs .tab-active-indicator{display:none}.source-sidebar-layer--contained .source-tabs [role=tab][aria-selected=true]{border-color:var(--text)}}\n:host { color-scheme: inherit; }100레벨까지 성장속도: 접속 간격별68101202468조건별 최저 직업 대비 (%)접속 간격 (시간)전사도적레인저마법사성직자팔라딘",
+    "buttons": [
+      "View data source",
+      "Toggle 전사",
+      "Toggle 도적",
+      "Toggle 레인저",
+      "Toggle 마법사",
+      "Toggle 성직자",
+      "Toggle 팔라딘"
+    ],
+    "charts": 1,
+    "errors": [],
+    "sourcePreview": true,
+    "network": "blocked"
+  },
+  {
+    "width": 736,
+    "colorScheme": "dark",
+    "overflow": false,
+    "paths": 6,
+    "text": "ive}.data-inline-chart-content{grid-area:1/1;align-self:start;min-width:0}.data-inline-chart-content .component-header{min-width:0}.data-inline-chart-content .component-title-text{overflow-wrap:anywhere;min-width:0}.data-inline-chart-stage>.source-sidebar-layer--contained{z-index:1}@container (width<=520px){.source-sidebar-layer--contained .source-tabs{row-gap:var(--space-2);flex-wrap:wrap;overflow:visible}.source-sidebar-layer--contained .source-tabs .tab-active-indicator{display:none}.source-sidebar-layer--contained .source-tabs [role=tab][aria-selected=true]{border-color:var(--text)}}\n:host { color-scheme: inherit; }100레벨까지 성장속도: 접속 간격별68101202468조건별 최저 직업 대비 (%)접속 간격 (시간)전사도적레인저마법사성직자팔라딘",
+    "buttons": [
+      "View data source",
+      "Toggle 전사",
+      "Toggle 도적",
+      "Toggle 레인저",
+      "Toggle 마법사",
+      "Toggle 성직자",
+      "Toggle 팔라딘"
+    ],
+    "charts": 1,
+    "errors": [],
+    "sourcePreview": true,
+    "network": "blocked"
+  },
+  {
+    "width": 360,
+    "colorScheme": "light",
+    "overflow": false,
+    "paths": 6,
+    "text": "ive}.data-inline-chart-content{grid-area:1/1;align-self:start;min-width:0}.data-inline-chart-content .component-header{min-width:0}.data-inline-chart-content .component-title-text{overflow-wrap:anywhere;min-width:0}.data-inline-chart-stage>.source-sidebar-layer--contained{z-index:1}@container (width<=520px){.source-sidebar-layer--contained .source-tabs{row-gap:var(--space-2);flex-wrap:wrap;overflow:visible}.source-sidebar-layer--contained .source-tabs .tab-active-indicator{display:none}.source-sidebar-layer--contained .source-tabs [role=tab][aria-selected=true]{border-color:var(--text)}}\n:host { color-scheme: inherit; }100레벨까지 성장속도: 접속 간격별68101202468조건별 최저 직업 대비 (%)접속 간격 (시간)전사도적레인저마법사성직자팔라딘",
+    "buttons": [
+      "View data source",
+      "Toggle 전사",
+      "Toggle 도적",
+      "Toggle 레인저",
+      "Toggle 마법사",
+      "Toggle 성직자",
+      "Toggle 팔라딘"
+    ],
+    "charts": 1,
+    "errors": [],
+    "sourcePreview": true,
+    "network": "blocked"
+  },
+  {
+    "width": 328,
+    "colorScheme": "dark",
+    "overflow": false,
+    "paths": 6,
+    "text": "ive}.data-inline-chart-content{grid-area:1/1;align-self:start;min-width:0}.data-inline-chart-content .component-header{min-width:0}.data-inline-chart-content .component-title-text{overflow-wrap:anywhere;min-width:0}.data-inline-chart-stage>.source-sidebar-layer--contained{z-index:1}@container (width<=520px){.source-sidebar-layer--contained .source-tabs{row-gap:var(--space-2);flex-wrap:wrap;overflow:visible}.source-sidebar-layer--contained .source-tabs .tab-active-indicator{display:none}.source-sidebar-layer--contained .source-tabs [role=tab][aria-selected=true]{border-color:var(--text)}}\n:host { color-scheme: inherit; }100레벨까지 성장속도: 접속 간격별68101202468조건별 최저 직업 대비 (%)접속 간격 (시간)전사도적레인저마법사성직자팔라딘",
+    "buttons": [
+      "View data source",
+      "Toggle 전사",
+      "Toggle 도적",
+      "Toggle 레인저",
+      "Toggle 마법사",
+      "Toggle 성직자",
+      "Toggle 팔라딘"
+    ],
+    "charts": 1,
+    "errors": [],
+    "sourcePreview": true,
+    "network": "blocked"
+  },
+  {
+    "receipt": true,
+    "expanded": true,
+    "errors": []
+  }
+]

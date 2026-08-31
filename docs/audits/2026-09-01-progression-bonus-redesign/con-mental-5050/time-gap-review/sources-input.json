@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "con-time-comparison",
+      "title": "시간 특화와 성장 격차 비교",
+      "queries": [
+        {
+          "id": "variant-summary",
+          "source": {
+            "label": "전사 모험시간 차이 민감도 검토",
+            "files": [
+              {
+                "label": "matched.csv"
+              },
+              {
+                "label": "heldout.csv"
+              },
+              {
+                "label": "con_time_gap_review.py"
+              }
+            ],
+            "filters": [
+              "직업: 6종",
+              "합성 성장 경로: 직업당24개",
+              "시간 외 스킬·탐색·판매·가방: 기존안 유지"
+            ],
+            "metricDefinitions": [
+              {
+                "name": "모험시간 상한",
+                "definition": "CON에 따른 시간 저장 상한. 기본8시간을 포함한다.",
+                "formula": "H=8+2×min(CON/150,1)^q×(0.15+0.85×x^1.2), x=clamp((L−1)/99,0,1)"
+              },
+              {
+                "name": "성장 격차",
+                "definition": "20~100레벨, 접속간격8종과접속시간3종에서 가장 느린 직업평균 도달시간을 가장 빠른 직업평균과 비교한 최대값.",
+                "formula": "(최대도달시간/최소도달시간−1)×100"
+              }
+            ],
+            "caveats": [
+              "기존144개 합성 경로의 시간모델만 재계산했으며 새 전투 재생은 하지 않았다.",
+              "실제 이용자 접속실험이나 모집단 통계가 아닌 반복충전 캘린더 환산이다.",
+              "최대6% 성장격차는 이전 기획검토 기준이다. 강화안1.0/1.2는 이 기준을 넘는다.",
+              "8시간마다 완충 상태로 접속하면 모든 안에서 시간상한이8시간 이상이라 저장량 차이의 이득이 없다.",
+              "앱·DB·기기 등록에는 변경이 없다."
+            ]
+          },
+          "rows": [
+            {
+              "power": 0.6,
+              "label": "현재 0.6",
+              "warrior_h": 9.9949198942222,
+              "other_h_min": 9.007335211373626,
+              "other_h_max": 9.067430274955607,
+              "gap_min_minutes": 55.64937715599559,
+              "gap_max_minutes": 59.25508097091445,
+              "max_growth_spread_pct": 5.889252307056858
+            },
+            {
+              "power": 1.0,
+              "label": "완만한 강화 1.0",
+              "warrior_h": 9.991666666666667,
+              "other_h_min": 8.640555555555556,
+              "other_h_max": 8.704444444444444,
+              "gap_min_minutes": 77.23333333333336,
+              "gap_max_minutes": 81.06666666666666,
+              "max_growth_spread_pct": 7.414876421142824
+            },
+            {
+              "power": 1.2,
+              "label": "강한 특화 1.2",
+              "warrior_h": 9.990078702326972,
+              "other_h_min": 8.511481411449454,
+              "other_h_max": 8.57277223548512,
+              "gap_min_minutes": 85.03838801051114,
+              "gap_max_minutes": 88.7158374526511,
+              "max_growth_spread_pct": 7.778385753790262
+            }
+          ],
+          "preview": {
+            "kind": "aggregate",
+            "note": "각직업24개 경로평균 및 두 집단의 최악 시나리오"
+          },
+          "columns": [
+            {
+              "field": "label",
+              "label": "후보"
+            },
+            {
+              "field": "warrior_h",
+              "label": "전사(h)"
+            },
+            {
+              "field": "other_h_min",
+              "label": "타직업최소(h)"
+            },
+            {
+              "field": "other_h_max",
+              "label": "타직업최대(h)"
+            },
+            {
+              "field": "gap_min_minutes",
+              "label": "시간차최소(분)"
+            },
+            {
+              "field": "gap_max_minutes",
+              "label": "시간차최대(분)"
+            },
+            {
+              "field": "max_growth_spread_pct",
+              "label": "최대성장격차(%)"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

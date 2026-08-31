@@ -1,0 +1,16 @@
+{
+  "variant": "level_envelope",
+  "samples": 8,
+  "seed_offset": 30,
+  "level": 110,
+  "mage_threshold": 8000,
+  "classes": "",
+  "output": "envelope-heldout-v2.csv",
+  "started_at": "2026-09-01T00:47:51.116018+09:00",
+  "finished_at": "2026-09-01T00:49:11.086119+09:00",
+  "duration_seconds": 79.96894454199355,
+  "output_sha256": "40479620b92ab948030c3cefc99c8f62a7a976767e0f5031eb916b9a5fbae2bb",
+  "network": "OS sandbox denied",
+  "database_files": "OS sandbox denied",
+  "app_started": false
+}

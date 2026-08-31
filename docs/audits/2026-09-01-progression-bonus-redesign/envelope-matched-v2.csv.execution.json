@@ -1,0 +1,16 @@
+{
+  "variant": "level_envelope",
+  "samples": 16,
+  "seed_offset": 14,
+  "level": 100,
+  "mage_threshold": 8000,
+  "classes": "",
+  "output": "envelope-matched-v2.csv",
+  "started_at": "2026-09-01T00:45:35.912906+09:00",
+  "finished_at": "2026-09-01T00:47:51.090743+09:00",
+  "duration_seconds": 135.17586183299863,
+  "output_sha256": "1dd7b86611e404e23dea2f4ecf7979a88fa81a3b344c15a58d17f1e8f716c6b3",
+  "network": "OS sandbox denied",
+  "database_files": "OS sandbox denied",
+  "app_started": false
+}

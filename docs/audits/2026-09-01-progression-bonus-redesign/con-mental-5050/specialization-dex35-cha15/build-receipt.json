@@ -1,0 +1,21 @@
+{
+  "app/src/simple/java/com/nullplaying/engine/AdventureTaleCatalog.kt": "1a409b8110154d04e932f4ade127589db91288c972b2fc1434e449b5d6dc94e7",
+  "app/src/simple/java/com/nullplaying/engine/ClassEquipmentCatalog.kt": "e4f83fb20ac252749b1727f96555cbed54783d48fdda8e91d382a67eff5649e6",
+  "app/src/simple/java/com/nullplaying/engine/GuardianEpilogueCatalog.kt": "ddb1e9328405f45399195b2529fb11f8b5e25232cb220022b89a6bf5df062de4",
+  "app/src/simple/java/com/nullplaying/engine/LabyrinthProgression.kt": "3ff4fed3f776dec3713777b127c9bb12d9242211b78d43994c76eeb768e8be79",
+  "app/src/simple/java/com/nullplaying/engine/LabyrinthTaleCatalog.kt": "f8af4b63796e6d8f3b99e44efdf2e01f328a0750a63488e74a7727c200f75838",
+  "app/src/simple/java/com/nullplaying/engine/MonsterModifierCompatibility.kt": "ab9291a2b46095ce7ff961706afb16e3c3d550fb448f5eec678c90e0081c36db",
+  "app/src/simple/java/com/nullplaying/engine/NorthernGlassMonsterCatalog.kt": "a629da1921671b2c8325e9442917c7cc737aad69d06b5c32226976c356db8f6e",
+  "app/src/simple/java/com/nullplaying/engine/NorthernGlassTaleCatalog.kt": "c326075e91982b9346cb2b1342445f3923ed43f66c46de6affcf8654a5fc8201",
+  "app/src/simple/java/com/nullplaying/engine/OfflineAdventureConfig.kt": "a6eedde888975973d9e9178db303e783de8c1d3c3d210402e0007f0a166fbcfc",
+  "app/src/simple/java/com/nullplaying/engine/PostgameMonsterCatalog.kt": "de281980e8f18cc87caabaab89dc34abea74d392ef279d6c5300f03575192353",
+  "app/src/simple/java/com/nullplaying/engine/QuestMonsterCatalog.kt": "2319c4c4f116fb4ac2612d45475ab4b975176fa1c6b34f5091d4af1b895394ff",
+  "app/src/simple/java/com/nullplaying/engine/SimpleContent.kt": "4e787f229e2026f9c49c4929b9b65efc69ec849fd7c817e8699bcff3bcddd346",
+  "docs/audits/2026-09-01-progression-bonus-redesign/con-mental-5050/specialization-dex35-cha15/SimpleGameEngine.analysis.kt": "daaae4a0fc402b840414dbb09fa24eb78a9c43403f623f11a633ae1359988df4",
+  "app/src/simple/java/com/nullplaying/engine/SkillCatalog.kt": "5189659e451a24ab3fe779a2efe993830dca90514a57f9645351ce527b64c6c4",
+  "app/src/simple/java/com/nullplaying/engine/StarterPrologueCatalog.kt": "4fe1409f391b5aff29064ef4476ed30d77da8ebca2835d8dfba9f6f704c3110b",
+  "app/src/simple/java/com/nullplaying/engine/StarterPrologueMonsterCatalog.kt": "4b4627efc5a34e8f04085f69fdc5a9a40500393784849823231264a8826ba127",
+  "app/src/simple/java/com/nullplaying/model/SimpleGameModels.kt": "ff040ba1922c8109054149f0af45b9196499c04da049a196036bf392eab7bf26",
+  "docs/audits/2026-09-01-progression-bonus-redesign/con-mental-5050/specialization-dex35-cha15/StatBonusEngineProbe.analysis.kt": "116fd9a852d482747c46ec15ed3bc060ab58ee9c100037079971d448d22c8500",
+  "tools/analysis/SpecializationDexBonusHooks.kt": "08341e0894fccb5e9ed1cedaf94c2f69b6343d7495224f566bc6e522475e2d9d"
+}

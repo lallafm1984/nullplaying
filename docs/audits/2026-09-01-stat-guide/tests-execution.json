@@ -1,0 +1,16 @@
+{
+  "started_at": "2026-09-01T03:34:06.746994+09:00",
+  "exit_code": 0,
+  "network": "OS sandbox denied",
+  "database_files": "OS sandbox denied",
+  "android_app_started": false,
+  "sha256": {
+    "app/src/simple/java/com/nullplaying/model/SimpleGameModels.kt": "36a5ab05f4604341f920d61d1798ce4ccf026c23ffc4324e429ab5b7092b9716",
+    "app/src/simple/java/com/nullplaying/ui/StatGuideContent.kt": "57f5ab1626b7fa296e262d21fed0762b274fd54cdcbc1148da8c41e733c9ed73",
+    "app/src/simpleTest/java/com/nullplaying/ui/StatGuideContentTest.kt": "64a948f0cec51a516c871026596d726f68e3d1724bc921aeccc596c1ae9a7a8c",
+    "app/src/simple/java/com/nullplaying/ui/StatGuide.kt": "ecbcdf1b3732ec2880b21f9c87d54e695222262a145a5044efc17613b3684020",
+    "app/src/simple/java/com/nullplaying/ui/AlarmQuestApp.kt": "5c3d8dbe08dc7a20ee1c0c2d83b975ea4e0ee6175697aed48afedbf006dbb8b3",
+    "app/src/simple/res/raw/localization_en.tsv": "306b92e7877b0fe749a6c0ddab1e3ec9bba7a1a863cb01d5e7862bb897c2016a",
+    "app/src/simple/res/raw/localization_ja.tsv": "c92655a6f319c4abdd8f60e83bc6a10f55aa01b8365c688f8ebf1a0b9e349409"
+  }
+}

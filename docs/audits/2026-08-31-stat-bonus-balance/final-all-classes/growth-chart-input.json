@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "id": "final-class-growth",
+  "title": "100레벨까지 성장속도: 접속 간격별",
+  "chart": {
+    "type": "line",
+    "x": "gap_h",
+    "y": "advantage_pct",
+    "series": "hero_class",
+    "xLabel": "접속 간격 (시간)",
+    "yLabel": "조건별 최저 직업 대비 (%)",
+    "showXAxisLabel": true
+  },
+  "rows": [
+    {
+      "gap_h": 6.0,
+      "hero_class": "전사",
+      "advantage_pct": 0.0
+    },
+    {
+      "gap_h": 6.0,
+      "hero_class": "도적",
+      "advantage_pct": 2.0145
+    },
+    {
+      "gap_h": 6.0,
+      "hero_class": "레인저",
+      "advantage_pct": 3.0767
+    },
+    {
+      "gap_h": 6.0,
+      "hero_class": "마법사",
+      "advantage_pct": 3.5606
+    },
+    {
+      "gap_h": 6.0,
+      "hero_class": "성직자",
+      "advantage_pct": 1.1511
+    },
+    {
+      "gap_h": 6.0,
+      "hero_class": "팔라딘",
+      "advantage_pct": 0.0331
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "전사",
+      "advantage_pct": 0.0
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "도적",
+      "advantage_pct": 2.0145
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "레인저",
+      "advantage_pct": 3.0767
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "마법사",
+      "advantage_pct": 3.5606
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "성직자",
+      "advantage_pct": 1.1511
+    },
+    {
+      "gap_h": 8.0,
+      "hero_class": "팔라딘",
+      "advantage_pct": 0.0331
+    },
+    {
+      "gap_h": 9.0,
+      "hero_class": "전사",
+      "advantage_pct": 2.1027
+    },
+    {
+      "gap_h": 9.0,
+      "hero_class": "도적",
+      "advantage_pct": 2.1459
+    },
+    {
+      "gap_h": 9.0,
+      "hero_class": "레인저",
+      "advantage_pct": 2.8412
+    },
+    {
+      "gap_h": 9.0,
+      "hero_class": "마법사",
+      "advantage_pct": 3.2012
+    },
+    {
+      "gap_h": 9.0,
+      "hero_class": "성직자",
+      "advantage_pct": 0.8795
+    },
+    {
+      "gap_h": 9.0,
+      "hero_class": "팔라딘",
+      "advantage_pct": 0.0
+    },
+    {
+      "gap_h": 10.0,
+      "hero_class": "전사",
+      "advantage_pct": 5.2601
+    },
+    {
+      "gap_h": 10.0,
+      "hero_class": "도적",
+      "advantage_pct": 2.1971
+    },
+    {
+      "gap_h": 10.0,
+      "hero_class": "레인저",
+      "advantage_pct": 2.8277
+    },
+    {
+      "gap_h": 10.0,
+      "hero_class": "마법사",
+      "advantage_pct": 3.1824
+    },
+    {
+      "gap_h": 10.0,
+      "hero_class": "성직자",
+      "advantage_pct": 0.8637
+    },
+    {
+      "gap_h": 10.0,
+      "hero_class": "팔라딘",
+      "advantage_pct": 0.0
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "전사",
+      "advantage_pct": 5.2601
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "도적",
+      "advantage_pct": 2.1971
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "레인저",
+      "advantage_pct": 2.8277
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "마법사",
+      "advantage_pct": 3.1824
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "성직자",
+      "advantage_pct": 0.8637
+    },
+    {
+      "gap_h": 12.0,
+      "hero_class": "팔라딘",
+      "advantage_pct": 0.0
+    }
+  ],
+  "source": {
+    "label": "전 직업 신규 성장 경로",
+    "files": [
+      {
+        "label": "all-heldout.csv"
+      },
+      {
+        "label": "final_class_bonus_review.py"
+      }
+    ],
+    "filters": [
+      "직업: 6종",
+      "신규 난수 seed: 14~29",
+      "직업당 전체 전투 경로: 16개",
+      "목표 레벨: 100",
+      "접속 시 충전: 12분",
+      "접속 간격: 6·8·9·10·12시간"
+    ],
+    "caveats": [
+      "실제 이용자 로그가 아닌 로컬 엔진 시뮬레이션입니다.",
+      "접속 간격 영향은 레벨별 저장시간 환산이며 실제 접속 이벤트 재생이 아닙니다.",
+      "HP 기본 8시간·최대 10시간, 마법사 기본 확률 35%, 탐색 최소 4초, 판매 보너스 최대 20%를 적용한 기획안입니다."
+    ],
+    "metricDefinitions": [
+      {
+        "name": "100레벨까지 성장속도: 접속 간격별",
+        "definition": "같은 목표 레벨까지의 직업별 평균 소요시간을 비교한 성장속도입니다. 각 접속 조건에서 가장 느린 직업을 기준으로 합니다.",
+        "formula": "(해당 조건 최대 평균 소요시간 / 해당 직업 평균 소요시간 − 1) × 100"
+      }
+    ]
+  },
+  "height": 310,
+  "theme": "codex-classic",
+  "generatedAt": "2026-08-31T23:40:25.775532+09:00"
+}

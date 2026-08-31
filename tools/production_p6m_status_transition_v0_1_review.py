@@ -247,11 +247,11 @@ def main() -> int:
     expected_audit = {
         "verificationTarget": "android-emulator", "serial": "emulator-5554",
         "avdName": "alarmquest-qa", "androidRelease": "15", "apiLevel": "35",
-        "packageName": "com.alarmquest", "versionName": "0.1.0", "versionCode": "1",
+        "packageName": "com.nullplaying", "versionName": "0.1.0", "versionCode": "1",
         "targetSdk": "36", "apkSizeBytes": str(APK_SIZE), "apkSha256": APK_SHA,
         "installResult": "Success", "pmClearResult": "Success", "launchState": "COLD",
         "coldTotalTimeMs": "4909", "coldWaitTimeMs": "4925",
-        "topResumedActivity": "com.alarmquest/.MainActivity", "freshRosterEmpty": "true",
+        "topResumedActivity": "com.nullplaying/.MainActivity", "freshRosterEmpty": "true",
         "androidRuntimeFatalCount": "0", "emulatorScreenshotSha256": SCREEN_SHA,
         "emulatorUiDumpSha256": UI_SHA, "engineTests": "709", "appDebugTests": "88",
         "appReleaseTests": "88", "appTests": "176", "totalTests": "885",
@@ -304,13 +304,13 @@ def main() -> int:
 
     if args.with_emulator:
         devices = command("adb", "devices", "-l")
-        version = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.alarmquest")
+        version = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.nullplaying")
         focus = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "activity", "activities")
         crash = command("adb", "-s", "emulator-5554", "logcat", "-d", "-b", "crash", "AndroidRuntime:E", "*:S")
         check("emulator:connected", "emulator-5554" in devices and " device " in devices, devices.splitlines()[-1])
         check("emulator:version", "versionName=0.1.0" in version and "versionCode=1" in version, "0.1.0(1)")
         check("emulator:target", "targetSdk=36" in version, "36")
-        check("emulator:focus", "topResumedActivity" in focus and "com.alarmquest/.MainActivity" in focus, "MainActivity")
+        check("emulator:focus", "topResumedActivity" in focus and "com.nullplaying/.MainActivity" in focus, "MainActivity")
         check("emulator:fatal", "AndroidRuntime" not in crash, crash or "0")
 
     passed = sum(ok for _, ok, _ in checks)

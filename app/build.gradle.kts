@@ -8,6 +8,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 val localProperties = Properties().apply {
@@ -40,14 +41,14 @@ val releaseKeyAlias = System.getenv("ALARMQUEST_RELEASE_KEY_ALIAS")
     ?: "alarmquest-upload"
 
 android {
-    namespace = "com.alarmquest"
+    namespace = "com.nullplaying"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.alarmquest"
+        applicationId = "com.nullplaying"
         minSdk = 26
         targetSdk = 36
-        versionCode = 10
+        versionCode = 14
         versionName = "0.4.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField(
@@ -100,12 +101,16 @@ android {
 
     buildTypes {
         getByName("debug") {
+            // QA must never create anonymous users, profiles, rankings, or session logs in production.
+            // Firebase Remote Config remains enabled independently of Supabase.
+            buildConfigField("String", "SUPABASE_URL", "\"\"")
+            buildConfigField("String", "SUPABASE_PUBLISHABLE_KEY", "\"\"")
             // Keep the installable QA build below the Drive/device delivery ceiling while
             // retaining debug-only inspection screens and debug signing.
             isMinifyEnabled = true
             isShrinkResources = true
             // Never request live ads from local QA builds. This protects the AdMob account
-            // from accidental invalid traffic while exercising the complete banner flow.
+            // from accidental invalid traffic while exercising each configured ad format.
             buildConfigField(
                 "String",
                 "BANNER_AD_UNIT_ID",
@@ -114,7 +119,7 @@ android {
             buildConfigField(
                 "String",
                 "REWARDED_AD_UNIT_ID",
-                "\"ca-app-pub-3940256099942544/5224354917\"",
+                "\"ca-app-pub-3940256099942544/5354046379\"",
             )
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
@@ -160,8 +165,11 @@ kotlin {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:34.2.0"))
+    implementation("com.google.firebase:firebase-config")
     implementation(platform("androidx.compose:compose-bom:2024.09.00"))
     implementation("androidx.activity:activity-compose:1.10.1")
+    implementation("androidx.fragment:fragment:1.9.0")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.room:room-runtime:2.8.4")

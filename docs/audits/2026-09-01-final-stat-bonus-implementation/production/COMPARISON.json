@@ -1,0 +1,79 @@
+{
+  "rows": 14400,
+  "games": 144,
+  "stable_fields_exact": [
+    "class",
+    "seed_index",
+    "level",
+    "str",
+    "con",
+    "dex",
+    "int",
+    "wis",
+    "cha",
+    "hp",
+    "mp",
+    "bag",
+    "proc_pct",
+    "tales"
+  ],
+  "max_capacity_quantization_error_ms": 0.4998431300862194,
+  "max_sale_rate_quantization_error_percentage_points": 4.996697633430358e-08,
+  "raw_proc_quantization": "PASS: nearest 0.01 percentage point",
+  "search_time_match": "PASS: exact",
+  "max_abs_progression_time_change_pct": 0.5091937765205112,
+  "changed_sale_rows": 9720,
+  "calendar_cohorts": [
+    {
+      "cohort": "matched",
+      "max_growth_spread_pct": 7.394736569219695,
+      "max_sale_spread_pct": 8.764810071384188
+    },
+    {
+      "cohort": "extra",
+      "max_growth_spread_pct": 7.764207829732617,
+      "max_sale_spread_pct": 8.524841118676974
+    }
+  ],
+  "largest_time_difference": {
+    "class": "PALADIN",
+    "seed_index": 20,
+    "level": 12,
+    "time_change_pct": -0.5091937765205112,
+    "sale_gold_change": 958,
+    "sale_gold_change_pct": 0.07580241365012785
+  },
+  "level100_changes": {
+    "CLERIC": {
+      "time_change_pct": -0.001608785990378503,
+      "sale_gold_change": 1029.7916666666667,
+      "sale_gold_change_pct": 0.00011356633481766447
+    },
+    "MAGE": {
+      "time_change_pct": 0.0037611961007423997,
+      "sale_gold_change": 5793.625,
+      "sale_gold_change_pct": 0.0006783979009476285
+    },
+    "PALADIN": {
+      "time_change_pct": -0.0027694269734058565,
+      "sale_gold_change": 179.20833333333334,
+      "sale_gold_change_pct": 1.9789026496630502e-05
+    },
+    "RANGER": {
+      "time_change_pct": 0.000938321064053449,
+      "sale_gold_change": 6445.833333333333,
+      "sale_gold_change_pct": 0.0007545575720209937
+    },
+    "ROGUE": {
+      "time_change_pct": 0.001072005940949694,
+      "sale_gold_change": 10002.166666666666,
+      "sale_gold_change_pct": 0.001176211464748907
+    },
+    "WARRIOR": {
+      "time_change_pct": 0.002443614183802086,
+      "sale_gold_change": 6961.833333333333,
+      "sale_gold_change_pct": 0.00081849145140885
+    }
+  },
+  "explanation": "Price uses integer fixed point instead of Double multiplication; 1-gold boundary underpayment is corrected. Other engine paths use the selected formulas."
+}

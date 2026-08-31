@@ -1,0 +1,31 @@
+{
+  "parameters": {
+    "hp_hours": 4.0,
+    "hp_k": 350.0,
+    "mp_pp": 10.0,
+    "mp_k": 750.0,
+    "dex_max": 0.2,
+    "dex_k": 35.0,
+    "cha_max": 0.2,
+    "cha_k": 20.0
+  },
+  "proposed_games": 24,
+  "paired_seeds": [
+    2,
+    3,
+    4,
+    5
+  ],
+  "proposed_kills": 16838353,
+  "level100_calendar_bound_pct": 0.2692142664560304,
+  "checks": [
+    "game source hashes unchanged",
+    "paired seed/level coverage",
+    "null/duplicate checks",
+    "tale growth counts equal",
+    "monotone capped effects",
+    "separate raw proc and pity",
+    "same denominators, higher caps only"
+  ],
+  "status": "conditional design recommendation; no production mutation"
+}

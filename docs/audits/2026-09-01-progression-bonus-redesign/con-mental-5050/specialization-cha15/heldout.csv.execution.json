@@ -1,0 +1,15 @@
+{
+  "samples": 8,
+  "seed_offset": 30,
+  "level": 100,
+  "output": "heldout.csv",
+  "profile": "specialization-cha15",
+  "started_at": "2026-09-01T01:22:32.257624+09:00",
+  "finished_at": "2026-09-01T01:23:53.183613+09:00",
+  "duration_seconds": 80.924806832998,
+  "output_sha256": "bd2f3cb15665250917989625efbdcce4367c106dc53df3ce3e2fae2c23b73fe4",
+  "formula": "CON time; 0.5 INT + 0.5 WIS added skill bonus; q=1.2 CHA15",
+  "network": "OS sandbox denied",
+  "database_files": "OS sandbox denied",
+  "app_started": false
+}

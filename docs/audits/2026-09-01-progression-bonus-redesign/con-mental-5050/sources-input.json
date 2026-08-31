@@ -1,0 +1,409 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "id": "con-mental-result",
+      "title": "CON·INT/WIS 50:50 검증 결과",
+      "queries": [
+        {
+          "id": "class-benefits",
+          "source": {
+            "label": "CON·정신력 50:50 오프라인 기획 검증",
+            "files": [
+              {
+                "label": "matched.csv"
+              },
+              {
+                "label": "heldout.csv"
+              },
+              {
+                "label": "ConMentalBonusHooks.kt"
+              },
+              {
+                "label": "con_mental_review.py"
+              },
+              {
+                "label": "boundary-checks.log"
+              }
+            ],
+            "filters": [
+              "합성 성장경로: 직업당24개",
+              "주 비교16개, 추가검증8개",
+              "평균 혜택: Lv100"
+            ],
+            "metricDefinitions": [
+              {
+                "name": "정신력",
+                "definition": "스킬 추가 보너스의 INT/WIS 동일 가중 점수. 기존 직업별 P0는 유지한다.",
+                "formula": "S=0.5×INT+0.5×WIS"
+              },
+              {
+                "name": "스킬 확률",
+                "definition": "연속일반공격 후 확정발동을 제외한 일반 판정 확률.",
+                "formula": "min(마법사35/그외30, P0+15×min(S/180,1)^1.2)"
+              },
+              {
+                "name": "모험시간",
+                "definition": "CON과 레벨 배율로 결정하는 시간 저장 상한. 실제 접속시간이나 자동 지급 시간은 아니다.",
+                "formula": "8+2×min(CON/150,1)^0.6×(0.15+0.85×x^1.2), x=clamp((L−1)/99,0,1)"
+              }
+            ],
+            "caveats": [
+              "운영 데이터가 아닌 로컬 순수엔진 합성 재생. DB와 앱에는 미적용.",
+              "캘린더 효율은 시간저장·반복충전 환산 모델이며 실제 사용자 접속실험은 아니다.",
+              "24개 경로의 상한달성 건수는 모집단 확률이 아니다.",
+              "AI 검토이며 실제 사람 기획팀의 승인은 아니다."
+            ]
+          },
+          "rows": [
+            {
+              "hero_class": "전사",
+              "cap_h": 9.99492,
+              "raw_proc_pct": 23.147967,
+              "search_s": 4.660556,
+              "sale_bonus_pct": 6.383333,
+              "bag": 146.958333,
+              "con": 162.833333,
+              "mental": 48.958333
+            },
+            {
+              "hero_class": "도적",
+              "cap_h": 9.06743,
+              "raw_proc_pct": 23.075887,
+              "search_s": 4.003889,
+              "sale_bonus_pct": 6.205556,
+              "bag": 147.0,
+              "con": 52.833333,
+              "mental": 48.041667
+            },
+            {
+              "hero_class": "레인저",
+              "cap_h": 9.021298,
+              "raw_proc_pct": 27.866539,
+              "search_s": 4.002222,
+              "sale_bonus_pct": 6.633333,
+              "bag": 97.25,
+              "con": 49.125,
+              "mental": 105.083333
+            },
+            {
+              "hero_class": "마법사",
+              "cap_h": 9.021853,
+              "raw_proc_pct": 33.246862,
+              "search_s": 4.664444,
+              "sale_bonus_pct": 6.65,
+              "bag": 97.041667,
+              "con": 49.166667,
+              "mental": 162.270833
+            },
+            {
+              "hero_class": "성직자",
+              "cap_h": 9.021853,
+              "raw_proc_pct": 27.89659,
+              "search_s": 4.664444,
+              "sale_bonus_pct": 19.916667,
+              "bag": 97.041667,
+              "con": 49.166667,
+              "mental": 105.416667
+            },
+            {
+              "hero_class": "팔라딘",
+              "cap_h": 9.007335,
+              "raw_proc_pct": 23.147967,
+              "search_s": 4.660556,
+              "sale_bonus_pct": 19.95,
+              "bag": 146.958333,
+              "con": 48.041667,
+              "mental": 48.958333
+            }
+          ],
+          "preview": {
+            "kind": "aggregate",
+            "note": "직업별100레벨24경로평균",
+            "totalRows": 14400
+          },
+          "columns": [
+            {
+              "field": "hero_class",
+              "label": "직업"
+            },
+            {
+              "field": "con",
+              "label": "CON"
+            },
+            {
+              "field": "mental",
+              "label": "정신력"
+            },
+            {
+              "field": "cap_h",
+              "label": "모험시간(h)"
+            },
+            {
+              "field": "raw_proc_pct",
+              "label": "스킬확률(%)"
+            },
+            {
+              "field": "search_s",
+              "label": "탐색(초)"
+            },
+            {
+              "field": "sale_bonus_pct",
+              "label": "판매추가(%)"
+            },
+            {
+              "field": "bag",
+              "label": "가방(칸)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "con-mental-growth",
+      "title": "레벨별 증가량과 마법사 상한",
+      "queries": [
+        {
+          "id": "level-growth",
+          "source": {
+            "label": "CON·정신력 50:50 오프라인 기획 검증",
+            "files": [
+              {
+                "label": "matched.csv"
+              },
+              {
+                "label": "heldout.csv"
+              },
+              {
+                "label": "ConMentalBonusHooks.kt"
+              },
+              {
+                "label": "con_mental_review.py"
+              },
+              {
+                "label": "boundary-checks.log"
+              }
+            ],
+            "filters": [
+              "직업: 전사·마법사",
+              "직업당24개 합성경로 평균",
+              "체크포인트1,10,20,...,100"
+            ],
+            "metricDefinitions": [
+              {
+                "name": "정신력",
+                "definition": "스킬 추가 보너스의 INT/WIS 동일 가중 점수. 기존 직업별 P0는 유지한다.",
+                "formula": "S=0.5×INT+0.5×WIS"
+              },
+              {
+                "name": "스킬 확률",
+                "definition": "연속일반공격 후 확정발동을 제외한 일반 판정 확률.",
+                "formula": "min(마법사35/그외30, P0+15×min(S/180,1)^1.2)"
+              },
+              {
+                "name": "모험시간",
+                "definition": "CON과 레벨 배율로 결정하는 시간 저장 상한. 실제 접속시간이나 자동 지급 시간은 아니다.",
+                "formula": "8+2×min(CON/150,1)^0.6×(0.15+0.85×x^1.2), x=clamp((L−1)/99,0,1)"
+              }
+            ],
+            "caveats": [
+              "운영 데이터가 아닌 로컬 순수엔진 합성 재생. DB와 앱에는 미적용.",
+              "캘린더 효율은 시간저장·반복충전 환산 모델이며 실제 사용자 접속실험은 아니다.",
+              "24개 경로의 상한달성 건수는 모집단 확률이 아니다.",
+              "AI 검토이며 실제 사람 기획팀의 승인은 아니다.",
+              "평균 관측 혜택과 구간 증가량이며 자동 지급 레벨상한이 아니다."
+            ]
+          },
+          "rows": [
+            {
+              "level": 1,
+              "warrior_bonus_min": 3.7400052388261074,
+              "warrior_delta_min": null,
+              "mage_proc_pct": 9.57830938505233,
+              "mage_delta_pp": null
+            },
+            {
+              "level": 10,
+              "warrior_bonus_min": 6.9197593536599555,
+              "warrior_delta_min": 3.179754114833848,
+              "mage_proc_pct": 11.474575228342525,
+              "mage_delta_pp": 1.8962658432901947
+            },
+            {
+              "level": 20,
+              "warrior_bonus_min": 11.678582064587495,
+              "warrior_delta_min": 4.758822710927539,
+              "mage_proc_pct": 13.688483467590018,
+              "mage_delta_pp": 2.213908239247493
+            },
+            {
+              "level": 30,
+              "warrior_bonus_min": 18.171691335530333,
+              "warrior_delta_min": 6.493109270942838,
+              "mage_proc_pct": 16.141954520528838,
+              "mage_delta_pp": 2.45347105293882
+            },
+            {
+              "level": 40,
+              "warrior_bonus_min": 26.678674532661226,
+              "warrior_delta_min": 8.506983197130893,
+              "mage_proc_pct": 18.99716797567963,
+              "mage_delta_pp": 2.8552134551507926
+            },
+            {
+              "level": 50,
+              "warrior_bonus_min": 37.52859006349745,
+              "warrior_delta_min": 10.84991553083622,
+              "mage_proc_pct": 22.639137922312543,
+              "mage_delta_pp": 3.641969946632912
+            },
+            {
+              "level": 60,
+              "warrior_bonus_min": 51.000651586994046,
+              "warrior_delta_min": 13.472061523496599,
+              "mage_proc_pct": 25.808066114846373,
+              "mage_delta_pp": 3.16892819253383
+            },
+            {
+              "level": 70,
+              "warrior_bonus_min": 66.3948678628708,
+              "warrior_delta_min": 15.394216275876751,
+              "mage_proc_pct": 27.43628017954359,
+              "mage_delta_pp": 1.628214064697218
+            },
+            {
+              "level": 80,
+              "warrior_bonus_min": 84.26372261236591,
+              "warrior_delta_min": 17.868854749495114,
+              "mage_proc_pct": 29.288032976645837,
+              "mage_delta_pp": 1.8517527971022467
+            },
+            {
+              "level": 90,
+              "warrior_bonus_min": 103.9551361583315,
+              "warrior_delta_min": 19.691413545965588,
+              "mage_proc_pct": 31.25118373564152,
+              "mage_delta_pp": 1.9631507589956811
+            },
+            {
+              "level": 100,
+              "warrior_bonus_min": 119.69519365333198,
+              "warrior_delta_min": 15.740057495000485,
+              "mage_proc_pct": 33.24686163486937,
+              "mage_delta_pp": 1.99567789922785
+            }
+          ],
+          "preview": {
+            "kind": "aggregate",
+            "note": "전사·마법사24경로의레벨평균과구간증가량"
+          },
+          "columns": [
+            {
+              "field": "level",
+              "label": "레벨"
+            },
+            {
+              "field": "warrior_bonus_min",
+              "label": "전사추가시간(분)"
+            },
+            {
+              "field": "warrior_delta_min",
+              "label": "시간증가(분)"
+            },
+            {
+              "field": "mage_proc_pct",
+              "label": "마법사확률(%)"
+            },
+            {
+              "field": "mage_delta_pp",
+              "label": "확률증가(%p)"
+            }
+          ]
+        },
+        {
+          "id": "mage-cap",
+          "source": {
+            "label": "CON·정신력 50:50 오프라인 기획 검증",
+            "files": [
+              {
+                "label": "matched.csv"
+              },
+              {
+                "label": "heldout.csv"
+              },
+              {
+                "label": "ConMentalBonusHooks.kt"
+              },
+              {
+                "label": "con_mental_review.py"
+              },
+              {
+                "label": "boundary-checks.log"
+              }
+            ],
+            "filters": [
+              "마법사 추가8경로",
+              "최대120레벨까지 확인"
+            ],
+            "metricDefinitions": [
+              {
+                "name": "35% 최초도달",
+                "definition": "S180 및 P0=20을 만족하는 최초 관측 레벨. 전체 캐릭터 보장 범위가 아니다."
+              }
+            ],
+            "caveats": [
+              "운영 데이터가 아닌 로컬 순수엔진 합성 재생. DB와 앱에는 미적용.",
+              "캘린더 효율은 시간저장·반복충전 환산 모델이며 실제 사용자 접속실험은 아니다.",
+              "24개 경로의 상한달성 건수는 모집단 확률이 아니다.",
+              "AI 검토이며 실제 사람 기획팀의 승인은 아니다."
+            ]
+          },
+          "rows": [
+            {
+              "seed": 30,
+              "first_35pct_level": 108
+            },
+            {
+              "seed": 31,
+              "first_35pct_level": 106
+            },
+            {
+              "seed": 32,
+              "first_35pct_level": 110
+            },
+            {
+              "seed": 33,
+              "first_35pct_level": 112
+            },
+            {
+              "seed": 34,
+              "first_35pct_level": 108
+            },
+            {
+              "seed": 35,
+              "first_35pct_level": 108
+            },
+            {
+              "seed": 36,
+              "first_35pct_level": 112
+            },
+            {
+              "seed": 37,
+              "first_35pct_level": 108
+            }
+          ],
+          "columns": [
+            {
+              "field": "seed",
+              "label": "시드"
+            },
+            {
+              "field": "first_35pct_level",
+              "label": "최초35%레벨"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

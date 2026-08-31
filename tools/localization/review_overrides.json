@@ -23,10 +23,6 @@
     "en": "Steel Slash",
     "ja": "鋼の斬撃"
   },
-  "거꾸로수로 이끼골렘": {
-    "en": "Reverse-Moss Golem",
-    "ja": "逆苔ゴーレム"
-  },
   "거대한 생명의 창을 만들어 적을 꾰뚟는다.": {
     "en": "Creates a massive spear of life that pierces the enemy.",
     "ja": "巨大な生命の槍を生み出し、敵を貫く。"
@@ -38,10 +34,6 @@
   "거울길 거미": {
     "en": "Mirror-Path Spider",
     "ja": "鏡の道のクモ"
-  },
-  "거울석 나방": {
-    "en": "Mirror Moth",
-    "ja": "鏡ガ"
   },
   "거울우물 도롱뇽": {
     "en": "Mirror-Well Salamander",
@@ -95,10 +87,6 @@
     "en": "Black Rose Wildcat",
     "ja": "黒薔薇ヤマネコ"
   },
-  "검은재 나방": {
-    "en": "Ash Moth",
-    "ja": "灰ガ"
-  },
   "겨울뿌리 도마뱀": {
     "en": "Winterroot Lizard",
     "ja": "冬根のトカゲ"
@@ -130,10 +118,6 @@
   "계절먹이 살쾡이": {
     "en": "Seasonal Prey Wildcat",
     "ja": "季節の獲物ヤマネコ"
-  },
-  "계절방 나방": {
-    "en": "Seasonal Moth",
-    "ja": "季節ガ"
   },
   "계절톱니 벌레": {
     "en": "Seasonal Sawtooth Bug",
@@ -219,10 +203,6 @@
     "en": "Return Road Fox",
     "ja": "帰還路キツネ"
   },
-  "귀환수 나방": {
-    "en": "Return Moth",
-    "ja": "帰還ガ"
-  },
   "귀환장치 도롱뇽": {
     "en": "Return Device Salamander",
     "ja": "帰還装置のサンショウウオ"
@@ -230,10 +210,6 @@
   "귀환종 딱정벌레": {
     "en": "Return Bell Beetle",
     "ja": "帰還の鐘の甲虫"
-  },
-  "귀환종 박쥐": {
-    "en": "Return Bat",
-    "ja": "帰還コウモリ"
   },
   "균열 거미": {
     "en": "Cracked Spider",
@@ -274,10 +250,6 @@
   "금 간 수정구": {
     "en": "Cracked Crystal Orb",
     "ja": "ひび割れた水晶球"
-  },
-  "금 간 수정구의 잔영": {
-    "en": "Afterimage of the Cracked Crystal Orb",
-    "ja": "ひび割れた水晶球の残像"
   },
   "금 간 수정구의 파문": {
     "en": "Ripple of the Cracked Crystal Orb",
@@ -338,10 +310,6 @@
   "기록실 거미": {
     "en": "Record Room Spider",
     "ja": "記録室グモ"
-  },
-  "기록실 박쥐": {
-    "en": "Record Bat",
-    "ja": "記録コウモリ"
   },
   "기록함 들쥐": {
     "en": "Record Box Mouse",
@@ -407,10 +375,6 @@
     "en": "Guide Owl",
     "ja": "案内人フクロウ"
   },
-  "길지도 까마귀": {
-    "en": "Roadmap Crow",
-    "ja": "道案内図のカラス"
-  },
   "깃발 까마귀": {
     "en": "Flag Crow",
     "ja": "旗カラス"
@@ -439,10 +403,6 @@
     "en": "Extinguished Sky Bat",
     "ja": "消えた空のコウモリ"
   },
-  "끊긴단 거미": {
-    "en": "Broken Spider",
-    "ja": "切れたグモ"
-  },
   "끊어진 다리 살쾡이": {
     "en": "Broken-Leg Wildcat",
     "ja": "足折れヤマネコ"
@@ -467,10 +427,6 @@
     "en": "Wood Heart Mole",
     "ja": "木心のモグラ"
   },
-  "나이테 도마뱀": {
-    "en": "Growth-Ring Lizard",
-    "ja": "年輪トカゲ"
-  },
   "나이테 좀": {
     "en": "Tree-Ring Silverfish",
     "ja": "年輪シミ"
@@ -484,8 +440,8 @@
     "ja": "乱射"
   },
   "낯선 야영 여우": {
-    "en": "Stranger Camp Fox",
-    "ja": "見知らぬキャンプのキツネ"
+    "en": "Unfamiliar-Camp Fox",
+    "ja": "見知らぬ野営地のキツネ"
   },
   "낯선 장화 거미": {
     "en": "Stranger Boot Spider",
@@ -607,10 +563,6 @@
     "en": "Cave Spider",
     "ja": "洞窟のグモ"
   },
-  "되감기 거미": {
-    "en": "Coiled Spider",
-    "ja": "巻きグモ"
-  },
   "두 번째 종혀의 약탈자": {
     "en": "Plunderer of the Second Clapper",
     "ja": "第二の舌の略奪者"
@@ -698,10 +650,6 @@
   "마지막잎 거미": {
     "en": "Last Leaf Spider",
     "ja": "最後葉グモ"
-  },
-  "막사 뒷거미": {
-    "en": "Shack Spider",
-    "ja": "小屋グモ"
   },
   "막힌 수문": {
     "en": "Blocked Sluice Gate",
@@ -823,10 +771,6 @@
     "en": "Threshold Bat",
     "ja": "敷居コウモリ"
   },
-  "문턱거미": {
-    "en": "Doorstep Spider",
-    "ja": "門限グモ"
-  },
   "문틈 없는 거미": {
     "en": "Gapless Spider",
     "ja": "隙のないグモ"
@@ -847,10 +791,6 @@
     "en": "Underwater Rodent",
     "ja": "水中齧歯類"
   },
-  "물소리 박쥐": {
-    "en": "Water Bat",
-    "ja": "水コウモリ"
-  },
   "물속편지 도롱뇽": {
     "en": "Underwater Letter Salamander",
     "ja": "水底の手紙のサンショウウオ"
@@ -859,21 +799,9 @@
     "en": "Wax Fox",
     "ja": "蝋のキツネ"
   },
-  "밀수로 들쥐": {
-    "en": "Thick Mouse",
-    "ja": "厚ネズミ"
-  },
-  "밀수로 박쥐": {
-    "en": "Thick Bat",
-    "ja": "厚コウモリ"
-  },
   "바퀴자국 거미": {
     "en": "Wheel-Track Spider",
     "ja": "車輪跡のクモ"
-  },
-  "반복말 앵무새": {
-    "en": "Repeating Bird",
-    "ja": "反復鳥"
   },
   "반사목소리 박쥐": {
     "en": "Echo Voice Bat",
@@ -903,10 +831,6 @@
     "en": "Shield Lizard",
     "ja": "盾トカゲ"
   },
-  "배달길 여우": {
-    "en": "Delivery Fox",
-    "ja": "配達キツネ"
-  },
   "백야 계단벌레": {
     "en": "White-Night Bug",
     "ja": "白夜虫"
@@ -927,14 +851,6 @@
     "en": "Bern's Royal Guard",
     "ja": "ベルンの親衛"
   },
-  "벽 틈 거미": {
-    "en": "Wall Spider",
-    "ja": "壁グモ"
-  },
-  "벽그늘 여우": {
-    "en": "Shadow Fox",
-    "ja": "壁陰キツネ"
-  },
   "벽화 도마뱀": {
     "en": "Wall Lizard",
     "ja": "壁トカゲ"
@@ -942,10 +858,6 @@
   "별빛 나방": {
     "en": "Starlight Moth",
     "ja": "星屑ガ"
-  },
-  "보급로 들쥐": {
-    "en": "Supply Mouse",
-    "ja": "補給路ネズミ"
   },
   "보급수레 약탈자": {
     "en": "Supply-Cart Raider",
@@ -975,17 +887,9 @@
     "en": "Clone Hound",
     "ja": "複製猟犬"
   },
-  "복제발 살쾡이": {
-    "en": "Clone Wildcat",
-    "ja": "複製ヤマネコ"
-  },
   "봄문 거미": {
     "en": "Spring Gate Spider",
     "ja": "春の門グモ"
-  },
-  "봄물 사냥개": {
-    "en": "Spring Hound",
-    "ja": "春猟犬"
   },
   "봄씨앗 도마뱀": {
     "en": "Spring-Seed Lizard",
@@ -1002,10 +906,6 @@
   "봉인 좀": {
     "en": "Sealed Silverfish",
     "ja": "封印のシミ"
-  },
-  "봉인계단 두꺼비": {
-    "en": "Sealed Stairs Toad",
-    "ja": "封じられた階段ヒキガエル"
   },
   "봉인문 딱정벌레": {
     "en": "Sealed-Gate Beetle",
@@ -1030,10 +930,6 @@
   "북문 살쾡이": {
     "en": "Northgate Wildcat",
     "ja": "北門ヤマネコ"
-  },
-  "북방 바람여우": {
-    "en": "Northern Fox",
-    "ja": "北風キツネ"
   },
   "북방 우편낭 왕쥐": {
     "en": "Northern-Mailbag Giant Rat",
@@ -1109,11 +1005,7 @@
   },
   "빈 막사": {
     "en": "Empty Barracks",
-    "ja": "空の兵舎"
-  },
-  "빈 막사에서 끌려간 때와 인원을 확인했다.": {
-    "en": "They confirmed when and how many people had been dragged from the empty barracks.",
-    "ja": "空の兵舎から連れ去られた時刻と人数を確認した。"
+    "ja": "無人の兵舎"
   },
   "빈 모루": {
     "en": "Empty Anvil",
@@ -1143,10 +1035,6 @@
     "en": "Empty-Cart Lizard",
     "ja": "空の荷車トカゲ"
   },
-  "빈이름 여우": {
-    "en": "Blank Fox",
-    "ja": "名なしキツネ"
-  },
   "빈하늘 딱정벌레": {
     "en": "Empty-Sky Beetle",
     "ja": "空甲虫"
@@ -1167,10 +1055,6 @@
     "en": "Light-Angled Beetle",
     "ja": "光角甲虫"
   },
-  "빛굴절 거미": {
-    "en": "Refraction Spider",
-    "ja": "屈折グモ"
-  },
   "빛금 거미": {
     "en": "Light-Fissure Spider",
     "ja": "光の亀裂のクモ"
@@ -1182,10 +1066,6 @@
   "빛바랜 서약의 인장": {
     "en": "Faded Oath Sigil",
     "ja": "色褪せた誓約の印"
-  },
-  "빛표식 딱정벌레": {
-    "en": "Lightmark Beetle",
-    "ja": "光印甲虫"
   },
   "뻔늑대": {
     "en": "Horned Wolf",
@@ -1199,18 +1079,6 @@
     "en": "Root-Thorn Fox",
     "ja": "根棘のキツネ"
   },
-  "뿌리문 들쥐": {
-    "en": "Root Mouse",
-    "ja": "根ネズミ"
-  },
-  "뿌리지기 살쾡이": {
-    "en": "Scatter Wildcat",
-    "ja": "散らすヤマネコ"
-  },
-  "뿌리틈 거미": {
-    "en": "Root Spider",
-    "ja": "根グモ"
-  },
   "뿔늑대": {
     "en": "Horned Wolf",
     "ja": "角オオカミ"
@@ -1222,10 +1090,6 @@
   "사라진길 여우": {
     "en": "Lost-Path Fox",
     "ja": "消え道キツネ"
-  },
-  "사절길 살쾡이": {
-    "en": "Ambassador Wildcat",
-    "ja": "使節ヤマネコ"
   },
   "사제 두건": {
     "en": "Priest Hood",
@@ -1239,17 +1103,9 @@
     "en": "Living-Door Wildcat",
     "ja": "生きた門ヤマネコ"
   },
-  "삼중종 박쥐": {
-    "en": "Triple Bat",
-    "ja": "三コウモリ"
-  },
   "새벽 나방": {
     "en": "Dawn Moth",
     "ja": "暁のガ"
-  },
-  "새벽종 상자 왕쥐": {
-    "en": "Dawn-Bell-Box Giant Rat",
-    "ja": "暁の鐘箱オオネズミ"
   },
   "새벽종쐐기 까마귀": {
     "en": "Dawn-Bell-Wedge Crow",
@@ -1270,10 +1126,6 @@
   "서가수면 나방": {
     "en": "Bookshelf-Surface Moth",
     "ja": "書架の表面のガ"
-  },
-  "서기관 살쾡이": {
-    "en": "Clerk Wildcat",
-    "ja": "書記ヤマネコ"
   },
   "서리": {
     "en": "Frost",
@@ -1339,25 +1191,21 @@
     "en": "Radiant Sword Dance",
     "ja": "聖光剣舞"
   },
-  "성문 들쥐": {
-    "en": "Gate Mouse",
-    "ja": "城門ネズミ"
-  },
   "성문 살쾡이": {
     "en": "Gate Wildcat",
     "ja": "門ヤマネコ"
   },
   "성물봉": {
-    "en": "Holy Relic Rod",
-    "ja": "聖物杖"
+    "en": "Reliquary Staff",
+    "ja": "聖遺物の杖"
   },
   "성벽 살쾡이": {
     "en": "Wall Wildcat",
     "ja": "壁ヤマネコ"
   },
   "성벽 여우": {
-    "en": "Walling Fox",
-    "ja": "城壁キツネ"
+    "en": "Rampart Fox",
+    "ja": "城壁のキツネ"
   },
   "성병 들쥐": {
     "en": "Rampart Mouse",
@@ -1399,21 +1247,9 @@
     "en": "Cleric Boots",
     "ja": "聖職者のブーツ"
   },
-  "성채 왕쥐": {
-    "en": "Giant Rat",
-    "ja": "オオネズミ"
-  },
-  "성채문 도마뱀": {
-    "en": "Castle-Door Lizard",
-    "ja": "城門トカゲ"
-  },
   "성채의 문은 굳게 닫혀 있었지만 지하로의 문은 안쪽에서 급히 열어 둔 채였다.": {
     "en": "The citadel gate was tightly shut, but the way underground had been left open in haste from the inside.",
     "ja": "城塞の門は固く閉ざされていたが、地下へ続く門は内側から急いで開け放たれていた。"
-  },
-  "세 갈래 이끼골렘": {
-    "en": "Three-Forked Moss Golem",
-    "ja": "三つ分苔ゴーレム"
   },
   "세 개의 종혀": {
     "en": "Three Clappers",
@@ -1499,18 +1335,6 @@
     "en": "Sluice Spider",
     "ja": "水門のクモ"
   },
-  "수문 거북": {
-    "en": "Gate Turtle",
-    "ja": "門のカメ"
-  },
-  "수문 슬라임": {
-    "en": "Gate Slime",
-    "ja": "門スライム"
-  },
-  "수문 이끼골렘": {
-    "en": "Gate Moss Golem",
-    "ja": "門苔ゴーレム"
-  },
   "수문거울 여우": {
     "en": "Sluice-Mirror Fox",
     "ja": "水門鏡のキツネ"
@@ -1543,21 +1367,9 @@
     "en": "Ranger Spear",
     "ja": "レンジャーの槍"
   },
-  "순환로 여우": {
-    "en": "Circuit Fox",
-    "ja": "環キツネ"
-  },
-  "숲 가장자리 하이에나": {
-    "en": "Edge Hyena",
-    "ja": "縁ハイエナ"
-  },
   "숲 각반": {
     "en": "Forest Greaves",
     "ja": "森の脚甲"
-  },
-  "승강로 두더지": {
-    "en": "Elevator Mole",
-    "ja": "エレベーターモグラ"
   },
   "승리기록 나방": {
     "en": "Victory-Record Moth",
@@ -1571,25 +1383,17 @@
     "en": "Market Wildcat",
     "ja": "市ヤマネコ"
   },
-  "식량함 왕쥐": {
-    "en": "Granary Giant Rat",
-    "ja": "倉庫オオネズミ"
-  },
   "식탁 들쥐": {
     "en": "Dining Mouse",
     "ja": "食卓のネズミ"
   },
   "신관 관": {
-    "en": "High Priest's Crown",
+    "en": "Priest's Circlet",
     "ja": "神官の冠"
   },
   "신앙 인장": {
     "en": "Faith Sigil",
     "ja": "信仰の印"
-  },
-  "신호기 여우": {
-    "en": "Signal Fox",
-    "ja": "シグナルキツネ"
   },
   "신호문 도마뱀": {
     "en": "Signal-Door Lizard",
@@ -1598,10 +1402,6 @@
   "신호불 딱정벌레": {
     "en": "Signal-Flame Beetle",
     "ja": "信号火の甲虫"
-  },
-  "신호빛 나방": {
-    "en": "Signal Moth",
-    "ja": "シグナルガ"
   },
   "신호탑 박쥐": {
     "en": "Signal Tower Bat",
@@ -1647,10 +1447,6 @@
     "en": "Cross Slash",
     "ja": "十字斬り"
   },
-  "씨앗지팡이 나방": {
-    "en": "Seedstaff Moth",
-    "ja": "種杖ガ"
-  },
   "씨앗함 왕쥐": {
     "en": "Seedbox Giant Rat",
     "ja": "種箱オオネズミ"
@@ -1667,10 +1463,6 @@
     "en": "Rock",
     "ja": "岩石"
   },
-  "암야빛 나방": {
-    "en": "Midnight Moth",
-    "ja": "真夜中のガ"
-  },
   "야영지 들쥐": {
     "en": "Campground Mouse",
     "ja": "キャンプ地ネズミ"
@@ -1682,10 +1474,6 @@
   "약한별 도롱뇽": {
     "en": "Faint-Star Salamander",
     "ja": "薄星サンショウウオ"
-  },
-  "어제불 나방": {
-    "en": "Yesterday's Moth",
-    "ja": "昨日のガ"
   },
   "얼음 창": {
     "en": "Ice Spear",
@@ -1719,10 +1507,6 @@
     "en": "Reverse-Seal Venom Spider",
     "ja": "逆印の毒グモ"
   },
-  "역하강 박쥐": {
-    "en": "Traveler Bat",
-    "ja": "旅人のコウモリ"
-  },
   "연격": {
     "en": "Combo Strikes",
     "ja": "連撃"
@@ -1734,10 +1518,6 @@
   "열 번째 장 까마귀": {
     "en": "Tenth-Chapter Crow",
     "ja": "第十章のカラス"
-  },
-  "열쇠열 나방": {
-    "en": "Keyhole Moth",
-    "ja": "鍵穴のガ"
   },
   "열여덟울림 박쥐": {
     "en": "Eighteenth-Echo Bat",
@@ -1775,10 +1555,6 @@
     "en": "With the cracked bell's short chime, Orban cut off the endless note and identified his own shadow.",
     "ja": "オルバンはひび割れた鐘の短い響きで永遠の音を断ち、自分の影を見分けた。"
   },
-  "오솔길 여우": {
-    "en": "Path Fox",
-    "ja": "小径のキツネ"
-  },
   "완갑": {
     "en": "Vambrace",
     "ja": "腕甲"
@@ -1815,17 +1591,9 @@
     "en": "Mailbag Giant Rat",
     "ja": "郵便袋オオネズミ"
   },
-  "운반수레 왕쥐": {
-    "en": "Carrying-Cart Giant Rat",
-    "ja": "運搬車オオネズミ"
-  },
   "울림틈 딱정벌레": {
     "en": "Echo-gap Beetle",
     "ja": "響き隙甲虫"
-  },
-  "웃음새 까마귀": {
-    "en": "Laughter-Scent Crow",
-    "ja": "笑香カラス"
   },
   "원소 각반": {
     "en": "Elemental Greaves",
@@ -1863,10 +1631,6 @@
     "en": "Glass-Shell Spider",
     "ja": "ガラス殻グモ"
   },
-  "유리꽃 사슴": {
-    "en": "Glass Deer",
-    "ja": "ガラスのシカ"
-  },
   "유리나선 거미": {
     "en": "Glass-Spiral Spider",
     "ja": "ガラスの螺旋のクモ"
@@ -1874,18 +1638,6 @@
   "유리답장 거미": {
     "en": "Glass-Reply Spider",
     "ja": "ガラスの返書のクモ"
-  },
-  "유리등 나방": {
-    "en": "Glass Moth",
-    "ja": "ガラスのガ"
-  },
-  "유리막 거미": {
-    "en": "Glass Spider",
-    "ja": "ガラスのグモ"
-  },
-  "유리비 나방": {
-    "en": "Glass Moth",
-    "ja": "ガラスのガ"
   },
   "유리뿌리 도마뱀": {
     "en": "Glass-Root Lizard",
@@ -1903,21 +1655,9 @@
     "en": "Glass Mountain Goat",
     "ja": "ガラスヤギ"
   },
-  "유리숲 들쥐": {
-    "en": "Glass Mouse",
-    "ja": "ガラスのネズミ"
-  },
   "유리심장 벌레": {
     "en": "Glass-Heart Bug",
     "ja": "ガラスの心虫"
-  },
-  "유리옥 여우": {
-    "en": "Glass Fox",
-    "ja": "ガラスのキツネ"
-  },
-  "유리잎 나방": {
-    "en": "Glass Moth",
-    "ja": "ガラスのガ"
   },
   "유리전사 들쥐": {
     "en": "Glass-Warrior Mouse",
@@ -2015,10 +1755,6 @@
     "en": "Forgotten-Name Wildcat",
     "ja": "忘れ名ヤマネコ"
   },
-  "자물쇠 딱정벌레": {
-    "en": "Lock Beetle",
-    "ja": "鍵甲虫"
-  },
   "잔불 박쥐": {
     "en": "Ember Bat",
     "ja": "残り火コウモリ"
@@ -2042,10 +1778,6 @@
   "잠긴표식 딱정벌레": {
     "en": "Locked-Mark Beetle",
     "ja": "閉ざされた標の甲虫"
-  },
-  "잠든 자 나방": {
-    "en": "Sleeping Moth",
-    "ja": "眠ガ"
   },
   "잠행 두건": {
     "en": "Stealth Hood",
@@ -2079,21 +1811,9 @@
     "en": "Ash-Armor Beetle",
     "ja": "灰の鎧の甲虫"
   },
-  "재 갑옷 왕쥐": {
-    "en": "Ash-Armor Giant Rat",
-    "ja": "灰の鎧のオオネズミ"
-  },
-  "재 봉인 나방": {
-    "en": "Ash-sealed Moth",
-    "ja": "灰封ガ"
-  },
   "재 속의 종이 새": {
-    "en": "Paper Bird in the Ash",
+    "en": "Ash-Buried Paper Bird",
     "ja": "灰の中の紙の鳥"
-  },
-  "재 왕 들쥐": {
-    "en": "Ash Mouse",
-    "ja": "灰のネズミ"
   },
   "재 왕의 사냥개": {
     "en": "Ash King's Hound",
@@ -2111,10 +1831,6 @@
     "en": "Ash-Trace Hyena",
     "ja": "灰痕ハイエナ"
   },
-  "재가루 나방": {
-    "en": "Ash Moth",
-    "ja": "アッシュガ"
-  },
   "재거품 기생벌레": {
     "en": "Ash Bubble Parasite",
     "ja": "灰の泡寄生虫"
@@ -2126,22 +1842,6 @@
   "재꽃씨앗 딱정벌레": {
     "en": "Ash-Blossom-Seed Beetle",
     "ja": "灰の花種甲虫"
-  },
-  "재나선 들쥐": {
-    "en": "Ash Mouse",
-    "ja": "アッシュネズミ"
-  },
-  "재먹이 포식새": {
-    "en": "Ash Raptor",
-    "ja": "灰の猛禽"
-  },
-  "재먼지 들쥐": {
-    "en": "Ash Mouse",
-    "ja": "アッシュネズミ"
-  },
-  "재먼지 박쥐": {
-    "en": "Ash Bat",
-    "ja": "アッシュコウモリ"
   },
   "재무리 도롱뇽": {
     "en": "Ash-Swarm Salamander",
@@ -2159,10 +1859,6 @@
     "en": "Shared Waterway Where the Remnants of Ash and the White Night Met",
     "ja": "灰と白夜の残渣が交わった共同水路"
   },
-  "재우물 도롱뇽": {
-    "en": "Ashwell Salamander",
-    "ja": "灰井サンショウウオ"
-  },
   "재폭풍 스크리커": {
     "en": "Ash Storm Shrieker",
     "ja": "灰の嵐シュリーカー"
@@ -2174,10 +1870,6 @@
   "잿빛 갈까마귀": {
     "en": "Ash-gray Crow",
     "ja": "灰カラス"
-  },
-  "잿빛 박쥐": {
-    "en": "Ash Bat",
-    "ja": "コウモリ"
   },
   "잿빛 스크리커": {
     "en": "Ash Shrieker",
@@ -2203,10 +1895,6 @@
     "en": "Legacy",
     "ja": "伝承式"
   },
-  "점검로 왕쥐": {
-    "en": "Giant Rat",
-    "ja": "オオネズミ"
-  },
   "정령 포화": {
     "en": "Spirit Barrage",
     "ja": "精霊弾幕"
@@ -2215,21 +1903,9 @@
     "en": "Essence",
     "ja": "エッセンス"
   },
-  "정오창 나방": {
-    "en": "Noon Moth",
-    "ja": "正午ガ"
-  },
   "정원군 까마귀": {
     "en": "Garden Army Crow",
     "ja": "軍園カラス"
-  },
-  "정원길 여우": {
-    "en": "Garden Fox",
-    "ja": "庭のキツネ"
-  },
-  "정원수로 이끼골렘": {
-    "en": "Garden-Waterway Moss Golem",
-    "ja": "庭園水路の苔ゴーレム"
   },
   "정찰 완갑": {
     "en": "Scout Vambraces",
@@ -2255,37 +1931,13 @@
     "en": "Bell Cart Crow",
     "ja": "鐘車カラス"
   },
-  "종 울림 나방": {
-    "en": "Bell-ringing Moth",
-    "ja": "鐘鳴ガ"
-  },
-  "종가루 거미": {
-    "en": "Bell Spider",
-    "ja": "鐘グモ"
-  },
   "종가루 틈": {
     "en": "Bell-Dust Crack",
     "ja": "鐘粉の隙間"
   },
-  "종간격 박쥐": {
-    "en": "Bell Bat",
-    "ja": "鐘コウモリ"
-  },
-  "종벽 이끼골렘": {
-    "en": "Bellwall Moss Golem",
-    "ja": "鐘壁苔ゴーレム"
-  },
-  "종불꽃 들쥐": {
-    "en": "Bell Mouse",
-    "ja": "鐘ネズミ"
-  },
   "종소리 박쥐": {
     "en": "Bell-Sound Bat",
     "ja": "鐘音のコウモリ"
-  },
-  "종소리 피라미": {
-    "en": "Bell Minnow",
-    "ja": "鐘ハヤ"
   },
   "종소리길 하이에나": {
     "en": "Bell-Sound Path Hyena",
@@ -2302,10 +1954,6 @@
   "종이 깃털새": {
     "en": "Paper Featherbird",
     "ja": "紙の羽鳥"
-  },
-  "종줄 박쥐": {
-    "en": "Bell String Bat",
-    "ja": "コウモリ"
   },
   "종줄 살쾡이": {
     "en": "Bell Wildcat",
@@ -2355,10 +2003,6 @@
     "en": "Opened by the Clapper",
     "ja": "舌で開かれた"
   },
-  "종홀 이끼골렘": {
-    "en": "Bell Moss Golem",
-    "ja": "鐘苔ゴーレム"
-  },
   "좌표 살쾡이": {
     "en": "Coordinate Wildcat",
     "ja": "座標のヤマネコ"
@@ -2383,21 +2027,9 @@
     "en": "Ash-dust Salamander",
     "ja": "灰塵サンショウウオ"
   },
-  "주조장 나방": {
-    "en": "Casting Moth",
-    "ja": "鋳ガ"
-  },
-  "중갑": {
-    "en": "Heavy Armor",
-    "ja": "重甲"
-  },
   "중심박동 두더지": {
     "en": "Central Pulse Mole",
     "ja": "中心脈動モグラ"
-  },
-  "지도 흉내새": {
-    "en": "Map Bird",
-    "ja": "地図の鳥"
   },
   "지도먼지 까마귀": {
     "en": "Map-dust Crow",
@@ -2436,28 +2068,12 @@
     "ja": "地下のオオネズミ"
   },
   "지하거울 박쥐": {
-    "en": "Underground-mirror Bat",
-    "ja": "地鏡コウモリ"
-  },
-  "지하로 도롱뇽": {
-    "en": "Underground Salamander",
-    "ja": "地中サンショウウオ"
-  },
-  "지하로 도마뱀": {
-    "en": "Underground Lizard",
-    "ja": "地中トカゲ"
-  },
-  "지하문 살쾡이": {
-    "en": "Underground Wildcat",
-    "ja": "地下ヤマネコ"
+    "en": "Underground-Mirror Bat",
+    "ja": "地下鏡のコウモリ"
   },
   "지하물길 박쥐": {
     "en": "Underground-Waterway Bat",
     "ja": "地下水路のコウモリ"
-  },
-  "지하별 나방": {
-    "en": "Subterranean Moth",
-    "ja": "地下ガ"
   },
   "지하에서 떠오른 푸른 빛을 두른": {
     "en": "Wreathed in Blue Light Rising from Underground",
@@ -2490,10 +2106,6 @@
   "진흙 하이에나": {
     "en": "Mud Hyena",
     "ja": "泥ハイエナ"
-  },
-  "짐수레 까마귀": {
-    "en": "Cart Crow",
-    "ja": "荷車カラス"
   },
   "짐수레 독거미": {
     "en": "Cargo-Cart Venom Spider",
@@ -2534,10 +2146,6 @@
   "천막 거미": {
     "en": "Tent Spider",
     "ja": "天幕グモ"
-  },
-  "천막끈 도마뱀": {
-    "en": "Tentstring Lizard",
-    "ja": "テント紐トカゲ"
   },
   "천벌 분쇄": {
     "en": "Divine Punishment Shatter",
@@ -2623,10 +2231,6 @@
     "en": "Chase-Path Fox",
     "ja": "追跡路キツネ"
   },
-  "출정명부 살쾡이": {
-    "en": "Roll Call Wildcat",
-    "ja": "出陣名簿ヤマネコ"
-  },
   "충성 사냥개": {
     "en": "Loyal Hound",
     "ja": "忠実猟犬"
@@ -2679,10 +2283,6 @@
     "en": "Passage Lizard",
     "ja": "通路トカゲ"
   },
-  "통로 이끼골렘": {
-    "en": "Passage Moss Golem",
-    "ja": "通路苔ゴーレム"
-  },
   "퇴마 사슬": {
     "en": "Exorcism Chain",
     "ja": "退魔の鎖"
@@ -2698,10 +2298,6 @@
   "투명뿔 도마뱀": {
     "en": "Transparent Horn Lizard",
     "ja": "透明角トカゲ"
-  },
-  "투명뿔 토끼": {
-    "en": "Clear-Horn Rabbit",
-    "ja": "透明角ウサギ"
   },
   "투명잎 사슴": {
     "en": "Transparent-Leaf Deer",
@@ -2731,25 +2327,13 @@
     "en": "Sword of Ruin",
     "ja": "破滅の剣"
   },
-  "파문 도마뱀": {
-    "en": "Wave Lizard",
-    "ja": "波トカゲ"
-  },
   "파쇄 충격": {
     "en": "Shattering Impact",
     "ja": "粉砕衝撃"
   },
-  "파수꾼 박쥐": {
-    "en": "Watchman Bat",
-    "ja": "番人コウモリ"
-  },
   "파수꾼 하이에나": {
     "en": "Sentinel Hyena",
     "ja": "番人ハイエナ"
-  },
-  "파수자 여우": {
-    "en": "Guard Fox",
-    "ja": "番人キツネ"
   },
   "파편날개 까마귀": {
     "en": "Shardwing Crow",
@@ -2791,10 +2375,6 @@
     "en": "Marker Stone Lizard",
     "ja": "標石トカゲ"
   },
-  "표지석 여우": {
-    "en": "Signpost Fox",
-    "ja": "標識キツネ"
-  },
   "푸른 돌 딱정벌레": {
     "en": "Blue-Stone Beetle",
     "ja": "青石の甲虫"
@@ -2831,14 +2411,6 @@
     "en": "Leaf Spider",
     "ja": "葉のグモ"
   },
-  "피난로 거미": {
-    "en": "Refuge Spider",
-    "ja": "避難路グモ"
-  },
-  "피난로 도마뱀": {
-    "en": "Escape Route Lizard",
-    "ja": "脱出路トカゲ"
-  },
   "필중": {
     "en": "Sure Hit",
     "ja": "必中"
@@ -2850,14 +2422,6 @@
   "하강계단 살쾡이": {
     "en": "Descent Staircase Wildcat",
     "ja": "下り階段ヤマネコ"
-  },
-  "하강로 두더지": {
-    "en": "Descent Mole",
-    "ja": "降下モグラ"
-  },
-  "하강문 살쾡이": {
-    "en": "Descent Wildcat",
-    "ja": "降下ヤマネコ"
   },
   "한 발": {
     "en": "One Shot",
@@ -2927,10 +2491,6 @@
     "en": "Training",
     "ja": "訓練式"
   },
-  "훈련장 거미": {
-    "en": "Training Spider",
-    "ja": "訓練場グモ"
-  },
   "흰가시 사슴": {
     "en": "White-Thorn Deer",
     "ja": "白棘シカ"
@@ -2939,16 +2499,112 @@
     "en": "White Crack Lizard",
     "ja": "白亀裂トカゲ"
   },
-  "흰유리 박쥐": {
-    "en": "Glass Bat",
-    "ja": "ガラスコウモリ"
-  },
   "흰정원 까마귀": {
     "en": "White Garden Crow",
     "ja": "白庭カラス"
   },
-  "흰형상 살쾡이": {
-    "en": "Whiteform Wildcat",
-    "ja": "白い形ヤマネコ"
+  "힘의 반지": {
+    "en": "Ring of Strength",
+    "ja": "力の指輪"
+  },
+  "돌격 전투화": {
+    "en": "Assault Boots",
+    "ja": "突撃戦靴"
+  },
+  "그림자 외투": {
+    "en": "Shadow Cloak",
+    "ja": "影の外套"
+  },
+  "그림자 모자": {
+    "en": "Shadow Hat",
+    "ja": "影の帽子"
+  },
+  "암살 손목띠": {
+    "en": "Assassin's Wristguard",
+    "ja": "暗殺者のリストガード"
+  },
+  "암살 장화": {
+    "en": "Assassin's Boots",
+    "ja": "暗殺者のブーツ"
+  },
+  "그림자 신발": {
+    "en": "Shadow Boots",
+    "ja": "影の靴"
+  },
+  "야행 코트": {
+    "en": "Nightstalker Coat",
+    "ja": "夜行のコート"
+  },
+  "야행 전투화": {
+    "en": "Nightstalker Boots",
+    "ja": "夜行の戦闘靴"
+  },
+  "별빛 법복": {
+    "en": "Starlight Vestments",
+    "ja": "星明かりの法衣"
+  },
+  "주문 손목띠": {
+    "en": "Spell Wristguard",
+    "ja": "呪文の腕輪"
+  },
+  "주문 허리띠": {
+    "en": "Spell Belt",
+    "ja": "呪文のベルト"
+  },
+  "사제 신발": {
+    "en": "Priest's Shoes",
+    "ja": "司祭の靴"
+  },
+  "신관 법복": {
+    "en": "Priest's Vestments",
+    "ja": "神官の法衣"
+  },
+  "왕실 장검": {
+    "en": "Royal Longsword",
+    "ja": "王家の長剣"
+  },
+  "왕실 투구": {
+    "en": "Royal Helm",
+    "ja": "王家の兜"
+  },
+  "왕실 장갑": {
+    "en": "Royal Gauntlets",
+    "ja": "王家のガントレット"
+  },
+  "성전 브로치": {
+    "en": "Crusader Brooch",
+    "ja": "聖戦のブローチ"
+  },
+  "심판 주먹갑": {
+    "en": "Judgment Fistguard",
+    "ja": "審判の拳甲"
+  },
+  "전투 목걸이": {
+    "en": "Combat Necklace",
+    "ja": "戦闘用の首飾り"
+  },
+  "중갑": {
+    "en": "Heavy Armor",
+    "ja": "重装鎧"
+  },
+  "기민 반지": {
+    "en": "Ring of Agility",
+    "ja": "俊敏の指輪"
+  },
+  "경량 갑옷": {
+    "en": "Light Armor",
+    "ja": "軽量鎧"
+  },
+  "원소 망토": {
+    "en": "Elemental Cloak",
+    "ja": "元素の外套"
+  },
+  "치유 부적": {
+    "en": "Healing Charm",
+    "ja": "癒やしの護符"
+  },
+  "성휘 목걸이": {
+    "en": "Radiance Necklace",
+    "ja": "聖光の首飾り"
   }
 }

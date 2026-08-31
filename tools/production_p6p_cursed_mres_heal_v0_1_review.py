@@ -209,11 +209,11 @@ def main() -> int:
 
     expected_audit = {
         "serial": "emulator-5554", "avdName": "alarmquest-qa", "androidRelease": "15",
-        "apiLevel": "35", "packageName": "com.alarmquest", "versionName": "0.1.0",
+        "apiLevel": "35", "packageName": "com.nullplaying", "versionName": "0.1.0",
         "versionCode": "1", "targetSdk": "36", "apkSizeBytes": str(APK_SIZE),
         "apkSha256": APK_SHA, "installResult": "Success", "pmClearResult": "Success",
         "launchState": "COLD", "coldTotalTimeMs": "4347", "coldWaitTimeMs": "4352",
-        "topResumedActivity": "com.alarmquest/.MainActivity", "freshRosterEmpty": "true",
+        "topResumedActivity": "com.nullplaying/.MainActivity", "freshRosterEmpty": "true",
         "androidRuntimeFatalCount": "0", "emulatorScreenshotSha256": SCREEN_SHA,
         "emulatorUiDumpSha256": UI_SHA, "engineTests": "736", "appDebugTests": "88",
         "appReleaseTests": "88", "totalTests": "912", "testFailures": "0",
@@ -244,14 +244,14 @@ def main() -> int:
 
     if args.with_emulator:
         devices = command("adb", "devices", "-l")
-        package = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.alarmquest")
+        package = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.nullplaying")
         activity = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "activity", "activities")
         check("emulator:connected", "emulator-5554" in devices and " device " in devices, devices)
         check("emulator:release", command("adb", "-s", "emulator-5554", "shell", "getprop", "ro.build.version.release") == "15", "15")
         check("emulator:api", command("adb", "-s", "emulator-5554", "shell", "getprop", "ro.build.version.sdk") == "35", "35")
         check("emulator:version", "versionName=0.1.0" in package and "versionCode=1" in package, "0.1.0(1)")
         check("emulator:target", "targetSdk=36" in package, "36")
-        check("emulator:focus", "com.alarmquest/.MainActivity" in activity and "Resumed" in activity, "MainActivity")
+        check("emulator:focus", "com.nullplaying/.MainActivity" in activity and "Resumed" in activity, "MainActivity")
 
     passed = sum(ok for _, ok, _ in checks)
     failed = len(checks) - passed

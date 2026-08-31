@@ -1,0 +1,15 @@
+{
+  "samples": 16,
+  "seed_offset": 14,
+  "level": 100,
+  "output": "matched.csv",
+  "profile": "specialization-dex35-cha15",
+  "started_at": "2026-09-01T01:23:53.167154+09:00",
+  "finished_at": "2026-09-01T01:26:32.153582+09:00",
+  "duration_seconds": 158.98409083300066,
+  "output_sha256": "70b8a17a6f4d08bdb6a8103ac1357be31b3a1ffadae1f77ae161ad84a1244d5f",
+  "formula": "CON time; 0.5 INT + 0.5 WIS added skill bonus; q=1.2 CHA15 DEX3.5s",
+  "network": "OS sandbox denied",
+  "database_files": "OS sandbox denied",
+  "app_started": false
+}

@@ -235,11 +235,11 @@ def main() -> int:
     expected_audit = {
         "verificationTarget": "android-emulator", "serial": "emulator-5554",
         "avdName": "alarmquest-qa", "androidRelease": "15", "apiLevel": "35",
-        "packageName": "com.alarmquest", "versionName": "0.1.0", "versionCode": "1",
+        "packageName": "com.nullplaying", "versionName": "0.1.0", "versionCode": "1",
         "targetSdk": "36", "apkSizeBytes": str(APK_SIZE), "apkSha256": APK_SHA,
         "installResult": "Success", "pmClearResult": "Success", "launchState": "COLD",
         "coldTotalTimeMs": "4713", "coldWaitTimeMs": "4715",
-        "topResumedActivity": "com.alarmquest/.MainActivity", "freshRosterEmpty": "true",
+        "topResumedActivity": "com.nullplaying/.MainActivity", "freshRosterEmpty": "true",
         "androidRuntimeFatalCount": "0", "emulatorScreenshotSha256": SCREEN_SHA,
         "emulatorUiDumpSha256": UI_SHA, "engineTests": "717", "appDebugTests": "88",
         "appReleaseTests": "88", "totalTests": "893", "testFailures": "0",
@@ -272,13 +272,13 @@ def main() -> int:
         check("emulator:connected", "emulator-5554" in devices and " device " in devices, devices)
         release_value = command("adb", "-s", "emulator-5554", "shell", "getprop", "ro.build.version.release")
         api = command("adb", "-s", "emulator-5554", "shell", "getprop", "ro.build.version.sdk")
-        package = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.alarmquest")
+        package = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.nullplaying")
         activity = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "activity", "activities")
         check("emulator:release", release_value == "15", release_value)
         check("emulator:api", api == "35", api)
         check("emulator:version", "versionName=0.1.0" in package and "versionCode=1" in package, "0.1.0(1)")
         check("emulator:target", "targetSdk=36" in package, "targetSdk36")
-        check("emulator:focus", "com.alarmquest/.MainActivity" in activity and "Resumed" in activity, "MainActivity")
+        check("emulator:focus", "com.nullplaying/.MainActivity" in activity and "Resumed" in activity, "MainActivity")
 
     passed = sum(ok for _, ok, _ in checks)
     failed = len(checks) - passed

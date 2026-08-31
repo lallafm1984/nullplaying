@@ -252,7 +252,7 @@ def main() -> int:
     audit_fields = (
         "verificationTarget=android-emulator", "installResult=Success", "pmClearResult=Success",
         "launchState=COLD", "coldTotalTimeMs=6177", "coldWaitTimeMs=6180",
-        "topResumedActivity=com.alarmquest/.MainActivity", "freshRosterEmpty=true",
+        "topResumedActivity=com.nullplaying/.MainActivity", "freshRosterEmpty=true",
         "androidRuntimeFatalCount=0", "engineTests=684", "appTests=176", "totalTests=860",
         "testFailures=0", "testErrors=0", "testSkipped=0", "lintErrors=0", "lintWarnings=22",
         "featureDefaultEnabled=false", "liveSettlementEnabled=false",
@@ -304,14 +304,14 @@ def main() -> int:
 
     if args.with_emulator:
         devices = command("adb", "devices", "-l")
-        package = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.alarmquest")
+        package = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.nullplaying")
         activity = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "activity", "activities")
         fatal = command("adb", "-s", "emulator-5554", "logcat", "-d", "-v", "brief", "*:E")
         ui = UI.read_text()
         check("emulator connected", "emulator-5554" in devices and "device" in devices, devices.splitlines()[-1])
         check("emulator version", "versionName=0.1.0" in package and "versionCode=1" in package, "0.1.0(1)")
         check("emulator target", "targetSdk=36" in package, "36")
-        check("emulator focus", "topResumedActivity" in activity and "com.alarmquest/.MainActivity" in activity, "MainActivity")
+        check("emulator focus", "topResumedActivity" in activity and "com.nullplaying/.MainActivity" in activity, "MainActivity")
         check("emulator fresh roster", "아직 캐릭터가 없습니다" in ui and "새 캐릭터" in ui, "empty")
         check("emulator fatal", "FATAL EXCEPTION" not in fatal and "AndroidRuntime: FATAL" not in fatal, "0")
 

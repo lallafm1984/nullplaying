@@ -251,12 +251,12 @@ def main() -> int:
 
     expected_audit = {
         "serial": "emulator-5554", "avdName": "alarmquest-qa", "androidRelease": "15",
-        "apiLevel": "35", "packageName": "com.alarmquest", "versionName": "0.1.0",
+        "apiLevel": "35", "packageName": "com.nullplaying", "versionName": "0.1.0",
         "versionCode": "1", "targetSdk": "36", "apkSizeBytes": str(APK_SIZE),
         "apkSha256": APK_SHA, "uninstallResult": "Success", "installResult": "Success",
         "pmClearResult": "Success", "launchState": "COLD", "coldLaunchTotalTimeMs": "5260",
         "coldLaunchWaitTimeMs": "5263", "warmBringToFrontWaitTimeMs": "250",
-        "topResumedActivity": "com.alarmquest/.MainActivity", "freshRosterEmpty": "true",
+        "topResumedActivity": "com.nullplaying/.MainActivity", "freshRosterEmpty": "true",
         "appFatalCount": "0", "appErrorCount": "0", "emulatorScreenshotSha256": SCREEN_SHA,
         "emulatorUiDumpSha256": UI_SHA, "engineTests": "822", "appDebugTests": "88",
         "appReleaseTests": "88", "totalTests": "998", "testFailures": "0",
@@ -304,12 +304,12 @@ def main() -> int:
         check("live:avd", "alarmquest-qa" in adb("emu", "avd", "name"), adb("emu", "avd", "name"))
         check("live:android", adb("shell", "getprop", "ro.build.version.release") == "15", "15")
         check("live:api", adb("shell", "getprop", "ro.build.version.sdk") == "35", "35")
-        package = adb("shell", "dumpsys", "package", "com.alarmquest")
+        package = adb("shell", "dumpsys", "package", "com.nullplaying")
         check("live:package-version", "versionName=0.1.0" in package and "versionCode=1" in package, "0.1.0/1")
         check("live:target", "targetSdk=36" in package, "36")
         activity = adb("shell", "dumpsys", "activity", "activities")
-        check("live:focus", "topResumedActivity" in activity and "com.alarmquest/.MainActivity" in activity, "MainActivity")
-        pid = adb("shell", "pidof", "com.alarmquest")
+        check("live:focus", "topResumedActivity" in activity and "com.nullplaying/.MainActivity" in activity, "MainActivity")
+        pid = adb("shell", "pidof", "com.nullplaying")
         errors = adb("logcat", "-d", f"--pid={pid}", "-v", "brief", "*:E") if pid else "NO_PID"
         check("live:pid", pid.isdigit(), pid)
         check("live:errors", errors == "", errors or "0")

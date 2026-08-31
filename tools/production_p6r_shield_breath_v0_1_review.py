@@ -204,7 +204,7 @@ def main() -> int:
         check(f"integration:{name}", anchor in resolver_test, anchor)
 
     cost_anchors = {
-        "canonical import": "import com.alarmquest.engine.vnext.VNextSkillContract",
+        "canonical import": "import com.nullplaying.engine.vnext.VNextSkillContract",
         "canonical call": "VNextSkillContract.finalResourceCost(",
         "zero test": "assertEquals(0, plan.adjustResourceCost(0, -1_500))",
         "floor -600": "assertEquals(1_000, plan.adjustResourceCost(1_000, -600))",
@@ -255,11 +255,11 @@ def main() -> int:
 
     expected_audit = {
         "serial": "emulator-5554", "avdName": "alarmquest-qa", "androidRelease": "15",
-        "apiLevel": "35", "packageName": "com.alarmquest", "versionName": "0.1.0",
+        "apiLevel": "35", "packageName": "com.nullplaying", "versionName": "0.1.0",
         "versionCode": "1", "targetSdk": "36", "apkSizeBytes": str(APK_SIZE),
         "apkSha256": APK_SHA, "installResult": "Success", "pmClearResult": "Success",
         "launchState": "COLD", "coldTotalTimeMs": "4358", "coldWaitTimeMs": "4362",
-        "topResumedActivity": "com.alarmquest/.MainActivity", "freshRosterEmpty": "true",
+        "topResumedActivity": "com.nullplaying/.MainActivity", "freshRosterEmpty": "true",
         "androidRuntimeFatalCount": "0", "emulatorScreenshotSha256": SCREEN_SHA,
         "emulatorUiDumpSha256": UI_SHA, "engineTests": "762", "appDebugTests": "88",
         "appReleaseTests": "88", "totalTests": "938", "testFailures": "0",
@@ -302,7 +302,7 @@ def main() -> int:
 
     if args.with_emulator:
         devices = command("adb", "devices", "-l")
-        package = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.alarmquest")
+        package = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "package", "com.nullplaying")
         activity = command("adb", "-s", "emulator-5554", "shell", "dumpsys", "activity", "activities")
         crash = command("adb", "-s", "emulator-5554", "logcat", "-d", "-b", "crash")
         check("emulator:connected", "emulator-5554" in devices and " device " in devices, devices)
@@ -310,7 +310,7 @@ def main() -> int:
         check("emulator:api", command("adb", "-s", "emulator-5554", "shell", "getprop", "ro.build.version.sdk") == "35", "35")
         check("emulator:version", "versionName=0.1.0" in package and "versionCode=1" in package, "0.1.0(1)")
         check("emulator:target", "targetSdk=36" in package, "36")
-        check("emulator:focus", "com.alarmquest/.MainActivity" in activity and "Resumed" in activity, "MainActivity")
+        check("emulator:focus", "com.nullplaying/.MainActivity" in activity and "Resumed" in activity, "MainActivity")
         check("emulator:crash", "FATAL EXCEPTION" not in crash, crash or "empty")
 
     passed = sum(ok for _, ok, _ in checks)

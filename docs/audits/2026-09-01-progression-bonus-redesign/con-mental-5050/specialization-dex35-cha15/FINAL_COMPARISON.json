@@ -1,0 +1,398 @@
+{
+  "latest": {
+    "profile": "CON power1.2; CHA15; INT/WIS50:50; DEX3.5",
+    "games": 144,
+    "rows": 14400,
+    "cohorts": [
+      {
+        "cohort": "matched.csv",
+        "games": 96,
+        "max_growth_spread_pct": 7.4015468820188834,
+        "max_sale_spread_pct": 8.761968459964198,
+        "key_scenarios": [
+          {
+            "level": 100,
+            "gap_h": 8,
+            "session_min": 1,
+            "growth_spread_pct": 7.401546882018817,
+            "sale_spread_pct": 5.2967059205741185,
+            "fastest": "WARRIOR",
+            "slowest": "PALADIN",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "ROGUE"
+          },
+          {
+            "level": 100,
+            "gap_h": 8,
+            "session_min": 12,
+            "growth_spread_pct": 4.873514002377122,
+            "sale_spread_pct": 8.761968459964198,
+            "fastest": "RANGER",
+            "slowest": "WARRIOR",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "WARRIOR"
+          },
+          {
+            "level": 100,
+            "gap_h": 12,
+            "session_min": 1,
+            "growth_spread_pct": 7.4015468820188834,
+            "sale_spread_pct": 5.296705920574096,
+            "fastest": "WARRIOR",
+            "slowest": "PALADIN",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "ROGUE"
+          },
+          {
+            "level": 100,
+            "gap_h": 12,
+            "session_min": 12,
+            "growth_spread_pct": 7.401546882018772,
+            "sale_spread_pct": 5.296705920574141,
+            "fastest": "WARRIOR",
+            "slowest": "PALADIN",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "ROGUE"
+          }
+        ]
+      },
+      {
+        "cohort": "heldout.csv",
+        "games": 48,
+        "max_growth_spread_pct": 7.768192786665273,
+        "max_sale_spread_pct": 8.51964793632083,
+        "key_scenarios": [
+          {
+            "level": 100,
+            "gap_h": 8,
+            "session_min": 1,
+            "growth_spread_pct": 7.768192786665251,
+            "sale_spread_pct": 5.0947668007713,
+            "fastest": "WARRIOR",
+            "slowest": "PALADIN",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "ROGUE"
+          },
+          {
+            "level": 100,
+            "gap_h": 8,
+            "session_min": 12,
+            "growth_spread_pct": 5.323304059010181,
+            "sale_spread_pct": 8.51964793632083,
+            "fastest": "RANGER",
+            "slowest": "WARRIOR",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "WARRIOR"
+          },
+          {
+            "level": 100,
+            "gap_h": 12,
+            "session_min": 1,
+            "growth_spread_pct": 7.768192786665251,
+            "sale_spread_pct": 5.094766800771322,
+            "fastest": "WARRIOR",
+            "slowest": "PALADIN",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "ROGUE"
+          },
+          {
+            "level": 100,
+            "gap_h": 12,
+            "session_min": 12,
+            "growth_spread_pct": 7.768192786665251,
+            "sale_spread_pct": 5.094766800771278,
+            "fastest": "WARRIOR",
+            "slowest": "PALADIN",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "ROGUE"
+          }
+        ]
+      }
+    ],
+    "level100": {
+      "WARRIOR": {
+        "con": 162.83333333333334,
+        "mental": 48.958333333333336,
+        "cap_h": 9.990078702326972,
+        "raw_proc_pct": 23.147966657359017,
+        "search_s": 4.490833333333334,
+        "sale_bonus_pct": 4.7875000000000005,
+        "bag": 146.95833333333334
+      },
+      "ROGUE": {
+        "con": 52.833333333333336,
+        "mental": 48.041666666666664,
+        "cap_h": 8.57277223548512,
+        "raw_proc_pct": 23.07588718428109,
+        "search_s": 3.5058333333333334,
+        "sale_bonus_pct": 4.654166666666667,
+        "bag": 147.0
+      },
+      "RANGER": {
+        "con": 49.125,
+        "mental": 105.08333333333333,
+        "cap_h": 8.52514303398255,
+        "raw_proc_pct": 27.86653863416737,
+        "search_s": 3.5033333333333334,
+        "sale_bonus_pct": 4.9750000000000005,
+        "bag": 97.25
+      },
+      "MAGE": {
+        "con": 49.166666666666664,
+        "mental": 162.27083333333334,
+        "cap_h": 8.525660309806048,
+        "raw_proc_pct": 33.24686163486937,
+        "search_s": 4.496666666666667,
+        "sale_bonus_pct": 4.9875,
+        "bag": 97.04166666666667
+      },
+      "CLERIC": {
+        "con": 49.166666666666664,
+        "mental": 105.41666666666667,
+        "cap_h": 8.525660309806048,
+        "raw_proc_pct": 27.896590210575994,
+        "search_s": 4.496666666666667,
+        "sale_bonus_pct": 14.9375,
+        "bag": 97.04166666666667
+      },
+      "PALADIN": {
+        "con": 48.041666666666664,
+        "mental": 48.958333333333336,
+        "cap_h": 8.511481411449454,
+        "raw_proc_pct": 23.147966657359017,
+        "search_s": 4.490833333333334,
+        "sale_bonus_pct": 14.9625,
+        "bag": 146.95833333333334
+      }
+    },
+    "boundary": "Strong specialization / CHA15 / DEX3500ms boundary checks: 3336 PASS",
+    "stat_identity_rows": 14400,
+    "app_changed": false,
+    "db_access": false,
+    "old_guardrail_growth_pct": 6,
+    "new_hard_guardrail_approved": false
+  },
+  "baseline": {
+    "profile": "CON power1.2; CHA15; INT/WIS50:50; DEX4.0",
+    "games": 144,
+    "rows": 14400,
+    "cohorts": [
+      {
+        "cohort": "matched.csv",
+        "games": 96,
+        "max_growth_spread_pct": 7.411559460964723,
+        "max_sale_spread_pct": 8.750839083230645,
+        "key_scenarios": [
+          {
+            "level": 100,
+            "gap_h": 8,
+            "session_min": 1,
+            "growth_spread_pct": 7.411559460964656,
+            "sale_spread_pct": 6.349822347799572,
+            "fastest": "WARRIOR",
+            "slowest": "PALADIN",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "ROGUE"
+          },
+          {
+            "level": 100,
+            "gap_h": 8,
+            "session_min": 12,
+            "growth_spread_pct": 3.799160058896911,
+            "sale_spread_pct": 8.750839083230645,
+            "fastest": "MAGE",
+            "slowest": "WARRIOR",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "WARRIOR"
+          },
+          {
+            "level": 100,
+            "gap_h": 12,
+            "session_min": 1,
+            "growth_spread_pct": 7.411559460964656,
+            "sale_spread_pct": 6.349822347799594,
+            "fastest": "WARRIOR",
+            "slowest": "PALADIN",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "ROGUE"
+          },
+          {
+            "level": 100,
+            "gap_h": 12,
+            "session_min": 12,
+            "growth_spread_pct": 7.411559460964678,
+            "sale_spread_pct": 6.349822347799572,
+            "fastest": "WARRIOR",
+            "slowest": "PALADIN",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "ROGUE"
+          }
+        ]
+      },
+      {
+        "cohort": "heldout.csv",
+        "games": 48,
+        "max_growth_spread_pct": 7.779446508924015,
+        "max_sale_spread_pct": 8.505852982040608,
+        "key_scenarios": [
+          {
+            "level": 100,
+            "gap_h": 8,
+            "session_min": 1,
+            "growth_spread_pct": 7.779446508923971,
+            "sale_spread_pct": 6.137006963507008,
+            "fastest": "WARRIOR",
+            "slowest": "PALADIN",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "ROGUE"
+          },
+          {
+            "level": 100,
+            "gap_h": 8,
+            "session_min": 12,
+            "growth_spread_pct": 4.254419356810635,
+            "sale_spread_pct": 8.505852982040608,
+            "fastest": "RANGER",
+            "slowest": "WARRIOR",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "WARRIOR"
+          },
+          {
+            "level": 100,
+            "gap_h": 12,
+            "session_min": 1,
+            "growth_spread_pct": 7.779446508923971,
+            "sale_spread_pct": 6.137006963507008,
+            "fastest": "WARRIOR",
+            "slowest": "PALADIN",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "ROGUE"
+          },
+          {
+            "level": 100,
+            "gap_h": 12,
+            "session_min": 12,
+            "growth_spread_pct": 7.779446508923971,
+            "sale_spread_pct": 6.137006963507008,
+            "fastest": "WARRIOR",
+            "slowest": "PALADIN",
+            "highest_sale": "CLERIC",
+            "lowest_sale": "ROGUE"
+          }
+        ]
+      }
+    ],
+    "level100": {
+      "WARRIOR": {
+        "con": 162.83333333333334,
+        "mental": 48.958333333333336,
+        "cap_h": 9.990078702326972,
+        "raw_proc_pct": 23.147966657359017,
+        "search_s": 4.660555555555556,
+        "sale_bonus_pct": 4.7875000000000005,
+        "bag": 146.95833333333334
+      },
+      "ROGUE": {
+        "con": 52.833333333333336,
+        "mental": 48.041666666666664,
+        "cap_h": 8.57277223548512,
+        "raw_proc_pct": 23.07588718428109,
+        "search_s": 4.003888888888889,
+        "sale_bonus_pct": 4.654166666666667,
+        "bag": 147.0
+      },
+      "RANGER": {
+        "con": 49.125,
+        "mental": 105.08333333333333,
+        "cap_h": 8.52514303398255,
+        "raw_proc_pct": 27.86653863416737,
+        "search_s": 4.002222222222222,
+        "sale_bonus_pct": 4.9750000000000005,
+        "bag": 97.25
+      },
+      "MAGE": {
+        "con": 49.166666666666664,
+        "mental": 162.27083333333334,
+        "cap_h": 8.525660309806048,
+        "raw_proc_pct": 33.24686163486937,
+        "search_s": 4.664444444444444,
+        "sale_bonus_pct": 4.9875,
+        "bag": 97.04166666666667
+      },
+      "CLERIC": {
+        "con": 49.166666666666664,
+        "mental": 105.41666666666667,
+        "cap_h": 8.525660309806048,
+        "raw_proc_pct": 27.896590210575994,
+        "search_s": 4.664444444444444,
+        "sale_bonus_pct": 14.9375,
+        "bag": 97.04166666666667
+      },
+      "PALADIN": {
+        "con": 48.041666666666664,
+        "mental": 48.958333333333336,
+        "cap_h": 8.511481411449454,
+        "raw_proc_pct": 23.147966657359017,
+        "search_s": 4.660555555555556,
+        "sale_bonus_pct": 14.9625,
+        "bag": 146.95833333333334
+      }
+    },
+    "boundary": "Strong specialization / CHA15 / DEX4000ms boundary checks: 3336 PASS",
+    "stat_identity_rows": 14400,
+    "app_changed": false,
+    "db_access": false,
+    "old_guardrail_growth_pct": 6,
+    "new_hard_guardrail_approved": false
+  },
+  "paired_level100": {
+    "CLERIC": {
+      "seconds_old": 13766397.5,
+      "seconds_new": 13688142.5,
+      "sale_gold_old": 908550101.625,
+      "sale_gold_new": 908551287.375,
+      "completion_time_reduction_pct": 0.568449371013735,
+      "sale_total_change_pct": 0.00013051013894038732
+    },
+    "MAGE": {
+      "seconds_old": 13528412.5,
+      "seconds_new": 13450165.0,
+      "sale_gold_old": 853244255.625,
+      "sale_gold_new": 853246346.0,
+      "completion_time_reduction_pct": 0.5783938063686378,
+      "sale_total_change_pct": 0.00024499139446021445
+    },
+    "PALADIN": {
+      "seconds_old": 14029715.0,
+      "seconds_new": 13951432.5,
+      "sale_gold_old": 908734916.0,
+      "sale_gold_new": 908734916.0,
+      "completion_time_reduction_pct": 0.5579764093568529,
+      "sale_total_change_pct": 0.0
+    },
+    "RANGER": {
+      "seconds_old": 13509800.0,
+      "seconds_new": 13295152.5,
+      "sale_gold_old": 853176710.4166666,
+      "sale_gold_new": 853174576.5,
+      "completion_time_reduction_pct": 1.5888281099646129,
+      "sale_total_change_pct": -0.00025011426596499575
+    },
+    "ROGUE": {
+      "seconds_old": 13763410.0,
+      "seconds_new": 13548770.0,
+      "sale_gold_old": 851849534.625,
+      "sale_gold_new": 851849534.625,
+      "completion_time_reduction_pct": 1.5594972466852375,
+      "sale_total_change_pct": 0.0
+    },
+    "WARRIOR": {
+      "seconds_old": 14041297.5,
+      "seconds_new": 13963007.5,
+      "sale_gold_old": 852766550.2083334,
+      "sale_gold_new": 852766550.2083334,
+      "completion_time_reduction_pct": 0.5575695550927517,
+      "sale_total_change_pct": 0.0
+    }
+  }
+}

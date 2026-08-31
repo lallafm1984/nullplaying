@@ -1,0 +1,38 @@
+[
+  {
+    "width": 736,
+    "colorScheme": "light",
+    "initiallyCollapsed": true,
+    "dataPreview": true,
+    "noOverflow": true,
+    "errors": [],
+    "network": "blocked"
+  },
+  {
+    "width": 736,
+    "colorScheme": "dark",
+    "initiallyCollapsed": true,
+    "dataPreview": true,
+    "noOverflow": true,
+    "errors": [],
+    "network": "blocked"
+  },
+  {
+    "width": 360,
+    "colorScheme": "light",
+    "initiallyCollapsed": true,
+    "dataPreview": true,
+    "noOverflow": true,
+    "errors": [],
+    "network": "blocked"
+  },
+  {
+    "width": 360,
+    "colorScheme": "dark",
+    "initiallyCollapsed": true,
+    "dataPreview": true,
+    "noOverflow": true,
+    "errors": [],
+    "network": "blocked"
+  }
+]

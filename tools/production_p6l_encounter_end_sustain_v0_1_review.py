@@ -251,11 +251,11 @@ def main() -> int:
     expected_audit = {
         "verificationTarget": "android-emulator", "serial": "emulator-5554",
         "avdName": "alarmquest-qa", "androidRelease": "15", "apiLevel": "35",
-        "packageName": "com.alarmquest", "versionName": "0.1.0", "versionCode": "1",
+        "packageName": "com.nullplaying", "versionName": "0.1.0", "versionCode": "1",
         "targetSdk": "36", "apkSizeBytes": str(APK_SIZE), "apkSha256": APK_SHA,
         "installResult": "Success", "pmClearResult": "Success", "launchState": "COLD",
         "coldTotalTimeMs": "4349", "coldWaitTimeMs": "4362",
-        "topResumedActivity": "com.alarmquest/.MainActivity", "freshRosterEmpty": "true",
+        "topResumedActivity": "com.nullplaying/.MainActivity", "freshRosterEmpty": "true",
         "androidRuntimeFatalCount": "0", "emulatorScreenshotSha256": SCREEN_SHA,
         "emulatorUiDumpSha256": UI_SHA, "engineTests": "702", "appDebugTests": "88",
         "appReleaseTests": "88", "appTests": "176", "totalTests": "878",
@@ -320,7 +320,7 @@ def main() -> int:
         release_value = command("adb", "-s", serial, "shell", "getprop", "ro.build.version.release")
         api = command("adb", "-s", serial, "shell", "getprop", "ro.build.version.sdk")
         avd = command("adb", "-s", serial, "shell", "getprop", "ro.boot.qemu.avd_name")
-        package = command("adb", "-s", serial, "shell", "dumpsys", "package", "com.alarmquest")
+        package = command("adb", "-s", serial, "shell", "dumpsys", "package", "com.nullplaying")
         focus = command("adb", "-s", serial, "shell", "dumpsys", "activity", "activities")
         crash = command("adb", "-s", serial, "logcat", "-d", "-b", "crash", "AndroidRuntime:E", "*:S")
         command("adb", "-s", serial, "shell", "uiautomator", "dump", "/sdcard/p6l-review.xml")
@@ -332,7 +332,7 @@ def main() -> int:
         check("emulator:avd", avd == "alarmquest-qa", avd)
         check("emulator:version", "versionCode=1" in package and "versionName=0.1.0" in package, "0.1.0(1)")
         check("emulator:target", "targetSdk=36" in package, "36")
-        check("emulator:focus", "topResumedActivity" in focus and "com.alarmquest/.MainActivity" in focus, "MainActivity")
+        check("emulator:focus", "topResumedActivity" in focus and "com.nullplaying/.MainActivity" in focus, "MainActivity")
         check("emulator:fatal", "FATAL EXCEPTION" not in crash, "0")
         check("emulator:empty", "아직 캐릭터가 없습니다" in live_ui, "empty")
         check("emulator:create", "새 캐릭터" in live_ui, "create")

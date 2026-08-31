@@ -1,0 +1,104 @@
+{
+  "cohorts": [
+    {
+      "cohort": "matched.csv",
+      "power": 0.6,
+      "label": "현재 0.6",
+      "max_growth_spread_pct": 5.55317549677572,
+      "max_sale_spread_pct": 10.893306106304923
+    },
+    {
+      "cohort": "matched.csv",
+      "power": 1.0,
+      "label": "완만한 강화 1.0",
+      "max_growth_spread_pct": 7.041021521305968,
+      "max_sale_spread_pct": 10.893306106304923
+    },
+    {
+      "cohort": "matched.csv",
+      "power": 1.2,
+      "label": "강한 특화 1.2",
+      "max_growth_spread_pct": 7.414813957183042,
+      "max_sale_spread_pct": 10.893306106304923
+    },
+    {
+      "cohort": "heldout.csv",
+      "power": 0.6,
+      "label": "현재 0.6",
+      "max_growth_spread_pct": 5.889252307056858,
+      "max_sale_spread_pct": 10.657212766151613
+    },
+    {
+      "cohort": "heldout.csv",
+      "power": 1.0,
+      "label": "완만한 강화 1.0",
+      "max_growth_spread_pct": 7.414876421142824,
+      "max_sale_spread_pct": 10.657212766151613
+    },
+    {
+      "cohort": "heldout.csv",
+      "power": 1.2,
+      "label": "강한 특화 1.2",
+      "max_growth_spread_pct": 7.778385753790262,
+      "max_sale_spread_pct": 10.657212766151613
+    }
+  ],
+  "comparison": [
+    {
+      "power": 0.6,
+      "label": "현재 0.6",
+      "warrior_h": 9.9949198942222,
+      "other_h_min": 9.007335211373626,
+      "other_h_max": 9.067430274955607,
+      "gap_min_minutes": 55.64937715599559,
+      "gap_max_minutes": 59.25508097091445,
+      "max_growth_spread_pct": 5.889252307056858
+    },
+    {
+      "power": 1.0,
+      "label": "완만한 강화 1.0",
+      "warrior_h": 9.991666666666667,
+      "other_h_min": 8.640555555555556,
+      "other_h_max": 8.704444444444444,
+      "gap_min_minutes": 77.23333333333336,
+      "gap_max_minutes": 81.06666666666666,
+      "max_growth_spread_pct": 7.414876421142824
+    },
+    {
+      "power": 1.2,
+      "label": "강한 특화 1.2",
+      "warrior_h": 9.990078702326972,
+      "other_h_min": 8.511481411449454,
+      "other_h_max": 8.57277223548512,
+      "gap_min_minutes": 85.03838801051114,
+      "gap_max_minutes": 88.7158374526511,
+      "max_growth_spread_pct": 7.778385753790262
+    }
+  ],
+  "method": "Existing synthetic engine replays; only time-cap calendar postprocessing changed.",
+  "evaluated_levels": "20..100",
+  "sessions_min": [
+    1,
+    5,
+    12
+  ],
+  "gaps_h": [
+    4,
+    6,
+    8,
+    9,
+    10,
+    12,
+    16,
+    24
+  ],
+  "checks": [
+    "Input SHA256 verified",
+    "Original formula parity",
+    "Monotone and bounded time curves",
+    "8h/full-charge results exactly unchanged"
+  ],
+  "game_replays_added": 0,
+  "app_changed": false,
+  "db_access": false
+}

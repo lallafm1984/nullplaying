@@ -1,0 +1,23 @@
+{
+  "project_id": "nullplaying-2d131",
+  "template_version": 2,
+  "verification_time": "2026-09-01T02:36:56.078+09:00",
+  "source": "Firebase console rendered UI after publication",
+  "url": "https://console.firebase.google.com/u/1/project/nullplaying-2d131/config/env/firebase",
+  "user_authorized": true,
+  "parameters": {
+    "app_session_logs_enabled": {"type": "BOOLEAN", "value": true, "change": "created"},
+    "offline_adventure_capacity_minutes": {"type": "NUMBER", "value": 480, "change": "updated from 720"},
+    "offline_adventure_charge_minutes": {"type": "NUMBER", "value": 20, "change": "updated from 12"}
+  },
+  "confirmation_list": [
+    "offline_adventure_capacity_minutes updated",
+    "offline_adventure_charge_minutes updated",
+    "app_session_logs_enabled created"
+  ],
+  "post_publish_checks": ["version 2 displayed", "all three values displayed", "no draft/pending-publication status"],
+  "app_launched": false,
+  "database_test_data_created": false,
+  "apk_installed": false,
+  "play_release_performed": false
+}
