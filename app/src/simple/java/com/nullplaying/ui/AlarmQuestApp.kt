@@ -167,6 +167,9 @@ import com.nullplaying.model.ShopEquipmentOffer
 import com.nullplaying.model.SimpleGameState
 import com.nullplaying.model.TaleActState
 import com.nullplaying.model.TaleKind
+import com.nullplaying.ads.AdsConsentState
+import com.nullplaying.ads.MobileAdsRuntimeState
+import com.nullplaying.ads.actions
 import com.nullplaying.notifications.GameNotificationPreferencesStore
 import com.nullplaying.remote.AppAnnouncement
 import com.nullplaying.localization.GameLanguageStore
@@ -238,7 +241,9 @@ fun AlarmQuestApp(
     gameLanguageStore: GameLanguageStore,
     supabaseGameService: SupabaseGameService,
     mobileAdsReady: Boolean = false,
-    privacyOptionsRequired: Boolean = false,
+    adsConsentState: AdsConsentState = AdsConsentState(),
+    mobileAdsRuntimeState: MobileAdsRuntimeState = MobileAdsRuntimeState.WAITING_FOR_CONSENT,
+    onRetryAdsSetup: () -> Unit = {},
     onOpenPrivacyOptions: () -> Unit = {},
 ) {
     val systemDensity = LocalDensity.current
@@ -285,7 +290,9 @@ fun AlarmQuestApp(
             onStartupAnnouncementShown = supabaseGameService::markAppAnnouncementDisplayed,
             onDismissStartupAnnouncement = { announcement = null },
             mobileAdsReady = mobileAdsReady,
-            privacyOptionsRequired = privacyOptionsRequired,
+            adsConsentState = adsConsentState,
+            mobileAdsRuntimeState = mobileAdsRuntimeState,
+            onRetryAdsSetup = onRetryAdsSetup,
             onOpenPrivacyOptions = onOpenPrivacyOptions,
         )
         updateNotice?.let { notice ->
@@ -382,7 +389,9 @@ private fun AlarmQuestAppContent(
     onStartupAnnouncementShown: (AppAnnouncement) -> Unit,
     onDismissStartupAnnouncement: () -> Unit,
     mobileAdsReady: Boolean,
-    privacyOptionsRequired: Boolean,
+    adsConsentState: AdsConsentState,
+    mobileAdsRuntimeState: MobileAdsRuntimeState,
+    onRetryAdsSetup: () -> Unit,
     onOpenPrivacyOptions: () -> Unit,
 ) {
     val snapshot by repository.snapshots.collectAsState()
@@ -580,7 +589,9 @@ private fun AlarmQuestAppContent(
                                 gameLanguageStore = gameLanguageStore,
                                 supabaseGameService = supabaseGameService,
                                 mobileAdsReady = mobileAdsReady,
-                                privacyOptionsRequired = privacyOptionsRequired,
+                                adsConsentState = adsConsentState,
+                                mobileAdsRuntimeState = mobileAdsRuntimeState,
+                                onRetryAdsSetup = onRetryAdsSetup,
                                 onOpenPrivacyOptions = onOpenPrivacyOptions,
                                 onExitToRoster = { entryScene = EntryScene.ROSTER },
                             )
@@ -974,7 +985,9 @@ private fun GameScreen(
     gameLanguageStore: GameLanguageStore,
     supabaseGameService: SupabaseGameService,
     mobileAdsReady: Boolean,
-    privacyOptionsRequired: Boolean,
+    adsConsentState: AdsConsentState,
+    mobileAdsRuntimeState: MobileAdsRuntimeState,
+    onRetryAdsSetup: () -> Unit,
     onOpenPrivacyOptions: () -> Unit,
     onExitToRoster: () -> Unit,
 ) {
@@ -989,11 +1002,14 @@ private fun GameScreen(
     var rewardedAd by remember { mutableStateOf<RewardedInterstitialAd?>(null) }
     var rewardedLoadState by remember { mutableStateOf(RewardedLoadState.WAITING) }
     var rewardedLoadGeneration by remember { mutableIntStateOf(0) }
+    var rewardedLoadRequestToken by remember { mutableIntStateOf(0) }
     var showingRewardDialog by remember { mutableStateOf(false) }
     val offlineAdventureProgress = repository.offlineAdventureFraction(state)
     val offlineAdventureFull = repository.isOfflineAdventureFull(state)
 
     LaunchedEffect(mobileAdsReady, offlineAdventureFull, rewardedLoadGeneration) {
+        rewardedLoadRequestToken += 1
+        val requestToken = rewardedLoadRequestToken
         if (!mobileAdsReady || offlineAdventureFull) {
             rewardedAd = null
             rewardedLoadState = RewardedLoadState.WAITING
@@ -1004,6 +1020,10 @@ private fun GameScreen(
             AdRequest.Builder(BuildConfig.REWARDED_AD_UNIT_ID).build(),
             object : AdLoadCallback<RewardedInterstitialAd> {
                 override fun onAdLoaded(ad: RewardedInterstitialAd) {
+                    if (requestToken != rewardedLoadRequestToken) {
+                        Log.d(REWARDED_AD_TAG, "Ignoring stale rewarded interstitial load success")
+                        return
+                    }
                     Log.d(REWARDED_AD_TAG, "Rewarded interstitial ad loaded")
                     ad.setImmersiveMode(true)
                     ad.adEventCallback = object : RewardedInterstitialAdEventCallback {
@@ -1023,8 +1043,7 @@ private fun GameScreen(
                                 "Rewarded interstitial ad failed to show: $fullScreenContentError",
                             )
                             rewardedAd = null
-                            rewardedLoadState = RewardedLoadState.FAILED
-                            rewardedLoadGeneration += 1
+                            rewardedLoadState = RewardedLoadState.SHOW_FAILED
                         }
                     }
                     rewardedAd = ad
@@ -1032,16 +1051,25 @@ private fun GameScreen(
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
+                    if (requestToken != rewardedLoadRequestToken) {
+                        Log.d(REWARDED_AD_TAG, "Ignoring stale rewarded interstitial load failure")
+                        return
+                    }
                     Log.w(REWARDED_AD_TAG, "Rewarded interstitial ad failed to load: $adError")
                     rewardedAd = null
-                    rewardedLoadState = RewardedLoadState.FAILED
+                    rewardedLoadState = RewardedLoadState.LOAD_FAILED
                 }
             },
         )
     }
 
     LaunchedEffect(rewardedLoadState, offlineAdventureFull) {
-        if (rewardedLoadState == RewardedLoadState.FAILED && !offlineAdventureFull) {
+        if (
+            rewardedLoadState in setOf(
+                RewardedLoadState.LOAD_FAILED,
+                RewardedLoadState.SHOW_FAILED,
+            ) && !offlineAdventureFull
+        ) {
             delay(REWARDED_AD_RETRY_MILLIS)
             rewardedLoadGeneration += 1
         }
@@ -1061,7 +1089,13 @@ private fun GameScreen(
     val showRewardedAd = {
         val activity = context as? Activity
         val ad = rewardedAd
-        if (activity != null && ad != null && !offlineAdventureFull) {
+        if (
+            activity != null &&
+            ad != null &&
+            mobileAdsReady &&
+            adsConsentState.canRequestAds &&
+            !offlineAdventureFull
+        ) {
             val requestId = UUID.randomUUID().toString()
             repository.setRewardAdInFlight(true, SystemClock.elapsedRealtime())
             rewardedLoadState = RewardedLoadState.SHOWING
@@ -1087,9 +1121,21 @@ private fun GameScreen(
             }.onFailure { error ->
                 repository.setRewardAdInFlight(false, SystemClock.elapsedRealtime())
                 Log.w(REWARDED_AD_TAG, "Rewarded interstitial ad show call failed", error)
-                rewardedLoadState = RewardedLoadState.FAILED
-                rewardedLoadGeneration += 1
+                rewardedLoadState = RewardedLoadState.SHOW_FAILED
             }
+        }
+    }
+
+    val retryRewardedAd = {
+        if (
+            !offlineAdventureFull && rewardedLoadState in setOf(
+                RewardedLoadState.LOAD_FAILED,
+                RewardedLoadState.SHOW_FAILED,
+            )
+        ) {
+            rewardedAd = null
+            rewardedLoadState = RewardedLoadState.LOADING
+            rewardedLoadGeneration += 1
         }
     }
 
@@ -1203,7 +1249,13 @@ private fun GameScreen(
                         gameLanguageStore = gameLanguageStore,
                         onBack = { showingSettings = false },
                         onExitToRoster = onExitToRoster,
-                        privacyOptionsRequired = privacyOptionsRequired,
+                        adsSetupNeedsRecovery = adsSetupNeedsRecovery(
+                            adsConsentState,
+                            mobileAdsRuntimeState,
+                        ),
+                        privacyOptionsRequired =
+                            adsConsentState.actions().showPrivacyOptions,
+                        onRetryAdsSetup = onRetryAdsSetup,
                         onOpenPrivacyOptions = onOpenPrivacyOptions,
                     )
                 } else {
@@ -1269,9 +1321,13 @@ private fun GameScreen(
 
     if (showingRewardDialog) {
         OfflineAdventureRewardDialog(
+            consentState = adsConsentState,
+            mobileAdsRuntimeState = mobileAdsRuntimeState,
             rewardedLoadState = rewardedLoadState,
             onDismiss = { showingRewardDialog = false },
-            onConfirm = {
+            onRetryAdsSetup = onRetryAdsSetup,
+            onRetryRewardedAd = retryRewardedAd,
+            onWatchAd = {
                 showingRewardDialog = false
                 showRewardedAd()
             },
@@ -2681,7 +2737,7 @@ private fun OfflineAdventureStrip(
     val message = if (isFull) {
         "오프라인 모험 시간이 가득 찼습니다"
     } else {
-        "오프라인 모험 시간이 충전됩니다"
+        "오프라인 모험 시간을 충전 중입니다."
     }
 
     Row(
@@ -2713,7 +2769,7 @@ private fun OfflineAdventureStrip(
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                message,
+                localized(message),
                 color = if (isFull) Color(0xFF8BCB84) else AqText,
                 fontSize = 10.sp,
                 lineHeight = 10.sp,
@@ -2783,12 +2839,19 @@ private fun OfflineAdventureStrip(
 
 @Composable
 private fun OfflineAdventureRewardDialog(
+    consentState: AdsConsentState,
+    mobileAdsRuntimeState: MobileAdsRuntimeState,
     rewardedLoadState: RewardedLoadState,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
+    onRetryAdsSetup: () -> Unit,
+    onRetryRewardedAd: () -> Unit,
+    onWatchAd: () -> Unit,
 ) {
-    val rewardReady = rewardedLoadState == RewardedLoadState.READY
-    val confirmText = if (rewardReady) "광고 보고 모두 충전" else "광고 준비 중"
+    val presentation = rewardDialogPresentation(
+        consentState = consentState,
+        mobileAdsRuntimeState = mobileAdsRuntimeState,
+        rewardedLoadState = rewardedLoadState,
+    )
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = AqSurfaceHigh,
@@ -2796,15 +2859,15 @@ private fun OfflineAdventureRewardDialog(
             Icon(Icons.Outlined.HourglassBottom, contentDescription = null, tint = AqGold)
         },
         title = {
-            Text("오프라인 모험 충전", color = AqText, fontWeight = FontWeight.Bold)
+            Text(
+                localized("오프라인 모험 충전"),
+                color = AqText,
+                fontWeight = FontWeight.Bold,
+            )
         },
         text = {
             Text(
-                if (rewardReady) {
-                    "광고를 끝까지 보면 오프라인 모험이 모두 충전됩니다."
-                } else {
-                    "광고를 준비하고 있습니다. 잠시 후 다시 시도해 주세요."
-                },
+                localized(presentation.message),
                 color = AqMuted,
                 fontSize = 13.sp,
                 lineHeight = 19.sp,
@@ -2812,20 +2875,31 @@ private fun OfflineAdventureRewardDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss, modifier = Modifier.height(48.dp)) {
-                Text("나중에", color = AqMuted)
+                Text(localized("나중에"), color = AqMuted)
             }
         },
         confirmButton = {
             Button(
-                onClick = onConfirm,
-                enabled = rewardReady,
+                onClick = {
+                    when (presentation.action) {
+                        RewardDialogAction.RETRY_AD_SETUP -> onRetryAdsSetup()
+                        RewardDialogAction.RETRY_AD_LOAD -> onRetryRewardedAd()
+                        RewardDialogAction.WATCH_AD -> onWatchAd()
+                        RewardDialogAction.NONE -> Unit
+                    }
+                },
+                enabled = presentation.confirmEnabled,
                 modifier = Modifier.height(48.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = AqGold,
                     contentColor = AqBackground,
                 ),
             ) {
-                Text(confirmText, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    localized(presentation.confirmLabel),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                )
             }
         },
     )
@@ -4861,14 +4935,6 @@ private fun monsterGradeColor(grade: String): Color = when (grade) {
     "보스" -> Color(0xFFFF8A78)
     "정예" -> Color(0xFFD897FF)
     else -> AqMuted
-}
-
-private enum class RewardedLoadState {
-    WAITING,
-    LOADING,
-    READY,
-    SHOWING,
-    FAILED,
 }
 
 private const val REWARDED_AD_TAG = "AlarmQuestRewarded"

@@ -9,6 +9,7 @@ import androidx.room.Room
 import androidx.work.Configuration
 import com.nullplaying.ads.GoogleMobileAdsConsentManager
 import com.nullplaying.ads.MobileAdsInitializationGate
+import com.nullplaying.ads.MobileAdsRuntimeState
 import com.nullplaying.data.FileSimpleStateBackupStore
 import com.nullplaying.data.SimpleDatabase
 import com.nullplaying.data.SimpleGameRepository
@@ -38,17 +39,22 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicBoolean
 
 class AlarmQuestApplication : Application(), Configuration.Provider {
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val _mobileAdsReady = MutableStateFlow(false)
+    private val _mobileAdsRuntimeState =
+        MutableStateFlow(MobileAdsRuntimeState.WAITING_FOR_CONSENT)
     private val mobileAdsInitializationGate = MobileAdsInitializationGate()
+    private val mobileAdsSdkInitialized = AtomicBoolean(false)
     private var rankingSyncJob: Job? = null
     private val sessionActivityVisibility = SessionActivityVisibility()
     private val foregroundForConfig = MutableStateFlow(false)
     private val offlineAdventureRemoteConfig by lazy { OfflineAdventureRemoteConfig(this) }
 
     val mobileAdsReady = _mobileAdsReady.asStateFlow()
+    val mobileAdsRuntimeState = _mobileAdsRuntimeState.asStateFlow()
 
     val adsConsentManager: GoogleMobileAdsConsentManager by lazy {
         GoogleMobileAdsConsentManager(this)
@@ -161,7 +167,7 @@ class AlarmQuestApplication : Application(), Configuration.Provider {
             Log.d(
                 TAG,
                 "UMP flow completed: canRequestAds=${adsConsentManager.canRequestAds}, " +
-                    "privacyOptionsRequired=${adsConsentManager.privacyOptionsRequired.value}",
+                    "privacyOptionsStatus=${adsConsentManager.state.value.privacyOptionsStatus}",
             )
             initializeMobileAdsIfAllowed()
         }
@@ -194,8 +200,29 @@ class AlarmQuestApplication : Application(), Configuration.Provider {
         }
     }
 
+    fun retryAdsSetup(activity: Activity) {
+        if (adsConsentManager.canRequestAds) {
+            initializeMobileAdsIfAllowed()
+        } else {
+            _mobileAdsReady.value = false
+            _mobileAdsRuntimeState.value = MobileAdsRuntimeState.WAITING_FOR_CONSENT
+            gatherAdsConsent(activity)
+        }
+    }
+
     private fun initializeMobileAdsIfAllowed() {
-        if (!mobileAdsInitializationGate.tryStart(adsConsentManager.canRequestAds)) return
+        if (!adsConsentManager.canRequestAds) {
+            _mobileAdsReady.value = false
+            _mobileAdsRuntimeState.value = MobileAdsRuntimeState.WAITING_FOR_CONSENT
+            return
+        }
+        if (mobileAdsSdkInitialized.get()) {
+            _mobileAdsReady.value = true
+            _mobileAdsRuntimeState.value = MobileAdsRuntimeState.READY
+            return
+        }
+        if (!mobileAdsInitializationGate.tryStart(canRequestAds = true)) return
+        _mobileAdsRuntimeState.value = MobileAdsRuntimeState.INITIALIZING
         applicationScope.launch {
             runCatching {
                 MobileAds.initialize(
@@ -203,10 +230,25 @@ class AlarmQuestApplication : Application(), Configuration.Provider {
                     InitializationConfig.Builder(BuildConfig.ADMOB_APP_ID).build(),
                 )
             }.onSuccess {
-                _mobileAdsReady.value = true
-                Log.d(TAG, "Google Mobile Ads Next-Gen SDK initialized after UMP consent gate")
+                mobileAdsSdkInitialized.set(true)
+                if (adsConsentManager.canRequestAds) {
+                    _mobileAdsReady.value = true
+                    _mobileAdsRuntimeState.value = MobileAdsRuntimeState.READY
+                    Log.d(TAG, "Google Mobile Ads Next-Gen SDK initialized after UMP consent gate")
+                } else {
+                    _mobileAdsReady.value = false
+                    _mobileAdsRuntimeState.value = MobileAdsRuntimeState.WAITING_FOR_CONSENT
+                    Log.d(TAG, "Google Mobile Ads initialized; requests remain blocked by UMP")
+                }
             }.onFailure { error ->
                 mobileAdsInitializationGate.markFailed()
+                mobileAdsSdkInitialized.set(false)
+                _mobileAdsReady.value = false
+                _mobileAdsRuntimeState.value = if (adsConsentManager.canRequestAds) {
+                    MobileAdsRuntimeState.RETRYABLE_ERROR
+                } else {
+                    MobileAdsRuntimeState.WAITING_FOR_CONSENT
+                }
                 Log.e(TAG, "Google Mobile Ads Next-Gen SDK initialization failed", error)
             }
         }

@@ -48,8 +48,8 @@ android {
         applicationId = "com.nullplaying"
         minSdk = 26
         targetSdk = 36
-        versionCode = 14
-        versionName = "0.4.1"
+        versionCode = 15
+        versionName = "0.4.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField(
             "String",
@@ -77,6 +77,9 @@ android {
             "DATA_DELETION_URL",
             "\"https://nullplaying.4ltree.com/data-deletion\"",
         )
+        // UMP geography overrides and consent resets must remain unavailable to production builds.
+        buildConfigField("boolean", "IS_EEA_QA", "false")
+        buildConfigField("String", "UMP_TEST_DEVICE_HASH", "\"\"")
         buildConfigField("String", "SUPABASE_URL", "\"${buildConfigString("SUPABASE_URL")}\"")
         buildConfigField(
             "String",
@@ -129,8 +132,24 @@ android {
             isShrinkResources = false
             matchingFallbacks += listOf("debug")
         }
+        create("eeaQa") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".eeaqa"
+            versionNameSuffix = "-eea-qa"
+            matchingFallbacks += listOf("debug")
+            resValue("string", "app_name", "AlarmQuest EEA QA")
+            buildConfigField("boolean", "IS_EEA_QA", "true")
+            buildConfigField(
+                "String",
+                "UMP_TEST_DEVICE_HASH",
+                "\"${buildConfigString("ALARMQUEST_UMP_TEST_DEVICE_HASH")}\"",
+            )
+        }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
     }
 
@@ -158,6 +177,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+}
+
+// The side-by-side EEA QA package intentionally has no Firebase registration.
+// Remote Config already falls back safely when Firebase configuration is absent.
+tasks.matching { it.name == "processEeaQaGoogleServices" }.configureEach {
+    enabled = false
 }
 
 kotlin {

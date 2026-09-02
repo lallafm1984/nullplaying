@@ -1,5 +1,6 @@
 package com.nullplaying.data
 
+import com.nullplaying.BuildConfig
 import com.nullplaying.engine.SimpleGameEngine
 import com.nullplaying.engine.OfflineAdventureConfig
 import com.nullplaying.engine.LegacyAutoHuntSnapshot
@@ -286,6 +287,10 @@ class SimpleGameRepository(
         compactExistingCharacterSlotsIfNeeded()
         val slotId = characterStates.size + 1
         val game = engine.newGame(name, heroClass, stats, seed, now)
+        if (BuildConfig.IS_EEA_QA) {
+            // Dedicated device QA starts below capacity so the real rewarded-ad path can load.
+            game.offlineAdventureMillis = 0L
+        }
         game.rankingCharacterId = UUID.randomUUID().toString()
         persistSlot(slotId, game, now, emitSnapshot = false)
         updateActiveCharacterSlot(slotId)

@@ -196,6 +196,19 @@ MANUAL_EN = {
     "모험 기록을 확인하는 중": "Checking adventure records",
     "모험 기록을 안전하게 준비하고 있습니다": "Preparing your adventure records safely",
     "오프라인 모험 충전": "Offline adventure time",
+    "광고 설정 다시 연결": "Retry ad setup",
+    "광고 설정 연결 중": "Connecting ad settings",
+    "광고 보고 모두 충전": "Watch ad and fully recharge",
+    "준비 중": "Preparing",
+    "광고 설정을 불러오지 못했습니다. 오프라인 모험은 앱을 켜 둔 동안 계속 충전됩니다.":
+        "Couldn't load ad settings. Offline adventure time will keep recharging while the app is open.",
+    "오프라인 모험 시간은 앱을 켜 둔 동안 자동으로 충전됩니다. 광고 시청은 선택 사항입니다. 광고를 끝까지 보면 즉시 가득 충전됩니다.":
+        "Offline adventure time recharges automatically while the app is open. Watching an ad is optional. Watching an ad to the end instantly refills it.",
+    "광고를 불러오지 못했습니다. 오프라인 모험은 앱을 켜 둔 동안 계속 충전되며, 원하면 광고를 다시 시도할 수 있습니다.":
+        "Couldn't load an ad. Offline adventure time will keep recharging while the app is open. You can try the ad again if you want.",
+    "광고를 준비하고 있습니다. 오프라인 모험은 앱을 켜 둔 동안 계속 충전됩니다.":
+        "Preparing an ad. Offline adventure time will keep recharging while the app is open.",
+    "오프라인 모험 시간을 충전 중입니다.": "Offline adventure time is recharging.",
     "바로 충전": "Charge Now",
     "충전 완료": "Charged",
     "가득 차면 자동 귀환": "Returns when full",
@@ -635,6 +648,19 @@ MANUAL_JA = {
     "모험 기록을 확인하는 중": "冒険記録を確認中",
     "모험 기록을 안전하게 준비하고 있습니다": "冒険記録を安全に準備しています",
     "오프라인 모험 충전": "オフライン冒険時間",
+    "광고 설정 다시 연결": "広告設定を再接続",
+    "광고 설정 연결 중": "広告設定に接続中",
+    "광고 보고 모두 충전": "広告を見て全回復",
+    "준비 중": "準備中",
+    "광고 설정을 불러오지 못했습니다. 오프라인 모험은 앱을 켜 둔 동안 계속 충전됩니다.":
+        "広告設定を読み込めませんでした。オフライン冒険時間は、アプリを開いている間も回復し続けます。",
+    "오프라인 모험 시간은 앱을 켜 둔 동안 자동으로 충전됩니다. 광고 시청은 선택 사항입니다. 광고를 끝까지 보면 즉시 가득 충전됩니다.":
+        "オフライン冒険時間は、アプリを開いている間に自動で回復します。広告の視聴は任意です。広告を最後まで見ると、すぐに全回復します。",
+    "광고를 불러오지 못했습니다. 오프라인 모험은 앱을 켜 둔 동안 계속 충전되며, 원하면 광고를 다시 시도할 수 있습니다.":
+        "広告を読み込めませんでした。オフライン冒険時間は、アプリを開いている間も回復し続けます。必要であれば広告を再試行できます。",
+    "광고를 준비하고 있습니다. 오프라인 모험은 앱을 켜 둔 동안 계속 충전됩니다.":
+        "広告を準備しています。オフライン冒険時間は、アプリを開いている間も回復し続けます。",
+    "오프라인 모험 시간을 충전 중입니다.": "オフライン冒険時間を回復中です。",
     "바로 충전": "今すぐ充電",
     "충전 완료": "充電完了",
     "가득 차면 자동 귀환": "満杯になると自動帰還",

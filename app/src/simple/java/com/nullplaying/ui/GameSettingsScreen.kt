@@ -82,7 +82,9 @@ internal fun GameSettingsScreen(
     gameLanguageStore: GameLanguageStore,
     onBack: () -> Unit,
     onExitToRoster: () -> Unit,
+    adsSetupNeedsRecovery: Boolean = false,
     privacyOptionsRequired: Boolean = false,
+    onRetryAdsSetup: () -> Unit = {},
     onOpenPrivacyOptions: () -> Unit = {},
 ) {
     BackHandler(onBack = onBack)
@@ -322,10 +324,24 @@ internal fun GameSettingsScreen(
                 }
                 Spacer(Modifier.height(12.dp))
                 GameInfoActionButton(
-                    label = "개인정보처리방침",
+                    label = localized("개인정보처리방침", language),
                     onClick = { openPrivacyPolicy(context, language) },
                     modifier = Modifier.fillMaxWidth(),
                 )
+                if (adsSetupNeedsRecovery) {
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = onRetryAdsSetup,
+                        modifier = Modifier.fillMaxWidth().height(48.dp),
+                        border = BorderStroke(1.dp, AqGoldSoft),
+                    ) {
+                        Text(
+                            text = localized("광고 설정 다시 연결", language),
+                            color = AqGold,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                }
                 if (privacyOptionsRequired) {
                     Spacer(Modifier.height(8.dp))
                     OutlinedButton(
@@ -334,7 +350,7 @@ internal fun GameSettingsScreen(
                         border = BorderStroke(1.dp, AqGoldSoft),
                     ) {
                         Text(
-                            text = "광고 개인정보 선택",
+                            text = localized("광고 개인정보 선택", language),
                             color = AqGold,
                             fontWeight = FontWeight.Bold,
                         )

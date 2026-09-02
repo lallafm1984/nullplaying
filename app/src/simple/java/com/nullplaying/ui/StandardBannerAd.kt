@@ -40,8 +40,9 @@ internal fun StandardBannerAd(
 ) {
     val context = LocalContext.current
     val isPreview = LocalInspectionMode.current
-    val adView = remember(context) { AdView(context) }
-    var loadState by remember { mutableStateOf(BannerLoadState.WAITING) }
+    // Recreate the view when UMP stops allowing requests so a previously loaded banner is dropped.
+    val adView = remember(context, mobileAdsReady) { AdView(context) }
+    var loadState by remember(adView) { mutableStateOf(BannerLoadState.WAITING) }
 
     LaunchedEffect(mobileAdsReady, adView, isPreview) {
         if (!mobileAdsReady || isPreview) return@LaunchedEffect

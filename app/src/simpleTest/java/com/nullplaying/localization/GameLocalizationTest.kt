@@ -125,6 +125,43 @@ class GameLocalizationTest {
     }
 
     @Test
+    fun `ad recovery and optional charging copy is complete in English and Japanese`() {
+        val readyMessage =
+            "오프라인 모험 시간은 앱을 켜 둔 동안 자동으로 충전됩니다. " +
+                "광고 시청은 선택 사항입니다. " +
+                "광고를 끝까지 보면 즉시 가득 충전됩니다."
+
+        assertEquals(
+            "Retry ad setup",
+            GameLocalization.translate("광고 설정 다시 연결", AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "広告設定を再接続",
+            GameLocalization.translate("광고 설정 다시 연결", AppLanguage.JAPANESE),
+        )
+        assertEquals(
+            "Offline adventure time recharges automatically while the app is open. " +
+                "Watching an ad is optional. " +
+                "Watching an ad to the end instantly refills it.",
+            GameLocalization.translate(readyMessage, AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "オフライン冒険時間は、アプリを開いている間に自動で回復します。" +
+                "広告の視聴は任意です。" +
+                "広告を最後まで見ると、すぐに全回復します。",
+            GameLocalization.translate(readyMessage, AppLanguage.JAPANESE),
+        )
+        assertEquals(
+            "Offline adventure time is recharging.",
+            GameLocalization.translate("오프라인 모험 시간을 충전 중입니다.", AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "オフライン冒険時間を回復中です。",
+            GameLocalization.translate("오프라인 모험 시간을 충전 중입니다.", AppLanguage.JAPANESE),
+        )
+    }
+
+    @Test
     fun `prologue accessibility scene labels avoid invalid English ordinals`() {
         for (scene in 1..3) {
             val source = "프롤로그 ${scene}번째 장면"

@@ -26,8 +26,10 @@ class MainActivity : ComponentActivity() {
         val alarmQuestApplication = application as AlarmQuestApplication
         setContent {
             val mobileAdsReady by alarmQuestApplication.mobileAdsReady.collectAsState()
-            val privacyOptionsRequired by
-                alarmQuestApplication.adsConsentManager.privacyOptionsRequired.collectAsState()
+            val adsConsentState by
+                alarmQuestApplication.adsConsentManager.state.collectAsState()
+            val mobileAdsRuntimeState by
+                alarmQuestApplication.mobileAdsRuntimeState.collectAsState()
             AlarmQuestTheme {
                 AlarmQuestApp(
                     repository = alarmQuestApplication.gameRepository,
@@ -36,7 +38,11 @@ class MainActivity : ComponentActivity() {
                     gameLanguageStore = alarmQuestApplication.gameLanguageStore,
                     supabaseGameService = alarmQuestApplication.supabaseGameService,
                     mobileAdsReady = mobileAdsReady,
-                    privacyOptionsRequired = privacyOptionsRequired,
+                    adsConsentState = adsConsentState,
+                    mobileAdsRuntimeState = mobileAdsRuntimeState,
+                    onRetryAdsSetup = {
+                        alarmQuestApplication.retryAdsSetup(this@MainActivity)
+                    },
                     onOpenPrivacyOptions = {
                         alarmQuestApplication.showAdsPrivacyOptions(this@MainActivity) {
                             if (!isFinishing && !isDestroyed) {
