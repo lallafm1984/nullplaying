@@ -996,6 +996,9 @@ private fun GameScreen(
     var showingSettings by rememberSaveable(activeSlotId, presentationVisitId) {
         mutableStateOf(false)
     }
+    var showingRecentEvents by rememberSaveable(activeSlotId, presentationVisitId) {
+        mutableStateOf(false)
+    }
     var showingSkillEffectTest by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -1006,6 +1009,22 @@ private fun GameScreen(
     var showingRewardDialog by remember { mutableStateOf(false) }
     val offlineAdventureProgress = repository.offlineAdventureFraction(state)
     val offlineAdventureFull = repository.isOfflineAdventureFull(state)
+    val recentEvents by remember(repository, activeSlotId) {
+        repository.observeRecentAdventureEvents(activeSlotId)
+    }.collectAsState(initial = emptyList())
+    val newestRecentEventId = recentEvents.firstOrNull()?.id ?: 0L
+    val unreadRecentEventCount = recentEvents.count {
+        it.id > state.lastSeenRecentAdventureEventId
+    }
+
+    LaunchedEffect(showingRecentEvents, newestRecentEventId) {
+        if (showingRecentEvents && newestRecentEventId > 0L) {
+            repository.markRecentAdventureEventsSeen(
+                eventId = newestRecentEventId,
+                now = System.currentTimeMillis(),
+            )
+        }
+    }
 
     LaunchedEffect(mobileAdsReady, offlineAdventureFull, rewardedLoadGeneration) {
         rewardedLoadRequestToken += 1
@@ -1186,9 +1205,13 @@ private fun GameScreen(
             !rankingTransition.currentState &&
             !showingSettings &&
             !showingSkillEffectTest &&
+            !showingRecentEvents &&
             !showingRewardDialog,
         onBack = onExitToRoster,
     )
+    BackHandler(enabled = showingRecentEvents) {
+        showingRecentEvents = false
+    }
     BackHandler(enabled = showingSkillEffectTest) {
         showingSkillEffectTest = false
     }
@@ -1290,6 +1313,8 @@ private fun GameScreen(
                                 MenuTab.MAIN -> MainPanel(
                                     state = state,
                                     repository = repository,
+                                    unreadRecentEventCount = unreadRecentEventCount,
+                                    onOpenRecentEvents = { showingRecentEvents = true },
                                 )
                                 MenuTab.CHARACTER -> CharacterPanel(
                                     state = state,
@@ -1331,6 +1356,12 @@ private fun GameScreen(
                 showingRewardDialog = false
                 showRewardedAd()
             },
+        )
+    }
+    if (showingRecentEvents) {
+        RecentAdventureEventsDialog(
+            records = recentEvents,
+            onDismiss = { showingRecentEvents = false },
         )
     }
 }
@@ -2866,12 +2897,48 @@ private fun OfflineAdventureRewardDialog(
             )
         },
         text = {
-            Text(
-                localized(presentation.message),
-                color = AqMuted,
-                fontSize = 13.sp,
-                lineHeight = 19.sp,
-            )
+            val supportingMessage = presentation.supportingMessage
+            if (supportingMessage == null) {
+                Text(
+                    localized(presentation.message),
+                    color = AqMuted,
+                    fontSize = 13.sp,
+                    lineHeight = 19.sp,
+                )
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                ) {
+                    Text(
+                        localized(presentation.message),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = AqText,
+                        fontSize = 14.sp,
+                        lineHeight = 21.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center,
+                    )
+                    val supportingShape = RoundedCornerShape(12.dp)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(supportingShape)
+                            .background(AqBackground.copy(alpha = 0.48f))
+                            .border(1.dp, AqGold.copy(alpha = 0.16f), supportingShape)
+                            .padding(horizontal = 14.dp, vertical = 12.dp),
+                    ) {
+                        Text(
+                            localized(supportingMessage),
+                            modifier = Modifier.fillMaxWidth(),
+                            color = AqMuted,
+                            fontSize = 12.sp,
+                            lineHeight = 18.sp,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+            }
         },
         dismissButton = {
             TextButton(onClick = onDismiss, modifier = Modifier.height(48.dp)) {
@@ -3448,6 +3515,8 @@ internal fun skillDamageFontSize(hitCount: Int, isFinal: Boolean): Int = when (h
 private fun MainPanel(
     state: SimpleGameState,
     repository: SimpleGameRepository,
+    unreadRecentEventCount: Int,
+    onOpenRecentEvents: () -> Unit,
 ) {
     val tale = state.adventureTale
     val act = tale.activeAct()
@@ -3470,7 +3539,7 @@ private fun MainPanel(
             .padding(horizontal = 4.dp, vertical = 10.dp),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().height(40.dp),
+            modifier = Modifier.fillMaxWidth().heightIn(min = 40.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
@@ -3482,10 +3551,15 @@ private fun MainPanel(
             Spacer(Modifier.width(8.dp))
             Text(
                 text = "모험 현황",
+                modifier = Modifier.weight(1f),
                 color = AqText,
                 fontSize = 18.sp,
                 lineHeight = 22.sp,
                 fontWeight = FontWeight.Black,
+            )
+            RecentAdventureEventsButton(
+                unreadCount = unreadRecentEventCount,
+                onClick = onOpenRecentEvents,
             )
         }
         Spacer(Modifier.height(8.dp))

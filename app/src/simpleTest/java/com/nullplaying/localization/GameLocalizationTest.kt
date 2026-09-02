@@ -126,10 +126,8 @@ class GameLocalizationTest {
 
     @Test
     fun `ad recovery and optional charging copy is complete in English and Japanese`() {
-        val readyMessage =
-            "오프라인 모험 시간은 앱을 켜 둔 동안 자동으로 충전됩니다. " +
-                "광고 시청은 선택 사항입니다. " +
-                "광고를 끝까지 보면 즉시 가득 충전됩니다."
+        val readyMessage = "광고를 끝까지 보면\n오프라인 모험 시간이 즉시 충전됩니다."
+        val supportingMessage = "광고를 보지 않아도 앱을 켜 둔 동안\n자동으로 충전됩니다."
 
         assertEquals(
             "Retry ad setup",
@@ -140,16 +138,21 @@ class GameLocalizationTest {
             GameLocalization.translate("광고 설정 다시 연결", AppLanguage.JAPANESE),
         )
         assertEquals(
-            "Offline adventure time recharges automatically while the app is open. " +
-                "Watching an ad is optional. " +
-                "Watching an ad to the end instantly refills it.",
+            "Watch the full ad to instantly\nrecharge your offline adventure time.",
             GameLocalization.translate(readyMessage, AppLanguage.ENGLISH),
         )
         assertEquals(
-            "オフライン冒険時間は、アプリを開いている間に自動で回復します。" +
-                "広告の視聴は任意です。" +
-                "広告を最後まで見ると、すぐに全回復します。",
+            "広告を最後まで見ると、\nオフライン冒険時間がすぐに回復します。",
             GameLocalization.translate(readyMessage, AppLanguage.JAPANESE),
+        )
+        assertEquals(
+            "Even without watching an ad,\n" +
+                "offline adventure time recharges automatically while the app is open.",
+            GameLocalization.translate(supportingMessage, AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "広告を見なくても、\nアプリを開いている間に自動で回復します。",
+            GameLocalization.translate(supportingMessage, AppLanguage.JAPANESE),
         )
         assertEquals(
             "Offline adventure time is recharging.",

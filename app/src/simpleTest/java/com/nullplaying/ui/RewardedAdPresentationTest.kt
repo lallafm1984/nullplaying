@@ -112,11 +112,19 @@ class RewardedAdPresentationTest {
         )
 
         presentations.forEach { presentation ->
-            assertTrue(presentation.message.contains("앱을 켜 둔 동안"))
+            assertTrue(
+                presentation.message.contains("앱을 켜 둔 동안") ||
+                    presentation.supportingMessage?.contains("앱을 켜 둔 동안") == true,
+            )
         }
-        assertTrue(presentations.last().message.contains("자동으로 충전"))
-        assertTrue(presentations.last().message.contains("선택 사항"))
-        assertTrue(presentations.last().message.contains("끝까지 보면"))
+        assertEquals(
+            "광고를 끝까지 보면\n오프라인 모험 시간이 즉시 충전됩니다.",
+            presentations.last().message,
+        )
+        assertEquals(
+            "광고를 보지 않아도 앱을 켜 둔 동안\n자동으로 충전됩니다.",
+            presentations.last().supportingMessage,
+        )
     }
 
     private fun requestableConsent() = AdsConsentState(

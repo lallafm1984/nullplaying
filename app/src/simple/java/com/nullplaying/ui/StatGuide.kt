@@ -29,6 +29,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
@@ -85,6 +86,31 @@ internal fun StatSectionHeading(
 @Composable
 private fun StatGuideButton(modifier: Modifier = Modifier, enabled: Boolean = true) {
     var guideOpen by rememberSaveable { mutableStateOf(false) }
+    CompactInlineActionButton(
+        icon = Icons.Outlined.Info,
+        label = StatGuideContent.title,
+        onClick = {
+            guideOpen = true
+        },
+        enabled = enabled,
+        modifier = modifier,
+    )
+
+    if (guideOpen) {
+        StatGuideDialog(onDismiss = { guideOpen = false })
+    }
+}
+
+/** Compact gold-outline action used beside section headings. */
+@Composable
+internal fun CompactInlineActionButton(
+    icon: ImageVector,
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    badgeText: String? = null,
+) {
     val focusManager = LocalFocusManager.current
     val buttonShape = RoundedCornerShape(percent = 50)
 
@@ -92,7 +118,7 @@ private fun StatGuideButton(modifier: Modifier = Modifier, enabled: Boolean = tr
     Surface(
         onClick = {
             focusManager.clearFocus()
-            guideOpen = true
+            onClick()
         },
         enabled = enabled,
         modifier = modifier.semantics { role = Role.Button },
@@ -107,14 +133,26 @@ private fun StatGuideButton(modifier: Modifier = Modifier, enabled: Boolean = tr
                 .padding(horizontal = 8.dp, vertical = 3.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(Icons.Outlined.Info, contentDescription = null, modifier = Modifier.size(14.dp))
+            Icon(icon, contentDescription = null, modifier = Modifier.size(14.dp))
             Spacer(Modifier.width(4.dp))
-            Text(StatGuideContent.title, fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.Medium)
+            Text(label, fontSize = 12.sp, lineHeight = 16.sp, fontWeight = FontWeight.Medium)
+            if (badgeText != null) {
+                Spacer(Modifier.width(5.dp))
+                Surface(
+                    shape = RoundedCornerShape(percent = 50),
+                    color = AqGold,
+                    contentColor = AqSurface,
+                ) {
+                    Text(
+                        badgeText,
+                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp),
+                        fontSize = 9.sp,
+                        lineHeight = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
         }
-    }
-
-    if (guideOpen) {
-        StatGuideDialog(onDismiss = { guideOpen = false })
     }
 }
 

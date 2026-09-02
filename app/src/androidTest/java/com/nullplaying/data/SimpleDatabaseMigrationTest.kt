@@ -18,7 +18,7 @@ class SimpleDatabaseMigrationTest {
     )
 
     @Test
-    fun migrate12To15PreservesGameState() {
+    fun migrate12To16PreservesGameState() {
         assertGameStateSurvivesMigration(
             databaseName = "simple-migration-12",
             startVersion = 12,
@@ -28,7 +28,7 @@ class SimpleDatabaseMigrationTest {
     }
 
     @Test
-    fun migrate13To15PreservesGameState() {
+    fun migrate13To16PreservesGameState() {
         assertGameStateSurvivesMigration(
             databaseName = "simple-migration-13",
             startVersion = 13,
@@ -38,7 +38,7 @@ class SimpleDatabaseMigrationTest {
     }
 
     @Test
-    fun migrate14To15PreservesAccountProgressAndAddsDefaults() {
+    fun migrate14To16PreservesAccountProgressAndAddsDefaults() {
         val databaseName = "simple-migration-14"
         helper.createDatabase(databaseName, 14).use { database ->
             database.execSQL(
@@ -51,7 +51,7 @@ class SimpleDatabaseMigrationTest {
             )
         }
 
-        helper.runMigrationsAndValidate(databaseName, 15, true).use { database ->
+        helper.runMigrationsAndValidate(databaseName, 16, true).use { database ->
             database.query(
                 "SELECT unlockedCharacterSlots, activeCharacterSlotId, revision " +
                     "FROM simple_account_progress WHERE id = 1",
@@ -62,6 +62,39 @@ class SimpleDatabaseMigrationTest {
                 assertEquals(0L, cursor.getLong(2))
             }
             assertGameStateRow(database, slotId = 3, payload = "legacy-v14")
+        }
+    }
+
+    @Test
+    fun migrate15To16AddsRecentAdventureEventsWithoutChangingState() {
+        val databaseName = "simple-migration-15"
+        helper.createDatabase(databaseName, 15).use { database ->
+            database.execSQL(
+                "INSERT INTO simple_game_state (id, payload, updatedAt) VALUES (?, ?, ?)",
+                arrayOf<Any>(1, "legacy-v15", 1_500L),
+            )
+        }
+
+        helper.runMigrationsAndValidate(databaseName, 16, true).use { database ->
+            assertGameStateRow(database, slotId = 1, payload = "legacy-v15")
+            database.execSQL(
+                "INSERT INTO recent_adventure_events " +
+                    "(characterSlotId, occurredAt, eventType, subjectId, subjectName, " +
+                    "contextName, previousName, currentName, previousValue, currentValue, " +
+                    "equipmentSlot, rarity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                arrayOf<Any>(
+                    1, 1_501L, "LEVEL_UP", "", "", "", "", "", 1L, 2L, "", "",
+                ),
+            )
+            database.query(
+                "SELECT eventType, previousValue, currentValue " +
+                    "FROM recent_adventure_events WHERE characterSlotId = 1",
+            ).use { cursor ->
+                assertTrue(cursor.moveToFirst())
+                assertEquals("LEVEL_UP", cursor.getString(0))
+                assertEquals(1L, cursor.getLong(1))
+                assertEquals(2L, cursor.getLong(2))
+            }
         }
     }
 
@@ -78,7 +111,7 @@ class SimpleDatabaseMigrationTest {
             )
         }
 
-        helper.runMigrationsAndValidate(databaseName, 15, true).use { database ->
+        helper.runMigrationsAndValidate(databaseName, 16, true).use { database ->
             assertGameStateRow(database, slotId, payload)
         }
     }

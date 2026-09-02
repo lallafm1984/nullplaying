@@ -2,7 +2,7 @@ package com.nullplaying.model
 
 import kotlinx.serialization.Serializable
 
-const val SIMPLE_GAME_SCHEMA_VERSION = 42
+const val SIMPLE_GAME_SCHEMA_VERSION = 43
 const val BASE_INVENTORY_CAPACITY = 15L
 private const val INVENTORY_LEVEL_BONUS_NUMERATOR = 3L
 private const val INVENTORY_LEVEL_BONUS_DENOMINATOR = 5L
@@ -332,6 +332,7 @@ data class SimpleGameState(
     var lastRewardRequestId: String = "",
     var completedTaleHistory: MutableList<CompletedTaleRecord> = mutableListOf(),
     var labyrinthDepthCompleted: Long = 0L,
+    var lastSeenRecentAdventureEventId: Long = 0L,
 ) {
     /**
      * Strength still expands the bag, while a level-scaled baseline and capped strength bonus
@@ -373,4 +374,29 @@ data class SettlementDelta(
     val actsCompleted: Long,
     val talesCompleted: Long,
     val itemsFound: Long,
+    val recentEvents: List<RecentAdventureEvent> = emptyList(),
+)
+
+enum class RecentAdventureEventType {
+    LEVEL_UP,
+    SKILL_MASTERY,
+    SKILL_LEARNED,
+    EQUIPMENT_CHANGED,
+    QUEST_COMPLETED,
+    TALE_COMPLETED,
+    TITLE_UNLOCKED,
+}
+
+data class RecentAdventureEvent(
+    val occurredAt: Long,
+    val type: RecentAdventureEventType,
+    val subjectId: String = "",
+    val subjectName: String = "",
+    val contextName: String = "",
+    val previousName: String = "",
+    val currentName: String = "",
+    val previousValue: Long? = null,
+    val currentValue: Long? = null,
+    val equipmentSlot: EquipmentSlot? = null,
+    val rarity: String = "",
 )

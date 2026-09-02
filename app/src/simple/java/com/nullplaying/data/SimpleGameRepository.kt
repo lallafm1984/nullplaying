@@ -1,11 +1,13 @@
 package com.nullplaying.data
 
+import androidx.room.withTransaction
 import com.nullplaying.BuildConfig
 import com.nullplaying.engine.SimpleGameEngine
 import com.nullplaying.engine.OfflineAdventureConfig
 import com.nullplaying.engine.LegacyAutoHuntSnapshot
 import com.nullplaying.model.HeroClass
 import com.nullplaying.model.HeroStats
+import com.nullplaying.model.RecentAdventureEvent
 import com.nullplaying.model.SimpleGameState
 import com.nullplaying.model.StatRoll
 import kotlinx.coroutines.CancellationException
@@ -13,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -127,6 +131,21 @@ class SimpleGameRepository(
 
     fun isAppInForeground(): Boolean = appInForeground
 
+    fun observeRecentAdventureEvents(
+        slotId: Int,
+        limit: Int = RECENT_ADVENTURE_EVENT_LIMIT,
+    ): Flow<List<RecentAdventureEventRecord>> =
+        database.recentAdventureEventDao()
+            .observeRecent(slotId, limit.coerceIn(1, RECENT_ADVENTURE_EVENT_LIMIT))
+            .map { entities -> entities.mapNotNull(RecentAdventureEventEntity::toRecordOrNull) }
+
+    suspend fun markRecentAdventureEventsSeen(eventId: Long, now: Long) = mutex.withLock {
+        val current = mutableSnapshots.value.state ?: return@withLock
+        if (eventId <= current.lastSeenRecentAdventureEventId) return@withLock
+        current.lastSeenRecentAdventureEventId = eventId
+        persist(current, now)
+    }
+
     suspend fun updateOfflineAdventureConfig(
         config: OfflineAdventureConfig,
         now: Long,
@@ -137,18 +156,26 @@ class SimpleGameRepository(
 
         // Finish elapsed time under the old rules, including inactive character slots.
         val checkpoints = characterStates.mapValues { it.value.progressCheckpoint() }
+        val recentEventsBySlot = mutableMapOf<Int, List<RecentAdventureEvent>>()
         characterStates.forEach { (slotId, state) ->
-            if (slotId == activeSlotId) {
+            val delta = if (slotId == activeSlotId) {
                 advanceForegroundOfflineAdventure(state, elapsedRealtime)
                 engine.settleOffline(state, now)
             } else {
                 engine.settleOfflineWithOfflineAdventure(state, now)
             }
+            recentEventsBySlot[slotId] = delta.recentEvents
         }
         engine.updateOfflineAdventureConfig(config)
         characterStates.entries.toList().forEach { (slotId, state) ->
             engine.clampOfflineAdventureBalance(state)
-            persistSlot(slotId, state, now, emitSnapshot = false)
+            persistSlot(
+                slotId = slotId,
+                state = state,
+                now = now,
+                emitSnapshot = false,
+                recentEvents = recentEventsBySlot[slotId].orEmpty(),
+            )
             publishProgressEvent(checkpoints.getValue(slotId), state)
         }
         emitReady()
@@ -182,6 +209,7 @@ class SimpleGameRepository(
                             sourceEntity = primary,
                             recoveredFromBackup = false,
                             progressEvent = settled.progressEvent,
+                            recentEvents = settled.recentEvents,
                         )
                     } catch (cancelled: CancellationException) {
                         throw cancelled
@@ -194,6 +222,7 @@ class SimpleGameRepository(
                             sourceEntity = backup,
                             recoveredFromBackup = true,
                             progressEvent = settled.progressEvent,
+                            recentEvents = settled.recentEvents,
                         )
                     }
                 }
@@ -207,6 +236,7 @@ class SimpleGameRepository(
                             sourceEntity = backup,
                             recoveredFromBackup = true,
                             progressEvent = settled.progressEvent,
+                            recentEvents = settled.recentEvents,
                         )
                     }
                 }
@@ -246,6 +276,7 @@ class SimpleGameRepository(
                     now = now,
                     rotateBackup = !loaded.recoveredFromBackup,
                     emitSnapshot = false,
+                    recentEvents = loaded.recentEvents,
                 )
                 loaded.progressEvent?.let(progressEventSink::onGameProgress)
             }
@@ -304,8 +335,14 @@ class SimpleGameRepository(
                     IllegalArgumentException("Character slot $slotId does not exist"),
                 )
             val checkpoint = selected.progressCheckpoint()
-            engine.settleOfflineWithOfflineAdventure(selected, now)
-            persistSlot(slotId, selected, now, emitSnapshot = false)
+            val delta = engine.settleOfflineWithOfflineAdventure(selected, now)
+            persistSlot(
+                slotId = slotId,
+                state = selected,
+                now = now,
+                emitSnapshot = false,
+                recentEvents = delta.recentEvents,
+            )
             publishProgressEvent(checkpoint, selected)
             updateActiveCharacterSlot(slotId)
             emitReady()
@@ -404,9 +441,10 @@ class SimpleGameRepository(
             current.monster.id != beforeMonsterId ||
             current.adventurePhase != beforeAdventurePhase ||
             current.combatPhase != beforePhase ||
-            delta.defeatedMonsters > 0L
+            delta.defeatedMonsters > 0L ||
+            delta.recentEvents.isNotEmpty()
         ) {
-            persist(current, now)
+            persist(current, now, recentEvents = delta.recentEvents)
             publishProgressEvent(progressCheckpoint, current)
         } else if (
             current.offlineAdventureMillis != beforeOfflineAdventure &&
@@ -433,12 +471,13 @@ class SimpleGameRepository(
         try {
             characterStates.entries.sortedBy { it.key }.forEach { (slotId, state) ->
                 val checkpoint = state.progressCheckpoint()
-                engine.settleOfflineWithOfflineAdventure(state, now)
+                val delta = engine.settleOfflineWithOfflineAdventure(state, now)
                 persistSlot(
                     slotId = slotId,
                     state = state,
                     now = now,
                     emitSnapshot = false,
+                    recentEvents = delta.recentEvents,
                 )
                 publishProgressEvent(checkpoint, state)
             }
@@ -456,12 +495,12 @@ class SimpleGameRepository(
             val checkpoint = current.progressCheckpoint()
             advanceForegroundOfflineAdventure(current, elapsedRealtime)
             val elapsed = now - current.lastSettledAt
-            if (elapsed >= OFFLINE_SETTLEMENT_THRESHOLD_MILLIS) {
+            val delta = if (elapsed >= OFFLINE_SETTLEMENT_THRESHOLD_MILLIS) {
                 engine.settleOffline(current, now)
             } else {
                 engine.settle(current, now)
             }
-            persist(current, now)
+            persist(current, now, recentEvents = delta.recentEvents)
             publishProgressEvent(checkpoint, current)
         }
         appInForeground = false
@@ -477,12 +516,13 @@ class SimpleGameRepository(
             if (appInForeground || characterStates.isEmpty()) return@withLock
             characterStates.entries.sortedBy { it.key }.forEach { (slotId, state) ->
                 val checkpoint = state.progressCheckpoint()
-                engine.settleOfflineWithOfflineAdventure(state, now)
+                val delta = engine.settleOfflineWithOfflineAdventure(state, now)
                 persistSlot(
                     slotId = slotId,
                     state = state,
                     now = now,
                     emitSnapshot = false,
+                    recentEvents = delta.recentEvents,
                 )
                 publishProgressEvent(checkpoint, state)
             }
@@ -534,12 +574,13 @@ class SimpleGameRepository(
             json.decodeFromString<SimpleGameState>(entity.payload) to legacySnapshot
         }
         val checkpoint = loaded.progressCheckpoint()
-        withContext(Dispatchers.Default) {
+        val delta = withContext(Dispatchers.Default) {
             engine.settleOfflineWithOfflineAdventure(loaded, now, legacy)
         }
         return SettledState(
             state = loaded,
             progressEvent = gameProgressEventBetween(checkpoint, loaded),
+            recentEvents = delta.recentEvents,
         )
     }
 
@@ -555,6 +596,7 @@ class SimpleGameRepository(
         now: Long,
         rotateBackup: Boolean = true,
         recoveredFromBackup: Boolean = false,
+        recentEvents: List<RecentAdventureEvent> = emptyList(),
     ) {
         val slotId = requireNotNull(activeSlotId) { "No active character slot" }
         persistSlot(
@@ -563,6 +605,7 @@ class SimpleGameRepository(
             now = now,
             rotateBackup = rotateBackup,
             recoveredFromBackup = recoveredFromBackup,
+            recentEvents = recentEvents,
         )
     }
 
@@ -573,6 +616,7 @@ class SimpleGameRepository(
         rotateBackup: Boolean = true,
         recoveredFromBackup: Boolean = false,
         emitSnapshot: Boolean = true,
+        recentEvents: List<RecentAdventureEvent> = emptyList(),
     ) {
         require(slotId in 1..MAX_CHARACTER_SLOTS) { "Unsupported character slot $slotId" }
         recordUnlockedCharacterSlots(unlockedCharacterSlotCountForLevel(state.hero.level))
@@ -587,7 +631,18 @@ class SimpleGameRepository(
         if (rotateBackup) {
             lastPersistedEntities[slotId]?.let { previous -> backupStore.save(previous) }
         }
-        database.stateDao().save(nextEntity)
+        database.withTransaction {
+            database.stateDao().save(nextEntity)
+            if (recentEvents.isNotEmpty()) {
+                database.recentAdventureEventDao().insertAll(
+                    recentEvents.map { it.toEntity(slotId) },
+                )
+                database.recentAdventureEventDao().trimToLimit(
+                    slotId = slotId,
+                    limit = RECENT_ADVENTURE_EVENT_LIMIT,
+                )
+            }
+        }
         lastPersistedEntities[slotId] = nextEntity
         // The engine mutates its working state for fast catch-up. Emit a detached object so
         // Compose cannot skip a header or panel just because the old object reference survived.
@@ -654,11 +709,13 @@ class SimpleGameRepository(
         val sourceEntity: SimpleStateEntity,
         val recoveredFromBackup: Boolean,
         val progressEvent: GameProgressEvent?,
+        val recentEvents: List<RecentAdventureEvent>,
     )
 
     private data class SettledState(
         val state: SimpleGameState,
         val progressEvent: GameProgressEvent?,
+        val recentEvents: List<RecentAdventureEvent>,
     )
 
     private data class LoadedAccountProgress(

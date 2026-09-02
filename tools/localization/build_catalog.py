@@ -202,8 +202,10 @@ MANUAL_EN = {
     "준비 중": "Preparing",
     "광고 설정을 불러오지 못했습니다. 오프라인 모험은 앱을 켜 둔 동안 계속 충전됩니다.":
         "Couldn't load ad settings. Offline adventure time will keep recharging while the app is open.",
-    "오프라인 모험 시간은 앱을 켜 둔 동안 자동으로 충전됩니다. 광고 시청은 선택 사항입니다. 광고를 끝까지 보면 즉시 가득 충전됩니다.":
-        "Offline adventure time recharges automatically while the app is open. Watching an ad is optional. Watching an ad to the end instantly refills it.",
+    "광고를 끝까지 보면\n오프라인 모험 시간이 즉시 충전됩니다.":
+        "Watch the full ad to instantly\nrecharge your offline adventure time.",
+    "광고를 보지 않아도 앱을 켜 둔 동안\n자동으로 충전됩니다.":
+        "Even without watching an ad,\noffline adventure time recharges automatically while the app is open.",
     "광고를 불러오지 못했습니다. 오프라인 모험은 앱을 켜 둔 동안 계속 충전되며, 원하면 광고를 다시 시도할 수 있습니다.":
         "Couldn't load an ad. Offline adventure time will keep recharging while the app is open. You can try the ad again if you want.",
     "광고를 준비하고 있습니다. 오프라인 모험은 앱을 켜 둔 동안 계속 충전됩니다.":
@@ -654,8 +656,10 @@ MANUAL_JA = {
     "준비 중": "準備中",
     "광고 설정을 불러오지 못했습니다. 오프라인 모험은 앱을 켜 둔 동안 계속 충전됩니다.":
         "広告設定を読み込めませんでした。オフライン冒険時間は、アプリを開いている間も回復し続けます。",
-    "오프라인 모험 시간은 앱을 켜 둔 동안 자동으로 충전됩니다. 광고 시청은 선택 사항입니다. 광고를 끝까지 보면 즉시 가득 충전됩니다.":
-        "オフライン冒険時間は、アプリを開いている間に自動で回復します。広告の視聴は任意です。広告を最後まで見ると、すぐに全回復します。",
+    "광고를 끝까지 보면\n오프라인 모험 시간이 즉시 충전됩니다.":
+        "広告を最後まで見ると、\nオフライン冒険時間がすぐに回復します。",
+    "광고를 보지 않아도 앱을 켜 둔 동안\n자동으로 충전됩니다.":
+        "広告を見なくても、\nアプリを開いている間に自動で回復します。",
     "광고를 불러오지 못했습니다. 오프라인 모험은 앱을 켜 둔 동안 계속 충전되며, 원하면 광고를 다시 시도할 수 있습니다.":
         "広告を読み込めませんでした。オフライン冒険時間は、アプリを開いている間も回復し続けます。必要であれば広告を再試行できます。",
     "광고를 준비하고 있습니다. 오프라인 모험은 앱을 켜 둔 동안 계속 충전됩니다.":

@@ -22,6 +22,7 @@ internal enum class RewardDialogAction {
 
 internal data class RewardDialogPresentation(
     val message: String,
+    val supportingMessage: String? = null,
     val confirmLabel: String,
     val confirmEnabled: Boolean,
     val action: RewardDialogAction,
@@ -45,7 +46,8 @@ internal fun rewardDialogPresentation(
         action = RewardDialogAction.RETRY_AD_SETUP,
     )
     rewardedLoadState == RewardedLoadState.READY -> RewardDialogPresentation(
-        message = "오프라인 모험 시간은 앱을 켜 둔 동안 자동으로 충전됩니다. 광고 시청은 선택 사항입니다. 광고를 끝까지 보면 즉시 가득 충전됩니다.",
+        message = "광고를 끝까지 보면\n오프라인 모험 시간이 즉시 충전됩니다.",
+        supportingMessage = "광고를 보지 않아도 앱을 켜 둔 동안\n자동으로 충전됩니다.",
         confirmLabel = "광고 보고 모두 충전",
         confirmEnabled = true,
         action = RewardDialogAction.WATCH_AD,

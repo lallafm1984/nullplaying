@@ -13,6 +13,8 @@ import com.nullplaying.model.InventoryItem
 import com.nullplaying.model.LearnedSkill
 import com.nullplaying.model.MonsterState
 import com.nullplaying.model.MonsterGrade
+import com.nullplaying.model.RecentAdventureEvent
+import com.nullplaying.model.RecentAdventureEventType
 import com.nullplaying.model.SettlementDelta
 import com.nullplaying.model.SIMPLE_GAME_SCHEMA_VERSION
 import com.nullplaying.model.ShopEquipmentOffer
@@ -156,11 +158,12 @@ class SimpleGameEngine(
         val beforeActs = state.totalActs
         val beforeTales = state.totalTales
         val beforeItems = state.totalItemsFound
+        val recentEvents = mutableListOf<RecentAdventureEvent>()
         val gameplayRng = StableRng(state.rngState)
         val presentationRng = StableRng(state.presentationRngState)
         normalizeLegacyCombat(state, gameplayRng, savedSchema)
 
-        replayTimeline(state, gameplayRng, presentationRng, now)
+        replayTimeline(state, gameplayRng, presentationRng, now, recentEvents)
         state.lastSettledAt = now
         state.rngState = gameplayRng.state
         state.presentationRngState = presentationRng.state
@@ -172,6 +175,7 @@ class SimpleGameEngine(
             beforeActs = beforeActs,
             beforeTales = beforeTales,
             beforeItems = beforeItems,
+            recentEvents = recentEvents,
         )
     }
 
@@ -188,11 +192,12 @@ class SimpleGameEngine(
         val beforeActs = state.totalActs
         val beforeTales = state.totalTales
         val beforeItems = state.totalItemsFound
+        val recentEvents = mutableListOf<RecentAdventureEvent>()
         val gameplayRng = StableRng(state.rngState)
         val presentationRng = StableRng(state.presentationRngState)
         normalizeLegacyCombat(state, gameplayRng, savedSchema)
 
-        replayTimeline(state, gameplayRng, presentationRng, now)
+        replayTimeline(state, gameplayRng, presentationRng, now, recentEvents)
         clearAttackPresentation(state)
         state.lastSettledAt = now
         state.rngState = gameplayRng.state
@@ -205,6 +210,7 @@ class SimpleGameEngine(
             beforeActs = beforeActs,
             beforeTales = beforeTales,
             beforeItems = beforeItems,
+            recentEvents = recentEvents,
         )
     }
 
@@ -213,6 +219,7 @@ class SimpleGameEngine(
         gameplayRng: StableRng,
         presentationRng: StableRng,
         now: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
     ) {
         while (state.actionEndsAt <= now) {
             val eventAt = state.actionEndsAt
@@ -220,12 +227,12 @@ class SimpleGameEngine(
                 AdventurePhase.COMBAT -> when (state.combatPhase) {
                     CombatPhase.REVEAL,
                     CombatPhase.ATTACKING,
-                    -> performAttack(state, presentationRng, eventAt)
+                    -> performAttack(state, presentationRng, eventAt, recentEvents)
 
-                    CombatPhase.VICTORY -> finishVictory(state, gameplayRng, eventAt)
+                    CombatPhase.VICTORY -> finishVictory(state, gameplayRng, eventAt, recentEvents)
                 }
 
-                else -> finishTownAction(state, gameplayRng, eventAt)
+                else -> finishTownAction(state, gameplayRng, eventAt, recentEvents)
             }
         }
     }
@@ -392,6 +399,7 @@ class SimpleGameEngine(
         beforeActs: Long,
         beforeTales: Long,
         beforeItems: Long,
+        recentEvents: List<RecentAdventureEvent>,
     ): SettlementDelta = SettlementDelta(
         elapsedMillis = state.lastSettledAt - startedAt,
         defeatedMonsters = state.totalKills - beforeKills,
@@ -399,6 +407,7 @@ class SimpleGameEngine(
         actsCompleted = state.totalActs - beforeActs,
         talesCompleted = state.totalTales - beforeTales,
         itemsFound = state.totalItemsFound - beforeItems,
+        recentEvents = recentEvents,
     )
 
     private fun clearAttackPresentation(state: SimpleGameState) {
@@ -461,7 +470,12 @@ class SimpleGameEngine(
         return rng.state
     }
 
-    private fun performAttack(state: SimpleGameState, rng: StableRng, eventAt: Long) {
+    private fun performAttack(
+        state: SimpleGameState,
+        rng: StableRng,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ) {
         if (state.monster.currentEnergy <= 0L) {
             state.combatPhase = CombatPhase.VICTORY
             state.actionStartedAt = eventAt
@@ -472,6 +486,20 @@ class SimpleGameEngine(
         val attack = rollAttack(state, rng)
         val skill = attack.skill
         val skillDefinition = attack.definition
+        if (
+            skill != null &&
+            attack.previousSkillLevel != null &&
+            skill.level > attack.previousSkillLevel
+        ) {
+            recentEvents += RecentAdventureEvent(
+                occurredAt = eventAt,
+                type = RecentAdventureEventType.SKILL_MASTERY,
+                subjectId = skill.catalogId,
+                subjectName = skill.name,
+                previousValue = attack.previousSkillLevel,
+                currentValue = skill.level,
+            )
+        }
         val baseDamage = baseAttackDamage(state)
         val variedDamage = scalePercent(baseDamage, attack.damagePercent).coerceAtLeast(1L)
         val energyBeforeAttack = state.monster.currentEnergy.coerceAtLeast(0L)
@@ -511,6 +539,7 @@ class SimpleGameEngine(
         val skill: LearnedSkill?,
         val definition: SkillDefinition?,
         val damagePercent: Long,
+        val previousSkillLevel: Long? = null,
     )
 
     fun baseSkillProcPercent(state: SimpleGameState): Int {
@@ -672,11 +701,17 @@ class SimpleGameEngine(
             skill = updated,
             definition = definition,
             damagePercent = safeAdd(basePercent.toLong(), updated.damageBonusPercent),
+            previousSkillLevel = current.level,
         )
     }
 
-    private fun finishVictory(state: SimpleGameState, rng: StableRng, eventAt: Long) {
-        completeCombat(state, rng)
+    private fun finishVictory(
+        state: SimpleGameState,
+        rng: StableRng,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ) {
+        completeCombat(state, rng, eventAt, recentEvents)
         continueAfterVictory(state, eventAt)
     }
 
@@ -701,7 +736,12 @@ class SimpleGameEngine(
         }
     }
 
-    private fun completeCombat(state: SimpleGameState, rng: StableRng) {
+    private fun completeCombat(
+        state: SimpleGameState,
+        rng: StableRng,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ) {
         val defeated = state.monster
         val defeatedTale = state.adventureTale
         val labyrinthDepth = defeatedTale.labyrinthDepth
@@ -720,16 +760,21 @@ class SimpleGameEngine(
         } else {
             baseXp
         }
-        grantExperience(state, xp, rng)
+        grantExperience(state, xp, rng, eventAt, recentEvents)
         val loot = if (rng.nextInt(100) < equipmentDropPercent(defeated)) {
-            addEquipmentDrop(state, rng)
+            addEquipmentDrop(state, rng, eventAt, recentEvents)
         } else {
             addTrophy(state, rng, defeated)
         }
         recordLootPresentation(state, loot)
-        advanceTaleOnVictory(state, rng, defeated)
+        advanceTaleOnVictory(state, rng, defeated, eventAt, recentEvents)
         state.lastResult = if (isLabyrinthGateBoss) {
             val unlockedTitle = LabyrinthProgression.titleForCompletedDepth(labyrinthDepth)
+            recentEvents += RecentAdventureEvent(
+                occurredAt = eventAt,
+                type = RecentAdventureEventType.TITLE_UNLOCKED,
+                subjectName = unlockedTitle,
+            )
             state.lastLootSummary = "${state.lastLootSummary} · $unlockedTitle 해금"
             "${defeated.name} 처치 · 경험치 +$xp · " +
                 "$unlockedTitle 해금"
@@ -770,7 +815,12 @@ class SimpleGameEngine(
         clearLootPresentation(state)
     }
 
-    private fun finishTownAction(state: SimpleGameState, rng: StableRng, eventAt: Long) {
+    private fun finishTownAction(
+        state: SimpleGameState,
+        rng: StableRng,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ) {
         if (state.adventurePhase == AdventurePhase.OPENING) {
             beginCombat(state, rng, eventAt)
             return
@@ -779,10 +829,10 @@ class SimpleGameEngine(
         when (state.adventurePhase) {
             AdventurePhase.OPENING -> Unit
             AdventurePhase.LOOTING -> finishLooting(state, rng, eventAt)
-            AdventurePhase.RETURNING -> beginEquipmentSortingOrSelling(state, rng, eventAt)
+            AdventurePhase.RETURNING -> beginEquipmentSortingOrSelling(state, rng, eventAt, recentEvents)
             AdventurePhase.EQUIPPING -> beginSellingOrShopping(state, rng, eventAt)
             AdventurePhase.SELLING -> beginSellingOrShopping(state, rng, eventAt)
-            AdventurePhase.SHOPPING -> buyEquipment(state, rng, eventAt)
+            AdventurePhase.SHOPPING -> buyEquipment(state, rng, eventAt, recentEvents)
             AdventurePhase.SHOPPING_RESULT -> beginShoppingOrDeparting(state, rng, eventAt)
             AdventurePhase.SHOPPING_EMPTY -> beginDeparting(state, eventAt)
             AdventurePhase.DEPARTING -> beginCombat(state, rng, eventAt)
@@ -794,6 +844,7 @@ class SimpleGameEngine(
         state: SimpleGameState,
         rng: StableRng,
         eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
     ) {
         val equipmentLoot = state.inventory.count {
             it.kind == "장비" && it.equipmentSlot != null && it.equipmentPower != null
@@ -803,7 +854,7 @@ class SimpleGameEngine(
             return
         }
 
-        val equippedNames = equipBestLoot(state)
+        val equippedNames = equipBestLoot(state, eventAt, recentEvents)
         if (equippedNames.isEmpty()) {
             beginSellingOrShopping(state, rng, eventAt)
             return
@@ -821,7 +872,11 @@ class SimpleGameEngine(
         }
     }
 
-    private fun equipBestLoot(state: SimpleGameState): List<String> {
+    private fun equipBestLoot(
+        state: SimpleGameState,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ): List<String> {
         val equippedNames = mutableListOf<String>()
         EquipmentSlot.entries.forEach { slot ->
             val best = state.inventory.withIndex()
@@ -841,6 +896,8 @@ class SimpleGameEngine(
                 (candidatePower == current.power && rarityRank(candidate.rarity) > rarityRank(current.rarity))
             if (!isUpgrade) return@forEach
 
+            val previousName = current.name
+            val previousPower = current.power
             val replaced = InventoryItem(
                 id = candidate.id,
                 name = current.name,
@@ -856,6 +913,16 @@ class SimpleGameEngine(
             current.acquiredAtLevel = state.hero.level.coerceAtLeast(1L)
             state.inventory[best.index] = replaced
             state.totalLootEquipmentEquips = safeIncrement(state.totalLootEquipmentEquips)
+            recentEvents += RecentAdventureEvent(
+                occurredAt = eventAt,
+                type = RecentAdventureEventType.EQUIPMENT_CHANGED,
+                previousName = previousName,
+                currentName = current.name,
+                previousValue = previousPower,
+                currentValue = current.power,
+                equipmentSlot = slot,
+                rarity = current.rarity,
+            )
             equippedNames += current.name
         }
         return equippedNames
@@ -931,7 +998,12 @@ class SimpleGameEngine(
         state.lastResult = "사냥터로 다시 출정 중"
     }
 
-    private fun buyEquipment(state: SimpleGameState, rng: StableRng, eventAt: Long) {
+    private fun buyEquipment(
+        state: SimpleGameState,
+        rng: StableRng,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ) {
         val offer = state.pendingShopOffer ?: createShopOffer(state, rng)
         val current = offer?.let { pending ->
             state.equipment.firstOrNull { it.slot == pending.slot }
@@ -953,12 +1025,24 @@ class SimpleGameEngine(
             return
         }
 
+        val previousName = current.name
+        val previousPower = current.power
         state.hero.gold -= offer.price
         current.name = offer.name
         current.power = offer.newPower
         current.rarity = offer.rarity
         current.acquiredAtLevel = state.hero.level.coerceAtLeast(1L)
         state.totalEquipmentPurchases = safeIncrement(state.totalEquipmentPurchases)
+        recentEvents += RecentAdventureEvent(
+            occurredAt = eventAt,
+            type = RecentAdventureEventType.EQUIPMENT_CHANGED,
+            previousName = previousName,
+            currentName = current.name,
+            previousValue = previousPower,
+            currentValue = current.power,
+            equipmentSlot = current.slot,
+            rarity = current.rarity,
+        )
         state.pendingShopOffer = null
         state.lastShopPurchase = offer
         state.lastTownItemName = offer.name
@@ -1122,15 +1206,36 @@ class SimpleGameEngine(
         return scaled.coerceIn(1L, Int.MAX_VALUE.toLong()).toInt()
     }
 
-    private fun grantExperience(state: SimpleGameState, amount: Long, rng: StableRng) {
+    private fun grantExperience(
+        state: SimpleGameState,
+        amount: Long,
+        rng: StableRng,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ) {
         state.hero.experience = safeAdd(state.hero.experience, amount)
         while (state.hero.experience >= experienceRequired(state.hero.level)) {
             val required = experienceRequired(state.hero.level)
             state.hero.experience -= required
+            val previousLevel = state.hero.level
             state.hero.level = safeIncrement(state.hero.level)
             applyClassGuidedGrowth(state.hero.stats, state.hero.heroClass, rng)
             state.classGuidedLevelGrowths = safeIncrement(state.classGuidedLevelGrowths)
-            learnSkillIfNeeded(state)
+            recentEvents += RecentAdventureEvent(
+                occurredAt = eventAt,
+                type = RecentAdventureEventType.LEVEL_UP,
+                previousValue = previousLevel,
+                currentValue = state.hero.level,
+            )
+            learnSkillIfNeeded(state)?.let { learned ->
+                recentEvents += RecentAdventureEvent(
+                    occurredAt = eventAt,
+                    type = RecentAdventureEventType.SKILL_LEARNED,
+                    subjectId = learned.catalogId,
+                    subjectName = learned.name,
+                    currentValue = state.hero.level,
+                )
+            }
         }
     }
 
@@ -1195,25 +1300,29 @@ class SimpleGameEngine(
         return safeAdd(whole, safeAdd(remainderTenths, 5L) / 10L)
     }
 
-    private fun learnSkillIfNeeded(state: SimpleGameState) {
-        if (state.hero.level % 5L != 0L || state.skills.size >= MAX_SKILLS) return
+    private fun learnSkillIfNeeded(state: SimpleGameState): LearnedSkill? {
+        if (state.hero.level % 5L != 0L || state.skills.size >= MAX_SKILLS) return null
         ensureSkillCatalogSeed(state)
         val tier = (state.hero.level / 5L + 1L).toInt()
-        if (tier !in 2..MAX_SKILLS || state.skills.any { it.id == tier }) return
+        if (tier !in 2..MAX_SKILLS || state.skills.any { it.id == tier }) return null
         val definition = SkillCatalog.select(state.skillCatalogSeed, state.hero.heroClass, tier)
-        state.skills += LearnedSkill(
+        val learned = LearnedSkill(
             id = tier,
             name = definition.name,
             acquiredAtLevel = state.hero.level,
             description = definition.description,
             catalogId = definition.catalogId,
         )
+        state.skills += learned
+        return learned
     }
 
     private fun advanceTaleOnVictory(
         state: SimpleGameState,
         gameplayRng: StableRng,
         defeated: MonsterState,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
     ) {
         val tale = state.adventureTale
         val act = tale.activeAct()
@@ -1228,9 +1337,16 @@ class SimpleGameEngine(
         act.completed = true
         state.totalActs = safeIncrement(state.totalActs)
         state.hero.gold = safeAdd(state.hero.gold, act.rewardGold)
-        grantExperience(state, act.rewardExperience, gameplayRng)
+        grantExperience(state, act.rewardExperience, gameplayRng, eventAt, recentEvents)
 
         if (tale.currentActIndex < tale.acts.lastIndex) {
+            recentEvents += RecentAdventureEvent(
+                occurredAt = eventAt,
+                type = RecentAdventureEventType.QUEST_COMPLETED,
+                subjectId = act.id,
+                subjectName = act.title,
+                contextName = tale.title,
+            )
             tale.currentActIndex += 1
             return
         }
@@ -1255,6 +1371,13 @@ class SimpleGameEngine(
             actMemories = tale.acts.map { it.completionBody },
             completedAtLevel = state.hero.level,
             labyrinthDepth = tale.labyrinthDepth,
+        )
+        recentEvents += RecentAdventureEvent(
+            occurredAt = eventAt,
+            type = RecentAdventureEventType.TALE_COMPLETED,
+            subjectId = tale.definitionId,
+            subjectName = tale.title,
+            contextName = tale.volumeTitle,
         )
         trimRepeatableTaleHistory(state)
 
@@ -2183,7 +2306,12 @@ class SimpleGameEngine(
         return CombatLoot(name = name, rarity = rarity, kind = "전리품")
     }
 
-    private fun addEquipmentDrop(state: SimpleGameState, rng: StableRng): CombatLoot? {
+    private fun addEquipmentDrop(
+        state: SimpleGameState,
+        rng: StableRng,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ): CombatLoot? {
         if (state.inventory.size.toLong() >= state.inventoryCapacity()) return null
         val slot = EquipmentSlot.entries[rng.nextInt(EquipmentSlot.entries.size)]
         val candidate = equipmentCandidate(state, rng, slot, equipmentLootRarity(rng))
@@ -2193,6 +2321,8 @@ class SimpleGameEngine(
             (candidate.power == current.power && rarityRank(candidate.rarity) > rarityRank(current.rarity))
 
         if (isUpgrade) {
+            val previousName = current.name
+            val previousPower = current.power
             val replaced = InventoryItem(
                 id = droppedItemId,
                 name = current.name,
@@ -2208,6 +2338,16 @@ class SimpleGameEngine(
             current.acquiredAtLevel = state.hero.level.coerceAtLeast(1L)
             addInventory(state, replaced)
             state.totalLootEquipmentEquips = safeIncrement(state.totalLootEquipmentEquips)
+            recentEvents += RecentAdventureEvent(
+                occurredAt = eventAt,
+                type = RecentAdventureEventType.EQUIPMENT_CHANGED,
+                previousName = previousName,
+                currentName = current.name,
+                previousValue = previousPower,
+                currentValue = current.power,
+                equipmentSlot = slot,
+                rarity = current.rarity,
+            )
             return CombatLoot(
                 name = candidate.name,
                 rarity = candidate.rarity,

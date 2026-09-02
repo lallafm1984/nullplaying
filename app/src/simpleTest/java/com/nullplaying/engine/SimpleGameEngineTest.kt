@@ -9,6 +9,7 @@ import com.nullplaying.model.HeroStats
 import com.nullplaying.model.InventoryItem
 import com.nullplaying.model.LearnedSkill
 import com.nullplaying.model.MonsterGrade
+import com.nullplaying.model.RecentAdventureEventType
 import com.nullplaying.model.SettlementDelta
 import com.nullplaying.model.ShopEquipmentOffer
 import com.nullplaying.model.SIMPLE_GAME_SCHEMA_VERSION
@@ -229,6 +230,11 @@ class SimpleGameEngineTest {
         assertEquals("부러진 성문의 파수꾼", game.completedTaleHistory.single().title)
         assertEquals(TaleKind.PROLOGUE, game.completedTaleHistory.single().kind)
         assertEquals("돌아오지 않은 순찰대", game.adventureTale.title)
+        assertEquals(
+            1,
+            delta.recentEvents.count { it.type == RecentAdventureEventType.TALE_COMPLETED },
+        )
+        assertFalse(delta.recentEvents.any { it.type == RecentAdventureEventType.QUEST_COMPLETED })
     }
 
     @Test
@@ -951,6 +957,25 @@ class SimpleGameEngineTest {
     }
 
     @Test
+    fun `online and offline settlement emit the same individual mastery event`() {
+        val online = newGame(now = 0L).apply {
+            skills[0] = skills.single().copy(usageCount = 99L)
+            consecutiveBasicAttacks = Int.MAX_VALUE
+        }
+        val offline = Json.decodeFromString<SimpleGameState>(Json.encodeToString(online))
+
+        val onlineDelta = engine.settle(online, online.actionEndsAt)
+        val offlineDelta = engine.settleOffline(offline, offline.actionEndsAt)
+
+        assertEquals(onlineDelta.recentEvents, offlineDelta.recentEvents)
+        val event = onlineDelta.recentEvents.single()
+        assertEquals(RecentAdventureEventType.SKILL_MASTERY, event.type)
+        assertEquals(1L, event.previousValue)
+        assertEquals(2L, event.currentValue)
+        assertEquals(online.skills.single().name, event.subjectName)
+    }
+
+    @Test
     fun `skill mastery stops at level one hundred with a full experience bar`() {
         val game = newGame(now = 0L)
         game.skills[0] = game.skills.single().copy(
@@ -1293,7 +1318,7 @@ class SimpleGameEngineTest {
         val bagBefore = game.inventory.size
         forceVictory(game)
 
-        engine.settle(game, game.actionEndsAt)
+        val delta = engine.settle(game, game.actionEndsAt)
 
         assertEquals(itemsBefore + 1L, game.totalItemsFound)
         assertEquals(bagBefore + 1, game.inventory.size)
@@ -1304,6 +1329,7 @@ class SimpleGameEngineTest {
         assertTrue(game.lastLootEquipmentSlot != null)
         assertTrue(game.lastLootEquipmentPower != null)
         assertEquals(1L, game.totalActs)
+        assertTrue(delta.recentEvents.any { it.type == RecentAdventureEventType.QUEST_COMPLETED })
     }
 
     @Test
@@ -1440,7 +1466,7 @@ class SimpleGameEngineTest {
         game.monster.isFinalBoss = true
         forceVictory(game)
 
-        engine.settle(game, game.actionEndsAt)
+        val delta = engine.settle(game, game.actionEndsAt)
 
         assertEquals(inventoryCapacity, game.inventory.size)
         assertTrue(game.inventory.map { it.name }.containsAll(oldNames))
@@ -1452,6 +1478,7 @@ class SimpleGameEngineTest {
         assertTrue(game.lastLootSummary.contains("새 장비로 장착"))
         assertTrue(game.lastLootPreviousPower != null)
         assertEquals(AdventurePhase.LOOTING, game.adventurePhase)
+        assertTrue(delta.recentEvents.any { it.type == RecentAdventureEventType.EQUIPMENT_CHANGED })
 
         engine.settle(game, game.actionEndsAt)
         assertEquals(AdventurePhase.RETURNING, game.adventurePhase)
@@ -2085,11 +2112,12 @@ class SimpleGameEngineTest {
         val game = newGame(now = 0L)
         game.hero.experience = engine.experienceRequired(game.hero.level) - 1L
 
-        settleUntilNextKill(game)
+        val delta = settleUntilNextKill(game)
 
         assertEquals(2L, game.hero.level)
         assertEquals(1L, game.classGuidedLevelGrowths)
         assertEquals(335L, engine.expectedWeightedStatThirtieths(2L, 1L))
+        assertTrue(delta.recentEvents.any { it.type == RecentAdventureEventType.LEVEL_UP })
     }
 
     @Test

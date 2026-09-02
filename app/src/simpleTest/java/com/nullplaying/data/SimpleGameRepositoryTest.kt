@@ -4,7 +4,9 @@ import androidx.room.Room
 import com.nullplaying.engine.SimpleGameEngine
 import com.nullplaying.engine.OfflineAdventureConfig
 import com.nullplaying.model.HeroClass
+import com.nullplaying.model.RecentAdventureEventType
 import com.nullplaying.model.SimpleGameState
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -62,6 +64,85 @@ class SimpleGameRepositoryTest {
 
         assertEquals(firstSave, backupStore[1])
         assertTrue(database.stateDao().load()!!.updatedAt > firstSave!!.updatedAt)
+    }
+
+    @Test
+    fun `recent adventure events retain the newest three hundred per character`() = runBlocking {
+        val dao = database.recentAdventureEventDao()
+        dao.insertAll(
+            (1L..305L).map { sequence ->
+                RecentAdventureEventEntity(
+                    characterSlotId = 1,
+                    occurredAt = sequence,
+                    eventType = RecentAdventureEventType.LEVEL_UP.name,
+                    previousValue = sequence,
+                    currentValue = sequence + 1L,
+                )
+            },
+        )
+
+        dao.trimToLimit(slotId = 1, limit = RECENT_ADVENTURE_EVENT_LIMIT)
+
+        val retained = dao.loadRecent(slotId = 1, limit = 400)
+        assertEquals(RECENT_ADVENTURE_EVENT_LIMIT, retained.size)
+        assertEquals(305L, retained.first().occurredAt)
+        assertEquals(6L, retained.last().occurredAt)
+    }
+
+    @Test
+    fun `opening recent events records the newest event as seen`() = runBlocking {
+        val repository = repository()
+        repository.createCharacter(
+            "기록 검사",
+            HeroClass.WARRIOR,
+            engine.rollStats(77L).stats,
+            88L,
+            1_000L,
+        )
+        val insertedId = database.recentAdventureEventDao().insertAll(
+            listOf(
+                RecentAdventureEventEntity(
+                    characterSlotId = 1,
+                    occurredAt = 1_001L,
+                    eventType = RecentAdventureEventType.LEVEL_UP.name,
+                    previousValue = 1L,
+                    currentValue = 2L,
+                ),
+            ),
+        ).single()
+
+        assertEquals(insertedId, repository.observeRecentAdventureEvents(1).first().single().id)
+        repository.markRecentAdventureEventsSeen(eventId = insertedId, now = 1_002L)
+
+        assertEquals(insertedId, repository.snapshots.value.state!!.lastSeenRecentAdventureEventId)
+        val saved = Json.decodeFromString<SimpleGameState>(database.stateDao().load()!!.payload)
+        assertEquals(insertedId, saved.lastSeenRecentAdventureEventId)
+    }
+
+    @Test
+    fun `foreground settlement persists each generated mastery event`() = runBlocking {
+        val repository = repository()
+        repository.createCharacter(
+            "숙련 기록",
+            HeroClass.WARRIOR,
+            engine.rollStats(77L).stats,
+            88L,
+            0L,
+        )
+        repository.onAppForegrounded(now = 0L, elapsedRealtime = 0L)
+
+        val opening = repository.snapshots.value.state!!
+        repository.tick(now = opening.actionEndsAt, elapsedRealtime = opening.actionEndsAt)
+        val combat = repository.snapshots.value.state!!
+        combat.skills[0] = combat.skills.single().copy(usageCount = 99L)
+        combat.consecutiveBasicAttacks = Int.MAX_VALUE
+
+        repository.tick(now = combat.actionEndsAt, elapsedRealtime = combat.actionEndsAt)
+
+        val event = repository.observeRecentAdventureEvents(slotId = 1).first().single().event
+        assertEquals(RecentAdventureEventType.SKILL_MASTERY, event.type)
+        assertEquals(1L, event.previousValue)
+        assertEquals(2L, event.currentValue)
     }
 
     @Test
@@ -355,6 +436,22 @@ class SimpleGameRepositoryTest {
         repository.createCharacter("셋째", HeroClass.MAGE, stats, 103L, 6_200L)
         repository.selectCharacter(slotId = 3, now = 6_300L)
         assertNotNull(backupStore[3])
+        database.recentAdventureEventDao().insertAll(
+            listOf(
+                RecentAdventureEventEntity(
+                    characterSlotId = 2,
+                    occurredAt = 6_250L,
+                    eventType = RecentAdventureEventType.TITLE_UNLOCKED.name,
+                    subjectName = "삭제될 기록",
+                ),
+                RecentAdventureEventEntity(
+                    characterSlotId = 3,
+                    occurredAt = 6_300L,
+                    eventType = RecentAdventureEventType.TITLE_UNLOCKED.name,
+                    subjectName = "셋째의 기록",
+                ),
+            ),
+        )
 
         val result = repository.deleteCharacter(slotId = 2)
 
@@ -366,6 +463,11 @@ class SimpleGameRepositoryTest {
         assertEquals(StartupPhase.READY, repository.snapshots.value.startupPhase)
         assertEquals(2, repository.snapshots.value.activeSlotId)
         assertEquals("셋째", repository.snapshots.value.state!!.hero.name)
+        assertEquals(
+            listOf("셋째의 기록"),
+            database.recentAdventureEventDao().loadRecent(2, 10).map { it.subjectName },
+        )
+        assertTrue(database.recentAdventureEventDao().loadRecent(3, 10).isEmpty())
         assertEquals(
             listOf("첫 번째", "셋째"),
             repository.snapshots.value.characters.map { it.state.hero.name },
