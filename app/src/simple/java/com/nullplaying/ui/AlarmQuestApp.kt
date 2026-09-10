@@ -28,6 +28,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -63,13 +65,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Backpack
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Flag
@@ -88,6 +91,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -98,7 +102,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text as MaterialText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -123,17 +129,21 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.dialog
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.paneTitle
 import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -147,22 +157,33 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.nullplaying.data.SimpleGameRepository
 import com.nullplaying.data.StartupPhase
+import com.nullplaying.data.adventureQaTriggerBuildAllowed
 import com.nullplaying.engine.LabyrinthProgression
+import com.nullplaying.engine.HeroPathCatalog
 import com.nullplaying.engine.SimpleGameEngine
 import com.nullplaying.engine.SkillCatalog
 import com.nullplaying.engine.SkillDefinition
 import com.nullplaying.R
 import com.nullplaying.BuildConfig
+import com.nullplaying.model.AdventureEventResult
+import com.nullplaying.model.AdventureEventRewardKind
 import com.nullplaying.model.AdventurePhase
+import com.nullplaying.model.AdventureRelationshipResult
 import com.nullplaying.model.CombatPhase
 import com.nullplaying.model.CompletedTaleRecord
 import com.nullplaying.model.HeroClass
+import com.nullplaying.model.HeroPathAllocationTarget
+import com.nullplaying.model.HeroPathNodeType
 import com.nullplaying.model.HeroStats
 import com.nullplaying.model.InventoryItem
 import com.nullplaying.model.LearnedSkill
 import com.nullplaying.model.MonsterGrade
+import com.nullplaying.model.ProjectionRelationshipStage
 import com.nullplaying.model.ShopEquipmentOffer
 import com.nullplaying.model.SimpleGameState
 import com.nullplaying.model.TaleActState
@@ -172,9 +193,13 @@ import com.nullplaying.ads.MobileAdsRuntimeState
 import com.nullplaying.ads.actions
 import com.nullplaying.notifications.GameNotificationPreferencesStore
 import com.nullplaying.remote.AppAnnouncement
+import com.nullplaying.remote.ArenaRankingLocalStanding
+import com.nullplaying.remote.forCharacter
 import com.nullplaying.localization.GameLanguageStore
+import com.nullplaying.localization.AppLanguage
 import com.nullplaying.remote.RemoteRankingSnapshot
 import com.nullplaying.remote.AppUpdateNotice
+import com.nullplaying.remote.ARENA_LIVE_SERVER_QA_APPLICATION_ID
 import com.nullplaying.remote.SupabaseConnectionState
 import com.nullplaying.remote.SupabaseGameService
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback
@@ -183,8 +208,8 @@ import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError
 import com.google.android.libraries.ads.mobile.sdk.rewarded.OnUserEarnedRewardListener
 import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardItem
-import com.google.android.libraries.ads.mobile.sdk.rewardedinterstitial.RewardedInterstitialAd
-import com.google.android.libraries.ads.mobile.sdk.rewardedinterstitial.RewardedInterstitialAdEventCallback
+import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAd
+import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAdEventCallback
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -193,13 +218,71 @@ import java.util.UUID
 import kotlin.math.PI
 import kotlin.math.sin
 
-private enum class MenuTab(val label: String, val icon: ImageVector) {
+internal enum class MenuTab(
+    val label: String,
+    val icon: ImageVector? = null,
+    val iconResourceId: Int? = null,
+) {
     MAIN("메인", Icons.Filled.Explore),
     CHARACTER("모험가", Icons.Filled.Person),
+    // Retired route retained only to decode an old saved navigation state.
+    CORRESPONDENCE(""),
+    ITEMS("아이템", Icons.Filled.Backpack),
+    BATTLE("결투장", iconResourceId = R.drawable.ic_swords),
     EQUIPMENT("장비", Icons.Filled.Shield),
     BAG("가방", Icons.Filled.Backpack),
     QUEST("퀘스트", Icons.Filled.Flag),
 }
+
+private enum class RankingPageKind {
+    ADVENTURER,
+    ARENA,
+}
+
+internal fun visibleMenuTabsForBuild(
+    isDebugBuild: Boolean,
+    serverMatchingEnabled: Boolean = BuildConfig.ARENA_SERVER_MATCHING_ENABLED,
+): List<MenuTab> =
+    if (battlePreviewMenuEnabled(isDebugBuild, serverMatchingEnabled)) {
+        listOf(
+            MenuTab.MAIN,
+            MenuTab.CHARACTER,
+            MenuTab.BATTLE,
+            MenuTab.ITEMS,
+            MenuTab.QUEST,
+        )
+    } else {
+        listOf(
+            MenuTab.MAIN,
+            MenuTab.CHARACTER,
+            MenuTab.EQUIPMENT,
+            MenuTab.BAG,
+            MenuTab.QUEST,
+        )
+    }
+
+internal fun menuTabAfterBuildRedirect(
+    selectedTab: MenuTab,
+    isDebugBuild: Boolean,
+    serverMatchingEnabled: Boolean = BuildConfig.ARENA_SERVER_MATCHING_ENABLED,
+): MenuTab = if (selectedTab == MenuTab.CORRESPONDENCE) {
+    MenuTab.MAIN
+} else if (
+    battlePreviewMenuEnabled(isDebugBuild, serverMatchingEnabled) &&
+    selectedTab in setOf(MenuTab.EQUIPMENT, MenuTab.BAG)
+) {
+    MenuTab.ITEMS
+} else {
+    selectedTab
+}
+
+internal fun adventurePanelVisibleForBuild(
+    selectedTab: MenuTab,
+    isDebugBuild: Boolean,
+    serverMatchingEnabled: Boolean = BuildConfig.ARENA_SERVER_MATCHING_ENABLED,
+): Boolean = !(battlePreviewMenuEnabled(isDebugBuild, serverMatchingEnabled) && selectedTab == MenuTab.BATTLE)
+
+internal val visibleMenuTabs = visibleMenuTabsForBuild(BuildConfig.DEBUG)
 
 internal fun offlineAdventurePercent(progress: Float): Int =
     (progress.coerceIn(0f, 1f) * 100f).toInt()
@@ -240,11 +323,16 @@ fun AlarmQuestApp(
     notificationPreferencesStore: GameNotificationPreferencesStore,
     gameLanguageStore: GameLanguageStore,
     supabaseGameService: SupabaseGameService,
+    gameNow: () -> Long,
+    onRetryGameInitialization: () -> Unit,
     mobileAdsReady: Boolean = false,
     adsConsentState: AdsConsentState = AdsConsentState(),
     mobileAdsRuntimeState: MobileAdsRuntimeState = MobileAdsRuntimeState.WAITING_FOR_CONSENT,
     onRetryAdsSetup: () -> Unit = {},
     onOpenPrivacyOptions: () -> Unit = {},
+    onBeginRewardedAdSession: (String, Long) -> Boolean,
+    onFinishRewardedAdSession: (String, Long) -> Boolean,
+    onEarnedOfflineAdventureReward: (String, String) -> Unit,
 ) {
     val systemDensity = LocalDensity.current
     val context = LocalContext.current
@@ -286,7 +374,10 @@ fun AlarmQuestApp(
             notificationPreferencesStore,
             gameLanguageStore,
             supabaseGameService,
+            gameNow,
+            onRetryGameInitialization,
             startupAnnouncement = if (updateNotice == null) announcement else null,
+            startupDialogsBlocked = updateNotice != null,
             onStartupAnnouncementShown = supabaseGameService::markAppAnnouncementDisplayed,
             onDismissStartupAnnouncement = { announcement = null },
             mobileAdsReady = mobileAdsReady,
@@ -294,6 +385,9 @@ fun AlarmQuestApp(
             mobileAdsRuntimeState = mobileAdsRuntimeState,
             onRetryAdsSetup = onRetryAdsSetup,
             onOpenPrivacyOptions = onOpenPrivacyOptions,
+            onBeginRewardedAdSession = onBeginRewardedAdSession,
+            onFinishRewardedAdSession = onFinishRewardedAdSession,
+            onEarnedOfflineAdventureReward = onEarnedOfflineAdventureReward,
         )
         updateNotice?.let { notice ->
             AppUpdateDialog(
@@ -385,7 +479,10 @@ private fun AlarmQuestAppContent(
     notificationPreferencesStore: GameNotificationPreferencesStore,
     gameLanguageStore: GameLanguageStore,
     supabaseGameService: SupabaseGameService,
+    gameNow: () -> Long,
+    onRetryGameInitialization: () -> Unit,
     startupAnnouncement: AppAnnouncement?,
+    startupDialogsBlocked: Boolean,
     onStartupAnnouncementShown: (AppAnnouncement) -> Unit,
     onDismissStartupAnnouncement: () -> Unit,
     mobileAdsReady: Boolean,
@@ -393,8 +490,22 @@ private fun AlarmQuestAppContent(
     mobileAdsRuntimeState: MobileAdsRuntimeState,
     onRetryAdsSetup: () -> Unit,
     onOpenPrivacyOptions: () -> Unit,
+    onBeginRewardedAdSession: (String, Long) -> Boolean,
+    onFinishRewardedAdSession: (String, Long) -> Boolean,
+    onEarnedOfflineAdventureReward: (String, String) -> Unit,
 ) {
     val snapshot by repository.snapshots.collectAsState()
+    val context = LocalContext.current
+    val whatsNewStore = remember(context) {
+        com.nullplaying.remote.AppAnnouncementDisplayStore(context)
+    }
+    val whatsNew = whatsNewNotice(LocalAppLanguage.current)
+    var whatsNewPending by remember {
+        mutableStateOf(
+            whatsNewNoticeEligible(BuildConfig.VERSION_CODE, isUpdatedInstallation(context)) &&
+                whatsNewStore.shouldDisplay(whatsNew),
+        )
+    }
     val rosterCharacters = snapshot.characters.map { character ->
         CharacterRosterEntry(
             slotId = character.slotId,
@@ -407,22 +518,33 @@ private fun AlarmQuestAppContent(
     val deleteCharacterAndSyncRanking: suspend (Int) -> Boolean = { slotId ->
         val deleted = repository.deleteCharacter(slotId).isSuccess
         if (deleted) {
-            supabaseGameService.syncRankingNow(repository.snapshots.value)
+            supabaseGameService.syncPlayerNetworkProfileAfterRosterMutation(
+                repository.snapshots.value,
+            )
         }
         deleted
     }
     var initializeAttempt by remember { mutableIntStateOf(0) }
     var minimumLoadingFinished by remember { mutableStateOf(false) }
-    var entryScene by rememberSaveable { mutableStateOf(EntryScene.TITLE) }
+    val liveArenaQa = BuildConfig.APPLICATION_ID == ARENA_LIVE_SERVER_QA_APPLICATION_ID
+    var entryScene by rememberSaveable {
+        mutableStateOf(if (liveArenaQa) EntryScene.GAME else EntryScene.TITLE)
+    }
     var gameSceneVisitId by rememberSaveable { mutableIntStateOf(0) }
+    // Resume settlement temporarily removes GameScreen. Keep navigation above that loading
+    // boundary, but reset it for a different character or an explicit roster re-entry.
+    val selectedGameTab = rememberSaveable(snapshot.activeSlotId, gameSceneVisitId) {
+        mutableStateOf(if (liveArenaQa) MenuTab.BATTLE else MenuTab.MAIN)
+    }
+    val arenaRuntime = remember(snapshot.activeSlotId, gameSceneVisitId) { ArenaPanelRuntime() }
     var pendingEnter by rememberSaveable { mutableStateOf(false) }
     val titleIntroClaimed = remember { ProcessTitleIntroGate.claim() }
     var playTitleIntro by remember {
         mutableStateOf(titleIntroClaimed && ValueAnimator.areAnimatorsEnabled())
     }
 
-    LaunchedEffect(repository, initializeAttempt) {
-        repository.initialize(System.currentTimeMillis())
+    LaunchedEffect(initializeAttempt) {
+        if (initializeAttempt > 0) onRetryGameInitialization()
     }
     LaunchedEffect(initializeAttempt) {
         minimumLoadingFinished = false
@@ -434,8 +556,8 @@ private fun AlarmQuestAppContent(
     }
 
     val entryReady = snapshot.ready && minimumLoadingFinished
-    LaunchedEffect(entryReady, pendingEnter) {
-        if (entryReady && pendingEnter) {
+    LaunchedEffect(entryReady, pendingEnter, whatsNewPending) {
+        if (entryReady && pendingEnter && !whatsNewPending) {
             pendingEnter = false
             entryScene = EntryScene.ROSTER
         }
@@ -515,7 +637,7 @@ private fun AlarmQuestAppContent(
                         playIntro = playTitleIntro,
                         onIntroFinished = { playTitleIntro = false },
                         onEnterRequested = {
-                            if (entryReady) {
+                            if (entryReady && !whatsNewPending) {
                                 entryScene = EntryScene.ROSTER
                             } else {
                                 pendingEnter = true
@@ -533,7 +655,7 @@ private fun AlarmQuestAppContent(
                                 if (
                                     repository.selectCharacter(
                                         slotId = slotId,
-                                        now = System.currentTimeMillis(),
+                                        now = gameNow(),
                                     ).isSuccess
                                 ) {
                                     gameSceneVisitId += 1
@@ -547,6 +669,7 @@ private fun AlarmQuestAppContent(
                     )
                     EntryScene.CREATION -> CharacterCreation(
                         repository = repository,
+                        gameNow = gameNow,
                         onBack = { entryScene = EntryScene.ROSTER },
                         onCreated = {
                             gameSceneVisitId += 1
@@ -567,7 +690,7 @@ private fun AlarmQuestAppContent(
                                         if (
                                             repository.selectCharacter(
                                                 slotId = slotId,
-                                                now = System.currentTimeMillis(),
+                                                now = gameNow(),
                                             ).isSuccess
                                         ) {
                                             gameSceneVisitId += 1
@@ -585,14 +708,20 @@ private fun AlarmQuestAppContent(
                                 state = state,
                                 activeSlotId = snapshot.activeSlotId ?: 1,
                                 presentationVisitId = gameSceneVisitId,
+                                selectedTabState = selectedGameTab,
+                                arenaRuntime = arenaRuntime,
                                 notificationPreferencesStore = notificationPreferencesStore,
                                 gameLanguageStore = gameLanguageStore,
                                 supabaseGameService = supabaseGameService,
+                                gameNow = gameNow,
                                 mobileAdsReady = mobileAdsReady,
                                 adsConsentState = adsConsentState,
                                 mobileAdsRuntimeState = mobileAdsRuntimeState,
                                 onRetryAdsSetup = onRetryAdsSetup,
                                 onOpenPrivacyOptions = onOpenPrivacyOptions,
+                                onBeginRewardedAdSession = onBeginRewardedAdSession,
+                                onFinishRewardedAdSession = onFinishRewardedAdSession,
+                                onEarnedOfflineAdventureReward = onEarnedOfflineAdventureReward,
                                 onExitToRoster = { entryScene = EntryScene.ROSTER },
                             )
                         }
@@ -601,9 +730,22 @@ private fun AlarmQuestAppContent(
             }
         }
     }
-    if (
+    val showWhatsNew = entryScene == EntryScene.TITLE && entryReady &&
+        !playTitleIntro && !startupDialogsBlocked && whatsNewPending &&
+        snapshot.startupPhase != StartupPhase.FAILED
+    if (showWhatsNew) {
+        AppAnnouncementDialog(
+            announcement = whatsNew,
+            explicitCloseOnly = true,
+            onDismiss = {
+                whatsNewStore.markDisplayed(whatsNew)
+                whatsNewPending = false
+            },
+        )
+    } else if (
         entryScene == EntryScene.TITLE &&
         snapshot.startupPhase != StartupPhase.FAILED &&
+        !startupDialogsBlocked && !whatsNewPending &&
         startupAnnouncement != null
     ) {
         LaunchedEffect(startupAnnouncement.id) {
@@ -620,10 +762,15 @@ private fun AlarmQuestAppContent(
 private fun AppAnnouncementDialog(
     announcement: AppAnnouncement,
     onDismiss: () -> Unit,
+    explicitCloseOnly: Boolean = false,
 ) {
     val language = LocalAppLanguage.current
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { if (!explicitCloseOnly) onDismiss() },
+        properties = DialogProperties(
+            dismissOnBackPress = !explicitCloseOnly,
+            dismissOnClickOutside = !explicitCloseOnly,
+        ),
         title = {
             MaterialText(
                 text = announcement.title,
@@ -632,16 +779,43 @@ private fun AppAnnouncementDialog(
             )
         },
         text = {
-            MaterialText(
-                text = announcement.message,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 360.dp)
-                    .verticalScroll(rememberScrollState()),
-                color = AqMuted,
-                fontSize = 14.sp,
-                lineHeight = 21.sp,
-            )
+            if (explicitCloseOnly) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().heightIn(max = 360.dp)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    announcement.message.split("\n\n").forEach { paragraph ->
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            MaterialText(
+                                text = paragraph.substringBefore('\n'),
+                                modifier = Modifier.semantics { heading() },
+                                color = AqText,
+                                fontSize = 14.sp,
+                                lineHeight = 21.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            MaterialText(
+                                text = paragraph.substringAfter('\n', ""),
+                                color = AqMuted,
+                                fontSize = 13.sp,
+                                lineHeight = 20.sp,
+                            )
+                        }
+                    }
+                }
+            } else {
+                MaterialText(
+                    text = announcement.message,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 360.dp)
+                        .verticalScroll(rememberScrollState()),
+                    color = AqMuted,
+                    fontSize = 14.sp,
+                    lineHeight = 21.sp,
+                )
+            }
         },
         confirmButton = {
             Button(
@@ -649,7 +823,11 @@ private fun AppAnnouncementDialog(
                 colors = ButtonDefaults.buttonColors(containerColor = AqGold),
             ) {
                 MaterialText(
-                    text = when (language) {
+                    text = if (explicitCloseOnly) when (language) {
+                        com.nullplaying.localization.AppLanguage.KOREAN -> "닫기"
+                        com.nullplaying.localization.AppLanguage.ENGLISH -> "Close"
+                        com.nullplaying.localization.AppLanguage.JAPANESE -> "閉じる"
+                    } else when (language) {
                         com.nullplaying.localization.AppLanguage.KOREAN -> "확인"
                         com.nullplaying.localization.AppLanguage.ENGLISH -> "OK"
                         com.nullplaying.localization.AppLanguage.JAPANESE -> "確認"
@@ -776,12 +954,13 @@ internal fun isValidAdventurerName(value: String): Boolean {
 @Composable
 private fun CharacterCreation(
     repository: SimpleGameRepository,
+    gameNow: () -> Long,
     onBack: () -> Unit,
     onCreated: () -> Unit,
 ) {
     var name by remember { mutableStateOf("") }
     var selectedClass by remember { mutableStateOf(HeroClass.WARRIOR) }
-    val firstRoll = remember { repository.rollStats(System.currentTimeMillis() xor System.nanoTime()) }
+    val firstRoll = remember { repository.rollStats(gameNow() xor System.nanoTime()) }
     var currentRoll by remember { mutableStateOf(firstRoll) }
     var creating by remember { mutableStateOf(false) }
     var creationError by remember { mutableStateOf<String?>(null) }
@@ -913,7 +1092,7 @@ private fun CharacterCreation(
                                     heroClass = selectedClass,
                                     stats = creationStats,
                                     seed = currentRoll.nextSeed,
-                                    now = System.currentTimeMillis(),
+                                    now = gameNow(),
                                 )
                                 onCreated()
                             } catch (_: Exception) {
@@ -981,18 +1160,43 @@ private fun GameScreen(
     state: SimpleGameState,
     activeSlotId: Int,
     presentationVisitId: Int,
+    selectedTabState: MutableState<MenuTab>,
+    arenaRuntime: ArenaPanelRuntime,
     notificationPreferencesStore: GameNotificationPreferencesStore,
     gameLanguageStore: GameLanguageStore,
     supabaseGameService: SupabaseGameService,
+    gameNow: () -> Long,
     mobileAdsReady: Boolean,
     adsConsentState: AdsConsentState,
     mobileAdsRuntimeState: MobileAdsRuntimeState,
     onRetryAdsSetup: () -> Unit,
     onOpenPrivacyOptions: () -> Unit,
+    onBeginRewardedAdSession: (String, Long) -> Boolean,
+    onFinishRewardedAdSession: (String, Long) -> Boolean,
+    onEarnedOfflineAdventureReward: (String, String) -> Unit,
     onExitToRoster: () -> Unit,
 ) {
-    var selectedTab by rememberSaveable(state.hero.name) { mutableStateOf(MenuTab.MAIN) }
-    var showingRanking by rememberSaveable { mutableStateOf(false) }
+    var selectedTab by selectedTabState
+    var battleSessionPhase by remember(state.hero.name) {
+        mutableStateOf(BattleSessionPhase.IDLE)
+    }
+    var rankingPage by rememberSaveable { mutableStateOf<RankingPageKind?>(null) }
+    var arenaRankingStanding by remember(state.rankingCharacterId, state.hero.name) {
+        mutableStateOf(
+            ArenaRankingLocalStanding(
+                characterId = state.rankingCharacterId,
+                displayName = state.hero.name,
+                heroClass = state.hero.heroClass,
+                level = state.hero.level,
+                score = BATTLE_START_SCORE,
+                completedBattles = 0,
+                wins = 0,
+                losses = 0,
+                draws = 0,
+                observedAtEpochMillis = 0L,
+            ),
+        )
+    }
     var showingSettings by rememberSaveable(activeSlotId, presentationVisitId) {
         mutableStateOf(false)
     }
@@ -1000,13 +1204,140 @@ private fun GameScreen(
         mutableStateOf(false)
     }
     var showingSkillEffectTest by remember { mutableStateOf(false) }
+    var showingHeroPath by rememberSaveable(activeSlotId, presentationVisitId) {
+        mutableStateOf(false)
+    }
+    var heroPathFilter by rememberSaveable(activeSlotId) { mutableStateOf(HeroPathFilter.ALL) }
+    var openedHeroPathTokenId by rememberSaveable(activeSlotId, presentationVisitId) {
+        mutableStateOf<String?>(null)
+    }
+    var deferredHeroPathTokenId by rememberSaveable(activeSlotId, presentationVisitId) {
+        mutableStateOf<String?>(null)
+    }
+    var heroPathChoiceSubmitting by remember(activeSlotId) { mutableStateOf(false) }
+    var heroPathDraftTraitIds by remember(activeSlotId) { mutableStateOf(emptySet<String>()) }
+    var showingHeroPathDraftReview by remember(activeSlotId) { mutableStateOf(false) }
+    var showingHeroPathResetConfirmation by remember(activeSlotId) { mutableStateOf(false) }
+    var showingHeroPathExitConfirmation by remember(activeSlotId) { mutableStateOf(false) }
+    var selectedHeroPathNodeId by remember(activeSlotId) { mutableStateOf<String?>(null) }
+    val qaAdventureSequenceAvailable = adventureQaTriggerBuildAllowed(
+        debug = BuildConfig.DEBUG,
+        previewEnabled = BuildConfig.ADVENTURE_PREVIEW_ENABLED,
+        remoteServicesEnabled = BuildConfig.REMOTE_SERVICES_ENABLED,
+        applicationId = BuildConfig.APPLICATION_ID,
+    )
     val context = LocalContext.current
+    val arenaServerQaFixtureRequested = remember(context) {
+        (context as? Activity)?.intent?.getBooleanExtra(
+            ARENA_SERVER_MATCHING_QA_FIXTURE_EXTRA,
+            false,
+        ) == true
+    }
+    val arenaServerQaCandidateCount = remember(context) {
+        (context as? Activity)?.intent?.getIntExtra(
+            ARENA_SERVER_CANDIDATE_COUNT_QA_EXTRA,
+            3,
+        ) ?: 3
+    }
+    val arenaServerQaFixtureCreatedAt = remember(activeSlotId, presentationVisitId) {
+        gameNow()
+    }
+    val arenaServerQaRoster = remember(
+        arenaServerQaFixtureRequested,
+        arenaServerQaCandidateCount,
+        state.hero.level,
+        state.rankingCharacterId,
+        arenaServerQaFixtureCreatedAt,
+    ) {
+        arenaServerMatchingQaFixture(
+            requested = arenaServerQaFixtureRequested,
+            debugBuild = BuildConfig.DEBUG,
+            remoteServicesEnabled = BuildConfig.REMOTE_SERVICES_ENABLED,
+            state = state,
+            nowEpochMillis = arenaServerQaFixtureCreatedAt,
+            candidateCount = arenaServerQaCandidateCount,
+        )
+    }
+    val battleLocalStateStore = remember(context.applicationContext) {
+        BattleLocalStateStore(context.applicationContext)
+    }
+    val appLanguage = LocalAppLanguage.current
+    val pathCopy: (String, String, String) -> String = { ko, en, ja ->
+        when (appLanguage) {
+            com.nullplaying.localization.AppLanguage.KOREAN -> ko
+            com.nullplaying.localization.AppLanguage.ENGLISH -> en
+            com.nullplaying.localization.AppLanguage.JAPANESE -> ja
+        }
+    }
+    val lifecycleOwner = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
-    var rewardedAd by remember { mutableStateOf<RewardedInterstitialAd?>(null) }
-    var rewardedLoadState by remember { mutableStateOf(RewardedLoadState.WAITING) }
-    var rewardedLoadGeneration by remember { mutableIntStateOf(0) }
-    var rewardedLoadRequestToken by remember { mutableIntStateOf(0) }
-    var showingRewardDialog by remember { mutableStateOf(false) }
+    var offlineRewardedAd by remember { mutableStateOf<RewardedAd?>(null) }
+    var offlineRewardedLoadState by remember { mutableStateOf(RewardedLoadState.WAITING) }
+    var offlineRewardedLoadedAt by remember { mutableLongStateOf(-1L) }
+    var offlineRewardedLoadGeneration by remember { mutableIntStateOf(0) }
+    var offlineRewardedLoadRequestToken by remember { mutableIntStateOf(0) }
+    var offlineRewardedRetryAttempt by remember { mutableIntStateOf(0) }
+    var offlineRewardedLastLoadAttemptAt by remember { mutableLongStateOf(-1L) }
+    var offlineRewardedLoadInFlight by remember { mutableStateOf(false) }
+    var arenaRewardedAd by remember { mutableStateOf<RewardedAd?>(null) }
+    var arenaRewardedLoadState by remember { mutableStateOf(RewardedLoadState.WAITING) }
+    var arenaRewardedLoadedAt by remember { mutableLongStateOf(-1L) }
+    var arenaRewardedLoadGeneration by remember { mutableIntStateOf(0) }
+    var arenaRewardedLoadRequestToken by remember { mutableIntStateOf(0) }
+    var arenaRewardedRetryAttempt by remember { mutableIntStateOf(0) }
+    var arenaRewardedLastLoadAttemptAt by remember { mutableLongStateOf(-1L) }
+    var arenaRewardedLoadInFlight by remember { mutableStateOf(false) }
+    var arenaRewardPreloadEligible by remember(state.rankingCharacterId, activeSlotId) { mutableStateOf(false) }
+    var rewardDialogBenefit by remember { mutableStateOf<RewardedBenefit?>(null) }
+    var pendingArenaRefillCount by remember { mutableIntStateOf(BATTLE_ENTRY_CAPACITY) }
+    var pendingArenaRewardIdentity by remember { mutableStateOf<String?>(null) }
+    var arenaRewardedRefillGrant by remember { mutableStateOf<ArenaRewardedRefillGrant?>(null) }
+    val showingRewardDialog = rewardDialogBenefit != null
+    var appInForeground by remember(lifecycleOwner) {
+        mutableStateOf(lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED))
+    }
+
+    LaunchedEffect(state.actionSequence, state.adventurePhase) {
+        if (qaAdventureSequenceAvailable) {
+            when (state.adventurePhase) {
+                AdventurePhase.EVENT,
+                AdventurePhase.EVENT_RESULT,
+                -> {
+                    val eventId = if (state.adventurePhase == AdventurePhase.EVENT) {
+                        state.adventureJourney.pending?.eventId
+                    } else {
+                        state.adventureJourney.lastResult?.run?.eventId
+                    }
+                    Log.i(
+                        "AdventureSequenceQA",
+                        "APP_PHASE phase=${state.adventurePhase} event=$eventId " +
+                            "durationMs=${state.actionEndsAt - state.actionStartedAt} sequence=${state.actionSequence}",
+                    )
+                }
+                AdventurePhase.COMBAT -> if (state.monster.catalogId.startsWith("event:")) {
+                    val eventId = state.monster.catalogId.removePrefix("event:")
+                    if (state.combatPhase == CombatPhase.ATTACKING && state.monster.attacksCompleted == 1) {
+                        Log.i(
+                            "AdventureSequenceQA",
+                            "EVENT_BATTLE_COMBAT event=$eventId " +
+                                "grade=${state.monster.grade} monster=${state.monster.name} direct=true",
+                        )
+                    }
+                }
+                AdventurePhase.LOOTING -> state.adventureJourney.eventBattle?.result?.let { result ->
+                    Log.i(
+                        "AdventureSequenceQA",
+                        "EVENT_BATTLE_REWARD event=${result.run.eventId} " +
+                            "grade=${result.run.battleGrade} reward=${result.run.battleRewardKind} " +
+                            "item=${result.itemName} gold=${result.goldAwarded} " +
+                            "xp=${result.experienceAwarded} progress=${result.progressAdded} " +
+                            "actualItems=${result.actualItemCount}",
+                    )
+                }
+                else -> Unit
+            }
+        }
+    }
     val offlineAdventureProgress = repository.offlineAdventureFraction(state)
     val offlineAdventureFull = repository.isOfflineAdventureFull(state)
     val recentEvents by remember(repository, activeSlotId) {
@@ -1016,145 +1347,509 @@ private fun GameScreen(
     val unreadRecentEventCount = recentEvents.count {
         it.id > state.lastSeenRecentAdventureEventId
     }
+    val pendingHeroPathToken = state.heroPath.milestoneTokens
+        .firstOrNull { !it.resolved }
+        ?.takeIf { state.heroPath.unspentPoints > 0L }
+    val openedHeroPathToken = openedHeroPathTokenId?.let { tokenId ->
+        state.heroPath.milestoneTokens.firstOrNull { it.tokenId == tokenId && !it.resolved }
+    }
+    DisposableEffect(lifecycleOwner, activeSlotId, presentationVisitId) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_START) {
+                appInForeground = true
+            } else if (event == Lifecycle.Event.ON_STOP) {
+                appInForeground = false
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    LaunchedEffect(selectedTab) {
+        val redirectedTab = menuTabAfterBuildRedirect(selectedTab, BuildConfig.DEBUG)
+        if (redirectedTab != selectedTab) selectedTab = redirectedTab
+    }
 
     LaunchedEffect(showingRecentEvents, newestRecentEventId) {
         if (showingRecentEvents && newestRecentEventId > 0L) {
             repository.markRecentAdventureEventsSeen(
                 eventId = newestRecentEventId,
-                now = System.currentTimeMillis(),
+                now = gameNow(),
             )
         }
     }
 
-    LaunchedEffect(mobileAdsReady, offlineAdventureFull, rewardedLoadGeneration) {
-        rewardedLoadRequestToken += 1
-        val requestToken = rewardedLoadRequestToken
-        if (!mobileAdsReady || offlineAdventureFull) {
-            rewardedAd = null
-            rewardedLoadState = RewardedLoadState.WAITING
-            return@LaunchedEffect
-        }
-        rewardedLoadState = RewardedLoadState.LOADING
-        RewardedInterstitialAd.load(
-            AdRequest.Builder(BuildConfig.REWARDED_AD_UNIT_ID).build(),
-            object : AdLoadCallback<RewardedInterstitialAd> {
-                override fun onAdLoaded(ad: RewardedInterstitialAd) {
-                    if (requestToken != rewardedLoadRequestToken) {
-                        Log.d(REWARDED_AD_TAG, "Ignoring stale rewarded interstitial load success")
-                        return
-                    }
-                    Log.d(REWARDED_AD_TAG, "Rewarded interstitial ad loaded")
-                    ad.setImmersiveMode(true)
-                    ad.adEventCallback = object : RewardedInterstitialAdEventCallback {
-                        override fun onAdDismissedFullScreenContent() {
-                            repository.setRewardAdInFlight(false, SystemClock.elapsedRealtime())
-                            rewardedAd = null
-                            rewardedLoadState = RewardedLoadState.LOADING
-                            rewardedLoadGeneration += 1
-                        }
-
-                        override fun onAdFailedToShowFullScreenContent(
-                            fullScreenContentError: FullScreenContentError,
-                        ) {
-                            repository.setRewardAdInFlight(false, SystemClock.elapsedRealtime())
-                            Log.w(
-                                REWARDED_AD_TAG,
-                                "Rewarded interstitial ad failed to show: $fullScreenContentError",
-                            )
-                            rewardedAd = null
-                            rewardedLoadState = RewardedLoadState.SHOW_FAILED
-                        }
-                    }
-                    rewardedAd = ad
-                    rewardedLoadState = RewardedLoadState.READY
-                }
-
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    if (requestToken != rewardedLoadRequestToken) {
-                        Log.d(REWARDED_AD_TAG, "Ignoring stale rewarded interstitial load failure")
-                        return
-                    }
-                    Log.w(REWARDED_AD_TAG, "Rewarded interstitial ad failed to load: $adError")
-                    rewardedAd = null
-                    rewardedLoadState = RewardedLoadState.LOAD_FAILED
-                }
-            },
-        )
+    // On character entry, warm the arena slot only if at most one ticket remains.
+    // This is a local read; reward delivery still rechecks the trusted ticket ledger at show time.
+    LaunchedEffect(state.rankingCharacterId, activeSlotId, state.hero.level >= 10L, state.lastSettledAt / 86_400_000L) {
+        val identity = state.rankingCharacterId.ifBlank { "local-slot:$activeSlotId" }
+        arenaRewardPreloadEligible = runCatching {
+            val snapshot = refreshTrustedBattleEntrySnapshot(
+                snapshot = battleLocalStateStore.load(identity),
+                roster = state.publicPlayerRoster,
+                deviceWallNowMillis = System.currentTimeMillis(),
+                elapsedRealtimeMillis = SystemClock.elapsedRealtime(),
+                bootCount = currentArenaBootCount(context.applicationContext),
+            )
+            arenaRewardedAdCanPreload(
+                heroLevel = state.hero.level,
+                refillsUsed = snapshot.rewardedRefillsUsed,
+                dailyBattlesUsed = snapshot.dailyBattlesUsed,
+                entriesRemaining = snapshot.entriesRemaining,
+            )
+        }.getOrDefault(false)
     }
 
-    LaunchedEffect(rewardedLoadState, offlineAdventureFull) {
+    val offlineRewardedShouldLoad = rewardedAdShouldLoad(
+        mobileAdsReady = mobileAdsReady && adsConsentState.canRequestAds,
+        adUnitId = BuildConfig.REWARDED_AD_UNIT_ID,
+        benefitEligible = !offlineAdventureFull,
+    )
+
+    val arenaRewardedShouldLoad = rewardedAdShouldLoad(
+        mobileAdsReady = mobileAdsReady && adsConsentState.canRequestAds,
+        adUnitId = BuildConfig.ARENA_REWARDED_AD_UNIT_ID,
+        benefitEligible = arenaRewardPreloadEligible,
+    )
+
+    LaunchedEffect(offlineRewardedShouldLoad, offlineRewardedLoadGeneration, appInForeground) {
+        if (offlineRewardedLoadState == RewardedLoadState.SHOWING) return@LaunchedEffect
+        if (!offlineRewardedShouldLoad) {
+            offlineRewardedLoadRequestToken += 1
+            offlineRewardedLoadInFlight = false
+            offlineRewardedAd = null
+            offlineRewardedLoadedAt = -1L
+            offlineRewardedLoadState = RewardedLoadState.WAITING
+            offlineRewardedRetryAttempt = 0
+            return@LaunchedEffect
+        }
+        // Preserve ready and in-flight ads across dialog closure or app pause.
+        if (!appInForeground || offlineRewardedLoadInFlight) return@LaunchedEffect
         if (
-            rewardedLoadState in setOf(
-                RewardedLoadState.LOAD_FAILED,
-                RewardedLoadState.SHOW_FAILED,
-            ) && !offlineAdventureFull
+            offlineRewardedAd != null &&
+            rewardedAdCacheIsFresh(offlineRewardedLoadedAt, SystemClock.elapsedRealtime())
         ) {
-            delay(REWARDED_AD_RETRY_MILLIS)
-            rewardedLoadGeneration += 1
+            offlineRewardedLoadState = RewardedLoadState.READY
+            return@LaunchedEffect
+        }
+        offlineRewardedAd = null
+        offlineRewardedLoadedAt = -1L
+        offlineRewardedLoadState = RewardedLoadState.LOADING
+        val throttleDelay = rewardedAdLoadThrottleDelayMillis(
+            offlineRewardedLastLoadAttemptAt,
+            SystemClock.elapsedRealtime(),
+        )
+        if (throttleDelay > 0L) delay(throttleDelay)
+        if (offlineRewardedAd != null && rewardedAdCacheIsFresh(offlineRewardedLoadedAt, SystemClock.elapsedRealtime())) {
+            offlineRewardedLoadState = RewardedLoadState.READY
+            return@LaunchedEffect
+        }
+        offlineRewardedLoadRequestToken += 1
+        val requestToken = offlineRewardedLoadRequestToken
+        offlineRewardedLoadInFlight = true
+        offlineRewardedLastLoadAttemptAt = SystemClock.elapsedRealtime()
+        try {
+            RewardedAd.load(
+                AdRequest.Builder(BuildConfig.REWARDED_AD_UNIT_ID).build(),
+                object : AdLoadCallback<RewardedAd> {
+                    override fun onAdLoaded(ad: RewardedAd) {
+                        if (!rewardedAdCallbackIsCurrent(
+                                requestToken,
+                                offlineRewardedLoadRequestToken,
+                            )
+                        ) {
+                            Log.d(REWARDED_AD_TAG, "Ignoring stale offline rewarded load success")
+                            return
+                        }
+                        offlineRewardedLoadInFlight = false
+                        Log.d(REWARDED_AD_TAG, "Offline standard rewarded ad loaded")
+                        ad.setImmersiveMode(true)
+                        offlineRewardedAd = ad
+                        offlineRewardedLoadedAt = SystemClock.elapsedRealtime()
+                        offlineRewardedLoadState = RewardedLoadState.READY
+                        offlineRewardedRetryAttempt = 0
+                    }
+
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        if (!rewardedAdCallbackIsCurrent(
+                                requestToken,
+                                offlineRewardedLoadRequestToken,
+                            )
+                        ) {
+                            Log.d(REWARDED_AD_TAG, "Ignoring stale offline rewarded load failure")
+                            return
+                        }
+                        offlineRewardedLoadInFlight = false
+                        Log.w(REWARDED_AD_TAG, "Offline standard rewarded ad failed to load: $adError")
+                        offlineRewardedAd = null
+                        offlineRewardedLoadedAt = -1L
+                        offlineRewardedLoadState = RewardedLoadState.LOAD_FAILED
+                    }
+                },
+            )
+        } catch (error: Exception) {
+            offlineRewardedLoadInFlight = false
+            offlineRewardedLoadState = RewardedLoadState.LOAD_FAILED
+            Log.w(REWARDED_AD_TAG, "Offline rewarded request could not start", error)
+        }
+    }
+
+    LaunchedEffect(offlineRewardedLoadInFlight, offlineRewardedLoadRequestToken, appInForeground) {
+        if (!offlineRewardedLoadInFlight) return@LaunchedEffect
+        val requestToken = offlineRewardedLoadRequestToken
+        delay(rewardedAdLoadTimeoutRemainingMillis(
+            offlineRewardedLastLoadAttemptAt, SystemClock.elapsedRealtime(),
+        ))
+        if (offlineRewardedLoadInFlight && rewardedAdCallbackIsCurrent(requestToken, offlineRewardedLoadRequestToken)) {
+            // Offer retry without discarding a late success from this same request. A new
+            // request or consent/eligibility loss invalidates the callback token instead.
+            offlineRewardedLoadInFlight = false
+            offlineRewardedLoadState = RewardedLoadState.LOAD_FAILED
+            Log.w(REWARDED_AD_TAG, "Offline rewarded load timed out; retry available")
+        }
+    }
+
+    LaunchedEffect(offlineRewardedLoadedAt, offlineRewardedShouldLoad) {
+        if (offlineRewardedLoadedAt >= 0L && offlineRewardedShouldLoad) {
+            val remaining = REWARDED_AD_CACHE_MAX_AGE_MILLIS -
+                (SystemClock.elapsedRealtime() - offlineRewardedLoadedAt)
+            if (remaining > 0L) delay(remaining)
+            offlineRewardedLoadRequestToken += 1
+            offlineRewardedAd = null
+            offlineRewardedLoadedAt = -1L
+            offlineRewardedLoadState = RewardedLoadState.LOADING
+            offlineRewardedLoadGeneration += 1
+        }
+    }
+
+    LaunchedEffect(offlineRewardedLoadState, offlineRewardedShouldLoad, appInForeground) {
+        if (appInForeground && rewardedAdRetryAllowed(offlineRewardedLoadState, offlineRewardedShouldLoad)) {
+            delay(rewardedAdRetryDelayMillis(offlineRewardedRetryAttempt))
+            if (offlineRewardedShouldLoad) {
+                offlineRewardedRetryAttempt += 1
+                offlineRewardedLoadGeneration += 1
+            }
+        }
+    }
+
+    LaunchedEffect(arenaRewardedShouldLoad, arenaRewardedLoadGeneration, appInForeground) {
+        if (arenaRewardedLoadState == RewardedLoadState.SHOWING) return@LaunchedEffect
+        if (!arenaRewardedShouldLoad) {
+            arenaRewardedLoadRequestToken += 1
+            arenaRewardedLoadInFlight = false
+            arenaRewardedAd = null
+            arenaRewardedLoadedAt = -1L
+            arenaRewardedLoadState = RewardedLoadState.WAITING
+            arenaRewardedRetryAttempt = 0
+            return@LaunchedEffect
+        }
+        // Preserve ready and in-flight ads across dialog closure or app pause.
+        if (!appInForeground || arenaRewardedLoadInFlight) return@LaunchedEffect
+        if (
+            arenaRewardedAd != null &&
+            rewardedAdCacheIsFresh(arenaRewardedLoadedAt, SystemClock.elapsedRealtime())
+        ) {
+            arenaRewardedLoadState = RewardedLoadState.READY
+            return@LaunchedEffect
+        }
+        arenaRewardedAd = null
+        arenaRewardedLoadedAt = -1L
+        arenaRewardedLoadState = RewardedLoadState.LOADING
+        val throttleDelay = rewardedAdLoadThrottleDelayMillis(
+            arenaRewardedLastLoadAttemptAt,
+            SystemClock.elapsedRealtime(),
+        )
+        if (throttleDelay > 0L) delay(throttleDelay)
+        if (arenaRewardedAd != null && rewardedAdCacheIsFresh(arenaRewardedLoadedAt, SystemClock.elapsedRealtime())) {
+            arenaRewardedLoadState = RewardedLoadState.READY
+            return@LaunchedEffect
+        }
+        arenaRewardedLoadRequestToken += 1
+        val requestToken = arenaRewardedLoadRequestToken
+        arenaRewardedLoadInFlight = true
+        arenaRewardedLastLoadAttemptAt = SystemClock.elapsedRealtime()
+        try {
+            RewardedAd.load(
+                AdRequest.Builder(BuildConfig.ARENA_REWARDED_AD_UNIT_ID).build(),
+                object : AdLoadCallback<RewardedAd> {
+                    override fun onAdLoaded(ad: RewardedAd) {
+                        if (!rewardedAdCallbackIsCurrent(requestToken, arenaRewardedLoadRequestToken)) {
+                            Log.d(REWARDED_AD_TAG, "Ignoring stale Arena rewarded load success")
+                            return
+                        }
+                        arenaRewardedLoadInFlight = false
+                        Log.d(REWARDED_AD_TAG, "Arena standard rewarded ad loaded")
+                        ad.setImmersiveMode(true)
+                        arenaRewardedAd = ad
+                        arenaRewardedLoadedAt = SystemClock.elapsedRealtime()
+                        arenaRewardedLoadState = RewardedLoadState.READY
+                        arenaRewardedRetryAttempt = 0
+                    }
+
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        if (!rewardedAdCallbackIsCurrent(requestToken, arenaRewardedLoadRequestToken)) {
+                            Log.d(REWARDED_AD_TAG, "Ignoring stale Arena rewarded load failure")
+                            return
+                        }
+                        arenaRewardedLoadInFlight = false
+                        Log.w(REWARDED_AD_TAG, "Arena standard rewarded ad failed to load: $adError")
+                        arenaRewardedAd = null
+                        arenaRewardedLoadedAt = -1L
+                        arenaRewardedLoadState = RewardedLoadState.LOAD_FAILED
+                    }
+                },
+            )
+        } catch (error: Exception) {
+            arenaRewardedLoadInFlight = false
+            arenaRewardedLoadState = RewardedLoadState.LOAD_FAILED
+            Log.w(REWARDED_AD_TAG, "Arena rewarded request could not start", error)
+        }
+    }
+
+    LaunchedEffect(arenaRewardedLoadInFlight, arenaRewardedLoadRequestToken, appInForeground) {
+        if (!arenaRewardedLoadInFlight) return@LaunchedEffect
+        val requestToken = arenaRewardedLoadRequestToken
+        delay(rewardedAdLoadTimeoutRemainingMillis(
+            arenaRewardedLastLoadAttemptAt, SystemClock.elapsedRealtime(),
+        ))
+        if (arenaRewardedLoadInFlight && rewardedAdCallbackIsCurrent(requestToken, arenaRewardedLoadRequestToken)) {
+            // Offer retry without discarding a late success from this same request. A new
+            // request or consent/eligibility loss invalidates the callback token instead.
+            arenaRewardedLoadInFlight = false
+            arenaRewardedLoadState = RewardedLoadState.LOAD_FAILED
+            Log.w(REWARDED_AD_TAG, "Arena rewarded load timed out; retry available")
+        }
+    }
+
+    LaunchedEffect(arenaRewardedLoadedAt, arenaRewardedShouldLoad) {
+        if (arenaRewardedLoadedAt >= 0L && arenaRewardedShouldLoad) {
+            val remaining = REWARDED_AD_CACHE_MAX_AGE_MILLIS -
+                (SystemClock.elapsedRealtime() - arenaRewardedLoadedAt)
+            if (remaining > 0L) delay(remaining)
+            arenaRewardedLoadRequestToken += 1
+            arenaRewardedAd = null
+            arenaRewardedLoadedAt = -1L
+            arenaRewardedLoadState = RewardedLoadState.LOADING
+            arenaRewardedLoadGeneration += 1
+        }
+    }
+
+    LaunchedEffect(arenaRewardedLoadState, arenaRewardedShouldLoad, appInForeground) {
+        if (appInForeground && rewardedAdRetryAllowed(arenaRewardedLoadState, arenaRewardedShouldLoad)) {
+            delay(rewardedAdRetryDelayMillis(arenaRewardedRetryAttempt))
+            if (arenaRewardedShouldLoad) {
+                arenaRewardedRetryAttempt += 1
+                arenaRewardedLoadGeneration += 1
+            }
+        }
+    }
+
+    LaunchedEffect(offlineRewardedLoadState, arenaRewardedLoadState) {
+        while (
+            offlineRewardedLoadState == RewardedLoadState.SHOWING ||
+            arenaRewardedLoadState == RewardedLoadState.SHOWING
+        ) {
+            delay(REWARDED_SESSION_UI_RECOVERY_POLL_MILLIS)
+            if (repository.isRewardAdInFlight()) continue
+            if (offlineRewardedLoadState == RewardedLoadState.SHOWING) {
+                offlineRewardedAd = null
+                offlineRewardedLoadedAt = -1L
+                offlineRewardedLoadState = RewardedLoadState.LOADING
+                offlineRewardedLoadGeneration += 1
+            }
+            if (arenaRewardedLoadState == RewardedLoadState.SHOWING) {
+                arenaRewardedAd = null
+                arenaRewardedLoadedAt = -1L
+                arenaRewardedLoadState = if (arenaRewardedShouldLoad) {
+                    RewardedLoadState.LOADING
+                } else {
+                    RewardedLoadState.WAITING
+                }
+                arenaRewardedLoadGeneration += 1
+            }
+            break
         }
     }
 
     LaunchedEffect(offlineAdventureFull) {
-        if (offlineAdventureFull) showingRewardDialog = false
+        if (offlineAdventureFull && rewardDialogBenefit == RewardedBenefit.OFFLINE_ADVENTURE) {
+            rewardDialogBenefit = null
+        }
     }
 
     LaunchedEffect(repository) {
         while (true) {
             delay(90L)
-            repository.tick(System.currentTimeMillis(), SystemClock.elapsedRealtime())
+            repository.tick(gameNow(), SystemClock.elapsedRealtime())
         }
     }
 
-    val showRewardedAd = {
+    val showRewardedAd: (RewardedBenefit) -> RewardedShowAttempt = showRewardedAd@{ benefit ->
         val activity = context as? Activity
-        val ad = rewardedAd
+        val loadedAd = when (benefit) {
+            RewardedBenefit.OFFLINE_ADVENTURE -> offlineRewardedAd
+            RewardedBenefit.ARENA_TICKETS -> arenaRewardedAd
+        }
+        val loadedAt = when (benefit) {
+            RewardedBenefit.OFFLINE_ADVENTURE -> offlineRewardedLoadedAt
+            RewardedBenefit.ARENA_TICKETS -> arenaRewardedLoadedAt
+        }
+        val arenaIdentity = pendingArenaRewardIdentity
+        val benefitAvailable = when (benefit) {
+            RewardedBenefit.OFFLINE_ADVENTURE -> !offlineAdventureFull
+            RewardedBenefit.ARENA_TICKETS -> arenaIdentity != null &&
+                battleLocalStateStore.rewardedBattleEntryRefillAvailableTrusted(
+                    identity = arenaIdentity,
+                    roster = state.publicPlayerRoster,
+                    deviceWallNowMillis = System.currentTimeMillis(),
+                    elapsedRealtimeMillis = SystemClock.elapsedRealtime(),
+                    bootCount = currentArenaBootCount(context.applicationContext),
+                )
+        }
+        if (!benefitAvailable) {
+            return@showRewardedAd RewardedShowAttempt.ELIGIBILITY_LOST
+        }
         if (
-            activity != null &&
-            ad != null &&
-            mobileAdsReady &&
-            adsConsentState.canRequestAds &&
-            !offlineAdventureFull
+            activity == null ||
+            loadedAd == null ||
+            !mobileAdsReady ||
+            !appInForeground ||
+            !adsConsentState.canRequestAds ||
+            !rewardedAdCacheIsFresh(loadedAt, SystemClock.elapsedRealtime())
         ) {
-            val requestId = UUID.randomUUID().toString()
-            repository.setRewardAdInFlight(true, SystemClock.elapsedRealtime())
-            rewardedLoadState = RewardedLoadState.SHOWING
-            rewardedAd = null
-            runCatching {
-                ad.show(
-                    activity,
-                    object : OnUserEarnedRewardListener {
-                        override fun onUserEarnedReward(rewardItem: RewardItem) {
-                            Log.d(
-                                REWARDED_AD_TAG,
-                                "Reward earned: ${rewardItem.amount} ${rewardItem.type}",
-                            )
-                            scope.launch {
-                                repository.grantRewardedOfflineAdventure(
-                                    now = System.currentTimeMillis(),
-                                    rewardRequestId = requestId,
+            if (loadedAd != null) {
+                when (benefit) {
+                    RewardedBenefit.OFFLINE_ADVENTURE -> offlineRewardedLoadGeneration += 1
+                    RewardedBenefit.ARENA_TICKETS -> arenaRewardedLoadGeneration += 1
+                }
+            }
+            return@showRewardedAd RewardedShowAttempt.NOT_READY
+        }
+        val requestId = UUID.randomUUID().toString()
+        val showStartedAt = SystemClock.elapsedRealtime()
+        if (!onBeginRewardedAdSession(requestId, showStartedAt)) {
+            return@showRewardedAd RewardedShowAttempt.NOT_READY
+        }
+        val rewardedCharacterId = state.rankingCharacterId
+        when (benefit) {
+            RewardedBenefit.OFFLINE_ADVENTURE -> {
+                offlineRewardedLoadRequestToken += 1
+                offlineRewardedLoadState = RewardedLoadState.SHOWING
+                offlineRewardedAd = null
+                offlineRewardedLoadedAt = -1L
+            }
+            RewardedBenefit.ARENA_TICKETS -> {
+                arenaRewardedLoadRequestToken += 1
+                arenaRewardedLoadState = RewardedLoadState.SHOWING
+                arenaRewardedAd = null
+                arenaRewardedLoadedAt = -1L
+            }
+        }
+        return@showRewardedAd runCatching {
+            loadedAd.adEventCallback = object : RewardedAdEventCallback {
+                override fun onAdDismissedFullScreenContent() {
+                    if (!onFinishRewardedAdSession(requestId, SystemClock.elapsedRealtime())) return
+                    when (benefit) {
+                        RewardedBenefit.OFFLINE_ADVENTURE -> {
+                            offlineRewardedAd = null
+                            offlineRewardedLoadedAt = -1L
+                            offlineRewardedLoadState = RewardedLoadState.LOADING
+                            offlineRewardedLoadGeneration += 1
+                        }
+                        RewardedBenefit.ARENA_TICKETS -> {
+                            arenaRewardedAd = null
+                            arenaRewardedLoadedAt = -1L
+                            arenaRewardedLoadState = RewardedLoadState.WAITING
+                            arenaRewardedLoadGeneration += 1
+                        }
+                    }
+                }
+
+                override fun onAdFailedToShowFullScreenContent(
+                    fullScreenContentError: FullScreenContentError,
+                ) {
+                    if (!onFinishRewardedAdSession(requestId, SystemClock.elapsedRealtime())) return
+                    Log.w(REWARDED_AD_TAG, "Standard rewarded ad failed to show: $fullScreenContentError")
+                    when (benefit) {
+                        RewardedBenefit.OFFLINE_ADVENTURE -> {
+                            offlineRewardedAd = null
+                            offlineRewardedLoadedAt = -1L
+                            offlineRewardedLoadState = RewardedLoadState.SHOW_FAILED
+                        }
+                        RewardedBenefit.ARENA_TICKETS -> {
+                            arenaRewardedAd = null
+                            arenaRewardedLoadedAt = -1L
+                            arenaRewardedLoadState = RewardedLoadState.SHOW_FAILED
+                        }
+                    }
+                }
+            }
+            loadedAd.show(
+                activity,
+                object : OnUserEarnedRewardListener {
+                    override fun onUserEarnedReward(rewardItem: RewardItem) {
+                        Log.d(
+                            REWARDED_AD_TAG,
+                            "Reward earned: ${rewardItem.amount} ${rewardItem.type}",
+                        )
+                        when (benefit) {
+                            RewardedBenefit.OFFLINE_ADVENTURE -> {
+                                onEarnedOfflineAdventureReward(rewardedCharacterId, requestId)
+                            }
+                            RewardedBenefit.ARENA_TICKETS -> {
+                                battleLocalStateStore.applyRewardedBattleEntryRefillTrusted(
+                                    identity = requireNotNull(arenaIdentity),
+                                    roster = state.publicPlayerRoster,
+                                    deviceWallNowMillis = System.currentTimeMillis(),
+                                    elapsedRealtimeMillis = SystemClock.elapsedRealtime(),
+                                    bootCount = currentArenaBootCount(context.applicationContext),
+                                    requestId = requestId,
+                                )
+                                arenaRewardedRefillGrant = ArenaRewardedRefillGrant(
+                                    identity = requireNotNull(arenaIdentity),
+                                    requestId = requestId,
                                 )
                             }
                         }
-                    },
-                )
-            }.onFailure { error ->
-                repository.setRewardAdInFlight(false, SystemClock.elapsedRealtime())
-                Log.w(REWARDED_AD_TAG, "Rewarded interstitial ad show call failed", error)
-                rewardedLoadState = RewardedLoadState.SHOW_FAILED
-            }
-        }
+                    }
+                },
+            )
+        }.fold(
+            onSuccess = { RewardedShowAttempt.SHOWN },
+            onFailure = { error ->
+                onFinishRewardedAdSession(requestId, SystemClock.elapsedRealtime())
+                Log.w(REWARDED_AD_TAG, "Standard rewarded ad show call failed", error)
+                when (benefit) {
+                    RewardedBenefit.OFFLINE_ADVENTURE ->
+                        offlineRewardedLoadState = RewardedLoadState.SHOW_FAILED
+                    RewardedBenefit.ARENA_TICKETS ->
+                        arenaRewardedLoadState = RewardedLoadState.SHOW_FAILED
+                }
+                RewardedShowAttempt.NOT_READY
+            },
+        )
     }
 
-    val retryRewardedAd = {
-        if (
-            !offlineAdventureFull && rewardedLoadState in setOf(
-                RewardedLoadState.LOAD_FAILED,
-                RewardedLoadState.SHOW_FAILED,
-            )
-        ) {
-            rewardedAd = null
-            rewardedLoadState = RewardedLoadState.LOADING
-            rewardedLoadGeneration += 1
+    val retryRewardedAd: (RewardedBenefit) -> Unit = { benefit ->
+        when (benefit) {
+            RewardedBenefit.OFFLINE_ADVENTURE -> {
+                if (rewardedAdRetryAllowed(offlineRewardedLoadState, offlineRewardedShouldLoad)) {
+                    offlineRewardedAd = null
+                    offlineRewardedLoadedAt = -1L
+                    offlineRewardedLoadState = RewardedLoadState.LOADING
+                    offlineRewardedRetryAttempt = 0
+                    offlineRewardedLoadGeneration += 1
+                }
+            }
+            RewardedBenefit.ARENA_TICKETS -> {
+                if (rewardedAdRetryAllowed(arenaRewardedLoadState, arenaRewardedShouldLoad)) {
+                    arenaRewardedAd = null
+                    arenaRewardedLoadedAt = -1L
+                    arenaRewardedLoadState = RewardedLoadState.LOADING
+                    arenaRewardedRetryAttempt = 0
+                    arenaRewardedLoadGeneration += 1
+                }
+            }
         }
     }
 
@@ -1162,6 +1857,9 @@ private fun GameScreen(
     val supabaseConnection by supabaseGameService.connectionState.collectAsState()
     val remoteRanking by supabaseGameService.rankingSnapshot.collectAsState()
     val rankingError by supabaseGameService.rankingError.collectAsState()
+    val remoteArenaRanking by supabaseGameService.arenaRankingSnapshot.collectAsState()
+    val arenaRankingError by supabaseGameService.arenaRankingError.collectAsState()
+    val rankingRefreshPolicy by supabaseGameService.rankingRefreshPolicy.collectAsState()
     val rankingUiState: RankingUiState = remember(
         supabaseConnection,
         remoteRanking,
@@ -1172,7 +1870,6 @@ private fun GameScreen(
         state.hero.level,
         combatPower,
     ) {
-        val evaluatedAt = System.currentTimeMillis()
         when {
             supabaseConnection is SupabaseConnectionState.Disabled ->
                 RankingUiState.Empty("아직 집계된 순위가 없습니다")
@@ -1189,34 +1886,73 @@ private fun GameScreen(
                     heroClass = state.hero.heroClass,
                     level = state.hero.level,
                     combatPower = combatPower,
-                    now = evaluatedAt,
+                    now = gameNow(),
                 ),
-            )
+            ).let { content ->
+                rankingError?.let { RankingUiState.Error(it, content.snapshot) } ?: content
+            }
             rankingError != null -> RankingUiState.Error(requireNotNull(rankingError))
             else -> RankingUiState.Loading
         }
     }
+    LaunchedEffect(rankingPage, state.rankingCharacterId) {
+        when (rankingPage) {
+            RankingPageKind.ADVENTURER -> supabaseGameService.fetchRanking(state.rankingCharacterId)
+            RankingPageKind.ARENA -> supabaseGameService.fetchArenaRanking(state.rankingCharacterId)
+            null -> Unit
+        }
+    }
+    LaunchedEffect(
+        rankingPage,
+        state.rankingCharacterId,
+        remoteArenaRanking?.snapshotId,
+        remoteArenaRanking?.nextSettlementAtEpochMillis,
+        remoteArenaRanking?.nextCheckAtEpochMillis,
+        rankingRefreshPolicy,
+    ) {
+        if (rankingPage != RankingPageKind.ARENA) return@LaunchedEffect
+        val snapshot = remoteArenaRanking?.forCharacter(state.rankingCharacterId)
+            ?: return@LaunchedEffect
+        val waitMillis = supabaseGameService.nextArenaRankingRefreshDelayMillis(snapshot)
+            ?: return@LaunchedEffect
+        delay(waitMillis.coerceAtLeast(1L))
+        supabaseGameService.fetchArenaRanking(state.rankingCharacterId)
+    }
     val rankingTransition = updateTransition(
-        targetState = showingRanking,
+        targetState = rankingPage,
         label = "ranking-page-transition",
     )
     BackHandler(
-        enabled = !showingRanking &&
-            !rankingTransition.currentState &&
+        enabled = rankingPage == null &&
+            rankingTransition.currentState == null &&
             !showingSettings &&
             !showingSkillEffectTest &&
             !showingRecentEvents &&
-            !showingRewardDialog,
+            !showingRewardDialog &&
+            openedHeroPathTokenId == null &&
+            !showingHeroPath &&
+            !arenaRuntime.skillTreeVisible &&
+            battleSessionPhase != BattleSessionPhase.IN_BATTLE,
         onBack = onExitToRoster,
     )
+    BackHandler(enabled = openedHeroPathTokenId != null) {
+        openedHeroPathTokenId = null
+    }
+    BackHandler(enabled = showingHeroPath && openedHeroPathTokenId == null) {
+        when {
+            selectedHeroPathNodeId != null -> selectedHeroPathNodeId = null
+            heroPathDraftTraitIds.isNotEmpty() -> showingHeroPathExitConfirmation = true
+            else -> showingHeroPath = false
+        }
+    }
     BackHandler(enabled = showingRecentEvents) {
         showingRecentEvents = false
     }
     BackHandler(enabled = showingSkillEffectTest) {
         showingSkillEffectTest = false
     }
-    BackHandler(enabled = showingRanking || rankingTransition.currentState) {
-        showingRanking = false
+    BackHandler(enabled = rankingPage != null || rankingTransition.currentState != null) {
+        rankingPage = null
     }
     if (BuildConfig.DEBUG && showingSkillEffectTest) {
         SkillEffectTestScreen(
@@ -1227,32 +1963,317 @@ private fun GameScreen(
         )
         return
     }
-    Column(modifier = Modifier.fillMaxSize().background(AqBackground)) {
-        rankingTransition.AnimatedContent(
-            modifier = Modifier.weight(1f).fillMaxWidth(),
-            transitionSpec = {
-                val enterOffset: (Int) -> Int = { width ->
-                    if (targetState) width / 10 else -width / 10
-                }
-                val exitOffset: (Int) -> Int = { width ->
-                    if (targetState) -width / 14 else width / 14
-                }
-                slideInHorizontally(
-                    animationSpec = tween(durationMillis = 220, easing = FastOutSlowInEasing),
-                    initialOffsetX = enterOffset,
-                ).togetherWith(
-                    slideOutHorizontally(
-                        animationSpec = tween(durationMillis = 190, easing = FastOutSlowInEasing),
-                        targetOffsetX = exitOffset,
-                    ),
+    val submitHeroPathChoice: (String, String) -> Unit = { tokenId, offerId ->
+        if (!heroPathChoiceSubmitting) {
+            heroPathChoiceSubmitting = true
+            val expectedRevision = state.heroPath.revision
+            scope.launch {
+                val status = repository.chooseHeroPath(
+                    tokenId = tokenId,
+                    offerId = offerId,
+                    expectedRevision = expectedRevision,
+                    now = gameNow(),
                 )
-            },
-        ) { rankingVisible ->
-            if (rankingVisible) {
-                Column(modifier = Modifier.fillMaxSize().background(AqBackground)) {
+                heroPathChoiceSubmitting = false
+                if (status == com.nullplaying.model.HeroPathMutationStatus.APPLIED) {
+                    openedHeroPathTokenId = null
+                    deferredHeroPathTokenId = null
+                } else {
+                    Toast.makeText(
+                        context,
+                        pathCopy("선택을 저장하지 못했습니다.", "Could not save your choice.", "選択を保存できませんでした。"),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
+        }
+    }
+    val submitHeroPathDraft: () -> Unit = {
+        if (
+            !heroPathChoiceSubmitting &&
+            heroPathDraftTraitIds.isNotEmpty() &&
+            battleSessionPhase == BattleSessionPhase.IDLE
+        ) {
+            heroPathChoiceSubmitting = true
+            val expectedRevision = state.heroPath.revision
+            val selectedTraits = heroPathDraftTraitIds.toList().sorted()
+            val committedTraits = state.heroPath.traits.associateBy { it.traitId }
+            val targetNodeRanks = committedTraits
+                .mapValues { (_, progress) -> progress.rank }
+                .toMutableMap()
+                .apply {
+                    selectedTraits.forEach { nodeId ->
+                        this[nodeId] = getOrDefault(nodeId, 0) + 1
+                    }
+                }
+            val targetNodeChoices = committedTraits.values
+                .mapNotNull { progress ->
+                    progress.selectedChoiceId
+                        .takeIf(String::isNotBlank)
+                        ?.let { progress.traitId to it }
+                }
+                .toMap()
+            val draftCoreNodeId = selectedTraits.firstOrNull { nodeId ->
+                HeroPathCatalog.byNodeId[nodeId]?.nodeType == HeroPathNodeType.CORE
+            }
+            val target = HeroPathAllocationTarget(
+                expectedRevision = expectedRevision,
+                nodeRanks = targetNodeRanks,
+                nodeChoices = targetNodeChoices,
+                activeCoreNodeId = draftCoreNodeId ?: state.heroPath.activeCoreTraitId,
+            )
+            scope.launch {
+                val status = repository.applyHeroPathAllocation(
+                    target = target,
+                    now = gameNow(),
+                )
+                heroPathChoiceSubmitting = false
+                showingHeroPathDraftReview = false
+                if (status == com.nullplaying.model.HeroPathMutationStatus.APPLIED) {
+                    heroPathDraftTraitIds = emptySet()
+                    openedHeroPathTokenId = null
+                    deferredHeroPathTokenId = null
+                } else {
+                    Toast.makeText(context, pathCopy("선택을 저장하지 못했습니다.", "Could not save your choice.", "選択を保存できませんでした。"), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+    val resetHeroPath: () -> Unit = {
+        if (!heroPathChoiceSubmitting && battleSessionPhase == BattleSessionPhase.IDLE) {
+            heroPathChoiceSubmitting = true
+            val expectedRevision = state.heroPath.revision
+            scope.launch {
+                val status = repository.resetHeroPath(
+                    expectedRevision = expectedRevision,
+                    now = gameNow(),
+                )
+                heroPathChoiceSubmitting = false
+                showingHeroPathResetConfirmation = false
+                if (status == com.nullplaying.model.HeroPathMutationStatus.APPLIED ||
+                    status == com.nullplaying.model.HeroPathMutationStatus.NOTHING_TO_RESET
+                ) {
+                    heroPathDraftTraitIds = emptySet()
+                } else {
+                    Toast.makeText(context, pathCopy("초기화하지 못했습니다.", "Could not reset traits.", "特性をリセットできませんでした。"), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+    if (showingHeroPath) {
+        val pathModel = remember(state.heroPath, state.hero.level, heroPathFilter, heroPathDraftTraitIds) {
+            heroPathPanelModel(state, heroPathFilter, heroPathDraftTraitIds)
+        }
+        Box(modifier = Modifier.fillMaxSize().background(AqBackground)) {
+            HeroPathPanel(
+                model = pathModel,
+                onBack = {
+                    if (heroPathDraftTraitIds.isNotEmpty()) {
+                        showingHeroPathExitConfirmation = true
+                    } else {
+                        showingHeroPath = false
+                    }
+                },
+                onFilterSelected = { heroPathFilter = it },
+                onNodeSelected = { node -> selectedHeroPathNodeId = node.id },
+                onReviewDraft = { showingHeroPathDraftReview = true },
+                onResetSelected = {
+                    if (battleSessionPhase == BattleSessionPhase.IDLE) {
+                        showingHeroPathResetConfirmation = true
+                    } else {
+                        Toast.makeText(
+                            context,
+                            pathCopy("전투가 끝난 뒤 초기화할 수 있습니다.", "Reset is available after the battle.", "戦闘終了後にリセットできます。"),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                },
+                editingEnabled = battleSessionPhase == BattleSessionPhase.IDLE,
+            )
+            val selectedNode = selectedHeroPathNodeId?.let { nodeId ->
+                pathModel.nodes.firstOrNull { it.id == nodeId }
+            }
+            val selectedLane = selectedNode?.let { node ->
+                pathModel.lanes.firstOrNull { it.id == node.laneId }
+            }
+            if (selectedNode != null && selectedLane != null) {
+                BoxWithConstraints(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .zIndex(70f)
+                        .background(AqBackground.copy(alpha = 0.24f))
+                        .pointerInput(selectedNode.id) {
+                            detectTapGestures(onTap = { selectedHeroPathNodeId = null })
+                        }
+                        .semantics {
+                            dialog()
+                            paneTitle = pathCopy("특성 상세", "Trait Details", "特性の詳細")
+                        },
+                    contentAlignment = Alignment.BottomCenter,
+                ) {
+                    HeroPathNodeDetailSheetContent(
+                        node = selectedNode,
+                        lane = selectedLane,
+                        editingEnabled = battleSessionPhase == BattleSessionPhase.IDLE,
+                        onToggleDraft = {
+                            heroPathDraftTraitIds = if (selectedNode.id in heroPathDraftTraitIds) {
+                                heroPathDraftTraitIds - selectedNode.id
+                            } else if (
+                                selectedNode.canDraft &&
+                                heroPathDraftTraitIds.size.toLong() < state.heroPath.unspentPoints
+                            ) {
+                                heroPathDraftTraitIds + selectedNode.id
+                            } else {
+                                heroPathDraftTraitIds
+                            }
+                            selectedHeroPathNodeId = null
+                        },
+                        onDismiss = { selectedHeroPathNodeId = null },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = maxHeight * 0.88f)
+                            .pointerInput(Unit) { detectTapGestures(onTap = {}) },
+                    )
+                }
+            }
+            if (showingHeroPathDraftReview) {
+                AlertDialog(
+                    onDismissRequest = { showingHeroPathDraftReview = false },
+                    title = {
+                        MaterialText(pathCopy("선택 검토", "Review Choices", "選択内容を確認"))
+                    },
+                    text = {
+                        MaterialText(
+                            pathCopy(
+                                "초안 ${heroPathDraftTraitIds.size}건을 한 번에 확정할까요? 다음에 시작하는 결투부터 적용됩니다.",
+                                "Confirm ${heroPathDraftTraitIds.size} drafted changes at once? They take effect in the next duel you start.",
+                                "仮選択${heroPathDraftTraitIds.size}件をまとめて確定しますか？ 次に開始する決闘から適用されます。",
+                            ),
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = submitHeroPathDraft, enabled = !heroPathChoiceSubmitting) {
+                            MaterialText(
+                                pathCopy(
+                                    "${heroPathDraftTraitIds.size}건 일괄 확정",
+                                    "Confirm ${heroPathDraftTraitIds.size} Changes",
+                                    "${heroPathDraftTraitIds.size}件をまとめて確定",
+                                ),
+                            )
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showingHeroPathDraftReview = false }) {
+                            MaterialText(pathCopy("취소", "Cancel", "キャンセル"))
+                        }
+                    },
+                )
+            }
+            if (showingHeroPathResetConfirmation) {
+                AlertDialog(
+                    onDismissRequest = { showingHeroPathResetConfirmation = false },
+                    title = {
+                        MaterialText(pathCopy("전체 초기화", "Reset All Traits", "全特性をリセット"))
+                    },
+                    text = {
+                        MaterialText(
+                            pathCopy(
+                                "습득한 ${state.heroPath.traits.size}개 특성을 초기화하고 ${state.heroPath.spentPoints}포인트를 돌려받습니다. 다음에 시작하는 결투부터 적용됩니다.",
+                                "Reset ${state.heroPath.traits.size} traits and refund ${state.heroPath.spentPoints} points. The reset takes effect in the next duel you start.",
+                                "${state.heroPath.traits.size}個の特性をリセットし、${state.heroPath.spentPoints}ポイントを返還します。次に開始する決闘から適用されます。",
+                            ),
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = resetHeroPath, enabled = !heroPathChoiceSubmitting) {
+                            MaterialText(pathCopy("포인트 전부 반환", "Refund All Points", "全ポイントを返還"))
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showingHeroPathResetConfirmation = false }) {
+                            MaterialText(pathCopy("취소", "Cancel", "キャンセル"))
+                        }
+                    },
+                )
+            }
+            if (showingHeroPathExitConfirmation) {
+                AlertDialog(
+                    onDismissRequest = { showingHeroPathExitConfirmation = false },
+                    title = { MaterialText(pathCopy("확정하지 않은 변경", "Unconfirmed Changes", "未確定の変更")) },
+                    text = {
+                        MaterialText(
+                            pathCopy(
+                                "초안 ${heroPathDraftTraitIds.size}개가 아직 확정되지 않았습니다. 초안을 유지하면 나중에 이어서 편집할 수 있습니다.",
+                                "${heroPathDraftTraitIds.size} changes are not confirmed. Keep them to continue editing later.",
+                                "${heroPathDraftTraitIds.size}件の変更はまだ確定されていません。保留すると後で編集を続けられます。",
+                            ),
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                showingHeroPathExitConfirmation = false
+                                showingHeroPath = false
+                            },
+                        ) {
+                            MaterialText(pathCopy("초안 유지", "Keep Draft", "仮選択を保留"))
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                heroPathDraftTraitIds = emptySet()
+                                showingHeroPathExitConfirmation = false
+                                showingHeroPath = false
+                            },
+                        ) {
+                            MaterialText(pathCopy("변경 폐기", "Discard Changes", "変更を破棄"))
+                        }
+                    },
+                )
+            }
+        }
+        return
+    }
+    val gameScreenModifier = Modifier
+        .fillMaxSize()
+        .background(AqBackground)
+    Box(modifier = gameScreenModifier) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            rankingTransition.AnimatedContent(
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+                transitionSpec = {
+                    val enterOffset: (Int) -> Int = { width ->
+                        rankingPageEnterOffset(targetState != null, width)
+                    }
+                    val exitOffset: (Int) -> Int = { width ->
+                        rankingPageExitOffset(targetState != null, width)
+                    }
+                    slideInHorizontally(
+                        animationSpec = tween(
+                            durationMillis = RANKING_PAGE_ENTER_DURATION_MILLIS,
+                            easing = FastOutSlowInEasing,
+                        ),
+                        initialOffsetX = enterOffset,
+                    ).togetherWith(
+                        slideOutHorizontally(
+                            animationSpec = tween(
+                                durationMillis = RANKING_PAGE_EXIT_DURATION_MILLIS,
+                                easing = FastOutSlowInEasing,
+                            ),
+                            targetOffsetX = exitOffset,
+                        ),
+                    )
+                },
+            ) { visibleRankingPage ->
+                when (visibleRankingPage) {
+                RankingPageKind.ADVENTURER -> Column(
+                    modifier = Modifier.fillMaxSize().background(AqBackground),
+                ) {
                     RankingScreen(
                         uiState = rankingUiState,
-                        onBack = { showingRanking = false },
+                        refreshPolicy = rankingRefreshPolicy,
+                        onBack = { rankingPage = null },
                         onRetry = {
                             scope.launch {
                                 supabaseGameService.fetchRanking(
@@ -1264,8 +2285,19 @@ private fun GameScreen(
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
-            } else {
-                if (showingSettings) {
+                RankingPageKind.ARENA -> BattleRankingScreen(
+                    localStanding = arenaRankingStanding,
+                    remoteSnapshot = remoteArenaRanking?.forCharacter(state.rankingCharacterId),
+                    errorMessage = arenaRankingError,
+                    refreshPolicy = rankingRefreshPolicy,
+                    modifier = Modifier.fillMaxSize(),
+                    onBack = { rankingPage = null },
+                    onRetry = {
+                        scope.launch { supabaseGameService.fetchArenaRanking(state.rankingCharacterId) }
+                    },
+                )
+                    null -> {
+                        if (showingSettings) {
                     GameSettingsScreen(
                         state = state,
                         notificationPreferencesStore = notificationPreferencesStore,
@@ -1282,79 +2314,239 @@ private fun GameScreen(
                         onOpenPrivacyOptions = onOpenPrivacyOptions,
                     )
                 } else {
+                    val contentTab = selectedTab.takeIf { it in visibleMenuTabs } ?: MenuTab.MAIN
                     Column(modifier = Modifier.fillMaxSize().background(AqBackground)) {
-                        OfflineAdventureStrip(
-                            progress = offlineAdventureProgress,
-                            isFull = offlineAdventureFull,
-                            onRewardClick = { showingRewardDialog = true },
-                        )
-                        HeroHeader(
+                        if (!arenaRuntime.skillTreeVisible) {
+                            OfflineAdventureStrip(
+                                progress = offlineAdventureProgress,
+                                isFull = offlineAdventureFull,
+                                onRewardClick = {
+                                    rewardDialogBenefit = RewardedBenefit.OFFLINE_ADVENTURE
+                                },
+                            )
+                            HeroHeader(
                             state = state,
                             combatPower = combatPower,
                             ranking = rankingHeaderPresentation(rankingUiState),
-                            onLevelClick = if (BuildConfig.DEBUG) {
+                            onLevelClick = if (
+                                BuildConfig.DEBUG &&
+                                (contentTab != MenuTab.BATTLE || battleSessionPhase == BattleSessionPhase.IDLE)
+                            ) {
                                 { showingSkillEffectTest = true }
                             } else {
                                 null
                             },
-                            onOpenSettings = {
-                                showingRanking = false
-                                showingSettings = true
+                            onOpenSettings = if (
+                                contentTab != MenuTab.BATTLE ||
+                                battleSessionPhase == BattleSessionPhase.IDLE
+                            ) {
+                                {
+                                    rankingPage = null
+                                    showingSettings = true
+                                }
+                            } else {
+                                null
                             },
-                        )
-                        AdventurePanel(state, repository.monsterEnergyFraction(state))
+                            )
+                        }
                         Box(
                             Modifier
                                 .weight(1f)
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 10.dp),
+                                .fillMaxWidth(),
                         ) {
-                            when (selectedTab) {
-                                MenuTab.MAIN -> MainPanel(
-                                    state = state,
-                                    repository = repository,
-                                    unreadRecentEventCount = unreadRecentEventCount,
-                                    onOpenRecentEvents = { showingRecentEvents = true },
-                                )
-                                MenuTab.CHARACTER -> CharacterPanel(
-                                    state = state,
-                                    rankingUiState = rankingUiState,
-                                    onOpenRanking = {
-                                        selectedTab = MenuTab.CHARACTER
-                                        showingRanking = true
-                                    },
-                                )
-                                MenuTab.EQUIPMENT -> EquipmentPanel(state)
-                                MenuTab.BAG -> BagPanel(state)
-                                MenuTab.QUEST -> QuestPanel(state)
+                            Column(
+                                modifier = if (contentTab == MenuTab.BATTLE) {
+                                    Modifier.size(0.dp).clearAndSetSemantics { }
+                                } else {
+                                    Modifier.fillMaxSize()
+                                },
+                            ) {
+                                if (adventurePanelVisibleForBuild(contentTab, BuildConfig.DEBUG)) {
+                                    AdventurePanel(state, repository.monsterEnergyFraction(state), gameNow())
+                                }
+                                Box(
+                                    Modifier
+                                        .weight(1f)
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                                ) {
+                                    when (contentTab) {
+                                        MenuTab.MAIN -> MainPanel(
+                                            state = state,
+                                            repository = repository,
+                                            rankingUiState = rankingUiState,
+                                            onOpenRanking = {
+                                                selectedTab = MenuTab.MAIN
+                                                rankingPage = RankingPageKind.ADVENTURER
+                                            },
+                                            unreadRecentEventCount = unreadRecentEventCount,
+                                            onOpenRecentEvents = { showingRecentEvents = true },
+                                        )
+                                        MenuTab.CHARACTER -> CharacterPanel(
+                                            state = state,
+                                        )
+                                        MenuTab.CORRESPONDENCE, MenuTab.BATTLE -> Unit
+                                        MenuTab.ITEMS -> ItemsPanel(state)
+                                        MenuTab.EQUIPMENT -> EquipmentPanel(state)
+                                        MenuTab.BAG -> BagPanel(state)
+                                        MenuTab.QUEST -> QuestPanel(state)
+                                    }
+                                }
                             }
+                            BattlePanel(
+                                state = state,
+                                characterSlotId = activeSlotId,
+                                runtime = arenaRuntime,
+                                combatPower = combatPower,
+                                heroPathEntry = remember(state.heroPath) {
+                                    heroPathArenaEntryModel(state)
+                                },
+                                modifier = if (contentTab == MenuTab.BATTLE) {
+                                    Modifier.fillMaxSize()
+                                } else {
+                                    Modifier.size(0.dp).clearAndSetSemantics { }
+                                },
+                                isActive = contentTab == MenuTab.BATTLE,
+                                onSessionPhaseChanged = { battleSessionPhase = it },
+                                onOpenRanking = { standing ->
+                                    arenaRankingStanding = standing
+                                    supabaseGameService.queueArenaRankingSync(standing)
+                                    scope.launch { supabaseGameService.flushPendingArenaRanking() }
+                                    selectedTab = MenuTab.BATTLE
+                                    rankingPage = RankingPageKind.ARENA
+                                },
+                                onArenaPlacementRecovered = { standing ->
+                                    supabaseGameService.rememberArenaRankingPlacement(standing)
+                                },
+                                onArenaStandingCommitted = { standing ->
+                                    arenaRankingStanding = standing
+                                    if (supabaseGameService.queueArenaRankingSync(standing)) {
+                                        scope.launch { supabaseGameService.flushPendingArenaRanking() }
+                                    }
+                                },
+                                onOpenHeroPath = {
+                                    if (battleSessionPhase == BattleSessionPhase.IDLE) {
+                                        showingHeroPath = true
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            pathCopy(
+                                                "매칭과 결투가 끝난 뒤 편집할 수 있습니다.",
+                                                "Editing is available after matching and battle end.",
+                                                "マッチングと決闘の終了後に編集できます。",
+                                            ),
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
+                                    }
+                                },
+                                arenaRewardedRefillGrant = arenaRewardedRefillGrant,
+                                rewardedAdPreloadStarted = arenaRewardPreloadEligible,
+                                onRewardedAdPreloadAvailabilityChanged = { arenaRewardPreloadEligible = it },
+                                onRequestArenaRewardedRefill = { identity ->
+                                    pendingArenaRewardIdentity = identity
+                                    val ticketSnapshot = refreshTrustedBattleEntrySnapshot(
+                                        snapshot = battleLocalStateStore.load(identity),
+                                        roster = state.publicPlayerRoster,
+                                        deviceWallNowMillis = System.currentTimeMillis(),
+                                        elapsedRealtimeMillis = SystemClock.elapsedRealtime(),
+                                        bootCount = currentArenaBootCount(context.applicationContext),
+                                    )
+                                    pendingArenaRefillCount = battleRewardedRefillCount(ticketSnapshot.dailyBattlesUsed)
+                                    arenaRewardPreloadEligible = true
+                                    rewardDialogBenefit = RewardedBenefit.ARENA_TICKETS
+                                },
+                                arenaServerMatchingQaFixture = arenaServerQaRoster,
+                            )
+                        }
+                    }
                         }
                     }
                 }
             }
+            if (!showingSettings && !arenaRuntime.skillTreeVisible) {
+                BottomMenu(
+                    selectedTab = if (rankingPage == RankingPageKind.ADVENTURER) {
+                        MenuTab.MAIN
+                    } else {
+                        selectedTab.takeIf { it in visibleMenuTabs } ?: MenuTab.MAIN
+                    },
+                    onSelect = { tab ->
+                        selectedTab = tab
+                        rankingPage = null
+                    },
+                )
+            }
         }
-        if (!showingSettings) {
-            BottomMenu(
-                selectedTab = if (showingRanking) MenuTab.CHARACTER else selectedTab,
-                onSelect = { tab ->
-                    selectedTab = tab
-                    showingRanking = false
-                },
-            )
+        if (
+            battleSessionPhase == BattleSessionPhase.MATCH_READY &&
+            selectedTab != MenuTab.BATTLE &&
+            rankingPage == null &&
+            !showingSettings &&
+            !showingSkillEffectTest &&
+            !showingRecentEvents &&
+            !showingRewardDialog &&
+            !arenaRuntime.skillTreeVisible
+        ) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 82.dp)
+                    .zIndex(21f),
+            ) {
+                BattleMatchFoundArrivalStrip(
+                    onOpen = {
+                        selectedTab = MenuTab.BATTLE
+                        rankingPage = null
+                    },
+                )
+            }
         }
     }
 
-    if (showingRewardDialog) {
-        OfflineAdventureRewardDialog(
+    rewardDialogBenefit?.let { benefit ->
+        val dialogLoadState = when (benefit) {
+            RewardedBenefit.OFFLINE_ADVENTURE -> offlineRewardedLoadState
+            RewardedBenefit.ARENA_TICKETS -> arenaRewardedLoadState
+        }
+        RewardedBenefitDialog(
+            benefit = benefit,
             consentState = adsConsentState,
             mobileAdsRuntimeState = mobileAdsRuntimeState,
-            rewardedLoadState = rewardedLoadState,
-            onDismiss = { showingRewardDialog = false },
+            rewardedLoadState = dialogLoadState,
+            arenaRefillCount = pendingArenaRefillCount,
+            onDismiss = {
+                rewardDialogBenefit = null
+                if (benefit == RewardedBenefit.ARENA_TICKETS) {
+                    pendingArenaRewardIdentity = null
+                }
+            },
             onRetryAdsSetup = onRetryAdsSetup,
-            onRetryRewardedAd = retryRewardedAd,
+            onRetryRewardedAd = { retryRewardedAd(benefit) },
             onWatchAd = {
-                showingRewardDialog = false
-                showRewardedAd()
+                when (showRewardedAd(benefit)) {
+                    RewardedShowAttempt.SHOWN -> {
+                        rewardDialogBenefit = null
+                        if (benefit == RewardedBenefit.ARENA_TICKETS) {
+                            pendingArenaRewardIdentity = null
+                        }
+                    }
+                    RewardedShowAttempt.ELIGIBILITY_LOST -> {
+                        rewardDialogBenefit = null
+                        if (benefit == RewardedBenefit.ARENA_TICKETS) {
+                            pendingArenaRewardIdentity = null
+                            Toast.makeText(
+                                context,
+                                pathCopy(
+                                    "출전권이 자동 충전되어 광고를 재생하지 않았습니다.",
+                                    "An entry recharged automatically, so the ad was not played.",
+                                    "出場券が自動回復したため、広告は再生しませんでした。",
+                                ),
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                        }
+                    }
+                    RewardedShowAttempt.NOT_READY -> Unit
+                }
             },
         )
     }
@@ -1362,6 +2554,22 @@ private fun GameScreen(
         RecentAdventureEventsDialog(
             records = recentEvents,
             onDismiss = { showingRecentEvents = false },
+        )
+    }
+    if (openedHeroPathToken != null) {
+        HeroPathChoiceSheet(
+            state = state,
+            token = openedHeroPathToken,
+            onChoiceSelected = submitHeroPathChoice,
+            onFullTreeSelected = {
+                openedHeroPathTokenId = null
+                showingHeroPath = true
+            },
+            onDeferred = {
+                deferredHeroPathTokenId = openedHeroPathToken.tokenId
+                openedHeroPathTokenId = null
+            },
+            onDismiss = { openedHeroPathTokenId = null },
         )
     }
 }
@@ -1395,6 +2603,37 @@ internal fun warriorSignatureSkillDefinitions(): List<SkillDefinition> =
 internal fun signatureSkillDefinitions(heroClass: HeroClass): List<SkillDefinition> =
     SkillCatalog.forClass(heroClass)
 
+internal fun skillEffectSummaryLabel(
+    unlockLevel: Int,
+    elementName: String,
+    hitCount: Int,
+    damagePercentMin: Int,
+    damagePercentMax: Int,
+    displayedDamage: String? = null,
+    language: AppLanguage,
+): String {
+    val localizedElement = localized(elementName, language)
+    val hitLabel = when (language) {
+        AppLanguage.KOREAN -> "${hitCount}타"
+        AppLanguage.ENGLISH -> "$hitCount ${if (hitCount == 1) "hit" else "hits"}"
+        AppLanguage.JAPANESE -> "${hitCount}ヒット"
+    }
+    val parts = mutableListOf(
+        "Lv.$unlockLevel",
+        localizedElement,
+        hitLabel,
+        "$damagePercentMin~$damagePercentMax%",
+    )
+    displayedDamage?.takeIf(String::isNotBlank)?.let { damage ->
+        parts += when (language) {
+            AppLanguage.KOREAN -> "표시 피해 $damage"
+            AppLanguage.ENGLISH -> "Display damage $damage"
+            AppLanguage.JAPANESE -> "表示ダメージ $damage"
+        }
+    }
+    return parts.joinToString(" · ")
+}
+
 @Composable
 private fun SkillEffectTestScreen(
     baseState: SimpleGameState,
@@ -1402,6 +2641,7 @@ private fun SkillEffectTestScreen(
     offlineAdventureFull: Boolean,
     onExit: () -> Unit,
 ) {
+    val language = LocalAppLanguage.current
     val engine = remember { SimpleGameEngine() }
     val frozenBaseState = remember { baseState.skillEffectTestCopy() }
     var selectedClass by remember { mutableStateOf(HeroClass.WARRIOR) }
@@ -1471,6 +2711,7 @@ private fun SkillEffectTestScreen(
             state = previewState,
             energyFraction = previewState.monster.currentEnergy.toFloat() /
                 previewState.monster.maxEnergy.coerceAtLeast(1L).toFloat(),
+            now = previewState.lastSettledAt,
         )
         Card(
             modifier = Modifier
@@ -1626,13 +2867,16 @@ private fun SkillEffectTestScreen(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
-                        Text(
-                            "Lv.${selectedDefinition.unlockLevel} · " +
-                                "${selectedDefinition.element.labelKo} · " +
-                                "${selectedDefinition.hitCount}타 · " +
-                                "${selectedDefinition.damagePercentMin}~" +
-                                "${selectedDefinition.damagePercentMax}% · " +
-                                "표시 피해 ${previewState.lastDamage.format()}",
+                        UnlocalizedText(
+                            skillEffectSummaryLabel(
+                                unlockLevel = selectedDefinition.unlockLevel,
+                                elementName = selectedDefinition.element.labelKo,
+                                hitCount = selectedDefinition.hitCount,
+                                damagePercentMin = selectedDefinition.damagePercentMin,
+                                damagePercentMax = selectedDefinition.damagePercentMax,
+                                displayedDamage = previewState.lastDamage.format(),
+                                language = language,
+                            ),
                             color = AqMuted,
                             fontSize = 10.sp,
                             maxLines = 1,
@@ -1682,6 +2926,7 @@ private fun SkillEffectTestRow(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
+    val language = LocalAppLanguage.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -1709,10 +2954,15 @@ private fun SkillEffectTestRow(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
-            Text(
-                "Lv.${definition.unlockLevel} · ${definition.element.labelKo} · " +
-                    "${definition.hitCount}타 · ${definition.damagePercentMin}~" +
-                    "${definition.damagePercentMax}%",
+            UnlocalizedText(
+                skillEffectSummaryLabel(
+                    unlockLevel = definition.unlockLevel,
+                    elementName = definition.element.labelKo,
+                    hitCount = definition.hitCount,
+                    damagePercentMin = definition.damagePercentMin,
+                    damagePercentMax = definition.damagePercentMax,
+                    language = language,
+                ),
                 color = AqMuted,
                 fontSize = 10.sp,
                 maxLines = 1,
@@ -1787,12 +3037,17 @@ private fun SimpleGameState.skillEffectTestCopy(): SimpleGameState = copy(
 )
 
 @Composable
-private fun AdventurePanel(state: SimpleGameState, energyFraction: Float) {
+internal fun AdventurePanel(state: SimpleGameState, energyFraction: Float, now: Long) {
     if (state.adventurePhase == AdventurePhase.COMBAT) {
-        CombatPanel(state, energyFraction)
+        CombatPanel(state, energyFraction, now)
+    } else if (state.adventurePhase == AdventurePhase.EVENT || state.adventurePhase == AdventurePhase.EVENT_RESULT) {
+        AdventureEventPanel(state, now)
+    } else if (state.adventurePhase == AdventurePhase.RELATIONSHIP || state.adventurePhase == AdventurePhase.RELATIONSHIP_RESULT) {
+        AdventureRelationshipPanel(state, now)
     } else {
-        TownActionPanel(state)
+        TownActionPanel(state, now)
     }
+    if (BuildConfig.ADVENTURE_SYSTEM_ENABLED) AdventureTraitActivationStrip(state, now)
 }
 
 internal fun usesMarketActionPanel(phase: AdventurePhase): Boolean =
@@ -1833,10 +3088,9 @@ internal fun openingNarrativePresentation(
 }
 
 @Composable
-private fun TownActionPanel(state: SimpleGameState) {
+private fun TownActionPanel(state: SimpleGameState, now: Long) {
     val actionProgress = remember(state.actionStartedAt, state.actionEndsAt) { Animatable(0f) }
-    LaunchedEffect(state.actionStartedAt, state.actionEndsAt) {
-        val now = System.currentTimeMillis()
+    LaunchedEffect(state.actionStartedAt, state.actionEndsAt, now) {
         val duration = (state.actionEndsAt - state.actionStartedAt).coerceAtLeast(1L)
         val elapsed = (now - state.actionStartedAt).coerceIn(0L, duration)
         actionProgress.snapTo(elapsed.toFloat() / duration.toFloat())
@@ -1852,7 +3106,11 @@ private fun TownActionPanel(state: SimpleGameState) {
         }
     }
     if (state.adventurePhase == AdventurePhase.LOOTING) {
-        LootResultPanel(state = state, progress = actionProgress.value)
+        LootResultPanel(
+            state = state,
+            progress = actionProgress.value,
+            eventResult = state.adventureJourney.eventBattle?.result,
+        )
         return
     }
     if (state.adventurePhase == AdventurePhase.OPENING) {
@@ -1873,6 +3131,8 @@ private fun TownActionPanel(state: SimpleGameState) {
         AdventurePhase.SHOPPING_RESULT -> "새 장비 장착 완료"
         AdventurePhase.SHOPPING_EMPTY -> "지금 살 수 있는 더 좋은 장비를 찾지 못했습니다"
         AdventurePhase.DEPARTING -> "사냥터로 출정 중"
+        AdventurePhase.EVENT, AdventurePhase.EVENT_RESULT -> "모험 중 만난 일"
+        AdventurePhase.RELATIONSHIP, AdventurePhase.RELATIONSHIP_RESULT -> "길에서 만난 인연"
         AdventurePhase.COMBAT -> "전투 중"
     }
     val detail = when (state.adventurePhase) {
@@ -1893,6 +3153,8 @@ private fun TownActionPanel(state: SimpleGameState) {
         AdventurePhase.SHOPPING_RESULT -> state.lastShopPurchase?.let(::shopEquipmentChangeLabel).orEmpty()
         AdventurePhase.SHOPPING_EMPTY -> "잠시 후 사냥터로 출정합니다"
         AdventurePhase.DEPARTING -> "잔액 ${state.hero.gold.format()}G"
+        AdventurePhase.EVENT, AdventurePhase.EVENT_RESULT -> ""
+        AdventurePhase.RELATIONSHIP, AdventurePhase.RELATIONSHIP_RESULT -> ""
         AdventurePhase.COMBAT -> ""
     }
     val sectionTitle = when (state.adventurePhase) {
@@ -2070,7 +3332,7 @@ private fun OpeningNarrativePanel(
                         textAlign = TextAlign.Center,
                     )
                     Spacer(Modifier.height(10.dp))
-                    Text(
+                    UnlocalizedText(
                         narrativeText,
                         color = AqMuted,
                         fontSize = 14.sp,
@@ -2326,62 +3588,139 @@ private fun GoldBalanceCard(gold: Long) {
 }
 
 @Composable
-private fun LootResultPanel(
+internal fun LootResultPanel(
     state: SimpleGameState,
     progress: Float,
+    eventResult: AdventureEventResult? = null,
+    relationshipResult: AdventureRelationshipResult? = null,
 ) {
     val language = LocalAppLanguage.current
-    val hasLoot = state.lastLootName.isNotBlank()
-    val rarity = state.lastLootRarity.ifBlank { "일반" }
-    val accent = if (hasLoot) rarityColor(rarity) else AqMuted
-    val sourceItemName = state.lastLootName.ifBlank { "전리품을 담지 못했습니다" }
-    val itemName = if (state.lastLootKind == "장비") {
-        localizedEquipmentName(sourceItemName, language)
+    require(eventResult == null || relationshipResult == null) { "Only one result receipt may be shown" }
+    val relationshipReceipt = relationshipResult?.let { relationshipReceiptPresentation(it, language) }
+    val eventReceipt = eventResult?.let { adventureEventReceiptPresentation(it, language) } ?: relationshipReceipt
+    val recordedItemName = state.lastLootName
+        .ifBlank { eventResult?.itemName.orEmpty() }
+        .ifBlank { relationshipResult?.itemName.orEmpty() }
+    val lootEquipped = relationshipResult?.itemEquipped ?: state.lastLootEquipped
+    val relationshipEquipment = relationshipResult?.rewardKind == AdventureEventRewardKind.ITEM
+    val equipmentLoot = relationshipEquipment || state.lastLootKind == "장비"
+    val hasLoot = if (eventReceipt == null) {
+        state.lastLootName.isNotBlank()
     } else {
-        localizedItemName(sourceItemName, language)
+        eventReceipt.itemState == AdventureEventItemReceiptState.ACQUIRED && recordedItemName.isNotBlank()
+    }
+    val omitted = if (eventReceipt != null) {
+        eventReceipt.itemState == AdventureEventItemReceiptState.OMITTED
+    } else {
+        BuildConfig.ADVENTURE_SYSTEM_ENABLED && !hasLoot && state.adventureTraits.source?.itemOmitted == true
+    }
+    val bagFull = if (eventReceipt != null) {
+        eventReceipt.itemState == AdventureEventItemReceiptState.BAG_FULL
+    } else {
+        !hasLoot && !omitted
+    }
+    val eventBattlePending = eventReceipt?.reward == AdventureEventReceiptReward.BATTLE
+    val omittedName = state.adventureTraits.visibleActivations.lastOrNull {
+        it.effectKind == com.nullplaying.model.AdventureTraitEffectKind.OMITTED_ITEM
+    }?.subjectName.orEmpty()
+    val rarity = state.lastLootRarity
+        .ifBlank { eventResult?.itemRarity.orEmpty() }
+        .ifBlank { relationshipResult?.itemRarity.orEmpty() }
+        .ifBlank { "일반" }
+    val accent = when {
+        hasLoot -> rarityColor(rarity)
+        eventReceipt?.reward == AdventureEventReceiptReward.EXPERIENCE -> Color(0xFF8FB9FF)
+        eventReceipt?.reward == AdventureEventReceiptReward.GOLD -> AqGold
+        eventReceipt?.reward == AdventureEventReceiptReward.ROUTE -> Color(0xFF84D3B0)
+        eventBattlePending -> AqRed
+        else -> AqMuted
+    }
+    val sourceItemName = when {
+        recordedItemName.isNotBlank() -> recordedItemName
+        omitted && omittedName.isNotBlank() -> omittedName
+        eventReceipt != null -> eventReceipt.eventTitle
+        else -> "전리품을 담지 못했습니다"
+    }
+    val eventAwareItemName = if (eventResult != null) {
+        eventItemDisplayName(eventResult, sourceItemName, language)
+    } else {
+        sourceItemName
+    }
+    val eventNarrativeIsPrimary = eventReceipt != null && !hasLoot && !omitted && !bagFull
+    val itemName = when {
+        eventNarrativeIsPrimary -> eventReceipt?.narrative.orEmpty()
+        hasLoot && equipmentLoot -> localizedEquipmentName(eventAwareItemName, language)
+        hasLoot || eventReceipt == null -> localizedItemName(eventAwareItemName, language)
+        else -> eventAwareItemName
     }
     val typeLabel = when {
-        !hasLoot -> "가방 가득 참"
-        state.lastLootKind == "장비" && state.lastLootEquipmentSlot != null ->
+        omitted -> journeyText(language, "남긴 전리품", "Loot left behind", "置いた戦利品")
+        bagFull -> journeyText(language, "가방 가득 참", "Bag full", "バッグがいっぱい")
+        eventReceipt?.reward == AdventureEventReceiptReward.BATTLE ->
+            journeyText(language, "사건 전개", "Event development", "出来事の展開")
+        relationshipReceipt != null && !hasLoot -> journeyText(language, "인연 보상", "Relationship reward", "縁の報酬")
+        eventReceipt != null && !hasLoot -> journeyText(language, "사건 보상", "Event reward", "出来事報酬")
+        equipmentLoot && state.lastLootEquipmentSlot != null ->
             "장비 · ${state.lastLootEquipmentSlot!!.labelKo}"
         else -> "전리품"
     }
+    val primaryBadgeLabel = if (eventReceipt != null && !hasLoot) eventReceipt.rewardTypeLabel else rarity
     val power = state.lastLootEquipmentPower
     val previousPower = state.lastLootPreviousPower
     val itemDetail = when {
+        eventNarrativeIsPrimary -> ""
         !hasLoot -> "가방 ${state.inventory.size}/${state.inventoryCapacity()}"
-        state.lastLootKind != "장비" ->
+        !equipmentLoot ->
             "가방 ${state.inventory.size}/${state.inventoryCapacity()}"
-        state.lastLootEquipped && power != null && previousPower != null ->
+        lootEquipped && power != null && previousPower != null ->
             equipmentReplacementPowerLabel(previousPower, power)
-        state.lastLootEquipped && power != null -> power.format()
+        lootEquipped && power != null -> power.format()
         power != null && previousPower != null ->
             "장비력 ${power.format()} · 장착 중 ${previousPower.format()}"
         power != null -> "장비력 ${power.format()}"
         else -> "장비"
     }
     val statusTitle = when {
-        !hasLoot -> "가방이 가득 찼습니다"
-        state.lastLootEquipped -> "새 장비로 바로 장착했습니다"
+        eventReceipt != null -> eventReceipt.rewardSummary
+        omitted -> journeyText(language, "가방에 담지 않았습니다", "Left out of the bag", "バッグには収納しませんでした")
+        bagFull -> journeyText(language, "가방이 가득 찼습니다", "The bag is full", "バッグがいっぱいです")
+        lootEquipped -> "새 장비로 바로 장착했습니다"
         else -> "가방에 보관했습니다"
     }
     val statusDetail = when {
-        !hasLoot -> "마을로 돌아가 가방을 정리합니다"
-        state.lastLootEquipped -> "기존 장비는 가방에 보관됩니다"
-        state.lastLootKind == "장비" -> "현재 장비를 유지합니다"
+        eventReceipt?.reward == AdventureEventReceiptReward.BATTLE -> journeyText(
+            language,
+            "잠시 후 자동으로 전투를 시작합니다",
+            "Battle begins automatically in a moment",
+            "まもなく自動で戦闘を開始します",
+        )
+        eventReceipt != null && eventReceipt.penaltySummary.isNotBlank() -> eventReceipt.penaltySummary
+        eventReceipt != null && omitted -> journeyText(language, "확인을 마치고 길을 재촉합니다", "The hero finishes checking and moves on", "確認を終え、道を急ぐ")
+        eventReceipt != null && bagFull -> journeyText(language, "마을에 돌아가 가방을 정리합니다", "Returning to town to sort the bag", "町に戻ってバッグを整理する")
+        relationshipReceipt != null -> relationshipReceipt.penaltySummary
+        eventReceipt != null && hasLoot && lootEquipped -> journeyText(language, "새 장비로 바로 장착했습니다", "Equipped immediately", "すぐに新しい装備を装着した")
+        eventReceipt != null && hasLoot && equipmentLoot -> journeyText(language, "현재 장비를 유지합니다", "Current equipment kept", "現在の装備を維持した")
+        eventReceipt != null && hasLoot -> journeyText(language, "가방 ${state.inventory.size}/${state.inventoryCapacity()}", "Bag ${state.inventory.size}/${state.inventoryCapacity()}", "バッグ ${state.inventory.size}/${state.inventoryCapacity()}")
+        eventReceipt != null -> journeyText(language, "보상 정산 완료", "Reward settled", "報酬精算完了")
+        omitted -> journeyText(language, "확인을 마치고 길을 서두릅니다", "The hero finishes checking and moves on sooner", "確認を終え、早く道を進む")
+        bagFull -> "마을로 돌아가 가방을 정리합니다"
+        lootEquipped -> "기존 장비는 가방에 보관됩니다"
+        equipmentLoot -> "현재 장비를 유지합니다"
         else -> ""
     }
-    val statusColor = if (state.lastLootEquipped) Color(0xFF8BCB84) else AqText
-    val statusBorder = if (state.lastLootEquipped) Color(0xA68BCB84) else AqSurfaceHigh
-    val statusBackground = if (state.lastLootEquipped) {
-        Color(0x298BCB84)
+    val highlightedStatus = lootEquipped || eventReceipt?.wasGranted() == true || eventBattlePending
+    val statusColor = if (highlightedStatus) accent else AqText
+    val statusBorder = if (highlightedStatus) accent.copy(alpha = 0.65f) else AqSurfaceHigh
+    val statusBackground = if (highlightedStatus) {
+        accent.copy(alpha = 0.16f)
     } else {
         Color(0xD922192C)
     }
     val usesDenseLootLayout = itemName.length > 18
     val itemFontSize = lootResultItemFontSizeSp(itemName.length).sp
     val semanticsDescription = buildList {
-        if (hasLoot) addAll(listOf(rarity, typeLabel, itemName, itemDetail))
+        eventReceipt?.subjectName?.takeIf(String::isNotBlank)?.let(::add)
+        addAll(listOf(primaryBadgeLabel, typeLabel, itemName, itemDetail).filter(String::isNotBlank))
         add(statusTitle)
         if (statusDetail.isNotBlank()) add(statusDetail)
     }.joinToString(", ") { localized(it) }
@@ -2426,9 +3765,30 @@ private fun LootResultPanel(
                         .padding(horizontal = 15.dp, vertical = 8.dp),
                 ) {
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                        Text("전리품", color = AqText, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.weight(1f))
-                        Text("획득 완료", color = accent, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                        Text(
+                            if (relationshipReceipt?.subjectName?.isNotBlank() == true) {
+                                relationshipReceipt.subjectName
+                            } else if (relationshipReceipt != null) {
+                                journeyText(language, "인연 보상", "Relationship reward", "縁の報酬")
+                            } else if (eventReceipt == null) "전리품"
+                            else if (eventReceipt.reward == AdventureEventReceiptReward.BATTLE) {
+                                journeyText(language, "사건 전개", "Event development", "出来事の展開")
+                            } else journeyText(language, "사건 보상", "Event reward", "出来事報酬"),
+                            color = AqText,
+                            fontSize = if ((relationshipReceipt?.subjectName?.length ?: 0) >= 8) 12.sp else 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            softWrap = false,
+                            modifier = Modifier.weight(1f),
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            eventReceipt?.outcomeLabel
+                                ?: if (omitted) journeyText(language, "가볍게 이동", "Moving on", "身軽に進む") else "획득 완료",
+                            color = relationshipResult?.let { relationshipColor(it.tier) } ?: accent,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
                     }
                     Spacer(Modifier.height(6.dp))
                     LinearProgressIndicator(
@@ -2438,7 +3798,11 @@ private fun LootResultPanel(
                             .height(6.dp)
                             .clip(RoundedCornerShape(99.dp))
                             .semantics {
-                                contentDescription = localized("전리품 확인")
+                                contentDescription = when {
+                                    relationshipReceipt != null -> journeyText(language, "인연 보상 확인", "Reviewing relationship reward", "縁の報酬を確認")
+                                    eventReceipt == null -> localized("전리품 확인")
+                                    else -> journeyText(language, "사건 보상 확인", "Reviewing event reward", "出来事報酬を確認")
+                                }
                                 stateDescription = localized("${(progress * 100f).toInt()}퍼센트")
                             },
                         color = accent,
@@ -2458,7 +3822,7 @@ private fun LootResultPanel(
                 ) {
                     Row(horizontalArrangement = Arrangement.Center) {
                         LootBadge(
-                            label = rarity,
+                            label = primaryBadgeLabel,
                             textColor = accent,
                             backgroundColor = accent.copy(alpha = 0.15f),
                             borderColor = accent.copy(alpha = 0.7f),
@@ -2474,7 +3838,7 @@ private fun LootResultPanel(
                     Spacer(Modifier.height(if (usesDenseLootLayout) 2.dp else 5.dp))
                     Text(
                         itemName,
-                        color = if (hasLoot) accent else AqText,
+                        color = if (hasLoot || eventReceipt?.reward != AdventureEventReceiptReward.NONE) accent else AqText,
                         fontSize = itemFontSize,
                         lineHeight = lootResultItemLineHeightSp(itemName.length).sp,
                         fontWeight = FontWeight.Black,
@@ -2482,17 +3846,27 @@ private fun LootResultPanel(
                         overflow = LOOT_RESULT_ITEM_OVERFLOW,
                         textAlign = TextAlign.Center,
                     )
-                    Text(
-                        itemDetail,
-                        color = if (state.lastLootEquipped) accent else AqMuted,
-                        fontSize = if (usesDenseLootLayout) 10.sp else 11.sp,
-                        lineHeight = if (usesDenseLootLayout) 12.sp else 14.sp,
-                        fontWeight = if (state.lastLootEquipped) FontWeight.Bold else FontWeight.Normal,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        textAlign = TextAlign.Center,
+                    if (itemDetail.isNotBlank()) {
+                        Text(
+                            itemDetail,
+                            color = if (lootEquipped) accent else AqMuted,
+                            fontSize = if (usesDenseLootLayout) 10.sp else 11.sp,
+                            lineHeight = if (usesDenseLootLayout) 12.sp else 14.sp,
+                            fontWeight = if (lootEquipped) FontWeight.Bold else FontWeight.Normal,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                    Spacer(
+                        Modifier.height(
+                            when {
+                                eventNarrativeIsPrimary -> 6.dp
+                                usesDenseLootLayout -> 2.dp
+                                else -> 6.dp
+                            },
+                        ),
                     )
-                    Spacer(Modifier.height(if (usesDenseLootLayout) 2.dp else 6.dp))
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -2507,13 +3881,13 @@ private fun LootResultPanel(
                         horizontalArrangement = Arrangement.Center,
                     ) {
                         Icon(
-                            imageVector = if (state.lastLootEquipped) {
-                                Icons.Filled.CheckCircle
-                            } else {
-                                Icons.Filled.Backpack
+                            imageVector = when {
+                                eventBattlePending -> Icons.Filled.Shield
+                                lootEquipped || eventReceipt?.wasGranted() == true -> Icons.Filled.CheckCircle
+                                else -> Icons.Filled.Backpack
                             },
                             contentDescription = null,
-                            tint = if (state.lastLootEquipped) statusColor else AqMuted,
+                            tint = if (highlightedStatus) statusColor else AqMuted,
                             modifier = Modifier.size(if (usesDenseLootLayout) 16.dp else 18.dp),
                         )
                         Spacer(Modifier.width(if (usesDenseLootLayout) 6.dp else 8.dp))
@@ -2655,7 +4029,9 @@ private fun HeroHeader(
             ) {
                 UnlocalizedText(
                     state.hero.name,
-                    modifier = Modifier.padding(end = if (onOpenSettings != null) 76.dp else 0.dp),
+                    modifier = Modifier.padding(
+                        end = if (onOpenSettings != null) 76.dp else 0.dp,
+                    ),
                     color = AqText,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Black,
@@ -2715,27 +4091,33 @@ private fun HeroHeader(
             }
         }
         if (onOpenSettings != null) {
-            OutlinedButton(
-                onClick = onOpenSettings,
+            Row(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(top = 8.dp, end = 20.dp)
-                    .height(40.dp),
-                contentPadding = PaddingValues(horizontal = 12.dp),
-                border = BorderStroke(1.dp, AqGoldSoft),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = AqGold.copy(alpha = 0.12f),
-                    contentColor = AqGold,
-                ),
+                    .padding(top = 8.dp, end = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = null,
-                    modifier = Modifier.size(18.dp),
-                )
-                Spacer(Modifier.width(5.dp))
-                Text("설정", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                if (onOpenSettings != null) {
+                    OutlinedButton(
+                        onClick = onOpenSettings,
+                        modifier = Modifier.height(40.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp),
+                        border = BorderStroke(1.dp, AqGoldSoft),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = AqGold.copy(alpha = 0.12f),
+                            contentColor = AqGold,
+                        ),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(Modifier.width(5.dp))
+                        Text("설정", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
             }
         }
     }
@@ -2869,19 +4251,24 @@ private fun OfflineAdventureStrip(
 }
 
 @Composable
-private fun OfflineAdventureRewardDialog(
+private fun RewardedBenefitDialog(
+    benefit: RewardedBenefit,
     consentState: AdsConsentState,
     mobileAdsRuntimeState: MobileAdsRuntimeState,
     rewardedLoadState: RewardedLoadState,
+    arenaRefillCount: Int,
     onDismiss: () -> Unit,
     onRetryAdsSetup: () -> Unit,
     onRetryRewardedAd: () -> Unit,
     onWatchAd: () -> Unit,
 ) {
+    val language = LocalAppLanguage.current
     val presentation = rewardDialogPresentation(
         consentState = consentState,
         mobileAdsRuntimeState = mobileAdsRuntimeState,
         rewardedLoadState = rewardedLoadState,
+        benefit = benefit,
+        arenaRefillCount = arenaRefillCount,
     )
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -2890,8 +4277,11 @@ private fun OfflineAdventureRewardDialog(
             Icon(Icons.Outlined.HourglassBottom, contentDescription = null, tint = AqGold)
         },
         title = {
-            Text(
-                localized("오프라인 모험 충전"),
+            UnlocalizedText(
+                when (benefit) {
+                    RewardedBenefit.OFFLINE_ADVENTURE -> localized("오프라인 모험 충전", language)
+                    RewardedBenefit.ARENA_TICKETS -> arenaRewardedRefillTitle(language)
+                },
                 color = AqText,
                 fontWeight = FontWeight.Bold,
             )
@@ -2929,7 +4319,11 @@ private fun OfflineAdventureRewardDialog(
                             .padding(horizontal = 14.dp, vertical = 12.dp),
                     ) {
                         Text(
-                            localized(supportingMessage),
+                            if (benefit == RewardedBenefit.ARENA_TICKETS) {
+                                arenaRewardedRefillSupportingMessage(language)
+                            } else {
+                                localized(supportingMessage, language)
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             color = AqMuted,
                             fontSize = 12.sp,
@@ -2973,10 +4367,9 @@ private fun OfflineAdventureRewardDialog(
 }
 
 @Composable
-private fun EncounterPanel(state: SimpleGameState) {
+private fun EncounterPanel(state: SimpleGameState, now: Long) {
     val actionProgress = remember(state.actionStartedAt, state.actionEndsAt) { Animatable(0f) }
-    LaunchedEffect(state.actionStartedAt, state.actionEndsAt) {
-        val now = System.currentTimeMillis()
+    LaunchedEffect(state.actionStartedAt, state.actionEndsAt, now) {
         val duration = (state.actionEndsAt - state.actionStartedAt).coerceAtLeast(1L)
         val elapsed = (now - state.actionStartedAt).coerceIn(0L, duration)
         actionProgress.snapTo(elapsed.toFloat() / duration.toFloat())
@@ -3000,6 +4393,7 @@ private fun EncounterPanel(state: SimpleGameState) {
         state.monster.name,
         state.monster.baseName,
         LocalAppLanguage.current,
+        catalogId = state.monster.catalogId,
     )
     val monsterHeaderHeight = monsterHeaderHeightDp(monsterName.length).dp
     val monsterHeaderFontSize = monsterHeaderFontSizeSp(monsterName.length).sp
@@ -3146,6 +4540,7 @@ private fun EncounterPanel(state: SimpleGameState) {
 private fun CombatPanel(
     state: SimpleGameState,
     energyFraction: Float,
+    now: Long,
 ) {
     var presentationElapsedMillis by remember {
         mutableIntStateOf(SKILL_PRESENTATION_DURATION_MILLIS)
@@ -3170,7 +4565,7 @@ private fun CombatPanel(
         }
     }
     if (state.combatPhase == CombatPhase.REVEAL) {
-        EncounterPanel(state)
+        EncounterPanel(state, now)
         return
     }
     val elapsedMillis = combatPresentationElapsedForCurrentFrame(
@@ -3198,6 +4593,7 @@ private fun CombatPanel(
         state.monster.name,
         state.monster.baseName,
         LocalAppLanguage.current,
+        catalogId = state.monster.catalogId,
     )
     val monsterHeaderHeight = monsterHeaderHeightDp(monsterName.length).dp
     val monsterHeaderFontSize = monsterHeaderFontSizeSp(monsterName.length).sp
@@ -3515,6 +4911,8 @@ internal fun skillDamageFontSize(hitCount: Int, isFinal: Boolean): Int = when (h
 private fun MainPanel(
     state: SimpleGameState,
     repository: SimpleGameRepository,
+    rankingUiState: RankingUiState,
+    onOpenRanking: () -> Unit,
     unreadRecentEventCount: Int,
     onOpenRecentEvents: () -> Unit,
 ) {
@@ -3542,24 +4940,16 @@ private fun MainPanel(
             modifier = Modifier.fillMaxWidth().heightIn(min = 40.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                imageVector = Icons.Filled.AutoAwesome,
-                contentDescription = null,
-                tint = AqGold,
-                modifier = Modifier.size(18.dp),
-            )
-            Spacer(Modifier.width(8.dp))
-            Text(
-                text = "모험 현황",
+            CompactRankingEntryMenu(
+                uiState = rankingUiState,
+                onClick = onOpenRanking,
                 modifier = Modifier.weight(1f),
-                color = AqText,
-                fontSize = 18.sp,
-                lineHeight = 22.sp,
-                fontWeight = FontWeight.Black,
             )
+            Spacer(Modifier.width(6.dp))
             RecentAdventureEventsButton(
                 unreadCount = unreadRecentEventCount,
                 onClick = onOpenRecentEvents,
+                modifier = Modifier.height(COMPACT_RANKING_ENTRY_MENU_HEIGHT_DP.dp),
             )
         }
         Spacer(Modifier.height(8.dp))
@@ -3847,29 +5237,275 @@ internal fun mainTaleActCompletionLabel(
 @Composable
 private fun CharacterPanel(
     state: SimpleGameState,
-    rankingUiState: RankingUiState,
-    onOpenRanking: () -> Unit,
 ) {
+    var detailTab by rememberSaveable(state.hero.name) { mutableStateOf(CharacterDetailTab.SKILLS) }
     PanelCard {
-        RankingEntryMenu(
-            uiState = rankingUiState,
-            onClick = onOpenRanking,
-        )
-        Spacer(Modifier.height(14.dp))
         StatSectionHeading(title = "능력치")
         Spacer(Modifier.height(10.dp))
         CharacterStatSheet(state.hero.stats)
         Spacer(Modifier.height(12.dp))
         DividerLine()
         Spacer(Modifier.height(14.dp))
-        Text("스킬", color = AqText, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        CharacterDetailTabs(
+            selected = detailTab,
+            onSelect = { tab -> detailTab = tab },
+        )
+        Spacer(Modifier.height(10.dp))
+        when (detailTab) {
+            CharacterDetailTab.SKILLS -> {
+                if (state.skills.isEmpty()) {
+                    EmptyText("보유한 스킬이 없습니다.")
+                } else {
+                    state.skills.forEachIndexed { index, skill ->
+                        SkillListRow(skill)
+                        if (index < state.skills.lastIndex) DividerLine()
+                    }
+                }
+            }
+            CharacterDetailTab.TRAITS -> AdventureTraitProfile(state)
+            CharacterDetailTab.RELATIONSHIPS -> AdventureRelationshipProfile(state)
+        }
+    }
+}
+
+private enum class CharacterDetailTab(val label: String) {
+    SKILLS("스킬"),
+    TRAITS("특성"),
+    RELATIONSHIPS("인연"),
+}
+
+@Composable
+private fun CharacterDetailTabs(
+    selected: CharacterDetailTab,
+    onSelect: (CharacterDetailTab) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(44.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(AqSurfaceHigh)
+            .selectableGroup()
+            .padding(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        CharacterDetailTab.entries.filter {
+            it == CharacterDetailTab.SKILLS || BuildConfig.ADVENTURE_SYSTEM_ENABLED
+        }.forEach { tab ->
+            val isSelected = tab == selected
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(9.dp))
+                    .background(if (isSelected) AqGold.copy(alpha = 0.16f) else Color.Transparent)
+                    .selectable(
+                        selected = isSelected,
+                        role = Role.Tab,
+                        onClick = { onSelect(tab) },
+                    )
+                    .semantics {
+                        this.selected = isSelected
+                        stateDescription = localized(if (isSelected) "선택됨" else "선택 안 됨")
+                    },
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = when (tab) {
+                        CharacterDetailTab.SKILLS -> journeyText(LocalAppLanguage.current, "스킬", "Skills", "スキル")
+                        CharacterDetailTab.TRAITS -> journeyText(LocalAppLanguage.current, "특성", "Traits", "特性")
+                        CharacterDetailTab.RELATIONSHIPS -> journeyText(LocalAppLanguage.current, "인연", "Relationships", "縁")
+                    },
+                    color = if (isSelected) AqGold else AqMuted,
+                    fontSize = 13.sp,
+                    fontWeight = if (isSelected) FontWeight.Black else FontWeight.Bold,
+                )
+            }
+        }
+    }
+}
+
+internal fun arenaMatchFoundMessage(language: AppLanguage): String = when (language) {
+    AppLanguage.KOREAN -> "결투장 상대를 찾았습니다"
+    AppLanguage.ENGLISH -> "Arena opponent found"
+    AppLanguage.JAPANESE -> "闘技場の対戦相手が見つかりました"
+}
+
+internal fun arenaMatchFoundActionLabel(language: AppLanguage): String = when (language) {
+    AppLanguage.KOREAN -> "이동"
+    AppLanguage.ENGLISH -> "Go"
+    AppLanguage.JAPANESE -> "移動"
+}
+
+internal fun arenaMatchFoundAccessibilityLabel(language: AppLanguage): String = when (language) {
+    AppLanguage.KOREAN -> "결투장 상대를 찾았습니다. 결투장으로 이동."
+    AppLanguage.ENGLISH -> "Arena opponent found. Go to Arena."
+    AppLanguage.JAPANESE -> "闘技場の対戦相手が見つかりました。闘技場へ移動します。"
+}
+
+@Composable
+private fun BattleMatchFoundArrivalStrip(
+    onOpen: () -> Unit,
+) {
+    val language = LocalAppLanguage.current
+    val shape = RoundedCornerShape(
+        topStart = 4.dp,
+        topEnd = 4.dp,
+        bottomStart = 20.dp,
+        bottomEnd = 20.dp,
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .heightIn(min = 52.dp)
+            .clip(shape)
+            .background(AqSurface)
+            .border(1.dp, AqGoldSoft, shape)
+            .clickable(role = Role.Button, onClick = onOpen)
+            .semantics(mergeDescendants = true) {
+                role = Role.Button
+                contentDescription = arenaMatchFoundAccessibilityLabel(language)
+            }
+            .padding(horizontal = 12.dp, vertical = 9.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(modifier = Modifier.size(28.dp), contentAlignment = Alignment.Center) {
+            Icon(
+                imageVector = Icons.Filled.Shield,
+                contentDescription = null,
+                tint = AqText,
+                modifier = Modifier.size(23.dp),
+            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .size(7.dp)
+                    .background(AqGold, CircleShape),
+            )
+        }
+        Spacer(Modifier.width(9.dp))
+        UnlocalizedText(
+            text = arenaMatchFoundMessage(language),
+            modifier = Modifier.weight(1f),
+            color = AqText,
+            fontSize = 13.sp,
+            lineHeight = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Spacer(Modifier.width(8.dp))
+        Box(Modifier.width(1.dp).height(24.dp).background(Color(0xFF4A3B4F)))
+        Spacer(Modifier.width(10.dp))
+        UnlocalizedText(
+            arenaMatchFoundActionLabel(language),
+            color = AqGold,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Black,
+        )
+        Icon(
+            imageVector = Icons.Filled.ChevronRight,
+            contentDescription = null,
+            tint = AqGold,
+            modifier = Modifier.size(19.dp),
+        )
+    }
+}
+
+@Composable
+private fun HeroPathChoiceSheet(
+    state: SimpleGameState,
+    token: com.nullplaying.model.HeroPathMilestoneToken,
+    onChoiceSelected: (eventId: String, offerId: String) -> Unit,
+    onFullTreeSelected: () -> Unit,
+    onDeferred: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val choice = remember(state.heroPath.revision, token.tokenId, token.offers) {
+        heroPathChoiceModel(state, token)
+    }
+    val lanes = remember(state.heroPath.heroClass) {
+        heroPathPanelModel(state, HeroPathFilter.ALL).lanes
+    }
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .zIndex(60f)
+            .background(AqBackground.copy(alpha = 0.78f))
+            .pointerInput(token.tokenId) {
+                detectTapGestures(onTap = { onDismiss() })
+            }
+            .semantics {
+                dialog()
+                paneTitle = localized("새로운 갈림길")
+            },
+        contentAlignment = Alignment.BottomCenter,
+    ) {
+        HeroPathChoiceSheetContent(
+            choice = choice,
+            lanes = lanes,
+            onChoiceSelected = onChoiceSelected,
+            onFullTreeSelected = onFullTreeSelected,
+            onDeferred = onDeferred,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = maxHeight * 0.88f)
+                .pointerInput(Unit) { detectTapGestures(onTap = {}) },
+        )
+    }
+}
+
+private enum class ItemSection(val label: String) {
+    EQUIPMENT("장비"),
+    BAG("가방"),
+}
+
+@Composable
+private fun ItemsPanel(state: SimpleGameState) {
+    var selectedSection by rememberSaveable(state.hero.name) {
+        mutableStateOf(ItemSection.EQUIPMENT)
+    }
+    Column(modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(46.dp)
+                .clip(RoundedCornerShape(14.dp))
+                .background(AqSurface)
+                .selectableGroup()
+                .padding(3.dp),
+        ) {
+            ItemSection.entries.forEach { section ->
+                val selected = selectedSection == section
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(11.dp))
+                        .background(if (selected) AqGold.copy(alpha = 0.16f) else Color.Transparent)
+                        .selectable(
+                            selected = selected,
+                            role = Role.Tab,
+                            onClick = { selectedSection = section },
+                        )
+                        .semantics { stateDescription = localized(if (selected) "선택됨" else "선택 안 됨") },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        section.label,
+                        color = if (selected) AqGold else AqMuted,
+                        fontSize = 13.sp,
+                        fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+                    )
+                }
+            }
+        }
         Spacer(Modifier.height(8.dp))
-        if (state.skills.isEmpty()) {
-            EmptyText("보유한 스킬이 없습니다.")
-        } else {
-            state.skills.forEachIndexed { index, skill ->
-                SkillListRow(skill)
-                if (index < state.skills.lastIndex) DividerLine()
+        Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+            when (selectedSection) {
+                ItemSection.EQUIPMENT -> EquipmentPanel(state)
+                ItemSection.BAG -> BagPanel(state)
             }
         }
     }
@@ -4645,34 +6281,71 @@ private fun CompletedTaleCard(record: CompletedTaleRecord, heroName: String) {
 
 private val TaleCompleteGreen = Color(0xFF8BCB84)
 
+internal const val BOTTOM_MENU_HEIGHT_DP = 74
+internal const val BOTTOM_MENU_LABEL_BOTTOM_PADDING_DP = 8
+internal const val BOTTOM_MENU_ICON_TOP_OFFSET_DP = 9
+
 @Composable
-private fun BottomMenu(selectedTab: MenuTab, onSelect: (MenuTab) -> Unit) {
+private fun BottomMenu(
+    selectedTab: MenuTab,
+    onSelect: (MenuTab) -> Unit,
+) {
     Row(
-        modifier = Modifier.fillMaxWidth().height(74.dp).background(AqSurface).padding(horizontal = 4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(BOTTOM_MENU_HEIGHT_DP.dp)
+            .background(AqSurface)
+            .padding(horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        MenuTab.entries.forEach { tab ->
+        visibleMenuTabs.forEach { tab ->
             val selected = tab == selectedTab
-            Column(
+            Box(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = localized(tab.label)
+                    }
                     .selectable(
                         selected = selected,
                         role = Role.Tab,
                         onClick = { onSelect(tab) },
                     ),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
             ) {
-                Icon(
-                    tab.icon,
-                    contentDescription = null,
-                    tint = if (selected) AqGold else AqMuted,
-                    modifier = Modifier.size(22.dp),
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .offset(y = BOTTOM_MENU_ICON_TOP_OFFSET_DP.dp)
+                        .size(26.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    val iconResourceId = tab.iconResourceId
+                    if (iconResourceId != null) {
+                        Icon(
+                            painter = painterResource(iconResourceId),
+                            contentDescription = null,
+                            tint = if (selected) AqGold else AqMuted,
+                            modifier = Modifier.size(22.dp),
+                        )
+                    } else {
+                        Icon(
+                            imageVector = requireNotNull(tab.icon),
+                            contentDescription = null,
+                            tint = if (selected) AqGold else AqMuted,
+                            modifier = Modifier.size(22.dp),
+                        )
+                    }
+                }
+                Text(
+                    text = localized(tab.label),
+                    color = if (selected) AqGold else AqMuted,
+                    fontSize = 10.sp,
+                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = BOTTOM_MENU_LABEL_BOTTOM_PADDING_DP.dp),
                 )
-                Spacer(Modifier.height(7.dp))
-                Text(tab.label, color = if (selected) AqGold else AqMuted, fontSize = 10.sp, fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal)
             }
         }
     }
@@ -5012,7 +6685,7 @@ private fun monsterGradeColor(grade: String): Color = when (grade) {
 }
 
 private const val REWARDED_AD_TAG = "AlarmQuestRewarded"
-private const val REWARDED_AD_RETRY_MILLIS = 30_000L
+private const val REWARDED_SESSION_UI_RECOVERY_POLL_MILLIS = 500L
 
 internal data class DamageMotion(
     val alpha: Float,

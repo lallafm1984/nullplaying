@@ -125,6 +125,54 @@ class RewardedAdPresentationTest {
             "광고를 보지 않아도 앱을 켜 둔 동안\n자동으로 충전됩니다.",
             presentations.last().supportingMessage,
         )
+        assertEquals("광고 보고 모두 충전", presentations.last().confirmLabel)
+    }
+
+    @Test
+    fun `arena reward dialog explains five ticket reward and ten minute refill`() {
+        val ready = rewardDialogPresentation(
+            consentState = requestableConsent(),
+            mobileAdsRuntimeState = MobileAdsRuntimeState.READY,
+            rewardedLoadState = RewardedLoadState.READY,
+            benefit = RewardedBenefit.ARENA_TICKETS,
+        )
+        val loading = rewardDialogPresentation(
+            consentState = requestableConsent(),
+            mobileAdsRuntimeState = MobileAdsRuntimeState.READY,
+            rewardedLoadState = RewardedLoadState.LOADING,
+            benefit = RewardedBenefit.ARENA_TICKETS,
+        )
+        val failed = rewardDialogPresentation(
+            consentState = requestableConsent(),
+            mobileAdsRuntimeState = MobileAdsRuntimeState.READY,
+            rewardedLoadState = RewardedLoadState.LOAD_FAILED,
+            benefit = RewardedBenefit.ARENA_TICKETS,
+        )
+
+        assertEquals("광고 시청 완료 시\n출전권 5개 즉시 충전", ready.message)
+        assertEquals(
+            "10분 자동 충전 시간 유지\n" +
+                "캐릭터별 하루 1회 · 출전권 0개일 때 이용",
+            ready.supportingMessage,
+        )
+        assertEquals("광고로 5회 충전", ready.confirmLabel)
+        assertEquals(RewardDialogAction.WATCH_AD, ready.action)
+        assertEquals("광고 준비 중입니다. 진행 중인 자동 충전은 계속됩니다.", loading.message)
+        assertEquals("광고를 불러오지 못했습니다. 진행 중인 자동 충전은 계속됩니다.", failed.message)
+        listOf(ready.message, ready.supportingMessage, loading.message, failed.message).forEach { copy ->
+            assertFalse(copy.orEmpty().contains("5분"))
+        }
+    }
+
+    @Test
+    fun `reward dialog displays a three ticket refill after seven daily matches`() {
+        val ready = rewardDialogPresentation(
+            consentState = requestableConsent(), mobileAdsRuntimeState = MobileAdsRuntimeState.READY,
+            rewardedLoadState = RewardedLoadState.READY, benefit = RewardedBenefit.ARENA_TICKETS,
+            arenaRefillCount = battleRewardedRefillCount(7),
+        )
+        assertEquals("광고로 3회 충전", ready.confirmLabel)
+        assertEquals("광고 시청 완료 시\n출전권 3개 즉시 충전", ready.message)
     }
 
     private fun requestableConsent() = AdsConsentState(

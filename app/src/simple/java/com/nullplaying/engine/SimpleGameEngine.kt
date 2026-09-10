@@ -1,12 +1,26 @@
 package com.nullplaying.engine
 
 import com.nullplaying.model.AdventurePhase
+import com.nullplaying.model.AdventureEventItemReward
+import com.nullplaying.model.AdventureEventRewardKind
+import com.nullplaying.model.AdventureEventBattleRewardKind
+import com.nullplaying.model.AdventureEventBattleState
+import com.nullplaying.model.AdventureEventContext
+import com.nullplaying.model.AdventureEventContinuation
+import com.nullplaying.model.AdventureEventProgressPolicy
+import com.nullplaying.model.AdventureEventResult
+import com.nullplaying.model.AdventureRelationshipResult
+import com.nullplaying.model.AdventureRelationshipBattleKind
+import com.nullplaying.model.AdventureRelationshipTier
+import com.nullplaying.model.AdventureTraitEffectKind
 import com.nullplaying.model.AdventureTaleState
 import com.nullplaying.model.CombatPhase
 import com.nullplaying.model.CompletedTaleRecord
 import com.nullplaying.model.EquipmentSlot
 import com.nullplaying.model.EquippedItem
 import com.nullplaying.model.HeroClass
+import com.nullplaying.model.BattleHeroClass
+import com.nullplaying.model.HeroPathState
 import com.nullplaying.model.HeroState
 import com.nullplaying.model.HeroStats
 import com.nullplaying.model.InventoryItem
@@ -14,6 +28,7 @@ import com.nullplaying.model.LearnedSkill
 import com.nullplaying.model.MonsterState
 import com.nullplaying.model.MonsterGrade
 import com.nullplaying.model.RecentAdventureEvent
+import com.nullplaying.model.RecentAdventureEventMetadata
 import com.nullplaying.model.RecentAdventureEventType
 import com.nullplaying.model.SettlementDelta
 import com.nullplaying.model.SIMPLE_GAME_SCHEMA_VERSION
@@ -43,6 +58,9 @@ private data class CombatLoot(
 
 class SimpleGameEngine(
     initialOfflineAdventureConfig: OfflineAdventureConfig = OfflineAdventureConfig(),
+    private val enableAdventureEvents: Boolean = false,
+    private val enableAdventureRelationships: Boolean = false,
+    private val enableAdventureTraits: Boolean = false,
 ) {
     @Volatile
     var offlineAdventureConfig: OfflineAdventureConfig = initialOfflineAdventureConfig
@@ -60,6 +78,20 @@ class SimpleGameEngine(
             .coerceIn(0L, MAX_STORED_OFFLINE_ADVENTURE_MILLIS)
         state.offlineAdventureChargeRemainder = 0L
         state.offlineAdventureChargeRemainderVersion = 1
+    }
+
+    /** Queues one real authored event for the next ordinary boundary without dropping combat progress. */
+    internal fun queueAdventureEventForQa(state: SimpleGameState, eventId: String): Boolean {
+        if (!enableAdventureEvents ||
+            AdventureEventEngine.all.none { it.id == eventId } ||
+            state.adventureJourney.pending != null ||
+            state.adventureJourney.qaQueuedEventId.isNotBlank()
+        ) {
+            return false
+        }
+        state.adventureJourney.qaQueuedEventId = eventId
+        state.adventureJourney.qaSequenceCursorEventId = eventId
+        return true
     }
 
     fun offlineAdventureCapacityMillis(state: SimpleGameState): Long {
@@ -146,10 +178,26 @@ class SimpleGameEngine(
         )
         state.offlineAdventureMillis = offlineAdventureCapacityMillis(state)
         state.offlineAdventureChargeRemainderVersion = 1
+        if (enableAdventureEvents) AdventureEventEngine.initialize(state, now)
+        if (enableAdventureRelationships) AdventureRelationshipEngine.initialize(state, now)
+        if (enableAdventureTraits) AdventureTraitEngine.initialize(state)
         return state
     }
 
+    private fun prepareAdventureTraits(state: SimpleGameState) {
+        if (enableAdventureTraits) AdventureTraitEngine.ensureSource(state)
+        else if (state.adventureTraits.initialized) {
+            state.adventureTraits.temporaryBagSlots = 0L
+            state.adventureTraits.source = null
+            state.adventureTraits.saleBatch = null
+            state.adventureTraits.shopVisit = null
+            state.adventureTraits.visibleActivations = emptyList()
+            state.adventureTraits.pendingEvidence = emptyList()
+        }
+    }
+
     fun settle(state: SimpleGameState, now: Long): SettlementDelta {
+        prepareAdventureTraits(state)
         if (now <= state.lastSettledAt) return emptyDelta()
         val savedSchema = state.schemaVersion
         val startedAt = state.lastSettledAt
@@ -162,8 +210,12 @@ class SimpleGameEngine(
         val gameplayRng = StableRng(state.rngState)
         val presentationRng = StableRng(state.presentationRngState)
         normalizeLegacyCombat(state, gameplayRng, savedSchema)
+        if (enableAdventureEvents) AdventureEventEngine.initialize(state, state.lastSettledAt)
+        if (enableAdventureRelationships) AdventureRelationshipEngine.initialize(state, state.lastSettledAt)
 
         replayTimeline(state, gameplayRng, presentationRng, now, recentEvents)
+        if (enableAdventureTraits) recentEvents += AdventureTraitEngine.drainRecentEvents(state)
+        reconcileHeroPath(state)
         state.lastSettledAt = now
         state.rngState = gameplayRng.state
         state.presentationRngState = presentationRng.state
@@ -184,6 +236,7 @@ class SimpleGameEngine(
      * deterministic rolls are replayed, while attack names, damage and animation stay hidden.
      */
     fun settleOffline(state: SimpleGameState, now: Long): SettlementDelta {
+        prepareAdventureTraits(state)
         if (now <= state.lastSettledAt) return emptyDelta()
         val savedSchema = state.schemaVersion
         val startedAt = state.lastSettledAt
@@ -196,8 +249,12 @@ class SimpleGameEngine(
         val gameplayRng = StableRng(state.rngState)
         val presentationRng = StableRng(state.presentationRngState)
         normalizeLegacyCombat(state, gameplayRng, savedSchema)
+        if (enableAdventureEvents) AdventureEventEngine.initialize(state, state.lastSettledAt)
+        if (enableAdventureRelationships) AdventureRelationshipEngine.initialize(state, state.lastSettledAt)
 
         replayTimeline(state, gameplayRng, presentationRng, now, recentEvents)
+        if (enableAdventureTraits) recentEvents += AdventureTraitEngine.drainRecentEvents(state)
+        reconcileHeroPath(state)
         clearAttackPresentation(state)
         state.lastSettledAt = now
         state.rngState = gameplayRng.state
@@ -224,6 +281,22 @@ class SimpleGameEngine(
         while (state.actionEndsAt <= now) {
             val eventAt = state.actionEndsAt
             when (state.adventurePhase) {
+                AdventurePhase.EVENT -> finishAdventureEvent(state, eventAt, recentEvents)
+                AdventurePhase.EVENT_RESULT -> finishAdventureEventResult(
+                    state,
+                    gameplayRng,
+                    presentationRng,
+                    eventAt,
+                    recentEvents,
+                )
+                AdventurePhase.RELATIONSHIP -> finishAdventureRelationship(state, eventAt, recentEvents)
+                AdventurePhase.RELATIONSHIP_RESULT -> finishAdventureEventResult(
+                    state,
+                    gameplayRng,
+                    presentationRng,
+                    eventAt,
+                    recentEvents,
+                )
                 AdventurePhase.COMBAT -> when (state.combatPhase) {
                     CombatPhase.REVEAL,
                     CombatPhase.ATTACKING,
@@ -234,6 +307,7 @@ class SimpleGameEngine(
 
                 else -> finishTownAction(state, gameplayRng, eventAt, recentEvents)
             }
+            if (enableAdventureTraits) recentEvents += AdventureTraitEngine.drainRecentEvents(state)
         }
     }
 
@@ -246,6 +320,7 @@ class SimpleGameEngine(
         now: Long,
         legacy: LegacyAutoHuntSnapshot? = null,
     ): SettlementDelta {
+        prepareAdventureTraits(state)
         val savedSchema = legacy?.schemaVersion ?: state.schemaVersion
         if (
             (
@@ -272,6 +347,7 @@ class SimpleGameEngine(
             state.rngState = migrationRng.state
         }
         synchronizeCatalogs(state, savedSchema)
+        reconcileHeroPath(state)
         if (savedSchema < OFFLINE_ADVENTURE_SCHEMA_VERSION) {
             return migrateOfflineAdventure(state, now, savedSchema, legacy)
         }
@@ -292,6 +368,23 @@ class SimpleGameEngine(
             .coerceAtLeast(0L)
         if (state.lastSettledAt < now) pauseTimeline(state, now)
         return delta
+    }
+
+    /**
+     * Moves a saved action to a new epoch without replaying rewards. This is used when a legacy
+     * save is ahead of verified server time, or when a character was created on an unverified
+     * provisional clock. Relative action progress is retained; economy and RNG fields are not
+     * changed.
+     */
+    internal fun rebaseTimelineWithoutProgress(state: SimpleGameState, now: Long) {
+        val oldCheckpoint = state.lastSettledAt
+        val elapsedInAction = nonNegativeDifference(oldCheckpoint, state.actionStartedAt)
+        val remainingInAction = nonNegativeDifference(state.actionEndsAt, oldCheckpoint)
+        state.actionStartedAt = safeSubtract(now, elapsedInAction)
+        state.actionEndsAt = safeAdd(now, remainingInAction)
+        AdventureTimelineRebase.rebase(state, oldCheckpoint, now)
+        state.lastSettledAt = now
+        clearAttackPresentation(state)
     }
 
     fun advanceOfflineAdventureForeground(
@@ -329,9 +422,16 @@ class SimpleGameEngine(
         state: SimpleGameState,
         rewardRequestId: String,
     ): Boolean {
-        if (rewardRequestId.isBlank() || rewardRequestId == state.lastRewardRequestId) return false
+        if (
+            rewardRequestId.isBlank() ||
+            rewardRequestId == state.lastRewardRequestId ||
+            rewardRequestId in state.rewardedOfflineRequestIds
+        ) return false
         if (isOfflineAdventureFull(state)) return false
         state.lastRewardRequestId = rewardRequestId
+        state.rewardedOfflineRequestIds = (
+            state.rewardedOfflineRequestIds + rewardRequestId
+        ).distinct().takeLast(REWARDED_OFFLINE_REQUEST_LEDGER_LIMIT)
         state.offlineAdventureChargeRemainder = 0L
         state.offlineAdventureChargeRemainderVersion = 1
         state.offlineAdventureMillis = offlineAdventureCapacityMillis(state)
@@ -346,6 +446,60 @@ class SimpleGameEngine(
     fun isOfflineAdventureFull(state: SimpleGameState): Boolean =
         state.offlineAdventureMillis >= offlineAdventureCapacityMillis(state)
 
+    /** Grants one persistent point per five levels and keeps one current three-card recommendation. */
+    internal fun reconcileHeroPath(state: SimpleGameState): Boolean {
+        val battleClass = BattleHeroClass.valueOf(state.hero.heroClass.name)
+        var current = HeroPathEngine.normalize(state.heroPath)
+        if (current.heroClass != battleClass) {
+            current = HeroPathState(
+                heroClass = battleClass,
+                revision = if (current.revision == Long.MAX_VALUE) Long.MAX_VALUE else current.revision + 1L,
+            )
+        }
+        current = HeroPathEngine.reconcilePointGrants(current, state.hero.level)
+        if (current.milestoneTokens.any { !it.resolved }) {
+            val changed = current != state.heroPath
+            state.heroPath = current
+            return changed
+        }
+        if (current.unspentPoints <= 0L) {
+            val changed = current != state.heroPath
+            state.heroPath = current
+            return changed
+        }
+        val issuedLevels = current.milestoneTokens.map { it.milestoneLevel }.toSet()
+        val nextLevel = generateSequence(5L) { previous ->
+            if (previous > Long.MAX_VALUE - 5L) null else previous + 5L
+        }.takeWhile { it <= current.lastGrantedMilestone }
+            .firstOrNull { it !in issuedLevels }
+        if (nextLevel != null) {
+            val heroId = state.rankingCharacterId.ifBlank {
+                "${state.hero.heroClass.name}:${state.hero.name}:${state.skillCatalogSeed}"
+            }
+            val mutation = HeroPathEngine.issueMilestone(
+                state = current,
+                heroId = heroId,
+                milestoneLevel = nextLevel,
+                generationSeed = heroPathSeed(heroId, nextLevel),
+            )
+            if (mutation.status == com.nullplaying.model.HeroPathMutationStatus.APPLIED) {
+                current = mutation.state
+            }
+        }
+        val changed = current != state.heroPath
+        state.heroPath = current
+        return changed
+    }
+
+    private fun heroPathSeed(heroId: String, milestoneLevel: Long): Long {
+        var hash = -3_750_763_034_362_895_579L xor milestoneLevel
+        heroId.forEach { character ->
+            hash = hash xor character.code.toLong()
+            hash *= 1_099_511_628_211L
+        }
+        return hash
+    }
+
     private fun migrateOfflineAdventure(
         state: SimpleGameState,
         now: Long,
@@ -353,7 +507,18 @@ class SimpleGameEngine(
         legacy: LegacyAutoHuntSnapshot?,
     ): SettlementDelta {
         if (savedSchema < LEGACY_AUTO_HUNT_SCHEMA_VERSION) {
-            val delta = settleOffline(state, now)
+            // Pre-bank builds historically replayed the entire wall-clock gap. Bound that one-time
+            // migration now that epoch comes from a remote header: even a bad first observation
+            // must not turn into unbounded rewards.
+            val elapsed = nonNegativeDifference(now, state.lastSettledAt)
+            val coveredMillis = minOf(elapsed, offlineAdventureCapacityMillis(state))
+            val coveredUntil = safeAdd(state.lastSettledAt, coveredMillis).coerceAtMost(now)
+            val delta = if (coveredMillis > 0L) {
+                settleOffline(state, coveredUntil)
+            } else {
+                emptyDelta()
+            }
+            if (state.lastSettledAt < now) pauseTimeline(state, now)
             state.schemaVersion = CURRENT_SCHEMA_VERSION
             state.offlineAdventureMillis = offlineAdventureCapacityMillis(state)
             return delta
@@ -423,6 +588,14 @@ class SimpleGameEngine(
         val pausedMillis = (now - state.lastSettledAt).coerceAtLeast(0L)
         state.actionStartedAt = safeAdd(state.actionStartedAt, pausedMillis)
         state.actionEndsAt = safeAdd(state.actionEndsAt, pausedMillis)
+        AdventureRelationshipEngine.pause(state.adventureRelationships, pausedMillis)
+        if (enableAdventureTraits) AdventureTraitEngine.pause(state, pausedMillis)
+        if (state.adventureJourney.initialized) {
+            state.adventureJourney.nextEventAt = safeAdd(state.adventureJourney.nextEventAt, pausedMillis)
+            state.adventureJourney.pending = state.adventureJourney.pending?.let {
+                it.copy(startedAt = safeAdd(it.startedAt, pausedMillis))
+            }
+        }
         state.lastSettledAt = now
         clearAttackPresentation(state)
     }
@@ -501,8 +674,11 @@ class SimpleGameEngine(
             )
         }
         val baseDamage = baseAttackDamage(state)
-        val variedDamage = scalePercent(baseDamage, attack.damagePercent).coerceAtLeast(1L)
         val energyBeforeAttack = state.monster.currentEnergy.coerceAtLeast(0L)
+        val damagePercent = if (enableAdventureTraits && skill == null)
+            AdventureTraitEngine.basicDamagePercent(state, attack.damagePercent, baseDamage, energyBeforeAttack, eventAt)
+            else attack.damagePercent
+        val variedDamage = scalePercent(baseDamage, damagePercent).coerceAtLeast(1L)
         state.monster.currentEnergy = (energyBeforeAttack - variedDamage).coerceAtLeast(0L)
         state.monster.attacksCompleted = if (state.monster.attacksCompleted == Int.MAX_VALUE) {
             Int.MAX_VALUE
@@ -711,7 +887,11 @@ class SimpleGameEngine(
         eventAt: Long,
         recentEvents: MutableList<RecentAdventureEvent>,
     ) {
-        completeCombat(state, rng, eventAt, recentEvents)
+        if (state.adventureJourney.eventBattle != null) {
+            completeAdventureEventBattle(state, eventAt, recentEvents)
+        } else {
+            completeCombat(state, rng, eventAt, recentEvents)
+        }
         continueAfterVictory(state, eventAt)
     }
 
@@ -725,15 +905,631 @@ class SimpleGameEngine(
         state.combatPhase = CombatPhase.VICTORY
         state.actionStartedAt = eventAt
         state.actionEndsAt = safeAdd(eventAt, LOOT_RESULT_MILLIS)
+        if (enableAdventureTraits) state.actionEndsAt = safeAdd(eventAt, AdventureTraitEngine.resultMillis(state, LOOT_RESULT_MILLIS))
         state.lastResult = state.lastLootSummary
     }
 
     private fun finishLooting(state: SimpleGameState, rng: StableRng, eventAt: Long) {
-        if (state.inventory.size.toLong() >= state.inventoryCapacity()) {
-            beginReturning(state, eventAt)
-        } else {
-            beginCombat(state, rng, eventAt)
+        val eventBattle = state.adventureJourney.eventBattle
+        if (eventBattle?.result != null) {
+            state.adventureJourney.eventBattle = null
+            resumeAdventureAfterEvent(state, rng, eventAt, eventBattle.continuation)
+            return
         }
+        if (state.inventory.size.toLong() >= state.inventoryCapacity()) {
+            if (!tryBeginAdventureEvent(state, eventAt, AdventureEventContext.RETURN_ROUTE)) {
+                beginReturning(state, eventAt)
+            }
+        } else {
+            if (!tryBeginAdventureEvent(state, eventAt, AdventureEventContext.POST_COMBAT)) {
+                beginNextAdventureStep(state, rng, eventAt)
+            }
+        }
+    }
+
+    /** Only ordinary encounter slots may become events. Elites and story/gate bosses remain combat. */
+    private fun beginNextAdventureStep(state: SimpleGameState, rng: StableRng, eventAt: Long) {
+        if ((enableAdventureEvents || enableAdventureRelationships) && state.inventory.size.toLong() >= state.inventoryCapacity()) {
+            beginReturning(state, eventAt)
+            return
+        }
+        val act = state.adventureTale.activeAct()
+        val ordinarySlot = QuestMonsterCatalog.encounterGrade(act.progress, act.target) == MonsterGrade.NORMAL
+        if (enableAdventureEvents && ordinarySlot) {
+            val queuedEventId = state.adventureJourney.qaQueuedEventId
+            if (queuedEventId.isNotBlank()) {
+                state.adventureJourney.qaQueuedEventId = ""
+                val definitionExists = AdventureEventEngine.all.any { it.id == queuedEventId }
+                if (definitionExists) {
+                    beginAdventureEvent(
+                        state = state,
+                        eventAt = eventAt,
+                        baseRun = AdventureEventEngine.beginForQa(
+                            state = state,
+                            eventAt = eventAt,
+                            eventId = queuedEventId,
+                            actionMillis = adventureEventActionMillis(state),
+                            // The visible QA sequencer audits the complete catalog without
+                            // advancing into authored elite/story slots between forced cases.
+                            progressPolicyOverride = AdventureEventProgressPolicy.NO_PROGRESS,
+                        ),
+                    )
+                    return
+                }
+            }
+        }
+        if (enableAdventureRelationships && ordinarySlot) {
+            val selectedRun = AdventureRelationshipEngine.tryBegin(
+                state = state,
+                eventAt = eventAt,
+                localCombatPower = displayCombatPower(state),
+            )
+            if (selectedRun != null) {
+                val run = if (selectedRun.battleKind == AdventureRelationshipBattleKind.NONE) {
+                    selectedRun
+                } else {
+                    AdventureRelationshipBattleEngine.simulate(selectedRun)?.let { resolution ->
+                        AdventureRelationshipEngine.resolveBattle(selectedRun, resolution.outcome)
+                    } ?: AdventureRelationshipEngine.withoutUnplayableBattle(selectedRun)
+                }
+                state.adventureRelationships.pending = run
+                if (enableAdventureTraits) AdventureTraitEngine.planRelationship(state, run)
+                state.adventurePhase = AdventurePhase.RELATIONSHIP
+                state.actionSequence = safeIncrement(state.actionSequence)
+                state.actionStartedAt = eventAt
+                state.actionEndsAt = safeAdd(eventAt, run.durationMillis)
+                clearAttackPresentation(state)
+                clearLootPresentation(state)
+                state.lastResult = AdventureRelationshipEngine.definition(run.sceneId).scene.ko
+                return
+            }
+        }
+        if (enableAdventureEvents) {
+            AdventureEventEngine.initialize(state, eventAt)
+            if (ordinarySlot) {
+                if (tryBeginAdventureEvent(state, eventAt, AdventureEventContext.PRE_COMBAT)) return
+                if (tryBeginAdventureEvent(
+                        state,
+                        eventAt,
+                        AdventureEventContext.FIELD_EXPLORATION,
+                        adventureEventActionMillis(state),
+                    )
+                ) return
+            }
+        }
+        beginCombat(state, rng, eventAt)
+    }
+
+    private fun tryBeginAdventureEvent(
+        state: SimpleGameState,
+        eventAt: Long,
+        context: AdventureEventContext,
+        actionMillis: Long = AdventureEventEngine.ACTION_MILLIS,
+    ): Boolean {
+        if (!enableAdventureEvents || !AdventureEventEngine.isDue(state, eventAt, context)) return false
+        beginAdventureEvent(
+            state = state,
+            eventAt = eventAt,
+            baseRun = AdventureEventEngine.begin(state, eventAt, actionMillis, context),
+        )
+        return true
+    }
+
+    private fun beginAdventureEvent(
+        state: SimpleGameState,
+        eventAt: Long,
+        baseRun: com.nullplaying.model.AdventureEventRun,
+    ) {
+        val plannedRun = if (enableAdventureTraits) AdventureTraitEngine.planEvent(state, baseRun) else baseRun
+        // A labyrinth event without combat uses the replaced ordinary encounter's time budget.
+        // When the event itself opens a real elite/boss fight, that fight supplies the combat time;
+        // keep only the authored 5s discovery + 5s action and any trait-added investigation time.
+        val run = if (
+            plannedRun.context == AdventureEventContext.FIELD_EXPLORATION &&
+            plannedRun.battleGrade != null &&
+            plannedRun.durationMillis > AdventureEventEngine.ACTION_MILLIS
+        ) {
+            plannedRun.copy(
+                durationMillis = safeAdd(
+                    AdventureEventEngine.ACTION_MILLIS,
+                    (plannedRun.durationMillis - baseRun.durationMillis).coerceAtLeast(0L),
+                ),
+            )
+        } else {
+            plannedRun
+        }
+        state.adventureJourney.pending = run
+        state.adventurePhase = AdventurePhase.EVENT
+        state.actionSequence = safeIncrement(state.actionSequence)
+        state.actionStartedAt = eventAt
+        state.actionEndsAt = safeAdd(eventAt, run.durationMillis)
+        clearAttackPresentation(state)
+        clearLootPresentation(state)
+        state.lastResult = AdventureEventEngine.definition(run.eventId).scene.ko
+    }
+
+    private fun finishAdventureRelationship(
+        state: SimpleGameState,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ) {
+        val relationships = state.adventureRelationships
+        val run = relationships.pending
+        if (run == null) {
+            state.adventurePhase = AdventurePhase.RELATIONSHIP_RESULT
+            state.actionStartedAt = eventAt
+            state.actionEndsAt = safeAdd(eventAt, AdventureRelationshipEngine.RESULT_MILLIS)
+            return
+        }
+        val rewardRng = StableRng(run.rewardSeed)
+        val xp = if (run.rewardKind == AdventureEventRewardKind.EXPERIENCE && run.experienceReward > 0L) {
+            if (enableAdventureTraits) {
+                AdventureTraitEngine.experience(state, run.experienceReward, "relationship:${run.sceneId}", eventAt)
+            } else {
+                run.experienceReward
+            }
+        } else {
+            0L
+        }
+        if (xp > 0L) grantExperience(state, xp, rewardRng, eventAt, recentEvents)
+        val goldBefore = state.hero.gold
+        if (run.rewardKind == AdventureEventRewardKind.GOLD && run.goldReward > 0L) {
+            state.hero.gold = safeAdd(state.hero.gold, run.goldReward)
+        }
+        val goldAwarded = state.hero.gold - goldBefore
+        val rewardOrigin = if (enableAdventureTraits) {
+            state.adventureTraits.source?.finalRewardOrigin ?: "PRIMARY"
+        } else {
+            "PRIMARY"
+        }
+        val loot = if (
+            run.rewardKind == AdventureEventRewardKind.ITEM &&
+            run.itemReward == AdventureEventItemReward.EQUIPMENT
+        ) {
+            addEquipmentDrop(
+                state = state,
+                rng = rewardRng,
+                eventAt = eventAt,
+                recentEvents = recentEvents,
+                origin = rewardOrigin,
+                maximumRarityRank = MYTHIC_RARITY_RANK,
+            )
+        } else {
+            null
+        }
+        val progressBefore = state.adventureTale.activeAct().progress
+        advanceOrdinaryAdventureProgress(state)
+        val traitSource = state.adventureTraits.source
+        val relationshipDelta = if (
+            enableAdventureTraits &&
+            traitSource?.baseRelationship?.sequence == run.sequence &&
+            traitSource.baseRelationship?.snapshotId == run.snapshotId
+        ) {
+            traitSource.relationshipDelta ?: AdventureRelationshipEngine.effectiveScoreDelta(run)
+        } else {
+            AdventureRelationshipEngine.effectiveScoreDelta(run)
+        }
+        val result = AdventureRelationshipResult(
+            run = run,
+            occurredAt = eventAt,
+            experienceAwarded = xp,
+            scoreAfter = (run.scoreBefore + relationshipDelta).coerceIn(-100, 100),
+            progressAdded = state.adventureTale.activeAct().progress - progressBefore,
+            goldAwarded = goldAwarded,
+            itemName = loot?.name.orEmpty(),
+            itemRarity = loot?.rarity.orEmpty(),
+            itemEquipped = loot?.equipped ?: false,
+            rewardKind = run.rewardKind,
+        )
+        AdventureRelationshipEngine.complete(relationships, result)
+        if (enableAdventureTraits) {
+            AdventureTraitEngine.observeRelationship(state, eventAt)
+            AdventureTraitEngine.finalizeEvidence(state, eventAt)
+        }
+        recentEvents += RecentAdventureEvent(
+            occurredAt = eventAt,
+            type = RecentAdventureEventType.RELATIONSHIP_ENCOUNTER,
+            subjectId = run.candidate.characterId,
+            subjectName = run.candidate.displayName,
+            contextName = RecentAdventureEventMetadata.appendRelationshipReward(
+                baseContext = "${run.sceneId}:${run.approachId}:${run.outcome.name}",
+                rewardKind = result.rewardKind,
+                experienceAwarded = result.experienceAwarded,
+                goldAwarded = result.goldAwarded,
+                itemName = result.itemName,
+                itemEquipped = result.itemEquipped,
+            ),
+            previousName = AdventureRelationshipTier.fromScore(run.scoreBefore).name,
+            currentName = result.tier.name,
+            previousValue = run.scoreBefore.toLong(),
+            currentValue = result.scoreAfter.toLong(),
+            rarity = result.itemRarity,
+        )
+        state.adventurePhase = AdventurePhase.RELATIONSHIP_RESULT
+        state.actionSequence = safeIncrement(state.actionSequence)
+        state.actionStartedAt = eventAt
+        state.actionEndsAt = safeAdd(eventAt, AdventureRelationshipEngine.RESULT_MILLIS)
+        if (enableAdventureTraits) state.actionEndsAt = safeAdd(eventAt, AdventureTraitEngine.resultMillis(state, AdventureRelationshipEngine.RESULT_MILLIS))
+        val definition = AdventureRelationshipEngine.definition(run.sceneId)
+        state.lastResult = when (run.outcome) {
+            com.nullplaying.model.AdventureEventOutcome.SUCCESS -> definition.success.ko
+            com.nullplaying.model.AdventureEventOutcome.PARTIAL -> definition.partial.ko
+            com.nullplaying.model.AdventureEventOutcome.FAILURE -> definition.failure.ko
+        }
+        if (loot != null) recordLootPresentation(state, loot) else clearLootPresentation(state)
+    }
+
+    private fun finishAdventureEvent(
+        state: SimpleGameState,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ) {
+        val journey = state.adventureJourney
+        val pendingRun = journey.pending
+        if (pendingRun == null) {
+            // A malformed/older prototype phase cannot replay a previous reward or stall the clock.
+            state.adventurePhase = AdventurePhase.EVENT_RESULT
+            state.actionStartedAt = eventAt
+            state.actionEndsAt = safeAdd(eventAt, AdventureEventEngine.RESULT_MILLIS)
+            return
+        }
+        val run = AdventureEventEngine.normalizedForSettlement(pendingRun)
+        val definition = AdventureEventEngine.definition(run.eventId)
+        val rewardRng = StableRng(run.rewardSeed)
+        // The existing growth/skill unlock path runs once; event randomness never consumes combat RNG.
+        val xp = if (enableAdventureTraits && run.experienceReward > 0L) {
+            AdventureTraitEngine.experience(state, run.experienceReward, "event:${run.eventId}", eventAt)
+        } else {
+            run.experienceReward
+        }
+        grantExperience(state, xp, rewardRng, eventAt, recentEvents)
+        val goldBefore = state.hero.gold
+        state.hero.gold = safeAdd(state.hero.gold, run.goldReward)
+        val goldAwarded = state.hero.gold - goldBefore
+        val itemBefore = state.totalItemsFound
+        val rewardOrigin = if (enableAdventureTraits) state.adventureTraits.source?.finalRewardOrigin ?: "PRIMARY" else "PRIMARY"
+        val loot = when (run.itemReward) {
+            AdventureEventItemReward.NONE -> null
+            AdventureEventItemReward.EQUIPMENT -> addEquipmentDrop(state, rewardRng, eventAt, recentEvents, rewardOrigin)
+            AdventureEventItemReward.TROPHY -> if (state.inventory.size.toLong() < state.inventoryCapacity()) {
+                val item = InventoryItem(safeIncrement(state.totalItemsFound), definition.itemName.ko,
+                    AdventureEventEngine.eventTrophyRarity(run.rewardSeed), "전리품", state.hero.level)
+                val key = if (enableAdventureTraits) AdventureTraitEngine.nextRewardKey(state, rewardOrigin) else ""
+                val canOmit = run.eventId in setOf("bridge", "wayfinding", "ruins", "camp")
+                val omitted = enableAdventureTraits && rewardOrigin == "PRIMARY" && canOmit && AdventureTraitEngine.omitTrophy(state, key, item.rarity, item.name, eventAt)
+                if (omitted) {
+                    AdventureTraitEngine.rewardTrace(state, key, rewardOrigin, 0L, item.name, null, item.rarity, null, null, false, false)
+                    null
+                } else {
+                    addInventory(state, item)
+                    if (enableAdventureTraits) {
+                        AdventureTraitEngine.rewardTrace(state, key, rewardOrigin, item.id, item.name, null, item.rarity, null, null, true, false)
+                        if (rewardOrigin == "PRIMARY") maybeAddTraitExtra(state, key, eventAt, recentEvents)
+                    }
+                    CombatLoot(item.name, item.rarity, item.kind)
+                }
+            } else null
+        }
+        val progressBefore = state.adventureTale.activeAct().progress
+        if (run.progressPolicy == AdventureEventProgressPolicy.REPLACE_ORDINARY_SLOT) {
+            advanceOrdinaryAdventureProgress(state)
+        }
+        val progressAdded = state.adventureTale.activeAct().progress - progressBefore
+        val result = AdventureEventResult(run, eventAt, xp, goldAwarded,
+            loot?.name.orEmpty(), loot?.rarity.orEmpty(), loot?.equipped ?: false, progressAdded,
+            if (loot == null) 0L else state.hero.level,
+            additionalItemNames = if (enableAdventureTraits) state.adventureTraits.source?.additionalItemNames.orEmpty() else emptyList(),
+            itemOmittedByTrait = enableAdventureTraits && state.adventureTraits.source?.itemOmitted == true,
+            actualItemCount = (state.totalItemsFound - itemBefore).coerceAtMost(Int.MAX_VALUE.toLong()).toInt())
+        journey.pending = null
+        journey.lastResult = result
+        journey.completedEvents = safeIncrement(journey.completedEvents)
+        journey.totalExperience = safeAdd(journey.totalExperience, result.experienceAwarded)
+        journey.totalGold = safeAdd(journey.totalGold, goldAwarded)
+        journey.totalItems = safeAdd(journey.totalItems, state.totalItemsFound - itemBefore)
+        journey.recentResults = (journey.recentResults + result).takeLast(AdventureEventEngine.HISTORY_LIMIT)
+        if (run.battleGrade != null) {
+            journey.eventBattle = AdventureEventBattleState(
+                eventId = run.eventId,
+                grade = run.battleGrade,
+                rewardKind = run.battleRewardKind.takeUnless {
+                    it == AdventureEventBattleRewardKind.NONE
+                } ?: AdventureEventEngine.battleRewardKindForSeed(run.rewardSeed, run.battleGrade),
+                rewardSeed = run.rewardSeed,
+                continuation = run.continuation,
+                context = run.context,
+            )
+        }
+        when {
+            run.routeDelayMillis < 0L -> {
+                val uses = run.routeRewardUses.coerceIn(2, 10)
+                journey.routeRewardDelayQueueMillis = journey.routeRewardDelayQueueMillis +
+                    List(uses) { run.routeDelayMillis }
+            }
+            run.routeDelayMillis > 0L -> {
+                val pendingAdjustment = journey.nextEncounterDelayAdjustmentMillis
+                if (pendingAdjustment < 0L) {
+                    journey.routeRewardDelayQueueMillis =
+                        listOf(pendingAdjustment, pendingAdjustment) + journey.routeRewardDelayQueueMillis
+                    journey.nextEncounterDelayAdjustmentMillis = run.routeDelayMillis
+                } else {
+                    journey.nextEncounterDelayAdjustmentMillis = safeAdd(pendingAdjustment, run.routeDelayMillis)
+                }
+            }
+        }
+        AdventureEventEngine.scheduleNext(journey, eventAt)
+        if (enableAdventureTraits) {
+            AdventureTraitEngine.observeEvent(state, eventAt)
+            AdventureTraitEngine.finalizeEvidence(state, eventAt)
+        }
+        // A combat incident is still unresolved here. Record it once, after the elite/boss reward
+        // has settled, so recent history never shows a duplicate zero-reward entry.
+        if (run.battleGrade == null) {
+            val baseContext = if (enableAdventureTraits) {
+                "${run.approachId}:${run.outcome.name}:${result.actualItemCount}"
+            } else {
+                "${run.approachId}:${run.outcome.name}"
+            }
+            recentEvents += RecentAdventureEvent(
+                occurredAt = eventAt,
+                type = RecentAdventureEventType.ADVENTURE_EVENT,
+                subjectId = run.eventId,
+                subjectName = definition.title.ko,
+                contextName = RecentAdventureEventMetadata.appendAdventureReward(
+                    baseContext = baseContext,
+                    rewardKind = run.rewardKind,
+                    routeRewardUses = run.routeRewardUses,
+                    routeDelayMillis = run.routeDelayMillis,
+                    itemReward = run.itemReward,
+                ),
+                previousValue = result.experienceAwarded,
+                currentValue = result.goldAwarded,
+                currentName = result.itemName,
+                rarity = result.itemRarity,
+            )
+        }
+        state.adventurePhase = AdventurePhase.EVENT_RESULT
+        state.actionSequence = safeIncrement(state.actionSequence)
+        state.actionStartedAt = eventAt
+        state.actionEndsAt = safeAdd(eventAt, AdventureEventEngine.RESULT_MILLIS)
+        if (enableAdventureTraits) state.actionEndsAt = safeAdd(eventAt, AdventureTraitEngine.resultMillis(state, AdventureEventEngine.RESULT_MILLIS))
+        state.lastResult = when (run.outcome) {
+            com.nullplaying.model.AdventureEventOutcome.SUCCESS -> definition.success.ko
+            com.nullplaying.model.AdventureEventOutcome.PARTIAL -> definition.partial.ko
+            com.nullplaying.model.AdventureEventOutcome.FAILURE -> definition.failure.ko
+        }
+        if (loot != null) recordLootPresentation(state, loot) else clearLootPresentation(state)
+    }
+
+    private fun finishAdventureEventResult(
+        state: SimpleGameState,
+        rng: StableRng,
+        presentationRng: StableRng,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ) {
+        if (state.adventurePhase == AdventurePhase.RELATIONSHIP_RESULT) {
+            resumeAdventureAfterEvent(state, rng, eventAt, AdventureEventContinuation.NEXT_ADVENTURE_STEP)
+            return
+        }
+        val battle = state.adventureJourney.eventBattle
+        if (battle != null && battle.result == null) {
+            beginAdventureEventBattle(state, presentationRng, eventAt, battle, recentEvents)
+            return
+        }
+        val continuation = state.adventureJourney.lastResult?.run?.continuation
+            ?: AdventureEventContinuation.NEXT_ADVENTURE_STEP
+        resumeAdventureAfterEvent(state, rng, eventAt, continuation)
+    }
+
+    private fun resumeAdventureAfterEvent(
+        state: SimpleGameState,
+        rng: StableRng,
+        eventAt: Long,
+        continuation: AdventureEventContinuation,
+    ) {
+        when (continuation) {
+            AdventureEventContinuation.NEXT_ADVENTURE_STEP -> {
+                if (state.inventory.size.toLong() >= state.inventoryCapacity()) beginReturning(state, eventAt)
+                else beginNextAdventureStep(state, rng, eventAt)
+            }
+            AdventureEventContinuation.BEGIN_COMBAT -> {
+                if (state.inventory.size.toLong() >= state.inventoryCapacity()) beginReturning(state, eventAt)
+                else beginCombat(state, rng, eventAt)
+            }
+            AdventureEventContinuation.BEGIN_RETURNING -> beginReturning(state, eventAt)
+            AdventureEventContinuation.BEGIN_TOWN_SHOPPING -> beginShoppingOrDeparting(state, rng, eventAt)
+        }
+    }
+
+    private fun advanceOrdinaryAdventureProgress(state: SimpleGameState) {
+        // Successful learning, including a safe failed attempt, advances the ordinary journey only.
+        // Completion, quest rewards, titles and the final boss are owned by the existing combat path.
+        advanceActProgress(state, canCompleteAct = false)
+    }
+
+    private fun adventureEventActionMillis(state: SimpleGameState): Long {
+        if (state.adventureTale.kind != TaleKind.LABYRINTH) return AdventureEventEngine.ACTION_MILLIS
+        val baseAttacks = LabyrinthProgression.targetAttacks(state.adventureTale.labyrinthDepth,
+            MonsterGrade.NORMAL.minAttacks, isGateBoss = false)
+        val attacks = attackCountForCombatPower(state, baseAttacks)
+        // Match the current ordinary encounter's depth/power budget instead of bypassing deep combat in 25s.
+        val ordinaryCombatMillis = safeAdd(StatBonusRules.encounterRevealMillis(state),
+            safeAdd(safeMul((attacks - 1).coerceAtLeast(0).toLong(), ATTACK_PRESENTATION_MILLIS),
+                VICTORY_PRESENTATION_MILLIS))
+        // Keep the ordinary combat + loot total when more time is reserved for reading the result.
+        return (safeAdd(ordinaryCombatMillis, LOOT_RESULT_MILLIS) - AdventureEventEngine.RESULT_MILLIS)
+            .coerceAtLeast(1_000L)
+    }
+
+    /** Both real victories and other journey actions share the same non-boss progress boundary. */
+    private fun advanceActProgress(state: SimpleGameState, canCompleteAct: Boolean): Boolean {
+        val act = state.adventureTale.activeAct()
+        val upperBound = if (canCompleteAct) act.target else (act.target - 1L).coerceAtLeast(0L)
+        act.progress = safeIncrement(act.progress).coerceAtMost(upperBound)
+        return canCompleteAct && act.progress >= act.target
+    }
+
+    private fun beginAdventureEventBattle(
+        state: SimpleGameState,
+        presentationRng: StableRng,
+        eventAt: Long,
+        battle: AdventureEventBattleState,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ) {
+        val definition = AdventureEventEngine.definition(battle.eventId)
+        val battleRule = requireNotNull(definition.battleRule) {
+            "Adventure event ${battle.eventId} has no battle rule"
+        }
+        val depth = state.adventureTale.labyrinthDepth.takeIf {
+            state.adventureTale.kind == TaleKind.LABYRINTH
+        } ?: 0L
+        val level = safeAdd(
+            state.hero.level.coerceAtLeast(1L),
+            if (depth > 0L) LabyrinthProgression.monsterLevelBonus(depth) else 0L,
+        )
+        val baseAttacks = battle.grade.minAttacks
+        val depthAdjustedAttacks = if (depth > 0L) {
+            LabyrinthProgression.targetAttacks(depth, baseAttacks, isGateBoss = false)
+        } else {
+            baseAttacks
+        }
+        val targetAttacks = attackCountForCombatPower(state, depthAdjustedAttacks)
+        val energy = monsterEnergyFor(state, targetAttacks)
+        val baseName = battleRule.monsterName.ko
+        state.monster = MonsterState(
+            id = safeIncrement(state.totalKills),
+            name = baseName,
+            level = level,
+            maxEnergy = energy,
+            grade = battle.grade,
+            currentEnergy = energy,
+            expectedAttacks = targetAttacks,
+            attacksCompleted = 0,
+            catalogId = "event:${battle.eventId}",
+            baseName = baseName,
+            isFinalBoss = false,
+            isLabyrinthGateBoss = false,
+        )
+        if (enableAdventureTraits) AdventureTraitEngine.beginCombat(state, eventAt)
+        state.adventurePhase = AdventurePhase.COMBAT
+        state.lastTownItemName = ""
+        state.lastTownItemRarity = ""
+        state.lastTownGold = 0L
+        state.pendingShopOffer = null
+        state.lastShopPurchase = null
+        state.shopAttemptedSlots.clear()
+        clearLootPresentation(state)
+        // The event result already introduced this enemy. Start the first real attack at the
+        // same boundary instead of replaying the ordinary search/discovery presentation.
+        performAttack(state, presentationRng, eventAt, recentEvents)
+    }
+
+    private fun completeAdventureEventBattle(
+        state: SimpleGameState,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+    ) {
+        val journey = state.adventureJourney
+        val battle = requireNotNull(journey.eventBattle)
+        val sourceResult = requireNotNull(journey.lastResult) {
+            "Event battle ${battle.eventId} has no source result"
+        }
+        state.totalKills = safeIncrement(state.totalKills)
+        val rewardRng = StableRng(battle.rewardSeed)
+        val itemsBefore = state.totalItemsFound
+        val goldBefore = state.hero.gold
+        var loot: CombatLoot? = null
+        var actualRewardKind = battle.rewardKind
+        if (battle.rewardKind == AdventureEventBattleRewardKind.EQUIPMENT) {
+            val maximumRarityRank = if (sourceResult.run.outcome == com.nullplaying.model.AdventureEventOutcome.SUCCESS) {
+                MYTHIC_RARITY_RANK
+            } else {
+                LEGENDARY_RARITY_RANK
+            }
+            loot = addEquipmentDrop(
+                state,
+                rewardRng,
+                eventAt,
+                recentEvents,
+                origin = "EVENT_BATTLE",
+                maximumRarityRank = maximumRarityRank,
+            )
+            if (loot == null) actualRewardKind = AdventureEventBattleRewardKind.GOLD
+        }
+        if (actualRewardKind == AdventureEventBattleRewardKind.GOLD) {
+            val multiplier = eventBattleGoldPerLevel(sourceResult.run.outcome)
+            val gold = safeMul(state.hero.level.coerceAtLeast(1L), multiplier).coerceAtLeast(multiplier)
+            state.hero.gold = safeAdd(state.hero.gold, gold)
+        }
+        val goldAwarded = state.hero.gold - goldBefore
+        val rewardRun = sourceResult.run.copy(
+            experienceReward = 0L,
+            goldReward = goldAwarded,
+            itemReward = if (loot != null) AdventureEventItemReward.EQUIPMENT else AdventureEventItemReward.NONE,
+            routeDelayMillis = 0L,
+            rewardKind = if (loot != null) {
+                com.nullplaying.model.AdventureEventRewardKind.ITEM
+            } else {
+                com.nullplaying.model.AdventureEventRewardKind.GOLD
+            },
+            routeRewardUses = 0,
+            battleRewardKind = actualRewardKind,
+        )
+        val result = AdventureEventResult(
+            run = rewardRun,
+            occurredAt = eventAt,
+            experienceAwarded = 0L,
+            goldAwarded = goldAwarded,
+            itemName = loot?.name.orEmpty(),
+            itemRarity = loot?.rarity.orEmpty(),
+            itemEquipped = loot?.equipped ?: false,
+            progressAdded = 0L,
+            itemFoundAtLevel = if (loot == null) 0L else state.hero.level,
+            actualItemCount = (state.totalItemsFound - itemsBefore)
+                .coerceIn(0L, Int.MAX_VALUE.toLong()).toInt(),
+            battleResolved = true,
+        )
+        battle.result = result
+        journey.lastResult = result
+        journey.totalGold = safeAdd(journey.totalGold, goldAwarded)
+        journey.totalItems = safeAdd(journey.totalItems, state.totalItemsFound - itemsBefore)
+        journey.recentResults = if (
+            journey.recentResults.lastOrNull()?.run?.sequence == sourceResult.run.sequence
+        ) {
+            (journey.recentResults.dropLast(1) + result).takeLast(AdventureEventEngine.HISTORY_LIMIT)
+        } else {
+            (journey.recentResults + result).takeLast(AdventureEventEngine.HISTORY_LIMIT)
+        }
+        if (loot != null) {
+            recordLootPresentation(state, loot)
+        } else {
+            clearLootPresentation(state)
+            state.lastLootSummary = "+${goldAwarded}G · 사건 전투 보상"
+        }
+        if (enableAdventureTraits) {
+            AdventureTraitEngine.observeCombat(state, eventAt)
+            AdventureTraitEngine.finalizeEvidence(state, eventAt)
+        }
+        val definition = AdventureEventEngine.definition(battle.eventId)
+        recentEvents += RecentAdventureEvent(
+            occurredAt = eventAt,
+            type = RecentAdventureEventType.ADVENTURE_EVENT,
+            subjectId = battle.eventId,
+            subjectName = definition.title.ko,
+            contextName = RecentAdventureEventMetadata.appendAdventureReward(
+                baseContext = "${rewardRun.approachId}:${rewardRun.outcome.name}:${result.actualItemCount}",
+                rewardKind = rewardRun.rewardKind,
+                routeRewardUses = 0,
+                routeDelayMillis = 0L,
+                itemReward = rewardRun.itemReward,
+            ),
+            previousValue = 0L,
+            currentValue = goldAwarded,
+            currentName = result.itemName,
+            rarity = result.itemRarity,
+        )
+        state.lastResult = "${state.monster.name} 처치 · 사건 보상 정산"
     }
 
     private fun completeCombat(
@@ -755,19 +1551,25 @@ class SimpleGameEngine(
             MonsterGrade.BOSS -> if (isLabyrinthGateBoss) 12L else 8L
         }
         val baseXp = safeMul(safeAdd(16L, safeMul(defeated.level, 4L)), gradeMultiplier)
-        val xp = if (defeatedTale.kind == TaleKind.LABYRINTH) {
+        val ordinaryXp = if (defeatedTale.kind == TaleKind.LABYRINTH) {
             LabyrinthProgression.scaleCombatExperience(baseXp, labyrinthDepth)
         } else {
             baseXp
         }
+        val xp = if (enableAdventureTraits) AdventureTraitEngine.experience(state, ordinaryXp,
+            "combat:${defeated.catalogId.ifBlank { defeated.baseName }}", eventAt) else ordinaryXp
         grantExperience(state, xp, rng, eventAt, recentEvents)
         val loot = if (rng.nextInt(100) < equipmentDropPercent(defeated)) {
             addEquipmentDrop(state, rng, eventAt, recentEvents)
         } else {
-            addTrophy(state, rng, defeated)
+            addTrophy(state, rng, defeated, eventAt, recentEvents)
         }
         recordLootPresentation(state, loot)
         advanceTaleOnVictory(state, rng, defeated, eventAt, recentEvents)
+        if (enableAdventureTraits) {
+            AdventureTraitEngine.observeCombat(state, eventAt)
+            AdventureTraitEngine.finalizeEvidence(state, eventAt)
+        }
         state.lastResult = if (isLabyrinthGateBoss) {
             val unlockedTitle = LabyrinthProgression.titleForCompletedDepth(labyrinthDepth)
             recentEvents += RecentAdventureEvent(
@@ -787,6 +1589,7 @@ class SimpleGameEngine(
         state.adventurePhase = AdventurePhase.RETURNING
         state.combatPhase = CombatPhase.VICTORY
         state.totalReturns = safeIncrement(state.totalReturns)
+        if (enableAdventureTraits) AdventureTraitEngine.beginReturn(state, eventAt)
         state.actionSequence = safeIncrement(state.actionSequence)
         state.actionStartedAt = eventAt
         state.actionEndsAt = safeAdd(eventAt, RETURN_TO_TOWN_MILLIS)
@@ -802,10 +1605,31 @@ class SimpleGameEngine(
 
     private fun beginCombat(state: SimpleGameState, rng: StableRng, eventAt: Long) {
         state.monster = createMonster(state, rng)
+        if (enableAdventureTraits) AdventureTraitEngine.beginCombat(state, eventAt)
         state.adventurePhase = AdventurePhase.COMBAT
         state.combatPhase = CombatPhase.REVEAL
         state.actionStartedAt = eventAt
-        state.actionEndsAt = safeAdd(eventAt, StatBonusRules.encounterRevealMillis(state))
+        val journey = state.adventureJourney
+        val immediateAdjustment = journey.nextEncounterDelayAdjustmentMillis
+        val routeAdjustment = if (immediateAdjustment > 0L) {
+            journey.nextEncounterDelayAdjustmentMillis = 0L
+            immediateAdjustment
+        } else if (immediateAdjustment < 0L) {
+            // A pre-queue save stored one shortcut in the scalar field. Apply it now and
+            // preserve one more use so the upgraded reward meets the current two-use minimum.
+            journey.nextEncounterDelayAdjustmentMillis = 0L
+            journey.routeRewardDelayQueueMillis =
+                listOf(immediateAdjustment) + journey.routeRewardDelayQueueMillis
+            immediateAdjustment
+        } else {
+            val queued = journey.routeRewardDelayQueueMillis.firstOrNull() ?: 0L
+            if (journey.routeRewardDelayQueueMillis.isNotEmpty()) {
+                journey.routeRewardDelayQueueMillis = journey.routeRewardDelayQueueMillis.drop(1)
+            }
+            queued
+        }
+        val revealMillis = (StatBonusRules.encounterRevealMillis(state) + routeAdjustment).coerceAtLeast(1_000L)
+        state.actionEndsAt = safeAdd(eventAt, revealMillis)
         state.lastTownItemName = ""
         state.lastTownItemRarity = ""
         state.lastTownGold = 0L
@@ -835,7 +1659,15 @@ class SimpleGameEngine(
             AdventurePhase.SHOPPING -> buyEquipment(state, rng, eventAt, recentEvents)
             AdventurePhase.SHOPPING_RESULT -> beginShoppingOrDeparting(state, rng, eventAt)
             AdventurePhase.SHOPPING_EMPTY -> beginDeparting(state, eventAt)
-            AdventurePhase.DEPARTING -> beginCombat(state, rng, eventAt)
+            AdventurePhase.DEPARTING -> {
+                if (!tryBeginAdventureEvent(state, eventAt, AdventureEventContext.OUTBOUND_ROUTE)) {
+                    beginNextAdventureStep(state, rng, eventAt)
+                }
+            }
+            AdventurePhase.EVENT,
+            AdventurePhase.EVENT_RESULT,
+            AdventurePhase.RELATIONSHIP,
+            AdventurePhase.RELATIONSHIP_RESULT,
             AdventurePhase.COMBAT -> Unit
         }
     }
@@ -881,9 +1713,10 @@ class SimpleGameEngine(
         EquipmentSlot.entries.forEach { slot ->
             val best = state.inventory.withIndex()
                 .filter { (_, item) ->
-                    item.kind == "장비" &&
+                        item.kind == "장비" &&
                         item.equipmentSlot == slot &&
-                        item.equipmentPower != null
+                        item.equipmentPower != null &&
+                        (!enableAdventureTraits || item.id !in state.adventureTraits.familiarHeldItemIds)
                 }
                 .maxWithOrNull(
                     compareBy<IndexedValue<InventoryItem>> { it.value.equipmentPower ?: Long.MIN_VALUE }
@@ -898,6 +1731,8 @@ class SimpleGameEngine(
 
             val previousName = current.name
             val previousPower = current.power
+            val candidateOrigin = state.adventureTraits.primaryRewardOrigins[candidate.id] ?: "PRIMARY"
+            val equippedOrigin = state.adventureTraits.equipmentOrigins[slot] ?: "PRIMARY"
             val replaced = InventoryItem(
                 id = candidate.id,
                 name = current.name,
@@ -912,6 +1747,10 @@ class SimpleGameEngine(
             current.rarity = candidate.rarity
             current.acquiredAtLevel = state.hero.level.coerceAtLeast(1L)
             state.inventory[best.index] = replaced
+            if (enableAdventureTraits) {
+                state.adventureTraits.equipmentOrigins = state.adventureTraits.equipmentOrigins + (slot to candidateOrigin)
+                state.adventureTraits.primaryRewardOrigins = state.adventureTraits.primaryRewardOrigins + (candidate.id to equippedOrigin)
+            }
             state.totalLootEquipmentEquips = safeIncrement(state.totalLootEquipmentEquips)
             recentEvents += RecentAdventureEvent(
                 occurredAt = eventAt,
@@ -933,18 +1772,29 @@ class SimpleGameEngine(
         rng: StableRng,
         eventAt: Long,
     ) {
+        if (enableAdventureTraits && state.adventureTraits.saleBatch == null && state.inventory.isNotEmpty()) {
+            AdventureTraitEngine.beginSale(state, state.inventory.asReversed().map {
+                it.id to StatBonusRules.saleValue(state, saleValue(it))
+            }, eventAt)
+        }
         val sold = state.inventory.removeLastOrNull()
         if (sold == null) {
-            beginShoppingOrDeparting(state, rng, eventAt)
+            if (enableAdventureTraits) AdventureTraitEngine.finishSale(state, eventAt)
+            if (!tryBeginAdventureEvent(state, eventAt, AdventureEventContext.TOWN_RETURN)) {
+                beginShoppingOrDeparting(state, rng, eventAt)
+            }
             return
         }
-        val value = StatBonusRules.saleValue(state, saleValue(sold))
+        val batch = if (enableAdventureTraits) state.adventureTraits.saleBatch else null
+        val value = if (batch != null && batch.nextIndex < batch.itemIds.size && batch.itemIds[batch.nextIndex] == sold.id)
+            batch.paidValues[batch.nextIndex++] else StatBonusRules.saleValue(state, saleValue(sold))
         state.hero.gold = safeAdd(state.hero.gold, value)
         state.totalItemsSold = safeIncrement(state.totalItemsSold)
         state.totalSaleGold = safeAdd(state.totalSaleGold, value)
         state.adventurePhase = AdventurePhase.SELLING
         state.actionStartedAt = eventAt
         state.actionEndsAt = safeAdd(eventAt, SELL_ITEM_MILLIS)
+        if (batch != null) state.actionEndsAt = safeAdd(eventAt, scalePercent(SELL_ITEM_MILLIS, batch.durationPercent.toLong()).coerceAtLeast(1L))
         state.lastTownItemName = sold.name
         state.lastTownItemRarity = sold.rarity
         state.lastTownGold = value
@@ -958,6 +1808,7 @@ class SimpleGameEngine(
         rng: StableRng,
         eventAt: Long,
     ) {
+        if (enableAdventureTraits) AdventureTraitEngine.beginShop(state)
         val offer = createShopOffer(state, rng)
         state.lastShopPurchase = null
         if (offer != null) {
@@ -980,6 +1831,10 @@ class SimpleGameEngine(
         state.adventurePhase = AdventurePhase.SHOPPING_EMPTY
         state.actionStartedAt = eventAt
         state.actionEndsAt = safeAdd(eventAt, SHOP_EMPTY_RESULT_MILLIS)
+        if (enableAdventureTraits && state.adventureTraits.shopVisit?.justReviewedExtra == true) {
+            state.actionEndsAt = safeAdd(state.actionEndsAt, SHOP_OFFER_MILLIS)
+            state.adventureTraits.shopVisit?.justReviewedExtra = false
+        }
         state.lastTownItemName = ""
         state.lastTownItemRarity = ""
         state.lastTownGold = 0L
@@ -991,7 +1846,8 @@ class SimpleGameEngine(
         state.lastShopPurchase = null
         state.adventurePhase = AdventurePhase.DEPARTING
         state.actionStartedAt = eventAt
-        state.actionEndsAt = safeAdd(eventAt, DEPART_TO_FIELDS_MILLIS)
+        val departureMillis = if (enableAdventureTraits) AdventureTraitEngine.depart(state, eventAt, DEPART_TO_FIELDS_MILLIS) else DEPART_TO_FIELDS_MILLIS
+        state.actionEndsAt = safeAdd(eventAt, departureMillis)
         state.lastTownItemName = ""
         state.lastTownItemRarity = ""
         state.lastTownGold = 0L
@@ -1018,7 +1874,9 @@ class SimpleGameEngine(
             current == null ||
             current.power != offer.previousPower ||
             offer.newPower <= current.power ||
-            rarityRank(offer.rarity) > SHOP_MAX_RARITY_RANK
+            rarityRank(offer.rarity) > SHOP_MAX_RARITY_RANK ||
+            (enableAdventureTraits && (offer.price <= 0L || offer.price != equipmentPrice(state.hero.level, offer.slot) ||
+                (rarityRank(current.rarity) > SHOP_MAX_RARITY_RANK && state.hero.level <= current.acquiredAtLevel)))
         ) {
             state.pendingShopOffer = null
             beginShoppingOrDeparting(state, rng, eventAt)
@@ -1033,6 +1891,18 @@ class SimpleGameEngine(
         current.rarity = offer.rarity
         current.acquiredAtLevel = state.hero.level.coerceAtLeast(1L)
         state.totalEquipmentPurchases = safeIncrement(state.totalEquipmentPurchases)
+        if (enableAdventureTraits) {
+            val visit = state.adventureTraits.shopVisit
+            val derived = visit?.pendingIsExtra == true
+            state.adventureTraits.equipmentOrigins = state.adventureTraits.equipmentOrigins +
+                (current.slot to if (derived) "TRAIT_SHOP_EXTRA" else "PRIMARY")
+            if (!derived) {
+                if (visit != null) visit.basePurchases++
+                val key = (visit?.sourceKey ?: state.adventureTraits.source!!.key) + ":compare:${current.slot}"
+                AdventureTraitEngine.observeEquipment(state, key, current.slot, current.power, true, eventAt)
+                AdventureTraitEngine.observe(state, key + ":paid", "trade:purchase:${current.slot}", setOf("S01"), setOf("S02"), eventAt, "trade:purchase")
+            }
+        }
         recentEvents += RecentAdventureEvent(
             occurredAt = eventAt,
             type = RecentAdventureEventType.EQUIPMENT_CHANGED,
@@ -1057,20 +1927,48 @@ class SimpleGameEngine(
     private fun createShopOffer(state: SimpleGameState, rng: StableRng): ShopEquipmentOffer? {
         while (true) {
             val remainingSlots = EquipmentSlot.entries.filterNot(state.shopAttemptedSlots::contains)
-            if (remainingSlots.isEmpty()) return null
-
-            val slot = remainingSlots.pick(rng)
-            state.shopAttemptedSlots += slot
+            val visit = if (enableAdventureTraits) AdventureTraitEngine.beginShop(state) else null
+            val extra = remainingSlots.isEmpty() && visit?.extraAllowed == true && !visit.extraUsed
+            if (remainingSlots.isEmpty() && !extra) return null
+            val candidateRng = if (extra) StableRng(AdventureTraitEngine.seedFor(state, visit!!.sourceKey + ":extraCandidate")) else rng
+            val slot = if (extra) {
+                visit?.extraSlot ?: EquipmentSlot.WEAPON
+            } else {
+                remainingSlots.pick(rng)
+            }
+            if (extra) {
+                visit!!.extraUsed = true
+                visit.pendingIsExtra = true
+                visit.justReviewedExtra = true
+                val reviewTraitId = visit.extraTraitId.ifBlank { "S05" }
+                AdventureTraitEngine.activate(state, reviewTraitId, visit.sourceKey, state.actionEndsAt,
+                    AdventureTraitEffectKind.SHOP_REVIEW, 0, 1, SHOP_OFFER_MILLIS)
+            } else {
+                state.shopAttemptedSlots += slot
+                visit?.pendingIsExtra = false
+            }
             val current = state.equipment.firstOrNull { it.slot == slot } ?: continue
-            val rolledRarity = shopRarity(rng)
-            val candidate = equipmentCandidate(state, rng, slot, rolledRarity, forShop = true)
+            val rolledRarity = shopRarity(candidateRng)
+            val previousNames = if (extra) state.recentItemNames.toMutableList() else null
+            val candidate = equipmentCandidate(state, candidateRng, slot, rolledRarity, forShop = true)
+            if (previousNames != null) state.recentItemNames = previousNames
+            val comparisonKey = visit?.sourceKey.orEmpty() + ":compare:${slot.name}"
+            if (enableAdventureTraits && !extra) AdventureTraitEngine.observe(state, comparisonKey,
+                "equipment:${slot.name}", setOf("L05"), at = state.actionEndsAt, reason = "equipment:compare")
             val protectsHighRarityAtAcquisitionLevel =
                 rarityRank(current.rarity) > SHOP_MAX_RARITY_RANK &&
                     state.hero.level <= current.acquiredAtLevel
-            if (protectsHighRarityAtAcquisitionLevel || candidate.power <= current.power) continue
+            if (protectsHighRarityAtAcquisitionLevel || candidate.power <= current.power) {
+                if (enableAdventureTraits && !extra) AdventureTraitEngine.observeEquipment(state, comparisonKey, slot, current.power, false, state.actionEndsAt)
+                if (extra) return null else continue
+            }
 
             val price = equipmentPrice(state.hero.level, slot)
-            if (state.hero.gold < price) continue
+            if (state.hero.gold < price) {
+                if (enableAdventureTraits && !extra) AdventureTraitEngine.observeEquipment(state, comparisonKey, slot, current.power, false, state.actionEndsAt)
+                if (extra) return null else continue
+            }
+            if (extra) visit?.justReviewedExtra = false
             return ShopEquipmentOffer(
                 slot = slot,
                 name = candidate.name,
@@ -1206,6 +2104,13 @@ class SimpleGameEngine(
         return scaled.coerceIn(1L, Int.MAX_VALUE.toLong()).toInt()
     }
 
+    /** Grade controls time and danger; the event outcome alone controls its recovery budget. */
+    internal fun eventBattleGoldPerLevel(outcome: com.nullplaying.model.AdventureEventOutcome): Long = when (outcome) {
+        com.nullplaying.model.AdventureEventOutcome.SUCCESS -> 20L
+        com.nullplaying.model.AdventureEventOutcome.PARTIAL -> 4L
+        com.nullplaying.model.AdventureEventOutcome.FAILURE -> 1L
+    }
+
     private fun grantExperience(
         state: SimpleGameState,
         amount: Long,
@@ -1219,11 +2124,16 @@ class SimpleGameEngine(
             state.hero.experience -= required
             val previousLevel = state.hero.level
             state.hero.level = safeIncrement(state.hero.level)
+            val statsBefore = state.hero.stats.copy()
             applyClassGuidedGrowth(state.hero.stats, state.hero.heroClass, rng)
             state.classGuidedLevelGrowths = safeIncrement(state.classGuidedLevelGrowths)
             recentEvents += RecentAdventureEvent(
                 occurredAt = eventAt,
                 type = RecentAdventureEventType.LEVEL_UP,
+                contextName = RecentAdventureEventMetadata.encodeStatGrowth(
+                    before = statsBefore,
+                    after = state.hero.stats,
+                ),
                 previousValue = previousLevel,
                 currentValue = state.hero.level,
             )
@@ -1326,17 +2236,13 @@ class SimpleGameEngine(
     ) {
         val tale = state.adventureTale
         val act = tale.activeAct()
-        val nextProgress = safeIncrement(act.progress).coerceAtMost(act.target)
-        if (nextProgress >= act.target && defeated.grade != MonsterGrade.BOSS) {
-            act.progress = (act.target - 1L).coerceAtLeast(0L)
-            return
-        }
-        act.progress = nextProgress
-        if (act.progress < act.target) return
+        if (!advanceActProgress(state, canCompleteAct = defeated.grade == MonsterGrade.BOSS)) return
 
         act.completed = true
         state.totalActs = safeIncrement(state.totalActs)
+        val goldBefore = state.hero.gold
         state.hero.gold = safeAdd(state.hero.gold, act.rewardGold)
+        val goldAwarded = state.hero.gold - goldBefore
         grantExperience(state, act.rewardExperience, gameplayRng, eventAt, recentEvents)
 
         if (tale.currentActIndex < tale.acts.lastIndex) {
@@ -1346,6 +2252,8 @@ class SimpleGameEngine(
                 subjectId = act.id,
                 subjectName = act.title,
                 contextName = tale.title,
+                previousValue = act.rewardExperience,
+                currentValue = goldAwarded,
             )
             tale.currentActIndex += 1
             return
@@ -2284,6 +3192,9 @@ class SimpleGameEngine(
         state: SimpleGameState,
         rng: StableRng,
         defeated: MonsterState,
+        eventAt: Long,
+        recentEvents: MutableList<RecentAdventureEvent>,
+        origin: String = "PRIMARY",
     ): CombatLoot? {
         if (state.inventory.size.toLong() >= state.inventoryCapacity()) return null
         val name = uniqueName(state.recentItemNames, RECENT_ITEMS, rng) {
@@ -2293,16 +3204,27 @@ class SimpleGameEngine(
                 ?: "${SimpleContent.lootMaterials.pick(rng)} ${SimpleContent.lootForms.pick(rng)}"
         }
         val rarity = trophyRarity(rng)
+        val key = if (enableAdventureTraits) AdventureTraitEngine.nextRewardKey(state, origin) else ""
+        if (enableAdventureTraits && origin == "PRIMARY" && defeated.grade == MonsterGrade.NORMAL &&
+            AdventureTraitEngine.omitTrophy(state, key, rarity, name, eventAt)) {
+            AdventureTraitEngine.rewardTrace(state, key, origin, 0L, name, null, rarity, null, null, false, false)
+            return null
+        }
+        val itemId = safeIncrement(state.totalItemsFound)
         addInventory(
             state,
             InventoryItem(
-                id = safeIncrement(state.totalItemsFound),
+                id = itemId,
                 name = name,
                 rarity = rarity,
                 kind = "전리품",
                 foundAtLevel = state.hero.level,
             ),
         )
+        if (enableAdventureTraits) {
+            AdventureTraitEngine.rewardTrace(state, key, origin, itemId, name, null, rarity, null, null, true, false)
+            if (origin == "PRIMARY") maybeAddTraitExtra(state, key, eventAt, recentEvents)
+        }
         return CombatLoot(name = name, rarity = rarity, kind = "전리품")
     }
 
@@ -2311,14 +3233,48 @@ class SimpleGameEngine(
         rng: StableRng,
         eventAt: Long,
         recentEvents: MutableList<RecentAdventureEvent>,
+        origin: String = "PRIMARY",
+        maximumRarityRank: Int = MYTHIC_RARITY_RANK,
     ): CombatLoot? {
         if (state.inventory.size.toLong() >= state.inventoryCapacity()) return null
         val slot = EquipmentSlot.entries[rng.nextInt(EquipmentSlot.entries.size)]
-        val candidate = equipmentCandidate(state, rng, slot, equipmentLootRarity(rng))
+        val originalCandidate = equipmentCandidate(
+            state,
+            rng,
+            slot,
+            equipmentLootRarity(rng, maximumRarityRank),
+        )
+        val key = if (enableAdventureTraits) AdventureTraitEngine.nextRewardKey(state, origin) else ""
+        var candidate = originalCandidate
+        if (enableAdventureTraits && origin != "TRAIT_EXTRA" && AdventureTraitEngine.owns(state, "L05") &&
+            AdventureTraitEngine.roll(state, "L05", key, 100)) {
+            val reroll = AdventureTraitEngine.random(state.adventureTraits.seed, key + ":appraisePower", EQUIPMENT_POWER_ROLL_MAX + 1)
+            val power = maxOf(originalCandidate.power, lootEquipmentPowerForRoll(state.hero.level, originalCandidate.rarity, reroll))
+            if (power > originalCandidate.power) {
+                candidate = originalCandidate.copy(power = power)
+                state.adventureTraits.source?.let { it.resultTimePercent += 15 }
+                AdventureTraitEngine.activate(state, "L05", key, eventAt, AdventureTraitEffectKind.APPRAISAL,
+                    originalCandidate.power, power, name = candidate.name)
+            }
+        }
         val current = state.equipment.first { it.slot == slot }
+        val previousOrigin = state.adventureTraits.equipmentOrigins[slot] ?: "PRIMARY"
+        val baseUpgrade = originalCandidate.power > current.power ||
+            (originalCandidate.power == current.power && rarityRank(originalCandidate.rarity) > rarityRank(current.rarity))
+        val baseSelectedPower = if (baseUpgrade) originalCandidate.power else current.power
         val droppedItemId = safeIncrement(state.totalItemsFound)
-        val isUpgrade = candidate.power > current.power ||
+        val candidateIsUpgrade = candidate.power > current.power ||
             (candidate.power == current.power && rarityRank(candidate.rarity) > rarityRank(current.rarity))
+        val keptFamiliar = enableAdventureTraits && origin != "TRAIT_EXTRA" && candidate.power > current.power &&
+            AdventureTraitEngine.keepFamiliarGear(
+                state = state,
+                key = key,
+                slot = slot,
+                currentPower = current.power,
+                candidatePower = candidate.power,
+                at = eventAt,
+            )
+        val isUpgrade = candidateIsUpgrade && !keptFamiliar
 
         if (isUpgrade) {
             val previousName = current.name
@@ -2337,6 +3293,16 @@ class SimpleGameEngine(
             current.rarity = candidate.rarity
             current.acquiredAtLevel = state.hero.level.coerceAtLeast(1L)
             addInventory(state, replaced)
+            if (enableAdventureTraits) {
+                val equippedOrigin = if (candidate.power > originalCandidate.power) "TRAIT_APPRAISAL" else origin
+                state.adventureTraits.equipmentOrigins = state.adventureTraits.equipmentOrigins + (slot to equippedOrigin)
+                AdventureTraitEngine.rewardTrace(state, key, origin, droppedItemId, candidate.name, slot,
+                    candidate.rarity, originalCandidate.power, candidate.power, true, true)
+                state.adventureTraits.primaryRewardOrigins = state.adventureTraits.primaryRewardOrigins + (droppedItemId to previousOrigin)
+                if (origin != "TRAIT_EXTRA") {
+                    AdventureTraitEngine.observeEquipment(state, key, slot, baseSelectedPower, baseUpgrade, eventAt)
+                }
+            }
             state.totalLootEquipmentEquips = safeIncrement(state.totalLootEquipmentEquips)
             recentEvents += RecentAdventureEvent(
                 occurredAt = eventAt,
@@ -2348,6 +3314,7 @@ class SimpleGameEngine(
                 equipmentSlot = slot,
                 rarity = current.rarity,
             )
+            if (enableAdventureTraits && origin == "PRIMARY") maybeAddTraitExtra(state, key, eventAt, recentEvents)
             return CombatLoot(
                 name = candidate.name,
                 rarity = candidate.rarity,
@@ -2371,6 +3338,34 @@ class SimpleGameEngine(
                 equipmentPower = candidate.power,
             ),
         )
+        if (enableAdventureTraits) {
+            if (keptFamiliar) {
+                state.adventureTraits.familiarHeldItemIds =
+                    state.adventureTraits.familiarHeldItemIds + droppedItemId
+            }
+            AdventureTraitEngine.rewardTrace(state, key, origin, droppedItemId, candidate.name, slot,
+                candidate.rarity, originalCandidate.power, candidate.power, true, false)
+            if (candidate.power > originalCandidate.power) state.adventureTraits.primaryRewardOrigins =
+                state.adventureTraits.primaryRewardOrigins + (droppedItemId to "TRAIT_APPRAISAL")
+            if (origin != "TRAIT_EXTRA") {
+                if (keptFamiliar) {
+                    AdventureTraitEngine.observe(
+                        state = state,
+                        key = "$key:familiarChoice",
+                        context = "equipment:${slot.name}",
+                        positive = setOf("L06"),
+                        negative = setOf("L05"),
+                        at = eventAt,
+                        reason = "equipment:familiar",
+                    )
+                } else {
+                    AdventureTraitEngine.observeEquipment(state, key, slot, baseSelectedPower, baseUpgrade, eventAt)
+                }
+            }
+            if (origin == "PRIMARY") {
+                maybeAddTraitExtra(state, key, eventAt, recentEvents)
+            }
+        }
         return CombatLoot(
             name = candidate.name,
             rarity = candidate.rarity,
@@ -2384,7 +3379,8 @@ class SimpleGameEngine(
     private fun recordLootPresentation(state: SimpleGameState, loot: CombatLoot?) {
         clearLootPresentation(state)
         if (loot == null) {
-            state.lastLootSummary = "가방이 가득 차 전리품을 더 담지 못했습니다"
+            state.lastLootSummary = if (enableAdventureTraits && state.adventureTraits.source?.itemOmitted == true)
+                "전리품을 남기고 길을 서두릅니다" else "가방이 가득 차 전리품을 더 담지 못했습니다"
             return
         }
         state.lastLootName = loot.name
@@ -2398,6 +3394,22 @@ class SimpleGameEngine(
             "${loot.name} · 새 장비로 장착"
         } else {
             "${loot.name} · 가방에 보관"
+        }
+    }
+
+    private fun maybeAddTraitExtra(state: SimpleGameState, originalKey: String, at: Long,
+        recentEvents: MutableList<RecentAdventureEvent>) {
+        if (!AdventureTraitEngine.owns(state, "L01") ||
+            !AdventureTraitEngine.roll(state, "L01", originalKey, AdventureTraitEngine.EXTRA_ITEM_BASIS_POINTS)) return
+        if (state.inventory.size.toLong() >= state.inventoryCapacity()) return
+        val rng = StableRng(AdventureTraitEngine.seedFor(state, originalKey + ":extraReward"))
+        val recentNames = state.recentItemNames.toMutableList()
+        val extra = if (rng.nextInt(100) < 2) addEquipmentDrop(state, rng, at, recentEvents, "TRAIT_EXTRA")
+            else addTrophy(state, rng, MonsterState(0L, "", state.hero.level, 1L), at, recentEvents, "TRAIT_EXTRA")
+        state.recentItemNames = recentNames
+        if (extra != null) {
+            state.adventureTraits.source?.let { it.additionalItemNames = it.additionalItemNames + extra.name; it.resultTimePercent += 15 }
+            AdventureTraitEngine.activate(state, "L01", originalKey, at, AdventureTraitEffectKind.EXTRA_ITEM, 1L, 2L, name = extra.name)
         }
     }
 
@@ -2515,8 +3527,13 @@ class SimpleGameEngine(
         state.inventory.add(0, item)
     }
 
-    private fun equipmentLootRarity(rng: StableRng): String =
-        equipmentLootRarityForRoll(rng.nextInt(LOOT_RARITY_ROLL_BOUND))
+    private fun equipmentLootRarity(
+        rng: StableRng,
+        maximumRarityRank: Int = MYTHIC_RARITY_RANK,
+    ): String = cappedEquipmentLootRarityForRoll(
+        roll = rng.nextInt(LOOT_RARITY_ROLL_BOUND),
+        maximumRarityRank = maximumRarityRank,
+    )
 
     private fun trophyRarity(rng: StableRng): String =
         trophyRarityForRoll(rng.nextInt(100))
@@ -2532,6 +3549,20 @@ class SimpleGameEngine(
             bounded < 50_550 -> "영웅"
             bounded < 190_550 -> "희귀"
             bounded < 490_550 -> "고급"
+            else -> "일반"
+        }
+    }
+
+    internal fun cappedEquipmentLootRarityForRoll(roll: Int, maximumRarityRank: Int): String {
+        val rarity = equipmentLootRarityForRoll(roll)
+        val cap = maximumRarityRank.coerceIn(0, MYTHIC_RARITY_RANK)
+        if (rarityRank(rarity) <= cap) return rarity
+        return when (cap) {
+            MYTHIC_RARITY_RANK -> "신화"
+            LEGENDARY_RARITY_RANK -> "전설"
+            3 -> "영웅"
+            2 -> "희귀"
+            1 -> "고급"
             else -> "일반"
         }
     }
@@ -2668,7 +3699,24 @@ class SimpleGameEngine(
         )
 
     private fun safeAdd(left: Long, right: Long): Long =
-        if (right > 0L && left > Long.MAX_VALUE - right) Long.MAX_VALUE else left + right
+        when {
+            right > 0L && left > Long.MAX_VALUE - right -> Long.MAX_VALUE
+            right < 0L && left < Long.MIN_VALUE - right -> Long.MIN_VALUE
+            else -> left + right
+        }
+
+    private fun safeSubtract(left: Long, nonNegativeRight: Long): Long =
+        if (nonNegativeRight > 0L && left < Long.MIN_VALUE + nonNegativeRight) {
+            Long.MIN_VALUE
+        } else {
+            left - nonNegativeRight
+        }
+
+    private fun nonNegativeDifference(later: Long, earlier: Long): Long = when {
+        later <= earlier -> 0L
+        earlier < 0L && later > Long.MAX_VALUE + earlier -> Long.MAX_VALUE
+        else -> later - earlier
+    }
 
     private fun safeMul(left: Long, right: Long): Long {
         if (left == 0L || right == 0L) return 0L
@@ -2779,6 +3827,7 @@ class SimpleGameEngine(
         private const val LEGACY_OFFLINE_ADVENTURE_EARN_RATE = 60L
         private const val MAX_STORED_OFFLINE_ADVENTURE_MILLIS =
             OfflineAdventureConfig.MAX_CAPACITY_MINUTES * 60_000L * 5L / 4L
+        private const val REWARDED_OFFLINE_REQUEST_LEDGER_LIMIT = 32
         private val ENHANCEMENT_SUFFIX = Regex(" \\+[1-5]$")
         private val LEGACY_MONSTER_EPITHET_IN_RESULT = Regex(" · [^·]+(?= 처치 · 경험치 \\+)")
         private const val CURRENT_SCHEMA_VERSION = SIMPLE_GAME_SCHEMA_VERSION
@@ -2822,6 +3871,7 @@ class SimpleGameEngine(
         internal const val NEW_SKILL_MAX_EXTRA_SELECTION_WEIGHT = 7L
         internal const val BASIC_ATTACK_MIN_PERCENT = 40
         internal const val BASIC_ATTACK_MAX_PERCENT = 60
+        private const val MYTHIC_RARITY_RANK = 5
         private const val LEGENDARY_RARITY_RANK = 4
         private const val SHOP_MAX_RARITY_RANK = 3
         private const val SHOP_RARITY_ROLL_BOUND = 1_000

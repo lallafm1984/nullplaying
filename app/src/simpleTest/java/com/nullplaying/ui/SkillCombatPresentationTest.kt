@@ -72,6 +72,20 @@ class SkillCombatPresentationTest {
     }
 
     @Test
+    fun `shadowless flurry presents five cuts without changing its total damage`() {
+        val definition = checkNotNull(SkillCatalog.find("warrior_t13_c03"))
+        val totalDamage = 12_345L
+
+        assertEquals(5, definition.hitCount)
+        assertEquals(listOf(15, 17, 18, 20, 30), definition.hitWeights)
+        assertEquals(listOf(125, 219, 313, 406, 500), definition.hitTimingsMillis)
+        assertEquals(330, definition.damagePercentMin)
+        assertEquals(340, definition.damagePercentMax)
+        assertEquals(totalDamage, splitSkillDamage(totalDamage, definition).sum())
+        assertEquals(totalDamage, cumulativeSkillDamage(totalDamage, definition).last())
+    }
+
+    @Test
     fun `final damage gets the requested half second extension without overlapping the next attack`() {
         SkillCatalog.all.forEach { definition ->
             val finalHit = definition.hitTimingsMillis.last()

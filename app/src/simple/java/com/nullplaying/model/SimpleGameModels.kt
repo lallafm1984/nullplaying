@@ -2,7 +2,7 @@ package com.nullplaying.model
 
 import kotlinx.serialization.Serializable
 
-const val SIMPLE_GAME_SCHEMA_VERSION = 43
+const val SIMPLE_GAME_SCHEMA_VERSION = 46
 const val BASE_INVENTORY_CAPACITY = 15L
 private const val INVENTORY_LEVEL_BONUS_NUMERATOR = 3L
 private const val INVENTORY_LEVEL_BONUS_DENOMINATOR = 5L
@@ -260,6 +260,10 @@ enum class CombatPhase {
 enum class AdventurePhase(val labelKo: String) {
     OPENING("서막"),
     COMBAT("전투"),
+    EVENT("모험 사건"),
+    EVENT_RESULT("사건 결과"),
+    RELATIONSHIP("길에서 만난 인연"),
+    RELATIONSHIP_RESULT("인연의 기억"),
     LOOTING("아이템 획득"),
     RETURNING("귀환"),
     EQUIPPING("장비 선별"),
@@ -273,6 +277,9 @@ enum class AdventurePhase(val labelKo: String) {
 @Serializable
 data class SimpleGameState(
     var schemaVersion: Int = SIMPLE_GAME_SCHEMA_VERSION,
+    // Kept separate from schemaVersion: a legacy save may be loaded before the first trusted
+    // server-time sample arrives. Only a successful server-time adoption may mark it verified.
+    var trustedTimelineVersion: Int = TRUSTED_TIMELINE_LEGACY,
     var rankingCharacterId: String = "",
     var hero: HeroState,
     var equipment: MutableList<EquippedItem>,
@@ -330,9 +337,20 @@ data class SimpleGameState(
     // 0: denominator is chargeMinutes (old saves); 1: chargeMinutes * 60_000.
     var offlineAdventureChargeRemainderVersion: Int = 0,
     var lastRewardRequestId: String = "",
+    /** Bounded replay ledger; the legacy single ID remains readable and participates in checks. */
+    var rewardedOfflineRequestIds: List<String> = emptyList(),
     var completedTaleHistory: MutableList<CompletedTaleRecord> = mutableListOf(),
     var labyrinthDepthCompleted: Long = 0L,
     var lastSeenRecentAdventureEventId: Long = 0L,
+    var battleTraits: BattleTraitState = defaultBattleTraitState(),
+    var heroPath: HeroPathState = HeroPathState(),
+    /** Archived letters are retained for save/backup compatibility and never advanced. */
+    var correspondence: CorrespondenceState = CorrespondenceState(),
+    var adventureJourney: AdventureJourneyState = AdventureJourneyState(),
+    var adventureRelationships: AdventureRelationshipState = AdventureRelationshipState(),
+    var adventureTraits: AdventureTraitState = AdventureTraitState(),
+    /** Auth-scoped daily public projections shared by relationship and arena adapters. */
+    var publicPlayerRoster: PublicPlayerRoster? = null,
 ) {
     /**
      * Strength still expands the bag, while a level-scaled baseline and capped strength bonus
@@ -352,9 +370,27 @@ data class SimpleGameState(
         val baseCapacity = saturatingInventoryAdd(BASE_INVENTORY_CAPACITY, levelBonus)
         val strengthBonus = (strength / INVENTORY_STRENGTH_PER_SLOT)
             .coerceAtMost((baseCapacity - 1L).coerceAtLeast(0L))
-        return saturatingInventoryAdd(baseCapacity, strengthBonus)
+        val permanentCapacity = saturatingInventoryAdd(baseCapacity, strengthBonus)
+        val journeyAdjustment = adventureTraits.temporaryBagSlots.coerceIn(-1L, 3L)
+        return if (journeyAdjustment >= 0L) {
+            saturatingInventoryAdd(permanentCapacity, journeyAdjustment)
+        } else {
+            (permanentCapacity + journeyAdjustment).coerceAtLeast(1L)
+        }
     }
 }
+
+const val TRUSTED_TIMELINE_LEGACY = 0
+const val TRUSTED_TIMELINE_VERIFIED = 1
+const val TRUSTED_TIMELINE_PROVISIONAL_NEW = 2
+
+fun defaultBattleTraitState(): BattleTraitState = BattleTraitState(
+    active = listOf(
+        ActiveBattleTrait(traitId = "TRAIT_050"),
+        ActiveBattleTrait(traitId = "TRAIT_012"),
+        ActiveBattleTrait(traitId = "TRAIT_071"),
+    ),
+)
 
 private fun saturatingInventoryAdd(left: Long, right: Long): Long =
     if (left > Long.MAX_VALUE - right) Long.MAX_VALUE else left + right
@@ -378,6 +414,10 @@ data class SettlementDelta(
 )
 
 enum class RecentAdventureEventType {
+    ADVENTURE_TRAIT_CHANGED,
+    ADVENTURE_TRAIT_ACTIVATED,
+    ADVENTURE_EVENT,
+    RELATIONSHIP_ENCOUNTER,
     LEVEL_UP,
     SKILL_MASTERY,
     SKILL_LEARNED,

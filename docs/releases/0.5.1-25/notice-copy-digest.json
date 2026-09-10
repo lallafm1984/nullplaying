@@ -1,0 +1,11 @@
+{
+  "version_code": 24,
+  "source_matches_published23_except_version_code": true,
+  "published23_source_sha256": "bd168360339049bcc5002c06dd5a8224809ec60b27d9b5fb71d34930642d41e5",
+  "current_source_sha256": "8e9709024ad60cedadc88f946391746ec06515435a7da35fc81523f51311272f",
+  "languages": [
+    "ko",
+    "en",
+    "ja"
+  ]
+}

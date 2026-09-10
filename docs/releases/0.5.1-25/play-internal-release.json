@@ -1,0 +1,24 @@
+{
+  "track": "internal",
+  "version_code": 25,
+  "version_name": "0.5.1",
+  "release_id": 10,
+  "status": "available_to_internal_testers",
+  "console_status_ko": "내부 테스터에게 제공됨",
+  "published_at_kst": "2026-09-10T17:43:00+09:00",
+  "verified_via": "Google Play Console browser UI",
+  "release_url": "https://play.google.com/console/u/2/developers/8511047435480770033/app/4972480412720762905/tracks/4701097285092429340/releases/10/details",
+  "uploaded_filename": "NULL-PLAYING-0.5.1-25.aab",
+  "uploaded_file_sha256": "0f27606df40d68e8ddde756cc06a395ef11599e582cefba2f8aa1ff8f02c16da",
+  "languages": [
+    "ko-KR",
+    "en-US",
+    "ja-JP"
+  ],
+  "blocking_errors": 0,
+  "advisory_warnings": [
+    "Native debug symbols not uploaded"
+  ],
+  "supported_device_reduction": 0,
+  "production_rollout_performed": false
+}

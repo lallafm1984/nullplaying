@@ -118,6 +118,12 @@ object GameLocalization {
             }
             return translated
         }
+        // Dynamic Korean names are rendered with their grammatical particle before they reach
+        // localization (for example, "수로 슬라임을"). Pattern placeholders must receive only
+        // the localized name because the target sentence supplies its own grammar.
+        KOREAN_TRAILING_PARTICLES.firstOrNull(text::endsWith)?.let { particle ->
+            catalog.exact[text.dropLast(particle.length)]?.let { return it }
+        }
         if (!text.contains(KOREAN_TEXT)) return text
 
         // Covers sentences assembled with buildString/append while keeping the longer, structured
@@ -172,6 +178,7 @@ object GameLocalization {
 
     private const val CACHE_LIMIT = 2_048
     private const val MIN_FRAGMENT_LENGTH = 2
+    private val KOREAN_TRAILING_PARTICLES = listOf("으로", "에서", "에게", "은", "는", "이", "가", "과", "와", "을", "를")
     private val KOREAN_TEXT = Regex("[가-힣]")
     private val TEMPLATE_TOKEN = Regex("\\{\\{[1-9][0-9]*\\}\\}")
 }

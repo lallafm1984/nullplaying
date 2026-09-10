@@ -1,0 +1,12 @@
+<ko-KR>
+결투장 스킬의 MP 소모량을 약 40% 줄였습니다.
+메이지의 얼음 창과 서리 폭풍 아이콘을 파란색 얼음 이미지로 변경했습니다.
+</ko-KR>
+<en-US>
+Reduced Arena skill MP costs by approximately 40%.
+Updated the mage’s Ice Spear and Frost Storm icons with blue ice artwork.
+</en-US>
+<ja-JP>
+決闘場スキルのMP消費量を約40％減らしました。
+メイジの氷の槍と霜の嵐のアイコンを、青い氷のイラストに変更しました。
+</ja-JP>

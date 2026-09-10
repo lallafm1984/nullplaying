@@ -14,6 +14,37 @@ class PostgameJourneyTest {
     private val engine = SimpleGameEngine()
 
     @Test
+    fun `level twenty guidance unlock stays inside the intended early progression window`() {
+        val expectedUnlockMinutes = mapOf(
+            HeroClass.WARRIOR to 10_050L,
+            HeroClass.ROGUE to 10_259L,
+            HeroClass.RANGER to 10_462L,
+            HeroClass.MAGE to 10_106L,
+            HeroClass.CLERIC to 10_419L,
+            HeroClass.PALADIN to 10_083L,
+        )
+        HeroClass.entries.forEach { heroClass ->
+            val game = newGame(heroClass)
+            var resolvedActions = 0
+
+            while (game.hero.level < 20L && resolvedActions < 2_000_000) {
+                engine.settleOffline(game, game.actionEndsAt)
+                resolvedActions += 1
+            }
+
+            assertEquals("$heroClass unlock level", 20L, game.hero.level)
+            assertTrue("$heroClass resolvedActions=$resolvedActions", resolvedActions < 2_000_000)
+            val unlockMinutes = game.lastSettledAt / 60_000L
+            assertEquals("$heroClass unlockMinutes", expectedUnlockMinutes[heroClass], unlockMinutes)
+            println(
+                "guidanceUnlock class=$heroClass minutes=$unlockMinutes " +
+                    "hours=${game.lastSettledAt / 3_600_000.0} " +
+                    "kills=${game.totalKills} tales=${game.totalTales}",
+            )
+        }
+    }
+
+    @Test
     fun `stat bonus classes preserve authored milestones and reach level one hundred around depth eighty seven`() {
         // Fixed-seed production replay, with the approved skill/search/sale bonuses enabled.
         val labyrinthQuarters = mapOf(HeroClass.WARRIOR to 216, HeroClass.ROGUE to 215,

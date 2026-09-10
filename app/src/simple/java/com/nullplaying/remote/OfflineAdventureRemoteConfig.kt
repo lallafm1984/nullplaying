@@ -32,6 +32,15 @@ class OfflineAdventureRemoteConfig(context: Context) {
         ).orEmpty()) ?: SessionLogRemotePolicy.DEFAULT_ENABLED,
     )
     val sessionLogsEnabled = mutableSessionLogsEnabled.asStateFlow()
+    private val mutableRankingRefreshPolicy = MutableStateFlow(
+        RankingRefreshPolicy.parse(
+            preferences.getString(
+                RankingRefreshPolicy.INTERVAL_HOURS_KEY,
+                RankingRefreshPolicy.DEFAULT_INTERVAL_HOURS.toString(),
+            ).orEmpty(),
+        ) ?: RankingRefreshPolicy(),
+    )
+    val rankingRefreshPolicy = mutableRankingRefreshPolicy.asStateFlow()
     @Volatile private var remoteConfig: FirebaseRemoteConfig? = null
     private val fetching = AtomicBoolean(false)
     private var started = false
@@ -56,6 +65,7 @@ class OfflineAdventureRemoteConfig(context: Context) {
                     OfflineAdventureConfig.CAPACITY_KEY to OfflineAdventureConfig.DEFAULT_CAPACITY_MINUTES,
                     OfflineAdventureConfig.CHARGE_KEY to OfflineAdventureConfig.DEFAULT_CHARGE_MINUTES,
                     SessionLogRemotePolicy.ENABLED_KEY to SessionLogRemotePolicy.DEFAULT_ENABLED,
+                    RankingRefreshPolicy.INTERVAL_HOURS_KEY to RankingRefreshPolicy.DEFAULT_INTERVAL_HOURS,
                 )),
             ).addOnSuccessListener {
                 remoteConfig = remote
@@ -66,6 +76,7 @@ class OfflineAdventureRemoteConfig(context: Context) {
                         if (update.updatedKeys.none {
                             it == OfflineAdventureConfig.CAPACITY_KEY || it == OfflineAdventureConfig.CHARGE_KEY ||
                                 it == SessionLogRemotePolicy.ENABLED_KEY
+                                || it == RankingRefreshPolicy.INTERVAL_HOURS_KEY
                         }) return
                         remote.activate().addOnSuccessListener { readValidatedConfig(remote) }
                             .addOnFailureListener { Log.w(TAG, "Remote config activation failed", it) }
@@ -101,6 +112,20 @@ class OfflineAdventureRemoteConfig(context: Context) {
         } else {
             Log.w(TAG, "Invalid session logging switch rejected; keeping last valid value")
         }
+        val rankingPolicy = RankingRefreshPolicy.parse(
+            remote.getString(RankingRefreshPolicy.INTERVAL_HOURS_KEY),
+        )
+        if (rankingPolicy != null) {
+            mutableRankingRefreshPolicy.value = rankingPolicy
+            preferences.edit()
+                .putString(
+                    RankingRefreshPolicy.INTERVAL_HOURS_KEY,
+                    rankingPolicy.intervalHours.toString(),
+                )
+                .apply()
+        } else {
+            Log.w(TAG, "Invalid ranking refresh interval rejected; keeping last valid value")
+        }
         val next = OfflineAdventureConfig.parse(
             remote.getString(OfflineAdventureConfig.CAPACITY_KEY),
             remote.getString(OfflineAdventureConfig.CHARGE_KEY),
@@ -112,7 +137,8 @@ class OfflineAdventureRemoteConfig(context: Context) {
         mutableConfig.value = next
         Log.i(TAG, "Validated config: capacityMinutes=${next.capacityMinutes}, chargeMinutes=${next.chargeMinutes}, " +
             "capacitySource=${remote.getValue(OfflineAdventureConfig.CAPACITY_KEY).source}, " +
-            "chargeSource=${remote.getValue(OfflineAdventureConfig.CHARGE_KEY).source}")
+            "chargeSource=${remote.getValue(OfflineAdventureConfig.CHARGE_KEY).source}, " +
+            "rankingRefreshHours=${mutableRankingRefreshPolicy.value.intervalHours}")
     }
 
     /** Save only after settlement/application, so a background fetch cannot rewrite past time. */

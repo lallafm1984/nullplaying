@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val mobileAdsReady by alarmQuestApplication.mobileAdsReady.collectAsState()
             val adsConsentState by
-                alarmQuestApplication.adsConsentManager.state.collectAsState()
+                alarmQuestApplication.adsConsentState.collectAsState()
             val mobileAdsRuntimeState by
                 alarmQuestApplication.mobileAdsRuntimeState.collectAsState()
             AlarmQuestTheme {
@@ -37,6 +37,8 @@ class MainActivity : ComponentActivity() {
                         alarmQuestApplication.notificationPreferencesStore,
                     gameLanguageStore = alarmQuestApplication.gameLanguageStore,
                     supabaseGameService = alarmQuestApplication.supabaseGameService,
+                    gameNow = alarmQuestApplication::gameNow,
+                    onRetryGameInitialization = alarmQuestApplication::retryGameInitialization,
                     mobileAdsReady = mobileAdsReady,
                     adsConsentState = adsConsentState,
                     mobileAdsRuntimeState = mobileAdsRuntimeState,
@@ -54,10 +56,16 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     },
+                    onBeginRewardedAdSession = alarmQuestApplication::beginRewardedAdSession,
+                    onFinishRewardedAdSession = alarmQuestApplication::finishRewardedAdSession,
+                    onEarnedOfflineAdventureReward =
+                        alarmQuestApplication::enqueueEarnedOfflineAdventureReward,
                 )
             }
         }
-        alarmQuestApplication.gatherAdsConsent(this)
+        if (BuildConfig.REMOTE_SERVICES_ENABLED) {
+            alarmQuestApplication.gatherAdsConsent(this)
+        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -68,6 +76,16 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         (application as AlarmQuestApplication).onAppForegrounded()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (application as AlarmQuestApplication).onMainActivityResumed()
+    }
+
+    override fun onPause() {
+        (application as AlarmQuestApplication).onMainActivityPaused()
+        super.onPause()
     }
 
     override fun onStop() {
@@ -85,4 +103,5 @@ class MainActivity : ComponentActivity() {
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
     }
+
 }

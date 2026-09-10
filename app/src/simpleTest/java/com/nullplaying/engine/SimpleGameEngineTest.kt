@@ -10,14 +10,19 @@ import com.nullplaying.model.InventoryItem
 import com.nullplaying.model.LearnedSkill
 import com.nullplaying.model.MonsterGrade
 import com.nullplaying.model.RecentAdventureEventType
+import com.nullplaying.model.RecentAdventureEventMetadata
 import com.nullplaying.model.SettlementDelta
 import com.nullplaying.model.ShopEquipmentOffer
 import com.nullplaying.model.SIMPLE_GAME_SCHEMA_VERSION
 import com.nullplaying.model.SimpleGameState
 import com.nullplaying.model.TaleKind
+import com.nullplaying.model.TRUSTED_TIMELINE_LEGACY
+import com.nullplaying.model.TRUSTED_TIMELINE_VERIFIED
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -25,6 +30,58 @@ import org.junit.Test
 
 class SimpleGameEngineTest {
     private val engine = SimpleGameEngine()
+
+    @Test
+    fun `future timeline rebase preserves action progress without granting rewards`() {
+        val game = engine.newGame(
+            name = "시간 검사",
+            heroClass = HeroClass.WARRIOR,
+            rolledStats = engine.rollStats(77L).stats,
+            seed = 88L,
+            now = 1_000_000L,
+        )
+        game.actionStartedAt = 1_000_000L
+        game.lastSettledAt = 1_002_000L
+        game.actionEndsAt = 1_006_000L
+        game.hero.experience = 123L
+        game.hero.gold = 456L
+        game.totalKills = 7L
+        game.totalActs = 8L
+        game.offlineAdventureMillis = 9_000L
+        val rngBefore = game.rngState
+
+        engine.rebaseTimelineWithoutProgress(game, now = 500_000L)
+
+        assertEquals(498_000L, game.actionStartedAt)
+        assertEquals(504_000L, game.actionEndsAt)
+        assertEquals(500_000L, game.lastSettledAt)
+        assertEquals(123L, game.hero.experience)
+        assertEquals(456L, game.hero.gold)
+        assertEquals(7L, game.totalKills)
+        assertEquals(8L, game.totalActs)
+        assertEquals(9_000L, game.offlineAdventureMillis)
+        assertEquals(rngBefore, game.rngState)
+    }
+
+    @Test
+    fun `future timeline rebase is safe for corrupt extreme timestamps`() {
+        val game = engine.newGame(
+            name = "극값 검사",
+            heroClass = HeroClass.WARRIOR,
+            rolledStats = engine.rollStats(77L).stats,
+            seed = 88L,
+            now = 0L,
+        )
+        game.actionStartedAt = Long.MIN_VALUE
+        game.lastSettledAt = Long.MAX_VALUE
+        game.actionEndsAt = Long.MAX_VALUE
+
+        engine.rebaseTimelineWithoutProgress(game, now = 10L)
+
+        assertEquals(Long.MIN_VALUE + 11L, game.actionStartedAt)
+        assertEquals(10L, game.actionEndsAt)
+        assertEquals(10L, game.lastSettledAt)
+    }
 
     @Test
     fun `new hero sees an opening before the first encounter search`() {
@@ -691,6 +748,75 @@ class SimpleGameEngineTest {
     }
 
     @Test
+    fun `delayed earned callback stays idempotent after a newer reward was applied`() {
+        val game = newGame(now = 0L)
+        val halfBank = engine.offlineAdventureCapacityMillis(game) / 2L
+        game.offlineAdventureMillis = halfBank
+        assertTrue(engine.grantRewardedOfflineAdventure(game, "reward-1"))
+        game.offlineAdventureMillis = halfBank
+        assertTrue(engine.grantRewardedOfflineAdventure(game, "reward-2"))
+        game.offlineAdventureMillis = halfBank
+
+        assertFalse(engine.grantRewardedOfflineAdventure(game, "reward-1"))
+        assertEquals(halfBank, game.offlineAdventureMillis)
+        assertEquals(listOf("reward-1", "reward-2"), game.rewardedOfflineRequestIds)
+    }
+
+    @Test
+    fun `older schema forty six payload without trusted timeline and reward ledger stays safe`() {
+        val codec = Json {
+            encodeDefaults = true
+            ignoreUnknownKeys = true
+        }
+        val original = newGame(now = 0L).apply {
+            schemaVersion = SIMPLE_GAME_SCHEMA_VERSION
+            trustedTimelineVersion = TRUSTED_TIMELINE_VERIFIED
+            hero.gold = 12_345L
+            hero.experience = 6_789L
+            totalKills = 23L
+            totalActs = 17L
+            totalItemsFound = 11L
+            offlineAdventureMillis = engine.offlineAdventureCapacityMillis(this) / 2L
+            lastRewardRequestId = "legacy-reward-request"
+            rewardedOfflineRequestIds = listOf("new-ledger-only-request")
+        }
+        val currentPayload = codec.parseToJsonElement(codec.encodeToString(original)).jsonObject
+        val olderSchemaFortySixPayload = JsonObject(
+            currentPayload.filterKeys { field ->
+                field != "trustedTimelineVersion" && field != "rewardedOfflineRequestIds"
+            },
+        ).toString()
+
+        assertFalse(olderSchemaFortySixPayload.contains("\"trustedTimelineVersion\""))
+        assertFalse(olderSchemaFortySixPayload.contains("\"rewardedOfflineRequestIds\""))
+        val restored = codec.decodeFromString<SimpleGameState>(olderSchemaFortySixPayload)
+
+        assertEquals(SIMPLE_GAME_SCHEMA_VERSION, restored.schemaVersion)
+        assertEquals(TRUSTED_TIMELINE_LEGACY, restored.trustedTimelineVersion)
+        assertTrue(restored.rewardedOfflineRequestIds.isEmpty())
+        assertEquals("legacy-reward-request", restored.lastRewardRequestId)
+        assertEquals(12_345L, restored.hero.gold)
+        assertEquals(6_789L, restored.hero.experience)
+        assertEquals(23L, restored.totalKills)
+        assertEquals(17L, restored.totalActs)
+        assertEquals(11L, restored.totalItemsFound)
+        assertEquals(original.offlineAdventureMillis, restored.offlineAdventureMillis)
+        assertEquals(original.lastSettledAt, restored.lastSettledAt)
+
+        val bankBeforeDuplicate = restored.offlineAdventureMillis
+        assertFalse(
+            engine.grantRewardedOfflineAdventure(restored, "legacy-reward-request"),
+        )
+        assertEquals(bankBeforeDuplicate, restored.offlineAdventureMillis)
+        assertTrue(engine.grantRewardedOfflineAdventure(restored, "fresh-reward-request"))
+        assertEquals(
+            engine.offlineAdventureCapacityMillis(restored),
+            restored.offlineAdventureMillis,
+        )
+        assertEquals(listOf("fresh-reward-request"), restored.rewardedOfflineRequestIds)
+    }
+
+    @Test
     fun `empty offline bank pauses the timeline without granting backlog growth`() {
         val game = newGame(now = 0L)
         game.offlineAdventureMillis = 0L
@@ -768,6 +894,29 @@ class SimpleGameEngineTest {
         assertEquals(reference.hero, migrated.hero)
         assertEquals(reference.equipment, migrated.equipment)
         assertEquals(SIMPLE_GAME_SCHEMA_VERSION, migrated.schemaVersion)
+        assertEquals(engine.offlineAdventureCapacityMillis(migrated), migrated.offlineAdventureMillis)
+    }
+
+    @Test
+    fun `pre-bank legacy migration caps an implausibly large epoch gap`() {
+        val migrated = newGame(now = 0L)
+        val reference = newGame(now = 0L)
+        migrated.schemaVersion = 7
+        reference.schemaVersion = 7
+        migrated.offlineAdventureMillis = 0L
+        val capacity = engine.offlineAdventureCapacityMillis(migrated)
+        val implausibleNow = 365L * 24L * 60L * 60L * 1_000L
+
+        val expected = engine.settleOffline(reference, capacity)
+        val actual = engine.settleOfflineWithOfflineAdventure(
+            migrated,
+            implausibleNow,
+            LegacyAutoHuntSnapshot(schemaVersion = 7, chargeMillis = 0L, activeUntil = 0L),
+        )
+
+        assertEquals(expected.defeatedMonsters, actual.defeatedMonsters)
+        assertEquals(expected.elapsedMillis, actual.elapsedMillis)
+        assertEquals(implausibleNow, migrated.lastSettledAt)
         assertEquals(engine.offlineAdventureCapacityMillis(migrated), migrated.offlineAdventureMillis)
     }
 
@@ -1311,6 +1460,8 @@ class SimpleGameEngineTest {
     fun `each victory grants exactly one item even when a tale act completes`() {
         val game = newGame(now = 0L)
         val act = game.adventureTale.activeAct()
+        val expectedQuestExperience = act.rewardExperience
+        val expectedQuestGold = act.rewardGold
         act.progress = act.target - 1L
         game.monster.grade = MonsterGrade.BOSS
         game.monster.isFinalBoss = true
@@ -1329,7 +1480,9 @@ class SimpleGameEngineTest {
         assertTrue(game.lastLootEquipmentSlot != null)
         assertTrue(game.lastLootEquipmentPower != null)
         assertEquals(1L, game.totalActs)
-        assertTrue(delta.recentEvents.any { it.type == RecentAdventureEventType.QUEST_COMPLETED })
+        val questEvent = delta.recentEvents.single { it.type == RecentAdventureEventType.QUEST_COMPLETED }
+        assertEquals(expectedQuestExperience, questEvent.previousValue)
+        assertEquals(expectedQuestGold, questEvent.currentValue)
     }
 
     @Test
@@ -2110,6 +2263,7 @@ class SimpleGameEngineTest {
     @Test
     fun `real level ups count toward the new two thirds benchmark`() {
         val game = newGame(now = 0L)
+        val statsBefore = game.hero.stats.copy()
         game.hero.experience = engine.experienceRequired(game.hero.level) - 1L
 
         val delta = settleUntilNextKill(game)
@@ -2117,7 +2271,17 @@ class SimpleGameEngineTest {
         assertEquals(2L, game.hero.level)
         assertEquals(1L, game.classGuidedLevelGrowths)
         assertEquals(335L, engine.expectedWeightedStatThirtieths(2L, 1L))
-        assertTrue(delta.recentEvents.any { it.type == RecentAdventureEventType.LEVEL_UP })
+        val levelEvent = delta.recentEvents.single { it.type == RecentAdventureEventType.LEVEL_UP }
+        val recordedGrowth = RecentAdventureEventMetadata.decodeStatGrowth(levelEvent.contextName).toMap()
+        val actualGrowth = com.nullplaying.model.HeroStats.labels
+            .map { it.replace(" ", "_") }
+            .zip(statsBefore.values().zip(game.hero.stats.values()))
+            .mapNotNull { (key, values) ->
+                val deltaValue = values.second - values.first
+                if (deltaValue > 0L) key to deltaValue else null
+            }
+            .toMap()
+        assertEquals(actualGrowth, recordedGrowth)
     }
 
     @Test

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- INTERNET remains only for password Auth and the five reviewed 006-008 RPCs:
+         unified profile/roster, daily general ranking, and arena aggregate/daily ranking. -->
+    <uses-permission
+        android:name="com.google.android.gms.permission.AD_ID"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_BASIC_PHONE_STATE"
+        tools:node="remove" />
+
+    <application>
+        <activity
+            android:name="com.nullplaying.ArenaLiveServerQaActivity"
+            android:exported="true" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            tools:node="remove" />
+        <provider
+            android:name="com.google.firebase.provider.FirebaseInitProvider"
+            tools:node="remove" />
+        <service
+            android:name="com.google.firebase.components.ComponentDiscoveryService"
+            tools:node="remove" />
+        <activity
+            android:name="com.google.android.libraries.ads.mobile.sdk.common.AdActivity"
+            tools:node="remove" />
+        <activity
+            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+            tools:node="remove" />
+    </application>
+</manifest>

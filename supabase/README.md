@@ -1,5 +1,10 @@
 # Supabase setup
 
+Current release/server boundary: [project handoff](../docs/SESSION_HANDOFF.md).
+Migrations 009 and 010 supersede the original daily-only publication descriptions below: current
+publication is hourly and public ranking moderation is applied. Reapplying recorded migrations is
+not part of a code build. The maintenance directory contains guarded operator scripts, not migrations.
+
 ## Production data and QA isolation
 
 Never leave test data in the production database. `debug` and `migrationTest` builds have empty
@@ -27,8 +32,13 @@ be extractable from an APK; authorization is enforced by Auth plus the RLS polic
 The app creates one persistent anonymous Supabase user per install and upserts one ranking row per
 eligible character slot. Ranking uploads are change-only, are limited to one successful upload per
 five minutes, and are never sent merely because the activity moved to the background. The compact
-top-1,000 leaderboard response is cached on disk for one hour; local combat-power changes are
-re-ranked immediately against that snapshot without another download.
+top-1,000 leaderboard is settled once per day at **00:00 UTC** (09:00 in Korea/Japan).
+`get_daily_leaderboard` returns the completed snapshot, its cutoff/next cutoff, and all of the
+caller's settled characters. The app caches that edition on disk, including own entries outside
+the top 1,000. Reopening the page, switching characters and retry actions reuse the same edition.
+After the next cutoff, a conditional request sends the known snapshot ID; if settlement is delayed,
+only metadata is returned and the previous completed edition stays visible. A local power change
+never reorders the published ranking. The UI converts cutoff times to the device's time zone.
 
 On process start, foreground return, and immediately before an upload, the app validates the stored
 anonymous session against Auth. If the user or session was deleted, the app discards the previous
@@ -52,9 +62,10 @@ rows, and a partial roster removes characters that are no longer present before 
 upserted atomically.
 
 Combat power is still calculated and submitted by the offline client, so this remains a social
-leaderboard rather than a fully server-authoritative anti-cheat leaderboard. The app places the
-current local character power into the downloaded server ranking and presents that recalculated
-order with the normal ranking UI. The sync RPC rejects malformed rows, levels above 10,000, and
+leaderboard rather than a fully server-authoritative anti-cheat leaderboard. The daily ranking uses
+records received by the server before the cutoff; growth that has not yet been synchronized cannot
+be included. Newly eligible characters wait for the next settlement. The sync RPC rejects malformed
+rows, levels above 10,000, and
 combat power above the exact level-specific displayed maximum derived from the engine's 135% stat
 soft-cap limit and strongest possible mythic equipment. A value equal to the maximum remains valid;
 only a value above it is treated as tampered.
@@ -66,6 +77,30 @@ Migration `202608240001` adds the compact `get_leaderboard_v2` RPC and a daily l
 `pg_cron` runs the rollup once per day at 03:17 UTC, keeps detailed `app_session_logs` for 30 days,
 and keeps `app_session_daily` aggregates for 90 days. The daily table is backend-only: anonymous
 and authenticated app clients have no table privileges.
+
+## Daily leaderboard settlement
+
+Migration `202609050001_daily_ranking_snapshots.sql` stores an immutable edition in private
+snapshot/row tables, with a prebuilt common top-1,000 response and an index for each caller's rows.
+The first publication is a bootstrap labelled with its actual creation time because historical
+midnight data did not exist before deployment. Subsequent editions use UTC midnight.
+
+A bounded before-image per character preserves the pre-cutoff record on its first post-cutoff
+update/deletion. Statement admission uses server time and a writer/publication lock barrier, so
+late/retried settlement does not include later submissions. Only two completed editions are kept.
+The minute scheduler retries publication, but an already completed day returns without sorting
+again. API reads never trigger publication. If a scheduled run fails, the previous edition remains
+available. `get_leaderboard_v2` and the legacy RPC retain their existing response shapes and read
+the same completed edition. Already-installed clients may still locally rerank that data until
+users install the updated app.
+
+Run the local PostgreSQL/WASM contract suite (no network or production data):
+
+```sh
+PGLITE_MODULE_PATH=/path/to/node_modules/@electric-sql/pglite node tools/test-daily-ranking.mjs
+```
+
+See [the reset-time comparison and design](../docs/design/daily-ranking-settlement.md).
 
 ## Direct CLI workflow
 

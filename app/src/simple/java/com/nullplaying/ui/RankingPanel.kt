@@ -51,10 +51,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nullplaying.localization.AppLanguage
 import com.nullplaying.model.HeroClass
+import com.nullplaying.remote.RankingRefreshPolicy
 import java.text.NumberFormat
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Locale
 import com.nullplaying.remote.RemoteRankingSnapshot
 import kotlinx.coroutines.launch
@@ -100,6 +98,8 @@ internal data class RankingSnapshot(
     val entries: List<RankingEntry>,
     val myEntry: RankingEntry,
     val usesLocalPower: Boolean = false,
+    val settledAtEpochMillis: Long = 0L,
+    val nextSettlementAtEpochMillis: Long = 0L,
 )
 
 internal sealed interface RankingUiState {
@@ -123,6 +123,22 @@ internal data class RankingHeaderPresentation(
 
 internal const val MAX_DISPLAYED_RANK = 1_000
 internal const val OUTSIDE_DISPLAYED_RANK = MAX_DISPLAYED_RANK + 1
+internal const val RANKING_ENTRY_MENU_MIN_HEIGHT_DP = 64
+internal const val RANKING_ENTRY_MENU_TITLE_FONT_SIZE_SP = 15
+internal const val RANKING_ENTRY_MENU_DETAIL_FONT_SIZE_SP = 12
+internal const val COMPACT_RANKING_ENTRY_MENU_HEIGHT_DP = 40
+internal const val COMPACT_RANKING_ENTRY_MENU_TITLE_FONT_SIZE_SP = 12
+internal const val COMPACT_RANKING_ENTRY_MENU_DETAIL_FONT_SIZE_SP = 9
+internal const val RANKING_PAGE_TITLE_FONT_SIZE_SP = 20
+internal const val RANKING_PAGE_SUBTITLE_FONT_SIZE_SP = 12
+internal const val RANKING_PAGE_ENTER_DURATION_MILLIS = 220
+internal const val RANKING_PAGE_EXIT_DURATION_MILLIS = 190
+
+internal fun rankingPageEnterOffset(targetVisible: Boolean, width: Int): Int =
+    if (targetVisible) width / 10 else -width / 10
+
+internal fun rankingPageExitOffset(targetVisible: Boolean, width: Int): Int =
+    if (targetVisible) -width / 14 else width / 14
 
 internal fun shouldEnableMyRankingMove(
     myRankingListIndex: Int?,
@@ -136,40 +152,77 @@ internal fun RemoteRankingSnapshot.toUiSnapshot(
     playerLevel: Long,
     playerCombatPower: Long,
 ): RankingSnapshot {
-    val mapped = entries.map { remote ->
+    val systemEntries = entries
+        .filter { it.systemEntryCode != null }
+        .distinctBy { it.characterId }
+    val mapped = entries.filter { it.systemEntryCode == null }.map { remote ->
+        val removedRanksAhead = systemEntries.count { it.rank < remote.rank }
+        val removedRowsAhead = systemEntries.count { it.listIndex < remote.listIndex }
+        val adjustedRank = if (remote.rank > 0) {
+            (remote.rank - removedRanksAhead).coerceAtLeast(1)
+        } else {
+            remote.rank
+        }
         RankingEntry(
-            rank = remote.rank,
-            listIndex = remote.listIndex,
+            rank = adjustedRank,
+            listIndex = if (remote.listIndex >= 0) {
+                (remote.listIndex - removedRowsAhead).coerceAtLeast(0)
+            } else {
+                remote.listIndex
+            },
             characterId = remote.characterId,
             displayName = remote.displayName,
             heroClass = remote.heroClass,
             level = remote.level,
             combatPower = remote.combatPower,
-            honorific = honorificForRank(remote.rank),
+            honorific = honorificForRank(adjustedRank),
             achievedAtEpochMillis = remote.achievedAtEpochMillis,
             verifiedAtEpochMillis = remote.updatedAtEpochMillis,
             isMe = remote.characterId == playerCharacterId,
-            systemEntryCode = remote.systemEntryCode,
+            systemEntryCode = null,
         )
     }
-    val myRemote = myEntry?.takeIf { it.characterId == playerCharacterId }
-    val serverMine = mapped.firstOrNull { it.characterId == playerCharacterId }
-        ?: myRemote?.let { remote ->
-            RankingEntry(
-                rank = remote.rank,
-                listIndex = remote.listIndex,
-                characterId = remote.characterId,
-                displayName = remote.displayName,
-                heroClass = remote.heroClass,
-                level = remote.level,
-                combatPower = remote.combatPower,
-                honorific = honorificForRank(remote.rank),
-                achievedAtEpochMillis = remote.achievedAtEpochMillis,
-                verifiedAtEpochMillis = remote.updatedAtEpochMillis,
-                isMe = true,
-                systemEntryCode = remote.systemEntryCode,
-            )
+    val mappedMine = mapped.firstOrNull { it.characterId == playerCharacterId }
+    val myRemote = ownEntries.firstOrNull {
+        it.characterId == playerCharacterId && it.systemEntryCode == null
+    } ?: myEntry?.takeIf {
+        it.characterId == playerCharacterId && it.systemEntryCode == null
+    }
+    // Old server snapshots may still contain system gatekeepers. Remove them from the visible
+    // field and close their rank/list gaps for an authenticated own row outside the top field.
+    val serverMine = myRemote?.let { remote ->
+        val removedRanksAhead = systemEntries.count { it.rank < remote.rank }
+        val removedRowsAhead = systemEntries.count { it.listIndex < remote.listIndex }
+        val adjustedRank = if (remote.rank > 0) {
+            (remote.rank - removedRanksAhead).coerceAtLeast(1)
+        } else {
+            remote.rank
         }
+        RankingEntry(
+            rank = adjustedRank,
+            listIndex = if (remote.listIndex >= 0) {
+                (remote.listIndex - removedRowsAhead).coerceAtLeast(0)
+            } else {
+                remote.listIndex
+            },
+            characterId = remote.characterId,
+            displayName = remote.displayName,
+            heroClass = remote.heroClass,
+            level = remote.level,
+            combatPower = remote.combatPower,
+            honorific = honorificForRank(adjustedRank),
+            achievedAtEpochMillis = remote.achievedAtEpochMillis,
+            verifiedAtEpochMillis = remote.updatedAtEpochMillis,
+            isMe = true,
+            systemEntryCode = null,
+        )
+    }?.let { privateMine ->
+        mappedMine?.let { publicMine ->
+            privateMine.copy(rank = publicMine.rank, listIndex = publicMine.listIndex)
+        } ?: privateMine
+    } ?: mappedMine
+    // The public list may contain an administrator-sanitized display name. The separately
+    // authenticated own row is authoritative for the player's private "my rank" card.
     val mine = serverMine ?: RankingEntry(
         rank = 0,
         listIndex = -1,
@@ -178,25 +231,30 @@ internal fun RemoteRankingSnapshot.toUiSnapshot(
         heroClass = playerClass,
         level = playerLevel,
         combatPower = playerCombatPower,
-        honorific = if (playerLevel < 20L) "Lv.20부터 참가" else "순위 집계 중",
-        achievedAtEpochMillis = fetchedAtEpochMillis,
+        honorific = if (playerLevel < 20L) "Lv.20부터 참가" else "다음 정산부터 참가",
+        achievedAtEpochMillis = settledAtEpochMillis,
         verifiedAtEpochMillis = fetchedAtEpochMillis,
         isMe = true,
     )
     return RankingSnapshot(
-        snapshotId = "remote-$fetchedAtEpochMillis",
+        snapshotId = snapshotId,
         source = if (isFromCache) RankingSnapshotSource.CACHE else RankingSnapshotSource.REMOTE,
         fetchedAtEpochMillis = fetchedAtEpochMillis,
         formulaVersion = 1,
-        totalParticipants = totalParticipants,
+        totalParticipants = (totalParticipants - systemEntries.size).coerceAtLeast(mapped.size),
         entries = mapped,
         myEntry = mine,
-        usesLocalPower = serverMine == null ||
-            serverMine.combatPower != playerCombatPower ||
-            serverMine.level != playerLevel,
+        usesLocalPower = serverMine == null,
+        settledAtEpochMillis = settledAtEpochMillis,
+        nextSettlementAtEpochMillis = nextSettlementAtEpochMillis,
     )
 }
 
+/**
+ * The server supplies one immutable ranking field. Only this device's active character is replaced
+ * with its current local power so older clients retain their familiar provisional rank between
+ * settlements. Snapshot identity and settlement metadata remain unchanged.
+ */
 internal fun RankingSnapshot.withLocalPlayerPower(
     characterId: String,
     displayName: String,
@@ -205,9 +263,13 @@ internal fun RankingSnapshot.withLocalPlayerPower(
     combatPower: Long,
     now: Long,
 ): RankingSnapshot {
+    val visibleEntries = entries.filter { it.systemEntryCode == null }
+    val visibleParticipantCount = (totalParticipants - (entries.size - visibleEntries.size))
+        .coerceAtLeast(visibleEntries.size)
     if (level < 20L) {
         return copy(
-            entries = entries.filterNot { it.characterId == characterId },
+            totalParticipants = visibleParticipantCount,
+            entries = visibleEntries.filterNot { it.characterId == characterId },
             myEntry = myEntry.copy(
                 rank = 0,
                 listIndex = -1,
@@ -216,13 +278,11 @@ internal fun RankingSnapshot.withLocalPlayerPower(
                 level = level,
                 combatPower = combatPower,
                 honorific = "Lv.20부터 참가",
-                verifiedAtEpochMillis = myEntry.verifiedAtEpochMillis,
             ),
             usesLocalPower = true,
         )
     }
-
-    val candidates = entries.filterNot { it.characterId == characterId }.map { entry ->
+    val candidates = visibleEntries.filterNot { it.characterId == characterId }.map { entry ->
         RankingCandidate(
             characterId = entry.characterId,
             displayName = entry.displayName,
@@ -232,21 +292,20 @@ internal fun RankingSnapshot.withLocalPlayerPower(
             achievedAtEpochMillis = entry.achievedAtEpochMillis,
             verifiedAtEpochMillis = entry.verifiedAtEpochMillis,
             isMe = false,
-            systemEntryCode = entry.systemEntryCode,
+            systemEntryCode = null,
         )
     }.toMutableList()
-    val powerIncreased = myEntry.rank <= 0 || combatPower > myEntry.combatPower
+    val localPowerChanged = myEntry.rank <= 0 || combatPower != myEntry.combatPower
     candidates += RankingCandidate(
         characterId = characterId,
         displayName = displayName,
         heroClass = heroClass,
         level = level,
         score = combatPower,
-        achievedAtEpochMillis = if (powerIncreased) now else myEntry.achievedAtEpochMillis,
+        achievedAtEpochMillis = if (localPowerChanged) now else myEntry.achievedAtEpochMillis,
         verifiedAtEpochMillis = myEntry.verifiedAtEpochMillis,
         isMe = true,
     )
-
     val ranked = rankCandidates(candidates)
     val calculatedMine = checkNotNull(ranked.firstOrNull { it.characterId == characterId })
     val localMine = if (calculatedMine.rank > MAX_DISPLAYED_RANK) {
@@ -255,15 +314,15 @@ internal fun RankingSnapshot.withLocalPlayerPower(
             listIndex = -1,
             honorific = honorificForRank(OUTSIDE_DISPLAYED_RANK),
         )
-    } else {
-        calculatedMine
-    }
+    } else calculatedMine
     return copy(
+        totalParticipants = maxOf(
+            visibleParticipantCount + if (myEntry.rank <= 0) 1 else 0,
+            ranked.size,
+        ),
         entries = ranked.filter { it.rank <= MAX_DISPLAYED_RANK },
         myEntry = localMine,
-        usesLocalPower = usesLocalPower ||
-            combatPower != myEntry.combatPower ||
-            level != myEntry.level,
+        usesLocalPower = usesLocalPower || combatPower != myEntry.combatPower || level != myEntry.level,
     )
 }
 
@@ -316,27 +375,7 @@ internal fun rankCandidates(candidates: List<RankingCandidate>): List<RankingEnt
     }
 }
 
-internal fun rankingDisplayName(entry: RankingEntry, language: AppLanguage): String =
-    rankingGatekeeperDisplayName(entry.systemEntryCode, entry.displayName, language)
-
-internal fun rankingGatekeeperDisplayName(
-    systemEntryCode: String?,
-    fallbackDisplayName: String,
-    language: AppLanguage,
-): String {
-    val gatekeeperNumber = systemEntryCode
-        ?.takeIf { it.matches(RANKING_GATEKEEPER_CODE_REGEX) }
-        ?.takeLast(2)
-        ?.toIntOrNull()
-        ?: return fallbackDisplayName
-    return when (language) {
-        AppLanguage.KOREAN -> "제${gatekeeperNumber} 수문장"
-        AppLanguage.ENGLISH -> "Gatekeeper ${rankingRomanNumeral(gatekeeperNumber)}"
-        AppLanguage.JAPANESE -> "第${gatekeeperNumber}の門番"
-    }
-}
-
-private fun rankingRomanNumeral(value: Int): String = RANKING_ROMAN_NUMERALS[value - 1]
+internal fun rankingDisplayName(entry: RankingEntry): String = entry.displayName
 
 internal fun rankingHeaderPresentation(uiState: RankingUiState): RankingHeaderPresentation {
     val entry = when (uiState) {
@@ -367,15 +406,112 @@ internal fun RankingEntryMenu(
     uiState: RankingUiState,
     onClick: () -> Unit,
 ) {
-    val myEntry = (uiState as? RankingUiState.Content)?.snapshot?.myEntry
+    val myEntry = when (uiState) {
+        is RankingUiState.Content -> uiState.snapshot.myEntry
+        is RankingUiState.Error -> uiState.cachedSnapshot?.myEntry
+        else -> null
+    }
     val detail = rankingEntryMenuDetail(myEntry)
+    RankingEntryMenuButton(
+        title = "모험가 랭킹",
+        detail = detail,
+        detailHighlighted = myEntry != null,
+        accessibilityLabel = "모험가 랭킹, $detail, 보기 버튼",
+        onClick = onClick,
+    )
+}
+
+/**
+ * Main-screen version of [RankingEntryMenuButton]. It keeps the same gold surface, outline,
+ * icon, title, and current-rank detail while fitting the 40dp adventure-status toolbar.
+ */
+@Composable
+internal fun CompactRankingEntryMenu(
+    uiState: RankingUiState,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val language = LocalAppLanguage.current
+    val myEntry = when (uiState) {
+        is RankingUiState.Content -> uiState.snapshot.myEntry
+        is RankingUiState.Error -> uiState.cachedSnapshot?.myEntry
+        else -> null
+    }
+    val detail = rankingEntryMenuDetail(myEntry)
+    val localizedDetail = localized(detail, language)
+    Button(
+        onClick = onClick,
+        modifier = modifier
+            .height(COMPACT_RANKING_ENTRY_MENU_HEIGHT_DP.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = compactAdventurerRankingAccessibilityLabel(localizedDetail, language)
+            },
+        shape = RoundedCornerShape(14.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = AqGold.copy(alpha = 0.12f),
+            contentColor = AqText,
+        ),
+        border = BorderStroke(1.dp, AqGoldSoft),
+        contentPadding = PaddingValues(horizontal = 9.dp, vertical = 3.dp),
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Leaderboard,
+            contentDescription = null,
+            tint = AqGold,
+            modifier = Modifier.size(17.dp),
+        )
+        Spacer(Modifier.width(5.dp))
+        Column {
+            UnlocalizedText(
+                text = compactAdventurerRankingTitle(language),
+                color = AqText,
+                fontSize = COMPACT_RANKING_ENTRY_MENU_TITLE_FONT_SIZE_SP.sp,
+                lineHeight = 14.sp,
+                fontWeight = FontWeight.Black,
+                maxLines = 1,
+            )
+            UnlocalizedText(
+                text = localizedDetail,
+                color = if (myEntry != null) AqGold else AqMuted,
+                fontSize = COMPACT_RANKING_ENTRY_MENU_DETAIL_FONT_SIZE_SP.sp,
+                lineHeight = 10.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+}
+
+internal fun compactAdventurerRankingTitle(language: AppLanguage): String = when (language) {
+    AppLanguage.KOREAN -> "모험가 랭킹"
+    AppLanguage.ENGLISH -> "Rankings"
+    AppLanguage.JAPANESE -> "ランキング"
+}
+
+internal fun compactAdventurerRankingAccessibilityLabel(
+    localizedDetail: String,
+    language: AppLanguage,
+): String = when (language) {
+    AppLanguage.KOREAN -> "모험가 랭킹, $localizedDetail, 보기 버튼"
+    AppLanguage.ENGLISH -> "Adventurer rankings, $localizedDetail, view button"
+    AppLanguage.JAPANESE -> "冒険者ランキング、$localizedDetail、表示ボタン"
+}
+
+@Composable
+internal fun RankingEntryMenuButton(
+    title: String,
+    detail: String,
+    detailHighlighted: Boolean,
+    accessibilityLabel: String,
+    onClick: () -> Unit,
+) {
     Button(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 64.dp)
+            .heightIn(min = RANKING_ENTRY_MENU_MIN_HEIGHT_DP.dp)
             .semantics(mergeDescendants = true) {
-                contentDescription = localized("모험가 랭킹, $detail, 보기 버튼")
+                contentDescription = localized(accessibilityLabel)
             },
         shape = RoundedCornerShape(14.dp),
         colors = ButtonDefaults.buttonColors(
@@ -397,27 +533,27 @@ internal fun RankingEntryMenu(
             )
             Spacer(Modifier.width(10.dp))
             Column(Modifier.weight(1f)) {
-                Text(
-                    text = "모험가 랭킹",
+                UnlocalizedText(
+                    text = localized(title),
                     color = AqText,
-                    fontSize = 15.sp,
+                    fontSize = RANKING_ENTRY_MENU_TITLE_FONT_SIZE_SP.sp,
                     lineHeight = 19.sp,
                     fontWeight = FontWeight.Black,
                 )
-                Text(
-                    text = detail,
-                    color = if (myEntry == null) AqMuted else AqGold,
-                    fontSize = 12.sp,
+                UnlocalizedText(
+                    text = localized(detail),
+                    color = if (detailHighlighted) AqGold else AqMuted,
+                    fontSize = RANKING_ENTRY_MENU_DETAIL_FONT_SIZE_SP.sp,
                     lineHeight = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
             Spacer(Modifier.width(8.dp))
-            Text(
-                text = "보기",
+            UnlocalizedText(
+                text = localized("보기"),
                 color = AqGold,
-                fontSize = 12.sp,
+                fontSize = RANKING_ENTRY_MENU_DETAIL_FONT_SIZE_SP.sp,
                 fontWeight = FontWeight.Black,
                 maxLines = 1,
             )
@@ -447,12 +583,13 @@ internal fun rankingPositionLabel(rank: Int): String = when {
 @Composable
 internal fun RankingScreen(
     uiState: RankingUiState,
+    refreshPolicy: RankingRefreshPolicy,
     onBack: () -> Unit,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize().background(AqBackground)) {
-        RankingTopBar(uiState = uiState, onBack = onBack)
+        RankingTopBar(refreshPolicy = refreshPolicy, onBack = onBack)
         when (uiState) {
             RankingUiState.Loading -> RankingLoadingState()
             is RankingUiState.Content -> RankingContent(snapshot = uiState.snapshot)
@@ -480,12 +617,29 @@ internal fun RankingScreen(
 }
 
 @Composable
-private fun RankingTopBar(uiState: RankingUiState, onBack: () -> Unit) {
-    val fetchedAt = when (uiState) {
-        is RankingUiState.Content -> uiState.snapshot.fetchedAtEpochMillis
-        is RankingUiState.Error -> uiState.cachedSnapshot?.fetchedAtEpochMillis
-        else -> null
-    }
+private fun RankingTopBar(refreshPolicy: RankingRefreshPolicy, onBack: () -> Unit) {
+    val language = LocalAppLanguage.current
+    RankingPageTopBar(
+        title = "모험가 랭킹",
+        subtitle = rankingRefreshPeriodLabel(refreshPolicy, language),
+        backContentDescription = adventurerRankingBackContentDescription(language),
+        onBack = onBack,
+    )
+}
+
+internal fun adventurerRankingBackContentDescription(language: AppLanguage): String = when (language) {
+    AppLanguage.KOREAN -> "메인 화면으로 돌아가기"
+    AppLanguage.ENGLISH -> "Back to Main"
+    AppLanguage.JAPANESE -> "メイン画面に戻る"
+}
+
+@Composable
+internal fun RankingPageTopBar(
+    title: String,
+    subtitle: String?,
+    backContentDescription: String,
+    onBack: () -> Unit,
+) {
     Row(
         modifier = Modifier.fillMaxWidth().height(62.dp).padding(horizontal = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -493,25 +647,25 @@ private fun RankingTopBar(uiState: RankingUiState, onBack: () -> Unit) {
         IconButton(onClick = onBack, modifier = Modifier.size(48.dp)) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = localized("모험가 화면으로 돌아가기"),
+                contentDescription = localized(backContentDescription),
                 tint = AqText,
                 modifier = Modifier.size(26.dp),
             )
         }
         Column(Modifier.weight(1f)) {
-            Text(
-                text = "모험가 랭킹",
+            UnlocalizedText(
+                text = localized(title),
                 modifier = Modifier.semantics { heading() },
                 color = AqText,
-                fontSize = 20.sp,
+                fontSize = RANKING_PAGE_TITLE_FONT_SIZE_SP.sp,
                 lineHeight = 24.sp,
                 fontWeight = FontWeight.Black,
             )
-            if (fetchedAt != null) {
-                Text(
-                    text = "${rankingTimeLabel(fetchedAt, LocalAppLanguage.current)} 기준",
+            if (subtitle != null) {
+                UnlocalizedText(
+                    text = localized(subtitle),
                     color = AqMuted,
-                    fontSize = 12.sp,
+                    fontSize = RANKING_PAGE_SUBTITLE_FONT_SIZE_SP.sp,
                     lineHeight = 16.sp,
                 )
             }
@@ -520,16 +674,32 @@ private fun RankingTopBar(uiState: RankingUiState, onBack: () -> Unit) {
 }
 
 @Composable
-private fun RankingContent(
-    snapshot: RankingSnapshot,
+private fun RankingContent(snapshot: RankingSnapshot, warning: String? = null) {
+    RankingListContent(
+        entryKeys = snapshot.entries.map { it.characterId },
+        currentPlayerKey = snapshot.myEntry.characterId,
+        totalParticipants = snapshot.totalParticipants,
+        warning = warning,
+        personalCard = { MyRankingCard(snapshot.myEntry) },
+    ) { index -> RankingListRow(snapshot.entries[index]) }
+}
+
+/** Shared ordering, quick navigation, spacing and heading for both public rankings. */
+@Composable
+internal fun RankingListContent(
+    entryKeys: List<String>,
+    currentPlayerKey: String?,
+    totalParticipants: Int,
     warning: String? = null,
+    personalCard: (@Composable () -> Unit)? = null,
+    rowContent: @Composable (Int) -> Unit,
 ) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    val myRankingListIndex = remember(snapshot.entries, snapshot.myEntry.characterId) {
-        snapshot.entries.indexOfFirst { it.characterId == snapshot.myEntry.characterId }
+    val myRankingListIndex = remember(entryKeys, currentPlayerKey, personalCard != null) {
+        entryKeys.indexOfFirst { it == currentPlayerKey }
             .takeIf { it >= 0 }
-            ?.plus(RANKING_LIST_ITEM_OFFSET)
+            ?.plus(if (personalCard != null) RANKING_LIST_ITEM_OFFSET else 1)
     }
     val isAtTop by remember(listState) {
         derivedStateOf {
@@ -599,8 +769,8 @@ private fun RankingContent(
             contentPadding = PaddingValues(top = 6.dp, bottom = 14.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            item(key = "my-ranking-card") {
-                MyRankingCard(snapshot.myEntry)
+            if (personalCard != null) {
+                item(key = "my-ranking-card") { personalCard() }
             }
             item(key = "ranking-heading") {
                 Row(
@@ -608,7 +778,7 @@ private fun RankingContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "전체 랭킹 · ${rankingNumber(snapshot.totalParticipants.toLong())}명",
+                        text = "전체 랭킹 · ${rankingNumber(totalParticipants.toLong())}명",
                         modifier = Modifier.semantics { heading() },
                         color = AqText,
                         fontSize = 16.sp,
@@ -616,8 +786,8 @@ private fun RankingContent(
                     )
                 }
             }
-            itemsIndexed(snapshot.entries, key = { _, entry -> entry.characterId }) { _, entry ->
-                RankingListRow(entry)
+            itemsIndexed(entryKeys, key = { _, key -> key }) { index, _ ->
+                rowContent(index)
             }
         }
     }
@@ -633,36 +803,52 @@ private suspend fun LazyListState.scrollToItemCentered(index: Int) {
 
 private const val RANKING_MY_CARD_INDEX = 0
 private const val RANKING_LIST_ITEM_OFFSET = 2
-private val RANKING_GATEKEEPER_CODE_REGEX = Regex("^RANK_GATE_(0[1-9]|1[0-9]|20)$")
-private val RANKING_ROMAN_NUMERALS = listOf(
-    "I", "II", "III", "IV", "V",
-    "VI", "VII", "VIII", "IX", "X",
-    "XI", "XII", "XIII", "XIV", "XV",
-    "XVI", "XVII", "XVIII", "XIX", "XX",
-)
-
 @Composable
 private fun MyRankingCard(entry: RankingEntry) {
     val isOutsideDisplayedRanking = entry.rank > MAX_DISPLAYED_RANK
-    val displayName = rankingDisplayName(entry, LocalAppLanguage.current)
+    val displayName = rankingDisplayName(entry)
+    val rankingDescription = if (entry.level < 20L) {
+        "랭킹 참가까지 레벨 20, 현재 레벨 ${entry.level}, $displayName"
+    } else if (isOutsideDisplayedRanking) {
+        "내 순위 ${rankingPositionLabel(entry.rank)}, $displayName, 호칭 ${entry.honorific}, 전투력 ${rankingNumber(entry.combatPower)}"
+    } else if (entry.rank > 0) {
+        "내 순위 ${entry.rank}위, $displayName, 호칭 ${entry.honorific}, 전투력 ${rankingNumber(entry.combatPower)}"
+    } else {
+        "내 순위 없음, $displayName, 전투력 ${rankingNumber(entry.combatPower)}"
+    }
+    val accessibility = localizedPreserving(
+        rankingDescription,
+        displayName,
+    )
+    RankingPersonalCard(
+        displayName = displayName,
+        rankLabel = when {
+            isOutsideDisplayedRanking -> rankingPositionLabel(entry.rank)
+            entry.rank > 0 -> "#${rankingNumber(entry.rank.toLong())}"
+            else -> "—"
+        },
+        compactRank = isOutsideDisplayedRanking,
+        accent = entry.honorific,
+        detail = "${entry.heroClass.labelKo} · Lv.${rankingNumber(entry.level)} · 전투력 ${rankingNumber(entry.combatPower)}",
+        accessibility = accessibility,
+    )
+}
+
+@Composable
+internal fun RankingPersonalCard(
+    displayName: String,
+    rankLabel: String,
+    compactRank: Boolean,
+    accent: String,
+    detail: String,
+    accessibility: String,
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 104.dp)
             .semantics(mergeDescendants = true) {
-                val rankingDescription = if (entry.level < 20L) {
-                    "랭킹 참가까지 레벨 20, 현재 레벨 ${entry.level}, $displayName"
-                } else if (isOutsideDisplayedRanking) {
-                    "내 순위 ${rankingPositionLabel(entry.rank)}, $displayName, 호칭 ${entry.honorific}, 전투력 ${rankingNumber(entry.combatPower)}"
-                } else if (entry.rank > 0) {
-                    "내 순위 ${entry.rank}위, $displayName, 호칭 ${entry.honorific}, 전투력 ${rankingNumber(entry.combatPower)}"
-                } else {
-                    "내 순위 없음, $displayName, 전투력 ${rankingNumber(entry.combatPower)}"
-                }
-                contentDescription = localizedPreserving(
-                    rankingDescription,
-                    displayName,
-                )
+                contentDescription = accessibility
             },
         colors = CardDefaults.cardColors(containerColor = AqGold.copy(alpha = 0.10f)),
         border = BorderStroke(1.dp, AqGoldSoft),
@@ -675,13 +861,9 @@ private fun MyRankingCard(entry: RankingEntry) {
             Column(modifier = Modifier.width(78.dp)) {
                 Text("내 순위", color = AqGold, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 Text(
-                    text = when {
-                        isOutsideDisplayedRanking -> rankingPositionLabel(entry.rank)
-                        entry.rank > 0 -> "#${rankingNumber(entry.rank.toLong())}"
-                        else -> "—"
-                    },
+                    text = rankLabel,
                     color = AqText,
-                    fontSize = if (isOutsideDisplayedRanking) 14.sp else 29.sp,
+                    fontSize = if (compactRank) 14.sp else 29.sp,
                     lineHeight = 32.sp,
                     fontWeight = FontWeight.Black,
                     maxLines = 1,
@@ -700,14 +882,14 @@ private fun MyRankingCard(entry: RankingEntry) {
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = entry.honorific,
+                    text = accent,
                     color = AqGold,
                     fontSize = 13.sp,
                     lineHeight = 18.sp,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = "${entry.heroClass.labelKo} · Lv.${rankingNumber(entry.level)} · 전투력 ${rankingNumber(entry.combatPower)}",
+                    text = detail,
                     color = AqMuted,
                     fontSize = 12.sp,
                     lineHeight = 17.sp,
@@ -722,10 +904,32 @@ private fun MyRankingCard(entry: RankingEntry) {
 @Composable
 private fun RankingListRow(entry: RankingEntry) {
     val language = LocalAppLanguage.current
-    val displayName = rankingDisplayName(entry, language)
-    val localizedClass = localized(entry.heroClass.labelKo, language)
-    val localizedHonorific = localized(entry.honorific, language)
-    val rankColor = when (entry.rank) {
+    val displayName = rankingDisplayName(entry)
+    RankingPlayerRow(
+        rank = entry.rank,
+        displayName = displayName,
+        detail = "${entry.heroClass.labelKo} · Lv.${rankingNumber(entry.level)} · ${entry.honorific}",
+        metricLabel = "전투력",
+        metricValue = rankingNumber(entry.combatPower),
+        isMe = entry.isMe,
+        accessibility = rankingListAccessibilityDescription(
+            entry, displayName, localized(entry.heroClass.labelKo, language),
+            localized(entry.honorific, language), language,
+        ),
+    )
+}
+
+@Composable
+internal fun RankingPlayerRow(
+    rank: Int,
+    displayName: String,
+    detail: String,
+    metricLabel: String,
+    metricValue: String,
+    isMe: Boolean,
+    accessibility: String,
+) {
+    val rankColor = when (rank) {
         1 -> AqGold
         2 -> Color(0xFFD8D3DF)
         3 -> Color(0xFFC78C66)
@@ -737,22 +941,16 @@ private fun RankingListRow(entry: RankingEntry) {
             .fillMaxWidth()
             .heightIn(min = 62.dp)
             .clip(shape)
-            .background(if (entry.isMe) AqGold.copy(alpha = 0.09f) else AqSurface)
-            .then(if (entry.isMe) Modifier.border(1.dp, AqGoldSoft, shape) else Modifier)
+            .background(if (isMe) AqGold.copy(alpha = 0.09f) else AqSurface)
+            .then(if (isMe) Modifier.border(1.dp, AqGoldSoft, shape) else Modifier)
             .semantics(mergeDescendants = true) {
-                contentDescription = rankingListAccessibilityDescription(
-                    entry = entry,
-                    displayName = displayName,
-                    localizedClass = localizedClass,
-                    localizedHonorific = localizedHonorific,
-                    language = language,
-                )
+                contentDescription = accessibility
             }
             .padding(horizontal = 12.dp, vertical = 9.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "${entry.rank}",
+            text = "${rank}",
             modifier = Modifier.width(38.dp),
             color = rankColor,
             fontSize = 16.sp,
@@ -775,7 +973,7 @@ private fun RankingListRow(entry: RankingEntry) {
                 )
             }
             Text(
-                text = "${entry.heroClass.labelKo} · Lv.${rankingNumber(entry.level)} · ${entry.honorific}",
+                text = detail,
                 color = AqMuted,
                 fontSize = 12.sp,
                 lineHeight = 16.sp,
@@ -786,15 +984,15 @@ private fun RankingListRow(entry: RankingEntry) {
         Spacer(Modifier.width(8.dp))
         Column(horizontalAlignment = Alignment.End) {
             Text(
-                text = "전투력",
+                text = metricLabel,
                 color = AqMuted,
                 fontSize = 9.sp,
                 lineHeight = 11.sp,
                 maxLines = 1,
             )
             Text(
-                text = rankingNumber(entry.combatPower),
-                color = if (entry.isMe) AqGold else AqText,
+                text = metricValue,
+                color = if (isMe) AqGold else AqText,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
@@ -889,21 +1087,18 @@ private fun RankingMessageState(
     }
 }
 
-private fun rankingNumber(value: Long): String =
+internal fun rankingNumber(value: Long): String =
     NumberFormat.getNumberInstance(Locale.KOREA).format(value)
 
-private fun rankingTimeLabel(
-    epochMillis: Long,
-    language: com.nullplaying.localization.AppLanguage,
-): String = rankingTimeFormatter(language).format(Instant.ofEpochMilli(epochMillis))
-
-private fun rankingTimeFormatter(
-    language: com.nullplaying.localization.AppLanguage,
-): DateTimeFormatter = when (language) {
-    com.nullplaying.localization.AppLanguage.ENGLISH ->
-        DateTimeFormatter.ofPattern("MMM d, HH:mm", Locale.ENGLISH)
-    com.nullplaying.localization.AppLanguage.JAPANESE ->
-        DateTimeFormatter.ofPattern("M月d日 HH:mm", Locale.JAPANESE)
-    com.nullplaying.localization.AppLanguage.KOREAN ->
-        DateTimeFormatter.ofPattern("M월 d일 HH:mm", Locale.KOREA)
-}.withZone(ZoneId.of("Asia/Seoul"))
+internal fun rankingRefreshPeriodLabel(
+    policy: RankingRefreshPolicy,
+    language: AppLanguage,
+): String {
+    val hours = policy.intervalHours
+    return when (language) {
+        AppLanguage.KOREAN -> "갱신 주기 · ${hours}시간"
+        AppLanguage.ENGLISH ->
+            "Refresh interval · $hours ${if (hours == 1L) "hour" else "hours"}"
+        AppLanguage.JAPANESE -> "更新間隔・${hours}時間"
+    }
+}

@@ -1,0 +1,14 @@
+{
+  "environment": "local PGlite",
+  "migrationsApplied": 13,
+  "pgTAP_contract_assertions": 17,
+  "result": "PASS",
+  "fixtures": [
+    "moderation visibility",
+    "ownership",
+    "cache revision",
+    "legacy RPC",
+    "immutable snapshot"
+  ],
+  "liveDatabaseWrites": 0
+}

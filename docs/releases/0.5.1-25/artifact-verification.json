@@ -1,0 +1,60 @@
+{
+  "result": "PASS",
+  "identity": {
+    "package": "com.nullplaying",
+    "version_code": 25,
+    "version_name": "0.5.1",
+    "min_sdk": 26,
+    "target_sdk": 36,
+    "debuggable": "false",
+    "allow_backup": "false"
+  },
+  "aab": {
+    "path": "app-release.aab",
+    "bytes": 94460150,
+    "sha256": "0f27606df40d68e8ddde756cc06a395ef11599e582cefba2f8aa1ff8f02c16da"
+  },
+  "apk": {
+    "path": "app-release.apk",
+    "bytes": 88727053,
+    "sha256": "b290c44a2686dbaf6a40a270eb68b162d1e78786d1e3b04e274bf541a3e8e3ef"
+  },
+  "bundletool_validate": "PASS",
+  "bundletool_version": "1.18.1",
+  "certificate_sha256": "45:EE:A2:23:C8:3F:2A:C6:F7:98:F2:AC:54:1B:FE:A2:70:E0:DD:74:70:AE:95:D9:FC:2C:4E:AD:4A:73:FD:D2",
+  "signature": "PASS",
+  "native_alignment": {
+    "base/lib/arm64-v8a/libandroidx.graphics.path.so": 16384,
+    "base/lib/arm64-v8a/libdatastore_shared_counter.so": 16384,
+    "base/lib/x86_64/libandroidx.graphics.path.so": 16384,
+    "base/lib/x86_64/libdatastore_shared_counter.so": 16384
+  },
+  "feature_flags": {
+    "REMOTE_SERVICES_ENABLED": true,
+    "SHARED_PLAYER_SYNC_ENABLED": true,
+    "ARENA_SERVER_MATCHING_ENABLED": true,
+    "ADVENTURE_SYSTEM_ENABLED": true
+  },
+  "qa_flags": {
+    "DEBUG": false,
+    "IS_EEA_QA": false,
+    "SHARED_PLAYER_QA_TRANSPORT_ENABLED": false,
+    "ADVENTURE_PREVIEW_ENABLED": false,
+    "BATTLE_QA_BRIDGE_ENABLED": false,
+    "BATTLE_UNLIMITED_ENTRIES": false,
+    "BATTLE_SKILL_TREE_REVIEW_ENABLED": false,
+    "BATTLE_IGNORE_HERO_LEVEL_GATE": false
+  },
+  "production_config_present_in_artifact": true,
+  "multilingual_notice_0_5_1": true,
+  "arena_rules": "arena-stat-identity-v5",
+  "lint": {
+    "Warning": 89,
+    "Hint": 7
+  },
+  "source_files": 750,
+  "source_freshness": "PASS",
+  "firebase_input_preserved": true,
+  "upload_performed": false,
+  "verified_utc": "2026-09-10T08:40:16.343216+00:00"
+}

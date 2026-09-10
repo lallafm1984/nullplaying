@@ -1,0 +1,482 @@
+{
+  "칼날 베기": {
+    "en": "Blade Slash",
+    "ja": "刃の斬撃"
+  },
+  "강철 베기": {
+    "en": "Steel Slash",
+    "ja": "鋼の斬撃"
+  },
+  "파쇄격": {
+    "en": "Crushing Blow",
+    "ja": "破砕撃"
+  },
+  "대지 가르기": {
+    "en": "Earth Splitter",
+    "ja": "大地裂き"
+  },
+  "십자 참격": {
+    "en": "X-Slash",
+    "ja": "十文字斬り"
+  },
+  "폭풍 베기": {
+    "en": "Storm Slash",
+    "ja": "嵐の斬撃"
+  },
+  "철갑 돌진": {
+    "en": "Ironclad Charge",
+    "ja": "鉄甲突進"
+  },
+  "전장의 돌격": {
+    "en": "Battlefield Charge",
+    "ja": "戦場の突撃"
+  },
+  "회오리 참격": {
+    "en": "Whirlwind Slash",
+    "ja": "旋風斬り"
+  },
+  "대지 분쇄": {
+    "en": "Earth Shatter",
+    "ja": "大地粉砕"
+  },
+  "폭풍검": {
+    "en": "Storm Blade",
+    "ja": "嵐の剣"
+  },
+  "섬광 일섬": {
+    "en": "Flash Slash",
+    "ja": "閃光一閃"
+  },
+  "무영 연참": {
+    "en": "Shadowless Flurry",
+    "ja": "無影連斬"
+  },
+  "용살검": {
+    "en": "Dragonslayer Blade",
+    "ja": "竜殺しの剣"
+  },
+  "멸천 일섬": {
+    "en": "Heaven-Rending Flash",
+    "ja": "滅天一閃"
+  },
+  "무극일섬": {
+    "en": "Limitless Flash",
+    "ja": "無極一閃"
+  },
+  "파멸의 검": {
+    "en": "Sword of Ruin",
+    "ja": "破滅の剣"
+  },
+  "천지 가르기": {
+    "en": "Heaven and Earth Splitter",
+    "ja": "天地裂き"
+  },
+  "천하대양단": {
+    "en": "World-Splitting Slash",
+    "ja": "天下大両断"
+  },
+  "최후의 일격": {
+    "en": "Final Strike",
+    "ja": "最後の一撃"
+  },
+  "빠른 찌르기": {
+    "en": "Quick Thrust",
+    "ja": "素早い突き"
+  },
+  "암습": {
+    "en": "Ambush",
+    "ja": "闇討ち"
+  },
+  "맹독 쌍침": {
+    "en": "Venomous Twin Needles",
+    "ja": "猛毒の双針"
+  },
+  "칼날 덫": {
+    "en": "Blade Trap",
+    "ja": "刃の罠"
+  },
+  "초승달 단검": {
+    "en": "Crescent Dagger",
+    "ja": "三日月の短剣"
+  },
+  "사각 일격": {
+    "en": "Blindside Strike",
+    "ja": "死角の一撃"
+  },
+  "네 갈래 비수": {
+    "en": "Fourfold Daggers",
+    "ja": "四方の短剣"
+  },
+  "잔상 도약": {
+    "en": "Afterimage Leap",
+    "ja": "残像跳躍"
+  },
+  "월하 암습": {
+    "en": "Moonlit Ambush",
+    "ja": "月下の奇襲"
+  },
+  "칼날 감옥": {
+    "en": "Blade Prison",
+    "ja": "刃の牢獄"
+  },
+  "은사 난무": {
+    "en": "Silver Thread Flurry",
+    "ja": "銀糸乱舞"
+  },
+  "침묵의 처형": {
+    "en": "Silent Execution",
+    "ja": "静寂の処刑"
+  },
+  "독왕의 송곳니": {
+    "en": "Venom King's Fang",
+    "ja": "毒王の牙"
+  },
+  "천라지망": {
+    "en": "Inescapable Net",
+    "ja": "天羅地網"
+  },
+  "월광 철사": {
+    "en": "Moonlit Wire",
+    "ja": "月光の鋼糸"
+  },
+  "검은 실 감옥": {
+    "en": "Black Thread Prison",
+    "ja": "黒糸の牢獄"
+  },
+  "왕의 숨통": {
+    "en": "King's Last Breath",
+    "ja": "王の息の根"
+  },
+  "종말의 단검무": {
+    "en": "Dagger Dance of Doom",
+    "ja": "終末の短剣舞"
+  },
+  "그림자 세계 절단": {
+    "en": "Shadowrealm Severance",
+    "ja": "影界切断"
+  },
+  "죽음의 한 점": {
+    "en": "A Single Point of Death",
+    "ja": "死の一点"
+  },
+  "정조준 사격": {
+    "en": "Aimed Shot",
+    "ja": "狙い撃ち"
+  },
+  "연속 사격": {
+    "en": "Rapid Fire",
+    "ja": "連続射撃"
+  },
+  "올가미 화살": {
+    "en": "Snare Arrow",
+    "ja": "捕縛の矢"
+  },
+  "회오리 화살": {
+    "en": "Whirlwind Arrow",
+    "ja": "旋風の矢"
+  },
+  "유성 화살비": {
+    "en": "Meteor Arrow Rain",
+    "ja": "流星の矢雨"
+  },
+  "곰발톱 강타": {
+    "en": "Bearclaw Strike",
+    "ja": "熊爪の強打"
+  },
+  "철갑 관통": {
+    "en": "Armor Pierce",
+    "ja": "鉄甲貫通"
+  },
+  "보름달 일격": {
+    "en": "Full Moon Strike",
+    "ja": "満月の一撃"
+  },
+  "매의 급강하": {
+    "en": "Hawk Dive",
+    "ja": "鷹の急降下"
+  },
+  "천공 화살비": {
+    "en": "Skyfall Arrows",
+    "ja": "天空の矢雨"
+  },
+  "월식 사격": {
+    "en": "Eclipse Shot",
+    "ja": "月食射撃"
+  },
+  "그리핀 급습": {
+    "en": "Griffin Assault",
+    "ja": "グリフィンの急襲"
+  },
+  "은하수 관통": {
+    "en": "Galactic Pierce",
+    "ja": "天の川貫通"
+  },
+  "대기의 칼날": {
+    "en": "Air Blade",
+    "ja": "大気の刃"
+  },
+  "왕의 사냥개": {
+    "en": "King's Hound",
+    "ja": "王の猟犬"
+  },
+  "무한 화살진": {
+    "en": "Endless Arrow Formation",
+    "ja": "無限の矢陣"
+  },
+  "창공 붕괴": {
+    "en": "Sky Collapse",
+    "ja": "蒼穹崩壊"
+  },
+  "신화의 덫": {
+    "en": "Mythic Trap",
+    "ja": "神話の罠"
+  },
+  "은하 종단": {
+    "en": "Galactic Traverse",
+    "ja": "銀河縦断"
+  },
+  "성운 가르기": {
+    "en": "Nebula Splitter",
+    "ja": "星雲裂き"
+  },
+  "불씨 화살": {
+    "en": "Ember Arrow",
+    "ja": "火種の矢"
+  },
+  "얼음 창": {
+    "en": "Ice Spear",
+    "ja": "氷の槍"
+  },
+  "삼중 낙뢰": {
+    "en": "Triple Lightning Strike",
+    "ja": "三連落雷"
+  },
+  "비전 충격": {
+    "en": "Arcane Shock",
+    "ja": "秘術衝撃"
+  },
+  "용암 분출": {
+    "en": "Lava Eruption",
+    "ja": "溶岩噴出"
+  },
+  "공간 절단": {
+    "en": "Spatial Severance",
+    "ja": "空間切断"
+  },
+  "서리 폭풍": {
+    "en": "Frost Storm",
+    "ja": "霜の嵐"
+  },
+  "사방 낙뢰": {
+    "en": "Fourfold Lightning Strike",
+    "ja": "四方落雷"
+  },
+  "유성우": {
+    "en": "Meteor Shower",
+    "ja": "流星雨"
+  },
+  "공간 왜곡파": {
+    "en": "Spatial Distortion Wave",
+    "ja": "空間歪曲波"
+  },
+  "지옥불 구체": {
+    "en": "Inferno Orb",
+    "ja": "業火の球"
+  },
+  "절대영도 파열": {
+    "en": "Absolute Zero Burst",
+    "ja": "絶対零度破裂"
+  },
+  "뇌신의 사슬": {
+    "en": "Thunder God's Chains",
+    "ja": "雷神の鎖"
+  },
+  "공허 칼날": {
+    "en": "Void Blade",
+    "ja": "虚無の刃"
+  },
+  "불사조 격돌": {
+    "en": "Phoenix Clash",
+    "ja": "不死鳥の激突"
+  },
+  "행성 낙하": {
+    "en": "Planetfall",
+    "ja": "惑星落下"
+  },
+  "비전 특이점": {
+    "en": "Arcane Singularity",
+    "ja": "秘術特異点"
+  },
+  "절대빙옥 파쇄": {
+    "en": "Absolute Ice Prison Shatter",
+    "ja": "絶対氷獄破砕"
+  },
+  "초신성": {
+    "en": "Supernova",
+    "ja": "超新星"
+  },
+  "우주 종말": {
+    "en": "Cosmic Apocalypse",
+    "ja": "宇宙の終焉"
+  },
+  "빛의 화살": {
+    "en": "Light Arrow",
+    "ja": "光の矢"
+  },
+  "심판의 망치": {
+    "en": "Hammer of Judgment",
+    "ja": "審判の槌"
+  },
+  "퇴마 연타": {
+    "en": "Exorcism Barrage",
+    "ja": "退魔連打"
+  },
+  "성화 폭발": {
+    "en": "Holy Flame Burst",
+    "ja": "聖火爆発"
+  },
+  "수호천사 강하": {
+    "en": "Guardian Angel's Descent",
+    "ja": "守護天使の降下"
+  },
+  "퇴마 사슬": {
+    "en": "Chains of Exorcism",
+    "ja": "退魔の鎖"
+  },
+  "순백의 파동": {
+    "en": "Pure White Wave",
+    "ja": "純白の波動"
+  },
+  "파마의 인장": {
+    "en": "Seal of Exorcism",
+    "ja": "破魔の印"
+  },
+  "대천사 돌진": {
+    "en": "Archangel's Charge",
+    "ja": "大天使の突進"
+  },
+  "정화의 불기둥": {
+    "en": "Purifying Flame Pillar",
+    "ja": "浄化の火柱"
+  },
+  "천벌 분쇄": {
+    "en": "Crushing Retribution",
+    "ja": "天罰粉砕"
+  },
+  "대천사 검무": {
+    "en": "Archangel's Sword Dance",
+    "ja": "大天使の剣舞"
+  },
+  "악마 파쇄진": {
+    "en": "Demon-Crushing Circle",
+    "ja": "悪魔粉砕陣"
+  },
+  "성화 해일": {
+    "en": "Holy Flame Tide",
+    "ja": "聖火の大波"
+  },
+  "지옥문 붕괴": {
+    "en": "Hellgate Collapse",
+    "ja": "地獄門崩壊"
+  },
+  "세계수 성광포": {
+    "en": "World Tree's Holy Cannon",
+    "ja": "世界樹の聖光砲"
+  },
+  "천군 포화": {
+    "en": "Heavenly Host Barrage",
+    "ja": "天軍の砲火"
+  },
+  "세계 정화폭진": {
+    "en": "World-Purifying Blast",
+    "ja": "世界浄化爆陣"
+  },
+  "신좌의 망치": {
+    "en": "Hammer of the Divine Throne",
+    "ja": "神座の槌"
+  },
+  "천국문 폭격": {
+    "en": "Heaven's Gate Bombardment",
+    "ja": "天国門爆撃"
+  },
+  "빛의 베기": {
+    "en": "Light Slash",
+    "ja": "光の斬撃"
+  },
+  "철벽 밀치기": {
+    "en": "Ironwall Bash",
+    "ja": "鉄壁の押し返し"
+  },
+  "기사의 망치 강타": {
+    "en": "Knight's Hammer Smash",
+    "ja": "騎士の槌撃"
+  },
+  "십자 베기": {
+    "en": "Cross Slash",
+    "ja": "十字斬り"
+  },
+  "새벽의 칼날": {
+    "en": "Dawn Blade",
+    "ja": "暁の刃"
+  },
+  "심판의 성추": {
+    "en": "Holy Hammer of Judgment",
+    "ja": "審判の聖槌"
+  },
+  "충성의 일격": {
+    "en": "Loyal Strike",
+    "ja": "忠誠の一撃"
+  },
+  "수호벽 돌파": {
+    "en": "Guardian Wall Breaker",
+    "ja": "守護壁突破"
+  },
+  "성광 검무": {
+    "en": "Radiant Sword Dance",
+    "ja": "聖光剣舞"
+  },
+  "왕권 일격": {
+    "en": "Royal Strike",
+    "ja": "王権の一撃"
+  },
+  "별철 성추 강타": {
+    "en": "Starsteel Holy Hammer Strike",
+    "ja": "星鉄の聖槌撃"
+  },
+  "황금 서약참": {
+    "en": "Golden Oath Slash",
+    "ja": "黄金誓約斬"
+  },
+  "천공 방패격": {
+    "en": "Sky Shield Bash",
+    "ja": "天空の盾撃"
+  },
+  "천상 십자참": {
+    "en": "Heavenly Cross Slash",
+    "ja": "天上十字斬"
+  },
+  "심판왕의 망치": {
+    "en": "Hammer of the Judgment King",
+    "ja": "審判王の槌"
+  },
+  "성역 방패돌진": {
+    "en": "Sanctuary Shield Charge",
+    "ja": "聖域の盾突進"
+  },
+  "불멸 서약참": {
+    "en": "Immortal Oath Slash",
+    "ja": "不滅誓約斬"
+  },
+  "태양 종말": {
+    "en": "Sun's End",
+    "ja": "太陽の終焉"
+  },
+  "별을 가르는 성검": {
+    "en": "Star-Splitting Holy Sword",
+    "ja": "星を裂く聖剣"
+  },
+  "왕국 영겁참": {
+    "en": "Kingdom's Eternal Slash",
+    "ja": "王国永劫斬"
+  }
+}

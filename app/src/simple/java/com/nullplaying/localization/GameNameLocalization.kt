@@ -8,9 +8,35 @@ import com.nullplaying.engine.SimpleContent
 /** Language-aware composition for names assembled from Korean gameplay data at runtime. */
 internal object GameNameLocalization {
     fun equipmentName(source: String, language: AppLanguage): String {
-        if (language == AppLanguage.KOREAN) return source
-        val parts = SimpleContent.parseEquipmentName(source)
+        val canonicalSource = canonicalEquipmentName(source)
+        if (language == AppLanguage.KOREAN) return canonicalSource
+        val parts = SimpleContent.parseEquipmentName(canonicalSource)
             ?: return GameLocalization.translate(source, language)
+        return renderEquipmentName(parts, language)
+    }
+
+    /**
+     * Recovers the Korean catalog form from equipment names saved by older English/Japanese builds.
+     * This lets one existing history field remain language-neutral without a save-schema migration.
+     */
+    internal fun canonicalEquipmentName(source: String): String {
+        if (SimpleContent.parseEquipmentName(source) != null) return source
+        val enhancementMatch = LOCALIZED_ENHANCEMENT_SUFFIX.find(source)
+        val enhancement = enhancementMatch?.groupValues?.get(1)?.toIntOrNull()
+        val core = enhancementMatch?.let { source.removeRange(it.range) } ?: source
+        val recovered = AppLanguage.entries
+            .asSequence()
+            .filter { it != AppLanguage.KOREAN }
+            .mapNotNull { language -> canonicalLocalizedEquipmentCore(core, language) }
+            .firstOrNull()
+            ?: return source
+        return recovered + enhancement?.let { " +$it" }.orEmpty()
+    }
+
+    private fun renderEquipmentName(
+        parts: SimpleContent.EquipmentNameParts,
+        language: AppLanguage,
+    ): String {
         val dropPrefix = shouldDropEquipmentPrefix(
             prefix = parts.prefix,
             progressionLabel = parts.progressionLabel,
@@ -43,13 +69,74 @@ internal object GameNameLocalization {
                 append(suffix)
             }
 
-            AppLanguage.KOREAN -> source
+            AppLanguage.KOREAN -> buildString {
+                parts.prefix?.let { append(it).append(' ') }
+                append(parts.progressionLabel).append(' ').append(parts.archetype).append(suffix)
+            }
         }
     }
 
+    private fun canonicalLocalizedEquipmentCore(source: String, language: AppLanguage): String? {
+        STATIC_LOCALIZED_EQUIPMENT_BASES.getValue(language)[source]?.let { return it }
+        val prefixMap = when (language) {
+            AppLanguage.ENGLISH -> ENGLISH_EQUIPMENT_PREFIXES
+            AppLanguage.JAPANESE -> JAPANESE_EQUIPMENT_PREFIXES
+            AppLanguage.KOREAN -> emptyMap()
+        }
+        prefixMap.entries
+            .sortedByDescending { it.value.length }
+            .forEach { (koreanPrefix, localizedPrefix) ->
+                val localizedBase = when (language) {
+                    AppLanguage.ENGLISH -> source.removePrefix("$localizedPrefix ")
+                        .takeIf { it != source }
+                    AppLanguage.JAPANESE -> source.removePrefix(localizedPrefix)
+                        .takeIf { it != source }
+                    AppLanguage.KOREAN -> null
+                } ?: return@forEach
+                canonicalLocalizedBase(localizedBase, language)?.let { koreanBase ->
+                    return "$koreanPrefix $koreanBase"
+                }
+            }
+        return canonicalLocalizedBase(source, language)
+    }
+
+    private fun canonicalLocalizedBase(source: String, language: AppLanguage): String? {
+        STATIC_LOCALIZED_EQUIPMENT_BASES.getValue(language)[source]?.let { return it }
+        val tier = when (language) {
+            AppLanguage.ENGLISH -> Regex("^Transcendent Tier ([1-9][0-9]*)").find(source)
+                ?.groupValues?.get(1)
+            AppLanguage.JAPANESE -> Regex("^超越([1-9][0-9]*)段").find(source)
+                ?.groupValues?.get(1)
+            AppLanguage.KOREAN -> null
+        } ?: return null
+        val progression = "초월 ${tier}단식"
+        return ClassEquipmentCatalog.localizableArchetypes.firstNotNullOfOrNull { archetype ->
+            val parts = SimpleContent.EquipmentNameParts(null, progression, archetype, null)
+            if (renderEquipmentName(parts, language) == source) "$progression $archetype" else null
+        }
+    }
+
+    private val STATIC_LOCALIZED_EQUIPMENT_BASES: Map<AppLanguage, Map<String, String>> by lazy {
+        listOf(AppLanguage.ENGLISH, AppLanguage.JAPANESE).associateWith { language ->
+            buildMap {
+                ClassEquipmentCatalog.localizableProgressionLabels.forEach { progression ->
+                    ClassEquipmentCatalog.localizableArchetypes.forEach { archetype ->
+                        val parts = SimpleContent.EquipmentNameParts(null, progression, archetype, null)
+                        putIfAbsent(renderEquipmentName(parts, language), "$progression $archetype")
+                    }
+                }
+            }
+        }
+    }
+
+    private val LOCALIZED_ENHANCEMENT_SUFFIX = Regex(" \\+([1-9][0-9]*)$")
+
     fun itemName(source: String, language: AppLanguage): String {
+        val canonicalEquipment = canonicalEquipmentName(source)
+        if (SimpleContent.parseEquipmentName(canonicalEquipment) != null) {
+            return equipmentName(canonicalEquipment, language)
+        }
         if (language == AppLanguage.KOREAN) return source
-        SimpleContent.parseEquipmentName(source)?.let { return equipmentName(source, language) }
         questTrophyName(source, language)?.let { return it }
         val parts = SimpleContent.parseGenericLootName(source)
             ?: return GameLocalization.translate(source, language)

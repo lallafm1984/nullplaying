@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.isSpecified
 import com.nullplaying.localization.AppLanguage
 import com.nullplaying.localization.GameLocalization
 import com.nullplaying.localization.GameNameLocalization
+import com.nullplaying.engine.AdventureEventEngine
 
 internal val LocalAppLanguage = staticCompositionLocalOf { AppLanguage.KOREAN }
 
@@ -77,17 +78,24 @@ internal fun heroNameLocalizationReplacements(heroName: String): Map<String, Str
 }
 
 internal fun localizedStoryText(text: String, heroName: String): String =
-    localizedPreserving(text, heroNameLocalizationReplacements(heroName))
+    storyLocalizationSegments(text).joinToString(" ") { segment ->
+        localizedPreserving(segment, heroNameLocalizationReplacements(heroName))
+    }
 
 internal fun localizedStoryText(
     text: String,
     heroName: String,
     language: AppLanguage,
-): String = GameLocalization.translatePreserving(
-    text = text,
-    language = language,
-    protectedValues = heroNameLocalizationReplacements(heroName),
-)
+): String = storyLocalizationSegments(text).joinToString(" ") { segment ->
+    GameLocalization.translatePreserving(
+        text = segment,
+        language = language,
+        protectedValues = heroNameLocalizationReplacements(heroName),
+    )
+}
+
+private fun storyLocalizationSegments(text: String): List<String> =
+    text.split(LABYRINTH_GATE_RESULT_BOUNDARY)
 
 internal fun localizedEquipmentName(text: String, language: AppLanguage): String =
     GameNameLocalization.equipmentName(text, language)
@@ -95,8 +103,21 @@ internal fun localizedEquipmentName(text: String, language: AppLanguage): String
 internal fun localizedItemName(text: String, language: AppLanguage): String =
     GameNameLocalization.itemName(text, language)
 
-internal fun localizedMonsterName(text: String, baseName: String, language: AppLanguage): String =
-    GameNameLocalization.monsterName(text, baseName, language)
+internal fun localizedMonsterName(
+    text: String,
+    baseName: String,
+    language: AppLanguage,
+    catalogId: String = "",
+): String {
+    val eventId = catalogId.removePrefix("event:").takeIf { catalogId.startsWith("event:") }
+    val eventMonster = eventId?.let { id ->
+        runCatching { AdventureEventEngine.definition(id).battleRule?.monsterName?.inLanguage(language) }
+            .getOrNull()
+    }
+    return eventMonster ?: GameNameLocalization.monsterName(text, baseName, language)
+}
+
+private val LABYRINTH_GATE_RESULT_BOUNDARY = Regex("(?<=\\.) (?=제[0-9]+관문 돌파 기록이)")
 
 internal fun nextAdaptiveTextScale(currentScale: Float, hasVisualOverflow: Boolean): Float =
     if (hasVisualOverflow && currentScale > MIN_ADAPTIVE_SCALE) {
@@ -201,6 +222,7 @@ internal fun UnlocalizedText(
     fontSize: TextUnit = TextUnit.Unspecified,
     lineHeight: TextUnit = TextUnit.Unspecified,
     fontWeight: FontWeight? = null,
+    textAlign: TextAlign? = null,
     maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip,
 ) {
@@ -211,6 +233,7 @@ internal fun UnlocalizedText(
         fontSize = fontSize,
         lineHeight = lineHeight,
         fontWeight = fontWeight,
+        textAlign = textAlign,
         maxLines = maxLines,
         overflow = overflow,
     )

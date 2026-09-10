@@ -16,9 +16,6 @@ internal enum class SkillMotion {
     ERUPTION_UP, TRAP_SNAP, SUMMON_DIVE, EXECUTE_PAUSE, GRAVITY_COLLAPSE,
 }
 
-internal enum class SkillTimingProfile { RAPID, EVEN, DELAYED_FINISH, ACCELERATE, DECELERATE }
-internal enum class SkillFinisher { NONE, RING, FRACTURE, COLUMN, BURST, AFTERIMAGE }
-
 internal data class SkillDefinition(
     val catalogId: String,
     val heroClass: HeroClass,
@@ -32,9 +29,6 @@ internal data class SkillDefinition(
     val hitTimingsMillis: List<Int>,
     val element: SkillElement,
     val motion: SkillMotion,
-    val timingProfile: SkillTimingProfile,
-    val finisher: SkillFinisher,
-    val effectVariant: Int,
     val intensityTier: Int,
 ) {
     val hitCount: Int get() = hitWeights.size
@@ -117,7 +111,6 @@ internal object SkillCatalog {
             val candidate = signature.catalogId.substringAfterLast("_c").toInt() - 1
             require(signature.catalogId.startsWith("${heroClass.name.lowercase()}_t${tier.toString().padStart(2, '0')}_"))
             require(candidate in 0..4)
-            val timingProfile = SkillTimingProfile.entries[(tier + candidate) % SkillTimingProfile.entries.size]
             val element = elementFor(heroClass, candidate, tier, signature.name)
             val motion = motionFor(heroClass, candidate, tier, signature.name)
             val damagePercentRange = damagePercentRange(tier)
@@ -141,9 +134,6 @@ internal object SkillCatalog {
                 ),
                 element = element,
                 motion = motion,
-                timingProfile = timingProfile,
-                finisher = finisherFor(element, motion, tier, candidate),
-                effectVariant = (tier + candidate) % 4,
                 intensityTier = ((tier - 1) / 4 + 1).coerceIn(1, 5),
             )
         }
@@ -204,10 +194,7 @@ internal object SkillCatalog {
                 name.containsAny("조준", "저격", "필중", "일점", "한 발") -> PROJECTILE_SINGLE
             heroClass in setOf(HeroClass.RANGER, HeroClass.MAGE, HeroClass.CLERIC) &&
                 name.containsAny("연사", "난사", "연탄", "광선", "포화") -> PROJECTILE_VOLLEY
-            heroClass == HeroClass.MAGE && name.contains("천둥 종말") -> RAIN_VERTICAL
             heroClass == HeroClass.MAGE && name.contains("초신성") -> NOVA_RADIAL
-            heroClass == HeroClass.CLERIC && name == "만악 종결광" -> BEAM_CHANNEL
-            heroClass == HeroClass.CLERIC && name == "영혼왕의 일격" -> SUMMON_DIVE
             heroClass == HeroClass.PALADIN && name == "왕권 일격" -> EXECUTE_PAUSE
             heroClass == HeroClass.PALADIN && name.contains("서약") && name.containsAny("검", "참") -> CLEAVE_HORIZONTAL
             name.containsAny("난무", "연격", "연참", "광란", "백련", "참무") -> FRENZY_FIVE
@@ -318,32 +305,6 @@ internal object SkillCatalog {
         return base
     }
 
-    private fun finisherFor(
-        element: SkillElement,
-        motion: SkillMotion,
-        tier: Int,
-        candidate: Int,
-    ): SkillFinisher {
-        // Finishers are deliberately staged by unlock level: early skills teach the
-        // core silhouette, while later tiers add the large secondary payoff.
-        if (tier <= 4) return SkillFinisher.NONE
-        val primary = when {
-            motion in setOf(CLEAVE_HORIZONTAL, CROSS_SLASH, RAPID_THREE, FRENZY_FIVE, DASH_IMPACT) ->
-                SkillFinisher.AFTERIMAGE
-            motion in setOf(HEAVY_FALL, PILLAR_DROP, GRAVITY_COLLAPSE) || element in setOf(EARTH, ICE) ->
-                SkillFinisher.FRACTURE
-            motion in setOf(PROJECTILE_SINGLE, PROJECTILE_VOLLEY, TRAP_SNAP, ERUPTION_UP) ||
-                element in setOf(FIRE, POISON) -> SkillFinisher.BURST
-            motion in setOf(NOVA_RADIAL, SPIN_CUT) || element in setOf(WIND, ARCANE, COSMIC) ->
-                SkillFinisher.RING
-            motion in setOf(BEAM_CHANNEL, CHAIN_ARC, RAIN_VERTICAL, SUMMON_DIVE) ||
-                element in setOf(HOLY, LIGHTNING) -> SkillFinisher.COLUMN
-            motion == EXECUTE_PAUSE || motion == PIERCE_LINE -> SkillFinisher.AFTERIMAGE
-            else -> SkillFinisher.NONE
-        }
-        return if (tier <= 8 && (tier + candidate) % 2 == 0) SkillFinisher.NONE else primary
-    }
-
     private fun String.containsAny(vararg keywords: String): Boolean = keywords.any { contains(it) }
 
     private fun scalePercent(value: Long, percent: Long): Long {
@@ -394,7 +355,7 @@ internal object SkillCatalog {
             warrior_t10_c01|대지 분쇄|1
             warrior_t11_c02|폭풍검|1
             warrior_t12_c04|섬광 일섬|1
-            warrior_t13_c03|무영 연참|1
+            warrior_t13_c03|무영 연참|5
             warrior_t14_c03|용살검|1
             warrior_t15_c01|멸천 일섬|1
             warrior_t16_c05|무극일섬|12

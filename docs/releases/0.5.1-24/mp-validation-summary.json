@@ -1,0 +1,44 @@
+{
+  "tests": 71,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "levels": [
+    10,
+    14,
+    15,
+    20,
+    25,
+    30,
+    40,
+    50,
+    60,
+    70,
+    80,
+    90,
+    100
+  ],
+  "battles": 4992000,
+  "aborted": 0,
+  "class_winrate_range": [
+    0.4558,
+    0.5394
+  ],
+  "cost_reduction": [
+    "MP_RELIEF_COSTS,before=42061,after=25245,saved=0.39980029005492024"
+  ],
+  "paired_battles": 21600,
+  "paired_mp_mean_before": 9.605106366617687,
+  "paired_mp_mean_after": 45.766264560001986,
+  "high_level_mp_before_range": [
+    5.30098728258717,
+    24.213531638579703
+  ],
+  "high_level_mp_after_range": [
+    41.49589120502624,
+    55.90921114785071
+  ],
+  "engine_unchanged": true,
+  "rules_version": "arena-stat-identity-v5",
+  "catalog_version": 13
+}

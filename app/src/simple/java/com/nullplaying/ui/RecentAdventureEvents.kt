@@ -47,8 +47,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.nullplaying.data.RecentAdventureEventRecord
 import com.nullplaying.localization.AppLanguage
+import com.nullplaying.model.AdventureEventRewardKind
 import com.nullplaying.model.EquipmentSlot
 import com.nullplaying.model.RecentAdventureEvent
+import com.nullplaying.model.RecentAdventureEventMetadata
 import com.nullplaying.model.RecentAdventureEventType
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -259,6 +261,17 @@ internal data class RecentAdventureEventPresentation(
     val detail: String,
 )
 
+/** Unknown pre-catalog event rows must not expose their stored Korean title after a language switch. */
+internal fun legacyAdventureEventTitle(
+    subjectName: String,
+    language: AppLanguage,
+): String {
+    if (language == AppLanguage.KOREAN && subjectName.isNotBlank()) return subjectName
+    val translated = localized(subjectName, language)
+    if (translated.isNotBlank() && !Regex("[가-힣]").containsMatchIn(translated)) return translated
+    return journeyText(language, "길 위의 사건", "Adventure event", "冒険の出来事")
+}
+
 internal fun recentAdventureEventPresentation(
     event: RecentAdventureEvent,
     language: AppLanguage,
@@ -270,17 +283,116 @@ internal fun recentAdventureEventPresentation(
     val previous = event.previousValue ?: 0L
     val current = event.currentValue ?: 0L
     return when (event.type) {
-        RecentAdventureEventType.LEVEL_UP -> eventPresentation(
-            Icons.AutoMirrored.Filled.TrendingUp,
-            Color(0xFF76D6A1),
-            language,
-            ko = "레벨 상승 · Lv.$current",
-            en = "Level up · Lv.$current",
-            ja = "レベルアップ · Lv.$current",
-            detailKo = "Lv.$previous → Lv.$current",
-            detailEn = "Lv.$previous → Lv.$current",
-            detailJa = "Lv.$previous → Lv.$current",
-        )
+        RecentAdventureEventType.ADVENTURE_TRAIT_CHANGED, RecentAdventureEventType.ADVENTURE_TRAIT_ACTIVATED -> {
+            val definition = com.nullplaying.engine.AdventureTraitCatalog.find(event.subjectId)
+            val name = definition?.name?.inLanguage(language) ?: journeyText(language, "모험 특성", "Adventure trait", "冒険の特性")
+            val changed = event.type == RecentAdventureEventType.ADVENTURE_TRAIT_CHANGED
+            val kind = runCatching { com.nullplaying.model.AdventureTraitChangeKind.valueOf(event.contextName) }.getOrNull()
+            val displayEvent = if (!changed && event.contextName in setOf("EXTRA_ITEM", "OMITTED_ITEM"))
+                event.copy(currentName = localizedItemName(event.currentName, language)) else event
+            RecentAdventureEventPresentation(
+                Icons.Filled.AutoAwesome, AqGold,
+                if (changed && kind != null) "${adventureTraitChangeLabel(kind, language)} · $name" else name,
+                com.nullplaying.engine.AdventureTraitCatalog.recentEventText(displayEvent).inLanguage(language),
+            )
+        }
+        RecentAdventureEventType.RELATIONSHIP_ENCOUNTER -> {
+            val tier = runCatching { com.nullplaying.model.AdventureRelationshipTier.valueOf(event.currentName) }
+                .getOrElse { com.nullplaying.model.AdventureRelationshipTier.fromScore(current.toInt()) }
+            val scene = runCatching { com.nullplaying.engine.AdventureRelationshipEngine.definition(event.contextName.substringBefore(":")) }.getOrNull()
+            val change = when {
+                current > previous -> journeyText(language, "조금 가까워졌다", "A little closer", "少し親しくなった")
+                current < previous -> journeyText(language, "거리감이 남았다", "Some distance remains", "距離を感じた")
+                else -> journeyText(language, "기억에 남은 만남", "An encounter remembered", "心に残る出会い")
+            }
+            val reward = when (RecentAdventureEventMetadata.adventureRewardKind(event.contextName)) {
+                AdventureEventRewardKind.EXPERIENCE -> RecentAdventureEventMetadata
+                    .relationshipExperience(event.contextName)
+                    .takeIf { it > 0L }
+                    ?.let { journeyText(language, "경험치 +$it", "EXP +$it", "経験値 +$it") }
+                AdventureEventRewardKind.GOLD -> RecentAdventureEventMetadata
+                    .relationshipGold(event.contextName)
+                    .takeIf { it > 0L }
+                    ?.let { "+$it G" }
+                AdventureEventRewardKind.ITEM -> {
+                    val itemName = RecentAdventureEventMetadata.relationshipItemName(event.contextName)
+                    if (itemName.isBlank()) {
+                        journeyText(language, "가방이 가득 차 장비를 담지 못했다", "The bag was full, so the equipment was left behind", "バッグがいっぱいで装備を持ち帰れなかった")
+                    } else {
+                        val localizedName = localizedEquipmentName(itemName, language)
+                        val stored = if (RecentAdventureEventMetadata.relationshipItemEquipped(event.contextName)) {
+                            journeyText(language, "새 장비로 장착", "Equipped", "新しい装備として装着")
+                        } else {
+                            journeyText(language, "가방에 보관", "Stored in the bag", "バッグに収納")
+                        }
+                        journeyText(language, "$localizedName 획득 · $stored", "$localizedName acquired · $stored", "$localizedName 獲得・$stored")
+                    }
+                }
+                AdventureEventRewardKind.ROUTE, AdventureEventRewardKind.UNSPECIFIED, null -> null
+            }
+            RecentAdventureEventPresentation(
+                Icons.AutoMirrored.Filled.MenuBook, relationshipColor(tier),
+                "${event.subjectName} · ${relationshipTierLabel(tier, language)}",
+                listOfNotNull(scene?.title?.inLanguage(language), change, reward).joinToString(" · "),
+            )
+        }
+        RecentAdventureEventType.ADVENTURE_EVENT -> {
+            val definition = runCatching { com.nullplaying.engine.AdventureEventEngine.definition(event.subjectId) }.getOrNull()
+            val contextParts = event.contextName.split(":")
+            val outcome = runCatching { com.nullplaying.model.AdventureEventOutcome.valueOf(contextParts.getOrNull(1).orEmpty()) }.getOrDefault(com.nullplaying.model.AdventureEventOutcome.PARTIAL)
+            val actualItemCount = contextParts.getOrNull(2)?.toIntOrNull()?.coerceAtLeast(0)
+                ?: if (event.currentName.isNotBlank()) 1 else 0
+            val itemName = when {
+                actualItemCount <= 0 || event.currentName.isBlank() -> ""
+                definition != null && event.currentName == definition.itemName.ko -> definition.itemName.inLanguage(language)
+                else -> localizedItemName(event.currentName, language)
+            }
+            val rewardKind = RecentAdventureEventMetadata.adventureRewardKind(event.contextName)
+            val routeShortened = RecentAdventureEventMetadata.isRouteShortening(event.contextName)
+            val itemKind = RecentAdventureEventMetadata.adventureItemReward(event.contextName)
+            val isTrophy = itemKind == com.nullplaying.model.AdventureEventItemReward.TROPHY ||
+                (itemKind == null && definition != null && event.currentName == definition.itemName.ko)
+            val detail = buildList {
+                if (previous > 0) add("EXP +$previous")
+                if (current > 0) add("+$current G")
+                if (itemName.isNotBlank()) add(
+                    if (isTrophy) journeyText(language, "전리품 획득", "Loot acquired", "戦利品を獲得")
+                    else journeyText(language, "$itemName 획득", "Obtained $itemName", "${itemName}を獲得")
+                )
+                if (routeShortened) {
+                    add(journeyText(language, "시간 단축", "Travel time reduced", "移動時間短縮"))
+                }
+                if (isEmpty() && rewardKind != null) {
+                    add(
+                        if (outcome == com.nullplaying.model.AdventureEventOutcome.FAILURE) {
+                            journeyText(language, "이동 지연", "Travel delayed", "移動遅延")
+                        } else {
+                            journeyText(language, "보상 없음", "No reward", "報酬なし")
+                        },
+                    )
+                }
+            }.distinct().joinToString(" · ")
+            RecentAdventureEventPresentation(
+                Icons.AutoMirrored.Filled.MenuBook, Color(0xFFD9B76F),
+                "${definition?.title?.inLanguage(language) ?: legacyAdventureEventTitle(event.subjectName, language)} · ${eventOutcomeLabel(outcome, language)}",
+                detail,
+            )
+        }
+        RecentAdventureEventType.LEVEL_UP -> {
+            val statGrowth = RecentAdventureEventMetadata.decodeStatGrowth(event.contextName)
+                .joinToString(" · ") { (key, amount) -> "${statGrowthLabel(key)} +$amount" }
+            eventPresentation(
+                Icons.AutoMirrored.Filled.TrendingUp,
+                Color(0xFF76D6A1),
+                language,
+                ko = "레벨 상승",
+                en = "Level up",
+                ja = "レベルアップ",
+                detailKo = statGrowth,
+                detailEn = statGrowth,
+                detailJa = statGrowth,
+            )
+        }
         RecentAdventureEventType.SKILL_MASTERY -> eventPresentation(
             Icons.Filled.AutoAwesome,
             Color(0xFF82C7FF),
@@ -314,17 +426,24 @@ internal fun recentAdventureEventPresentation(
             detailEn = "$previousEquipment ($previous) → $currentEquipment ($current)",
             detailJa = "$previousEquipment ($previous) → $currentEquipment ($current)",
         )
-        RecentAdventureEventType.QUEST_COMPLETED -> eventPresentation(
-            Icons.Filled.CheckCircle,
-            Color(0xFF75D7D0),
-            language,
-            ko = "퀘스트 완료 · $subject",
-            en = "Quest completed · $subject",
-            ja = "クエスト完了 · $subject",
-            detailKo = context,
-            detailEn = context,
-            detailJa = context,
-        )
+        RecentAdventureEventType.QUEST_COMPLETED -> {
+            val completionDetail = buildList {
+                if (context.isNotBlank()) add(context)
+                if (previous > 0L) add("EXP +$previous")
+                if (current > 0L) add("+$current G")
+            }.distinct().joinToString(" · ")
+            eventPresentation(
+                Icons.Filled.CheckCircle,
+                Color(0xFF75D7D0),
+                language,
+                ko = "퀘스트 완료 · $subject",
+                en = "Quest completed · $subject",
+                ja = "クエスト完了 · $subject",
+                detailKo = completionDetail,
+                detailEn = completionDetail,
+                detailJa = completionDetail,
+            )
+        }
         RecentAdventureEventType.TALE_COMPLETED -> eventPresentation(
             Icons.AutoMirrored.Filled.MenuBook,
             Color(0xFFE894C5),
@@ -398,6 +517,12 @@ private fun equipmentSlotLabel(slot: EquipmentSlot?, language: AppLanguage): Str
         null -> Triple("장비", "Equipment", "装備")
     }
     return selectLanguage(language, labels.first, labels.second, labels.third)
+}
+
+private fun statGrowthLabel(key: String): String = when (key) {
+    "HP_MAX" -> "HP MAX"
+    "MP_MAX" -> "MP MAX"
+    else -> key
 }
 
 internal fun recentEventTimeLabel(

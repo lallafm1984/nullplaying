@@ -1,11 +1,53 @@
 package com.nullplaying.ui
 
+import android.app.Application
+import com.nullplaying.localization.AppLanguage
+import com.nullplaying.localization.GameLocalization
 import com.nullplaying.model.HeroClass
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [35], application = Application::class)
 class SkillEffectTestCatalogTest {
+    @Before
+    fun setUp() {
+        GameLocalization.initialize(RuntimeEnvironment.getApplication())
+    }
+
+    @Test
+    fun `debug effect summaries localize hit and display damage fragments`() {
+        assertEquals(
+            "Lv.1 · Fire · 1 hit · 80~120% · Display damage 314",
+            skillEffectSummaryLabel(1, "화염", 1, 80, 120, "314", AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "Lv.5 · 炎 · 3ヒット · 90~140% · 表示ダメージ 271",
+            skillEffectSummaryLabel(5, "화염", 3, 90, 140, "271", AppLanguage.JAPANESE),
+        )
+        HeroClass.entries.flatMap(::signatureSkillDefinitions).forEach { definition ->
+            listOf(AppLanguage.ENGLISH, AppLanguage.JAPANESE).forEach { language ->
+                val summary = skillEffectSummaryLabel(
+                    definition.unlockLevel,
+                    definition.element.labelKo,
+                    definition.hitCount,
+                    definition.damagePercentMin,
+                    definition.damagePercentMax,
+                    "100",
+                    language,
+                )
+                assertFalse("$language leaked Korean: $summary", Regex("[가-힣]").containsMatchIn(summary))
+            }
+        }
+    }
+
     @Test
     fun `warrior effect test list preserves the twenty refined skills`() {
         val definitions = warriorSignatureSkillDefinitions()

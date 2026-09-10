@@ -1,6 +1,7 @@
 package com.nullplaying.ui
 
 import android.graphics.BitmapFactory
+import com.nullplaying.BuildConfig
 import com.nullplaying.R
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -13,13 +14,20 @@ import org.robolectric.annotation.Config
 @Config(sdk = [35], application = android.app.Application::class)
 class BrandContractTest {
     @Test
-    fun `installed app label and package match NULL PLAYING brand`() {
+    fun `installed app label and package match the build variant contract`() {
         val context = RuntimeEnvironment.getApplication()
         val applicationInfo = context.packageManager.getApplicationInfo(context.packageName, 0)
+        val expectedLabel = when {
+            BuildConfig.APPLICATION_ID.endsWith(".adventurepreview") -> "NULL PLAYING 모험 검증"
+            BuildConfig.APPLICATION_ID.endsWith(".battleqa") -> "AlarmQuest Arena QA"
+            BuildConfig.APPLICATION_ID.endsWith(".offlineqa") -> "AlarmQuest Offline QA"
+            BuildConfig.APPLICATION_ID.endsWith(".eeaqa") -> "AlarmQuest EEA QA"
+            else -> "NULL PLAYING"
+        }
 
-        assertEquals("NULL PLAYING", context.getString(R.string.app_name))
+        assertEquals(expectedLabel, context.getString(R.string.app_name))
         assertEquals(R.string.app_name, applicationInfo.labelRes)
-        assertEquals("com.nullplaying", context.packageName)
+        assertEquals(BuildConfig.APPLICATION_ID, context.packageName)
     }
 
     @Test

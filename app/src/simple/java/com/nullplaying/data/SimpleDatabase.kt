@@ -110,6 +110,15 @@ interface RecentAdventureEventDao {
     suspend fun loadRecent(slotId: Int, limit: Int): List<RecentAdventureEventEntity>
 
     @Query(
+        """
+        UPDATE recent_adventure_events
+        SET occurredAt = :trustedNow
+        WHERE characterSlotId = :slotId AND occurredAt > :trustedNow
+        """,
+    )
+    suspend fun clampFutureTimestamps(slotId: Int, trustedNow: Long)
+
+    @Query(
         "DELETE FROM recent_adventure_events WHERE characterSlotId = :slotId AND id NOT IN " +
             "(SELECT id FROM recent_adventure_events WHERE characterSlotId = :slotId " +
             "ORDER BY occurredAt DESC, id DESC LIMIT :limit)",

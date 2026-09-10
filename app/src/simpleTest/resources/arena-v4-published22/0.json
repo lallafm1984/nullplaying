@@ -1,0 +1,737 @@
+[
+    {
+        "fighter": {
+            "id": "profile-WARRIOR-15-4-defensive_ward",
+            "heroClass": "WARRIOR",
+            "level": 15,
+            "stats": {
+                "strength": 29.0,
+                "constitution": 14.0,
+                "dexterity": 12.0,
+                "intelligence": 15.0,
+                "wisdom": 13.0,
+                "charisma": 11.0,
+                "rawMaxHealth": 102.0,
+                "rawMaxMana": 101.0
+            },
+            "attacks": [
+                {
+                    "id": "warrior_t01_c01",
+                    "name": "칼날 베기",
+                    "tier": 1,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 6,
+                        "prepareTurns": 0,
+                        "mpCost": 13,
+                        "cooldownTurns": 1,
+                        "damagePercent": 158,
+                        "effectKey": "ACCURATE",
+                        "effectValues": {
+                            "accuracy": 14.666666666666668
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A01",
+                            "ACCURATE"
+                        ]
+                    }
+                },
+                {
+                    "id": "warrior_t02_c03",
+                    "name": "강철 베기",
+                    "tier": 2,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 3,
+                        "prepareTurns": 0,
+                        "mpCost": 12,
+                        "cooldownTurns": 2,
+                        "damagePercent": 137,
+                        "effectKey": "PREPARATION_PUNISH",
+                        "effectValues": {
+                            "bonus": 21.666666666666668,
+                            "masterBleedTick": 0.0,
+                            "masterBleedTurns": 0.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A02",
+                            "PREPARATION_PUNISH"
+                        ]
+                    }
+                },
+                {
+                    "id": "warrior_t03_c02",
+                    "name": "파쇄격",
+                    "tier": 3,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 4,
+                        "prepareTurns": 1,
+                        "mpCost": 17,
+                        "cooldownTurns": 2,
+                        "damagePercent": 267,
+                        "effectKey": "SHIELD_SHATTER",
+                        "effectValues": {
+                            "masterRupture": 0.0,
+                            "masterRuptureTurns": 0.0,
+                            "shatter": 83.33333333333334
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 35.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A03",
+                            "SHIELD_SHATTER"
+                        ]
+                    }
+                },
+                {
+                    "id": "warrior_t04_c03",
+                    "name": "대지 가르기",
+                    "tier": 4,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 1,
+                        "prepareTurns": 0,
+                        "mpCost": 11,
+                        "cooldownTurns": 2,
+                        "damagePercent": 85,
+                        "effectKey": "MISS_RECOVERY",
+                        "effectValues": {
+                            "bonus": 15.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A04",
+                            "MISS_RECOVERY"
+                        ]
+                    }
+                }
+            ]
+        },
+        "supportIds": [
+            "ARENA_SUP_FIGHTER_01"
+        ],
+        "traits": [],
+        "arenaLevel": 15,
+        "arenaClassBalanceEnabled": true,
+        "supportRanks": {
+            "ARENA_SUP_FIGHTER_01": 1
+        },
+        "resolvedSupports": {
+            "ARENA_SUP_FIGHTER_01": {
+                "schemaVersion": 1,
+                "id": "ARENA_SUP_FIGHTER_01",
+                "heroClass": "WARRIOR",
+                "rank": 1,
+                "kind": "IRON",
+                "mp": 29,
+                "castTurns": 1,
+                "durationTurns": 4,
+                "cooldownTurns": 5,
+                "charges": 0,
+                "magnitude": 13.8,
+                "secondary": 0.0,
+                "threshold": 0.0,
+                "oncePerBattle": false,
+                "conditionKey": "UTILITY"
+            }
+        },
+        "identity": {
+            "version": "arena-stat-identity-v4",
+            "stats": {
+                "hp": 455.0,
+                "mp": 91,
+                "attack": 31.69363143398507,
+                "weightedAttack": 21.85,
+                "aim": 12.399999999999999,
+                "evade": 12.350000000000001,
+                "dexterity": 12.0,
+                "physicalGuard": 16.85,
+                "magicGuard": 13.700000000000001,
+                "resistance": 12.950000000000001,
+                "baseHit": 0.94,
+                "baseEvade": 0.03
+            },
+            "skills": [
+                {
+                    "id": "ARENA_SUP_FIGHTER_01",
+                    "slot": "S01",
+                    "kind": "IRON",
+                    "rank": 1,
+                    "support": true,
+                    "actionTurns": 1,
+                    "cooldown": 8,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 6,
+                    "charges": 0,
+                    "mp": 15,
+                    "damagePercent": 0,
+                    "magnitude": 12.0,
+                    "statFactor": 0.900354540096478,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "charges": 0.0,
+                        "cooldown_turns": 8.0,
+                        "duration_turns": 6.0,
+                        "magnitude_r1": 12.0,
+                        "magnitude_r10": 20.0,
+                        "mp_r1": 14.0,
+                        "mp_r10": 18.0,
+                        "stat_factor_max": 1.15,
+                        "stat_factor_min": 0.85
+                    },
+                    "options": {
+                        "effect_kind": "IRON",
+                        "role": "피해 억제",
+                        "stat_scaled": "true",
+                        "status": "numeric_design_individual_effect_defined_not_runtime_verified",
+                        "unit": "percent_damage"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "warrior_t01_c01",
+                    "slot": "A01",
+                    "kind": "accuracy",
+                    "rank": 6,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 2,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 0,
+                    "charges": 0,
+                    "mp": 10,
+                    "damagePercent": 136,
+                    "magnitude": 6.222,
+                    "statFactor": 0.9443920955863352,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_charges": 1.0,
+                        "capstone_duration_turns": 2.0,
+                        "capstone_value": 12.0,
+                        "cooldown_turns": 2.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 0.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 4.0,
+                        "effect_r10": 8.0,
+                        "counter_damage": 8.0
+                    },
+                    "options": {
+                        "damage_type": "physical",
+                        "effect_kind": "accuracy",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "before_current_accuracy_roll",
+                        "effect_unit": "percentage_points",
+                        "once_per_battle": "false",
+                        "role": "정확한 베기",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "warrior_t02_c03",
+                    "slot": "A02",
+                    "kind": "followup_damage",
+                    "rank": 3,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 1,
+                    "mp": 7,
+                    "damagePercent": 121,
+                    "magnitude": 9.556,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_value": 8.0,
+                        "charges": 1.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 8.0,
+                        "effect_r10": 15.0
+                    },
+                    "options": {
+                        "affects": "next_direct_attack_excluding_triggering_action",
+                        "damage_type": "physical",
+                        "effect_kind": "followup_damage",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent",
+                        "once_per_battle": "false",
+                        "role": "강한 후속타",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "warrior_t03_c02",
+                    "slot": "A03",
+                    "kind": "shield_extra",
+                    "rank": 4,
+                    "support": false,
+                    "actionTurns": 2,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 15,
+                    "damagePercent": 277,
+                    "magnitude": 40.0,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 2.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 35.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 30.0,
+                        "effect_r10": 60.0
+                    },
+                    "options": {
+                        "damage_type": "physical",
+                        "effect_kind": "shield_extra",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent",
+                        "once_per_battle": "false",
+                        "overflow_bonus_to_hp": "false",
+                        "role": "보호막 파쇄",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "warrior_t04_c03",
+                    "slot": "A04",
+                    "kind": "weaken_damage",
+                    "rank": 1,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 6,
+                    "damagePercent": 105,
+                    "magnitude": 6.0,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 6.0,
+                        "effect_r10": 12.0
+                    },
+                    "options": {
+                        "damage_type": "physical",
+                        "effect_kind": "weaken_damage",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent",
+                        "once_per_battle": "false",
+                        "role": "균형 무너뜨리기",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                }
+            ]
+        }
+    },
+    {
+        "fighter": {
+            "id": "profile-ROGUE-15-5-swift_assault",
+            "heroClass": "ROGUE",
+            "level": 15,
+            "stats": {
+                "strength": 21.0,
+                "constitution": 6.0,
+                "dexterity": 22.0,
+                "intelligence": 14.0,
+                "wisdom": 16.0,
+                "charisma": 12.0,
+                "rawMaxHealth": 55.0,
+                "rawMaxMana": 100.0
+            },
+            "attacks": [
+                {
+                    "id": "rogue_t01_c01",
+                    "name": "빠른 찌르기",
+                    "tier": 1,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 7,
+                        "prepareTurns": 0,
+                        "mpCost": 14,
+                        "cooldownTurns": 1,
+                        "damagePercent": 168,
+                        "effectKey": "ACCURATE",
+                        "effectValues": {
+                            "accuracy": 16.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A01",
+                            "ACCURATE"
+                        ]
+                    }
+                },
+                {
+                    "id": "rogue_t02_c02",
+                    "name": "암습",
+                    "tier": 2,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 4,
+                        "prepareTurns": 0,
+                        "mpCost": 13,
+                        "cooldownTurns": 2,
+                        "damagePercent": 148,
+                        "effectKey": "PREPARATION_PUNISH",
+                        "effectValues": {
+                            "bonus": 25.0,
+                            "masterBleedTick": 0.0,
+                            "masterBleedTurns": 0.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A02",
+                            "PREPARATION_PUNISH"
+                        ]
+                    }
+                },
+                {
+                    "id": "rogue_t03_c03",
+                    "name": "맹독 쌍침",
+                    "tier": 3,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 3,
+                        "prepareTurns": 1,
+                        "mpCost": 15,
+                        "cooldownTurns": 2,
+                        "damagePercent": 247,
+                        "effectKey": "SHIELD_SHATTER",
+                        "effectValues": {
+                            "masterRupture": 0.0,
+                            "masterRuptureTurns": 0.0,
+                            "shatter": 72.22222222222223
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 35.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A03",
+                            "SHIELD_SHATTER"
+                        ]
+                    }
+                },
+                {
+                    "id": "rogue_t04_c04",
+                    "name": "칼날 덫",
+                    "tier": 4,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 1,
+                        "prepareTurns": 0,
+                        "mpCost": 11,
+                        "cooldownTurns": 2,
+                        "damagePercent": 85,
+                        "effectKey": "MISS_RECOVERY",
+                        "effectValues": {
+                            "bonus": 15.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A04",
+                            "MISS_RECOVERY"
+                        ]
+                    }
+                }
+            ]
+        },
+        "supportIds": [],
+        "traits": [],
+        "arenaLevel": 15,
+        "arenaClassBalanceEnabled": true,
+        "supportRanks": {},
+        "resolvedSupports": {},
+        "identity": {
+            "version": "arena-stat-identity-v4",
+            "stats": {
+                "hp": 440.0,
+                "mp": 91,
+                "attack": 29.857492994394395,
+                "weightedAttack": 20.8,
+                "aim": 20.2,
+                "evade": 19.9,
+                "dexterity": 22.0,
+                "physicalGuard": 10.500000000000002,
+                "magicGuard": 13.5,
+                "resistance": 12.899999999999999,
+                "baseHit": 0.92,
+                "baseEvade": 0.08
+            },
+            "skills": [
+                {
+                    "id": "rogue_t01_c01",
+                    "slot": "A01",
+                    "kind": "accuracy",
+                    "rank": 7,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 2,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 0,
+                    "charges": 0,
+                    "mp": 11,
+                    "damagePercent": 145,
+                    "magnitude": 5.0,
+                    "statFactor": 0.9963877064368375,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_duration_turns": 2.0,
+                        "capstone_max_stacks": 1.0,
+                        "capstone_value": 6.0,
+                        "cooldown_turns": 2.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 0.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 3.0,
+                        "effect_r10": 6.0,
+                        "opening_damage": 8.0
+                    },
+                    "options": {
+                        "damage_type": "physical",
+                        "effect_kind": "accuracy",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "before_current_accuracy_roll",
+                        "effect_unit": "percentage_points",
+                        "once_per_battle": "false",
+                        "role": "빠른 연속 찌르기",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "rogue_t02_c02",
+                    "slot": "A02",
+                    "kind": "preparing_bonus",
+                    "rank": 4,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 8,
+                    "damagePercent": 130,
+                    "magnitude": 13.333,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 10.0,
+                        "effect_r10": 20.0
+                    },
+                    "options": {
+                        "damage_type": "physical",
+                        "effect_kind": "preparing_bonus",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent",
+                        "once_per_battle": "false",
+                        "requires": "target_preparing_action_at_resolution",
+                        "role": "틈새 암습",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "rogue_t03_c03",
+                    "slot": "A03",
+                    "kind": "poison_tick",
+                    "rank": 3,
+                    "support": false,
+                    "actionTurns": 2,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 14,
+                    "damagePercent": 269,
+                    "magnitude": 6.889,
+                    "statFactor": 0.9913083817320963,
+                    "numbers": {
+                        "action_turns": 2.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 35.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 6.0,
+                        "effect_r10": 10.0,
+                        "max_stacks": 3.0
+                    },
+                    "options": {
+                        "damage_type": "physical",
+                        "effect_kind": "poison_tick",
+                        "effect_stacking": "independent_expiry_no_whole_stack_refresh",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent_skill_attack_per_tick",
+                        "once_per_battle": "false",
+                        "role": "맹독 주입",
+                        "stat_scaled": "false",
+                        "tick_starts": "next_turn"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "rogue_t04_c04",
+                    "slot": "A04",
+                    "kind": "slow_accuracy",
+                    "rank": 1,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 6,
+                    "damagePercent": 110,
+                    "magnitude": 4.0,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 4.0,
+                        "effect_r10": 8.0
+                    },
+                    "options": {
+                        "damage_type": "physical",
+                        "effect_kind": "slow_accuracy",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percentage_points",
+                        "once_per_battle": "false",
+                        "role": "칼날 덫",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                }
+            ]
+        }
+    }
+]

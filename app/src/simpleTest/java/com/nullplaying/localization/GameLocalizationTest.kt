@@ -38,6 +38,21 @@ class GameLocalizationTest {
     }
 
     @Test
+    fun `every partial arena reward quantity has English and Japanese copy`() {
+        (1..5).forEach { count ->
+            assertEquals("Watch ad for $count " + if (count == 1) "entry" else "entries",
+                GameLocalization.translate("광고로 ${count}회 충전", AppLanguage.ENGLISH))
+            assertEquals("広告で${count}回分回復",
+                GameLocalization.translate("광고로 ${count}회 충전", AppLanguage.JAPANESE))
+            listOf(AppLanguage.ENGLISH, AppLanguage.JAPANESE).forEach { language ->
+                val copy = GameLocalization.translate("광고 시청 완료 시\n출전권 ${count}개 즉시 충전", language)
+                assertFalse(copy.contains("출전권"))
+                assertTrue(copy.contains(count.toString()))
+            }
+        }
+    }
+
+    @Test
     fun `fresh install selects a supported device language and otherwise uses English`() {
         assertEquals(AppLanguage.KOREAN, AppLanguage.fromDevice(Locale.KOREA))
         assertEquals(AppLanguage.JAPANESE, AppLanguage.fromDevice(Locale.JAPAN))
@@ -125,9 +140,30 @@ class GameLocalizationTest {
     }
 
     @Test
+    fun `arena naming is consistent in Korean Japanese and English`() {
+        assertEquals("결투장", GameLocalization.translate("결투장", AppLanguage.KOREAN))
+        assertEquals("闘技場", GameLocalization.translate("결투장", AppLanguage.JAPANESE))
+        assertEquals("Arena", GameLocalization.translate("결투장", AppLanguage.ENGLISH))
+        assertEquals(
+            "闘技場ランキング",
+            GameLocalization.translate("결투장 랭킹", AppLanguage.JAPANESE),
+        )
+        assertEquals(
+            "Arena rankings",
+            GameLocalization.translate("결투장 랭킹", AppLanguage.ENGLISH),
+        )
+    }
+
+    @Test
     fun `ad recovery and optional charging copy is complete in English and Japanese`() {
         val readyMessage = "광고를 끝까지 보면\n오프라인 모험 시간이 즉시 충전됩니다."
         val supportingMessage = "광고를 보지 않아도 앱을 켜 둔 동안\n자동으로 충전됩니다."
+        assertEquals("Watch ad and fully recharge", GameLocalization.translate("광고 보고 모두 충전", AppLanguage.ENGLISH))
+        assertEquals("広告を見て全回復", GameLocalization.translate("광고 보고 모두 충전", AppLanguage.JAPANESE))
+        assertEquals("Watch ad to refill 5", GameLocalization.translate("광고 보고 5개 충전", AppLanguage.ENGLISH))
+        assertEquals("広告を見て5枚回復", GameLocalization.translate("광고 보고 5개 충전", AppLanguage.JAPANESE))
+        assertEquals("Watch the full ad to instantly\nrefill 5 arena tickets.", GameLocalization.translate("광고 시청 완료 시\n출전권 5개 즉시 충전", AppLanguage.ENGLISH))
+        assertEquals("広告を最後まで見ると\n出場券が5枚まで回復します。", GameLocalization.translate("광고 시청 완료 시\n출전권 5개 즉시 충전", AppLanguage.JAPANESE))
 
         assertEquals(
             "Retry ad setup",
@@ -169,7 +205,7 @@ class GameLocalizationTest {
         for (scene in 1..3) {
             val source = "프롤로그 ${scene}번째 장면"
             assertEquals("Prologue Scene $scene", GameLocalization.translate(source, AppLanguage.ENGLISH))
-            assertEquals("プロローグ ${scene}話", GameLocalization.translate(source, AppLanguage.JAPANESE))
+            assertEquals("プロローグ・シーン$scene", GameLocalization.translate(source, AppLanguage.JAPANESE))
             assertEquals(source, GameLocalization.translate(source, AppLanguage.KOREAN))
         }
     }
@@ -211,6 +247,59 @@ class GameLocalizationTest {
     }
 
     @Test
+    fun `correspondence arrival and projection copy preserve dynamic names`() {
+        val arrival = "라온에게서 서신이 도착했습니다."
+        assertEquals(
+            "A letter has arrived from 라온.",
+            GameLocalization.translatePreserving(
+                arrival,
+                AppLanguage.ENGLISH,
+                protectedValues = listOf("라온"),
+            ),
+        )
+        assertEquals(
+            "라온から書簡が届きました。",
+            GameLocalization.translatePreserving(
+                arrival,
+                AppLanguage.JAPANESE,
+                protectedValues = listOf("라온"),
+            ),
+        )
+
+        val projection = "유하의 투영 · 레인저 · Lv.27 · 142위"
+        assertEquals(
+            "유하's projection · Ranger · Lv.27 · Rank 142",
+            GameLocalization.translatePreserving(
+                projection,
+                AppLanguage.ENGLISH,
+                protectedValues = listOf("유하"),
+            ),
+        )
+        assertEquals(
+            "유하の投影 · レンジャー · Lv.27 · 142位",
+            GameLocalization.translatePreserving(
+                projection,
+                AppLanguage.JAPANESE,
+                protectedValues = listOf("유하"),
+            ),
+        )
+    }
+
+    @Test
+    fun `correspondence outcome joins naturally in English and Japanese`() {
+        val outcome = "건넨 말을 따라 더 높은 목표를 택했습니다."
+
+        assertEquals(
+            "Following my advice, the hero chose a higher goal.",
+            GameLocalization.translate(outcome, AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "かけられた言葉に従い、より高い目標を選びました。",
+            GameLocalization.translate(outcome, AppLanguage.JAPANESE),
+        )
+    }
+
+    @Test
     fun `opening narrative replaces Korean hero particles with natural Japanese grammar`() {
         val localized = localizedStoryText(
             text = "QA는 무너진 북문 앞에서 손잡이가 닳은 검을 발견했다.",
@@ -223,6 +312,108 @@ class GameLocalizationTest {
             localized,
         )
         assertFalse(Regex("[가-힣]").containsMatchIn(localized))
+    }
+
+    @Test
+    fun `quest pattern removes Korean object particles from localized monster names`() {
+        val vowelEndingMonster = "Lina는 오래된 수로를 막은 재먼지 들쥐를 몰아내고 벽 너머의 바람을 들었다."
+        val consonantEndingMonster = "Lina는 오래된 수로를 막은 수로 슬라임을 몰아내고 벽 너머의 바람을 들었다."
+
+        assertEquals(
+            "Lina drove Ash-Dust Field Mouse from the old waterway and heard the wind beyond the wall.",
+            localizedStoryText(vowelEndingMonster, "Lina", AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "Lina drove Waterway Slime from the old waterway and heard the wind beyond the wall.",
+            localizedStoryText(consonantEndingMonster, "Lina", AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "Linaは古い水路を塞いでいた灰塵の野ネズミを追い払い、壁の向こうから吹く風の音を聞いた。",
+            localizedStoryText(vowelEndingMonster, "Lina", AppLanguage.JAPANESE),
+        )
+        assertEquals(
+            "Linaは古い水路を塞いでいた水路のスライムを追い払い、壁の向こうから吹く風の音を聞いた。",
+            localizedStoryText(consonantEndingMonster, "Lina", AppLanguage.JAPANESE),
+        )
+    }
+
+    @Test
+    fun `quest patterns supply natural subject grammar after dynamic names`() {
+        val heroOpening = "Lina가 새벽 시장의 지붕에서 눈을 뜨자 손바닥에 낯선 은빛 동전이 놓여 있었다. " +
+            "동전이 굴러간 곳에는 잘린 봉인끈과 급히 지운 발자국이 남아 있었다."
+        assertEquals(
+            "When Lina opened their eyes on the roof of the Dawn Market, a strange silver coin lay in their palm. " +
+                "A severed seal string and hastily erased footprints marked where the coin had rolled.",
+            localizedStoryText(heroOpening, "Lina", AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "Linaが暁の市場の屋根で目を覚ますと、手のひらに見知らぬ銀貨が置かれていた。" +
+                "銀貨が転がった先には、切れた封印紐と急いで消された足跡が残っていた。",
+            localizedStoryText(heroOpening, "Lina", AppLanguage.JAPANESE),
+        )
+
+        val copiedTracks = "북풍 송곳니가 지나간 자리마다 조사대의 발자국이 똑같이 생겨났다."
+        assertEquals(
+            "Wherever Northwind Fang passed, footprints identical to the survey team’s appeared.",
+            GameLocalization.translate(copiedTracks, AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "北風の牙が通った場所ごとに、調査隊と同じ足跡が現れた。",
+            GameLocalization.translate(copiedTracks, AppLanguage.JAPANESE),
+        )
+    }
+
+    @Test
+    fun `specific combat and arena patterns precede generic patterns`() {
+        assertEquals(
+            "基本攻撃・17ダメージ",
+            GameLocalization.translate("기본 공격 · 17 피해", AppLanguage.JAPANESE),
+        )
+        assertEquals(
+            "Ari · Fighter · Lv.20 · Power 999",
+            GameLocalization.translate("Ari · 파이터 · Lv.20 · 전투력 999", AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "Ari・ファイター・Lv.20・戦闘力 999",
+            GameLocalization.translate("Ari · 파이터 · Lv.20 · 전투력 999", AppLanguage.JAPANESE),
+        )
+        assertEquals(
+            "VS Ari・ファイター・Lv.20・戦闘力 999",
+            GameLocalization.translate("VS Ari · 파이터 · Lv.20 · 전투력 999", AppLanguage.JAPANESE),
+        )
+    }
+
+    @Test
+    fun `dynamic status and action labels keep target language grammar`() {
+        assertEquals("Purchased Northwind Fang · -20G", GameLocalization.translate("북풍 송곳니 구매 · -20G", AppLanguage.ENGLISH))
+        assertEquals("北風の牙を購入・-20G", GameLocalization.translate("북풍 송곳니 구매 · -20G", AppLanguage.JAPANESE))
+        assertEquals("Choice outcome. Read New Letter.", GameLocalization.translate("선택 결과. 새 서신 읽기.", AppLanguage.ENGLISH))
+        assertEquals("選択の結果。新しい書簡を読む。", GameLocalization.translate("선택 결과. 새 서신 읽기.", AppLanguage.JAPANESE))
+        assertEquals("Replaced gear in 3 slots with drops", GameLocalization.translate("드롭 장비 3부위 교체", AppLanguage.ENGLISH))
+        assertEquals("3部位を自動交換", GameLocalization.translate("3부위 자동 교체", AppLanguage.JAPANESE))
+        assertEquals("Outside Top 1000", GameLocalization.translate("1000위 밖", AppLanguage.ENGLISH))
+        assertEquals("1000位圏外", GameLocalization.translate("1000위 밖", AppLanguage.JAPANESE))
+        assertEquals("Rank 12", GameLocalization.translate("12위", AppLanguage.ENGLISH))
+        assertEquals("Transcendent Tier 12", GameLocalization.translate("초월 12단식", AppLanguage.ENGLISH))
+        assertEquals("超越12段", GameLocalization.translate("초월 12단식", AppLanguage.JAPANESE))
+        assertEquals("3 hits · 80~", GameLocalization.translate("3타 · 80~", AppLanguage.ENGLISH))
+        assertEquals("3ヒット・80～", GameLocalization.translate("3타 · 80~", AppLanguage.JAPANESE))
+        assertEquals("Continue as Lina", GameLocalization.translate("Lina으로 이어하기", AppLanguage.ENGLISH))
+    }
+
+    @Test
+    fun `labyrinth tier and activity render as one native label`() {
+        val surfaceGate = "표층 관문 · 기억나무 뿌리가 길을 바꾸는 회랑"
+        assertEquals(
+            "Surface Gate · Memory Tree roots altering the path of the corridor",
+            GameLocalization.translate(surfaceGate, AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "表層関門 · 記憶の木の根が回廊の道を変える",
+            GameLocalization.translate(surfaceGate, AppLanguage.JAPANESE),
+        )
+        assertEquals("Deep Expedition", GameLocalization.translate("심층 원정", AppLanguage.ENGLISH))
+        assertEquals("深層遠征", GameLocalization.translate("심층 원정", AppLanguage.JAPANESE))
     }
 
     @Test

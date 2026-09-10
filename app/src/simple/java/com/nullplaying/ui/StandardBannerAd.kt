@@ -38,6 +38,36 @@ internal fun StandardBannerAd(
     mobileAdsReady: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    if (!BuildConfig.REMOTE_SERVICES_ENABLED) {
+        val qaLabel = if (BuildConfig.BATTLE_QA_BRIDGE_ENABLED) {
+            "결투장 QA · 라이브 DB 연결 차단"
+        } else {
+            "OFFLINE QA · 서버 연결 차단"
+        }
+        val qaDescription = if (BuildConfig.BATTLE_QA_BRIDGE_ENABLED) {
+            "결투장 QA, 라이브 데이터베이스 연결 차단됨"
+        } else {
+            "오프라인 QA, 서버 연결 차단됨"
+        }
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(BANNER_HOST_HEIGHT)
+                .background(Color(0xFF100C16))
+                .border(width = 1.dp, color = AqSurfaceHigh)
+                .semantics {
+                    contentDescription = localized(qaDescription)
+                },
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = qaLabel,
+                color = AqGold,
+                fontSize = 12.sp,
+            )
+        }
+        return
+    }
     val context = LocalContext.current
     val isPreview = LocalInspectionMode.current
     // Recreate the view when UMP stops allowing requests so a previously loaded banner is dropped.

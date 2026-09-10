@@ -33,6 +33,8 @@ class QaSupabaseIsolationTest {
         }
         assertEquals("", BuildConfig.SUPABASE_URL)
         assertEquals("", BuildConfig.SUPABASE_PUBLISHABLE_KEY)
+        assertEquals(BuildConfig.ADVENTURE_PREVIEW_ENABLED, BuildConfig.ADVENTURE_SYSTEM_ENABLED)
+        assertFalse(BuildConfig.SHARED_PLAYER_SYNC_ENABLED)
         val context = RuntimeEnvironment.getApplication()
         val database = Room.inMemoryDatabaseBuilder(context, SimpleDatabase::class.java)
             .allowMainThreadQueries().build()

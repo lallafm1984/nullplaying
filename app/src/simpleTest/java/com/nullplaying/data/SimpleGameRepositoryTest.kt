@@ -1,14 +1,36 @@
 package com.nullplaying.data
 
 import androidx.room.Room
+import com.nullplaying.BuildConfig
+import com.nullplaying.engine.AdventureEventEngine
+import com.nullplaying.engine.HeroPathCatalog
 import com.nullplaying.engine.SimpleGameEngine
 import com.nullplaying.engine.OfflineAdventureConfig
+import com.nullplaying.model.HeroPathAllocationTarget
+import com.nullplaying.model.HeroPathBranch
+import com.nullplaying.model.HeroPathMutationStatus
+import com.nullplaying.model.HeroPathNodeSlot
+import com.nullplaying.model.CorrespondenceRecord
+import com.nullplaying.model.CorrespondenceReplyIntent
+import com.nullplaying.model.CorrespondenceStatus
+import com.nullplaying.model.CorrespondenceTopic
 import com.nullplaying.model.HeroClass
+import com.nullplaying.model.AdventurePhase
 import com.nullplaying.model.RecentAdventureEventType
 import com.nullplaying.model.SimpleGameState
+import com.nullplaying.model.TRUSTED_TIMELINE_LEGACY
+import com.nullplaying.model.TRUSTED_TIMELINE_PROVISIONAL_NEW
+import com.nullplaying.model.TRUSTED_TIMELINE_VERIFIED
+import com.nullplaying.time.BootCountSource
+import com.nullplaying.time.ElapsedRealtimeSource
+import com.nullplaying.time.TrustedGameClock
+import com.nullplaying.time.TrustedTimeAnchor
+import com.nullplaying.time.TrustedTimeAnchorStore
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -16,6 +38,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Assume.assumeTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -65,6 +88,353 @@ class SimpleGameRepositoryTest {
         assertEquals(firstSave, backupStore[1])
         assertTrue(database.stateDao().load()!!.updatedAt > firstSave!!.updatedAt)
     }
+
+    @Test
+    fun `application owned earned reward targets its character and survives a retry`() = runBlocking {
+        val repository = repository()
+        val stats = engine.rollStats(91L).stats
+        repository.createCharacter("광고 보상", HeroClass.RANGER, stats, 92L, 1_000L)
+        val characterId = repository.snapshots.value.state!!.rankingCharacterId
+        repository.snapshots.value.state!!.offlineAdventureMillis = 0L
+
+        assertEquals(
+            RewardedOfflineGrantStatus.APPLIED,
+            repository.grantRewardedOfflineAdventureForCharacter(
+                characterId = characterId,
+                now = 1_001L,
+                rewardRequestId = "durable-request",
+            ),
+        )
+        val persisted = Json.decodeFromString<SimpleGameState>(database.stateDao().load()!!.payload)
+        assertEquals(engine.offlineAdventureCapacityMillis(persisted), persisted.offlineAdventureMillis)
+        assertTrue("durable-request" in persisted.rewardedOfflineRequestIds)
+
+        assertEquals(
+            RewardedOfflineGrantStatus.ALREADY_APPLIED,
+            repository.grantRewardedOfflineAdventureForCharacter(
+                characterId = characterId,
+                now = 1_002L,
+                rewardRequestId = "durable-request",
+            ),
+        )
+    }
+
+    @Test
+    fun `verified startup rebases a future legacy save without granting or removing progress`() =
+        runBlocking {
+            val future = engine.newGame(
+                "미래 기록",
+                HeroClass.WARRIOR,
+                engine.rollStats(77L).stats,
+                88L,
+                500_000L,
+            ).apply {
+                trustedTimelineVersion = TRUSTED_TIMELINE_LEGACY
+                actionStartedAt = 498_000L
+                lastSettledAt = 500_000L
+                actionEndsAt = 504_000L
+                hero.experience = 123L
+                hero.gold = 456L
+                totalKills = 7L
+                totalActs = 8L
+                offlineAdventureMillis = 9_000L
+            }
+            val encodedFuture = Json { encodeDefaults = true }.encodeToString(future)
+            assertEquals(9_000L, Json.decodeFromString<SimpleGameState>(encodedFuture).offlineAdventureMillis)
+            database.stateDao().save(
+                SimpleStateEntity(payload = encodedFuture, updatedAt = 500_000L),
+            )
+            database.recentAdventureEventDao().insertAll(
+                listOf(
+                    RecentAdventureEventEntity(
+                        characterSlotId = 1,
+                        occurredAt = 499_000L,
+                        eventType = RecentAdventureEventType.LEVEL_UP.name,
+                    ),
+                ),
+            )
+
+            val repository = repository()
+            repository.initialize(now = 100_000L, trustedTime = true)
+
+            val migrated = repository.snapshots.value.state!!
+            assertEquals(98_000L, migrated.actionStartedAt)
+            assertEquals(104_000L, migrated.actionEndsAt)
+            assertEquals(100_000L, migrated.lastSettledAt)
+            assertEquals(TRUSTED_TIMELINE_VERIFIED, migrated.trustedTimelineVersion)
+            assertEquals(123L, migrated.hero.experience)
+            assertEquals(456L, migrated.hero.gold)
+            assertEquals(7L, migrated.totalKills)
+            assertEquals(8L, migrated.totalActs)
+            assertEquals(9_000L, migrated.offlineAdventureMillis)
+            assertEquals(
+                100_000L,
+                database.recentAdventureEventDao().loadRecent(slotId = 1, limit = 1).single().occurredAt,
+            )
+        }
+
+    @Test
+    fun `actual v17 payload without trusted timeline field upgrades normally`() = runBlocking {
+        val legacy = engine.newGame(
+            "v17 기록",
+            HeroClass.WARRIOR,
+            engine.rollStats(77L).stats,
+            88L,
+            10_000L,
+        ).apply {
+            offlineAdventureMillis = 5_000L
+        }
+        val v17Payload = Json { encodeDefaults = true }
+            .encodeToString(legacy)
+            .replace("\"trustedTimelineVersion\":0,", "")
+        assertFalse(v17Payload.contains("trustedTimelineVersion"))
+        database.stateDao().save(SimpleStateEntity(payload = v17Payload, updatedAt = 10_000L))
+
+        val repository = repository()
+        repository.initialize(now = 12_000L, trustedTime = true)
+
+        val upgraded = requireNotNull(repository.snapshots.value.state)
+        assertEquals(TRUSTED_TIMELINE_VERIFIED, upgraded.trustedTimelineVersion)
+        assertEquals(12_000L, upgraded.lastSettledAt)
+        assertEquals(3_000L, upgraded.offlineAdventureMillis)
+    }
+
+    @Test
+    fun `first offline v18 launch never settles an existing save from provisional wall time`() =
+        runBlocking {
+            val legacy = engine.newGame(
+                "오프라인 업그레이드",
+                HeroClass.WARRIOR,
+                engine.rollStats(77L).stats,
+                88L,
+                1_000L,
+            ).apply {
+                schemaVersion = 7
+                hero.gold = 123L
+                totalKills = 4L
+                totalActs = 5L
+            }
+            database.stateDao().save(
+                SimpleStateEntity(
+                    payload = Json { encodeDefaults = true }.encodeToString(legacy),
+                    updatedAt = 1_000L,
+                ),
+            )
+            val clock = TrustedGameClock(
+                store = MemoryTrustedTimeAnchorStore(),
+                elapsedRealtimeSource = ElapsedRealtimeSource { 10L },
+                bootCountSource = BootCountSource { 7L },
+            )
+            assertNotNull(clock.installProvisionalAnchor(5_000_000L))
+            val repository = repository(gameClock = clock)
+
+            repository.initialize(
+                now = 5_000_000L,
+                trustedTime = false,
+                deferUnverifiedSettlement = true,
+            )
+
+            val deferred = requireNotNull(repository.snapshots.value.state)
+            assertEquals(5_000_000L, deferred.lastSettledAt)
+            assertEquals(123L, deferred.hero.gold)
+            assertEquals(4L, deferred.totalKills)
+            assertEquals(5L, deferred.totalActs)
+            assertEquals(TRUSTED_TIMELINE_LEGACY, deferred.trustedTimelineVersion)
+        }
+
+    @Test
+    fun `persisted timeline ceiling uses the newest character checkpoint`() = runBlocking {
+        val json = Json { encodeDefaults = true }
+        val newer = engine.newGame(
+            "새 시각",
+            HeroClass.WARRIOR,
+            engine.rollStats(77L).stats,
+            88L,
+            20_000L,
+        )
+        val older = engine.newGame(
+            "옛 시각",
+            HeroClass.ROGUE,
+            engine.rollStats(78L).stats,
+            89L,
+            10_000L,
+        )
+        database.stateDao().save(SimpleStateEntity(id = 1, payload = json.encodeToString(newer), updatedAt = 99_000L))
+        database.stateDao().save(SimpleStateEntity(id = 2, payload = json.encodeToString(older), updatedAt = 98_000L))
+
+        assertEquals(20_000L, repository().persistedTimelineCeilingOrNull())
+    }
+
+    @Test
+    fun `verified startup gives a normal legacy save only its bank limited offline gap`() =
+        runBlocking {
+            val legacy = engine.newGame(
+                "정상 기록",
+                HeroClass.WARRIOR,
+                engine.rollStats(77L).stats,
+                88L,
+                1_000L,
+            ).apply {
+                trustedTimelineVersion = TRUSTED_TIMELINE_LEGACY
+                offlineAdventureMillis = 5_000L
+            }
+            val encodedLegacy = Json { encodeDefaults = true }.encodeToString(legacy)
+            assertEquals(5_000L, Json.decodeFromString<SimpleGameState>(encodedLegacy).offlineAdventureMillis)
+            database.stateDao().save(
+                SimpleStateEntity(payload = encodedLegacy, updatedAt = 1_000L),
+            )
+            database.recentAdventureEventDao().insertAll(
+                listOf(
+                    RecentAdventureEventEntity(
+                        characterSlotId = 1,
+                        occurredAt = 99_000L,
+                        eventType = RecentAdventureEventType.LEVEL_UP.name,
+                    ),
+                ),
+            )
+
+            val repository = repository()
+            repository.initialize(now = 3_000L, trustedTime = true)
+
+            val migrated = repository.snapshots.value.state!!
+            assertEquals(3_000L, migrated.lastSettledAt)
+            assertEquals(3_000L, migrated.offlineAdventureMillis)
+            assertEquals(TRUSTED_TIMELINE_VERIFIED, migrated.trustedTimelineVersion)
+            assertEquals(
+                3_000L,
+                database.recentAdventureEventDao().loadRecent(1, 1).single().occurredAt,
+            )
+        }
+
+    @Test
+    fun `provisional new character adopts server time without treating epoch gap as offline time`() =
+        runBlocking {
+            var elapsed = 10L
+            val clockStore = MemoryTrustedTimeAnchorStore()
+            val clock = TrustedGameClock(
+                store = clockStore,
+                elapsedRealtimeSource = ElapsedRealtimeSource { elapsed },
+                bootCountSource = BootCountSource { 7L },
+            )
+            assertNotNull(clock.installProvisionalAnchor(1_000L))
+            val repository = repository()
+            repository.initialize(now = 1_000L, trustedTime = false)
+            repository.createCharacter(
+                "임시 시각",
+                HeroClass.WARRIOR,
+                engine.rollStats(77L).stats,
+                88L,
+                1_000L,
+            )
+            val before = repository.snapshots.value.state!!.copy(
+                hero = repository.snapshots.value.state!!.hero.copy(),
+            )
+            assertEquals(TRUSTED_TIMELINE_PROVISIONAL_NEW, before.trustedTimelineVersion)
+
+            elapsed = 20L
+            assertTrue(repository.adoptVerifiedServerTime(clock, serverEpochMillis = 5_000_000L))
+
+            val adopted = repository.snapshots.value.state!!
+            assertEquals(5_000_000L, adopted.lastSettledAt)
+            assertEquals(TRUSTED_TIMELINE_VERIFIED, adopted.trustedTimelineVersion)
+            assertEquals(before.hero.experience, adopted.hero.experience)
+            assertEquals(before.hero.gold, adopted.hero.gold)
+            assertEquals(before.totalKills, adopted.totalKills)
+            assertEquals(before.totalActs, adopted.totalActs)
+            assertEquals(before.offlineAdventureMillis, adopted.offlineAdventureMillis)
+        }
+
+    @Test
+    fun `queued mutation ignores a stale provisional sample after server correction`() =
+        runBlocking {
+            var elapsed = 10L
+            val clock = TrustedGameClock(
+                store = MemoryTrustedTimeAnchorStore(),
+                elapsedRealtimeSource = ElapsedRealtimeSource { elapsed },
+                bootCountSource = BootCountSource { 7L },
+            )
+            assertNotNull(clock.installProvisionalAnchor(5_000_000L))
+            val repository = repository(gameClock = clock)
+            repository.initialize(now = 5_000_000L, trustedTime = false)
+            repository.createCharacter(
+                "경쟁 조건 검사",
+                HeroClass.WARRIOR,
+                engine.rollStats(77L).stats,
+                88L,
+                5_000_000L,
+            )
+            repository.onAppForegrounded(now = 5_000_000L, elapsedRealtime = 10L)
+
+            val staleCallerSample = 5_000_000L
+            elapsed = 20L
+            assertTrue(repository.adoptVerifiedServerTime(clock, serverEpochMillis = 100_000L))
+            val corrected = repository.snapshots.value.state!!
+            val killsBeforeQueuedTick = corrected.totalKills
+            val actsBeforeQueuedTick = corrected.totalActs
+
+            // This simulates a UI tick that sampled the old provisional epoch before waiting for
+            // the repository mutex. Production must re-read the bound clock inside that mutex.
+            repository.tick(now = staleCallerSample, elapsedRealtime = 20L)
+
+            val afterQueuedTick = repository.snapshots.value.state!!
+            assertEquals(100_000L, afterQueuedTick.lastSettledAt)
+            assertEquals(killsBeforeQueuedTick, afterQueuedTick.totalKills)
+            assertEquals(actsBeforeQueuedTick, afterQueuedTick.totalActs)
+        }
+
+    @Test
+    fun `foreground wall clock jump advances adventure and trait active time by monotonic elapsed only`() =
+        runBlocking {
+            engine = SimpleGameEngine(
+                enableAdventureEvents = true,
+                enableAdventureRelationships = true,
+                enableAdventureTraits = true,
+            )
+            var monotonicNow = 10L
+            val clock = TrustedGameClock(
+                store = MemoryTrustedTimeAnchorStore(),
+                elapsedRealtimeSource = ElapsedRealtimeSource { monotonicNow },
+                bootCountSource = BootCountSource { 7L },
+            )
+            assertNotNull(clock.installVerifiedServerObservation(100_000L))
+            val repository = repository(gameClock = clock)
+            repository.initialize(now = 100_000L, trustedTime = true)
+            repository.createCharacter(
+                "벽시계 조작 검사",
+                HeroClass.WARRIOR,
+                engine.rollStats(77L).stats,
+                88L,
+                100_000L,
+            )
+            repository.onAppForegrounded(now = 100_000L, elapsedRealtime = monotonicNow)
+            val initial = requireNotNull(repository.snapshots.value.state)
+            initial.adventureJourney.initialized = true
+            initial.adventureJourney.nextEventAt = 110_000L
+            initial.adventureTraits.owned = listOf(
+                com.nullplaying.model.AdventureOwnedTrait(
+                    traitId = "G01",
+                    acquiredAt = 99_000L,
+                    acquisitionSequence = 1L,
+                ),
+            )
+            initial.adventureTraits.stableStartedAtByTrait = mapOf("G01" to 99_000L)
+
+            monotonicNow += 1_000L
+            repository.tick(
+                now = 100_000L + 8L * 60L * 60L * 1_000L,
+                elapsedRealtime = monotonicNow,
+            )
+
+            val advanced = requireNotNull(repository.snapshots.value.state)
+            assertEquals(101_000L, advanced.lastSettledAt)
+            assertEquals(110_000L, advanced.adventureJourney.nextEventAt)
+            assertEquals(
+                2_000L,
+                advanced.lastSettledAt -
+                    advanced.adventureTraits.stableStartedAtByTrait.getValue("G01"),
+            )
+            assertEquals(99_000L, advanced.adventureTraits.owned.single().acquiredAt)
+        }
 
     @Test
     fun `recent adventure events retain the newest three hundred per character`() = runBlocking {
@@ -120,6 +490,101 @@ class SimpleGameRepositoryTest {
     }
 
     @Test
+    fun `adventure qa trigger build gate requires the isolated offline package`() {
+        assertTrue(adventureQaTriggerBuildAllowed(true, true, false, "com.nullplaying.adventurepreview"))
+        assertFalse(adventureQaTriggerBuildAllowed(false, true, false, "com.nullplaying.adventurepreview"))
+        assertFalse(adventureQaTriggerBuildAllowed(true, false, false, "com.nullplaying.adventurepreview"))
+        assertFalse(adventureQaTriggerBuildAllowed(true, true, true, "com.nullplaying.adventurepreview"))
+        assertFalse(adventureQaTriggerBuildAllowed(true, true, false, "com.nullplaying"))
+        assertFalse(adventureQaTriggerBuildAllowed(true, true, false, "com.nullplaying.battleqa"))
+    }
+
+    @Test
+    fun `offline qa queued event survives repository persistence and restart`() = runBlocking {
+        assumeTrue(
+            adventureQaTriggerBuildAllowed(
+                BuildConfig.DEBUG,
+                BuildConfig.ADVENTURE_PREVIEW_ENABLED,
+                BuildConfig.REMOTE_SERVICES_ENABLED,
+                BuildConfig.APPLICATION_ID,
+            ),
+        )
+        engine = SimpleGameEngine(enableAdventureEvents = true)
+        val repository = repository()
+        repository.createCharacter(
+            "사건 순회",
+            HeroClass.WARRIOR,
+            engine.rollStats(77L).stats,
+            88L,
+            1_000L,
+        )
+        val firstBoundary = repository.snapshots.value.state!!.actionEndsAt
+
+        assertTrue(repository.queueAdventureEventForQa("bridge", now = firstBoundary))
+        assertFalse(repository.queueAdventureEventForQa("rescue", now = firstBoundary))
+        assertEquals(AdventurePhase.COMBAT, repository.snapshots.value.state!!.adventurePhase)
+        assertEquals("bridge", repository.snapshots.value.state!!.adventureJourney.qaQueuedEventId)
+        assertEquals("bridge", repository.snapshots.value.state!!.adventureJourney.qaSequenceCursorEventId)
+        assertEquals(
+            "bridge",
+            Json.decodeFromString<SimpleGameState>(database.stateDao().load()!!.payload)
+                .adventureJourney.qaQueuedEventId,
+        )
+
+        val restarted = repository()
+        restarted.initialize(now = firstBoundary)
+
+        assertEquals("bridge", restarted.snapshots.value.state!!.adventureJourney.qaQueuedEventId)
+        assertEquals("bridge", restarted.snapshots.value.state!!.adventureJourney.qaSequenceCursorEventId)
+        assertEquals(0L, restarted.snapshots.value.state!!.adventureJourney.completedEvents)
+        assertEquals(AdventureEventEngine.all.first().id, "bridge")
+    }
+
+    @Test
+    fun `retired letters remain unchanged across settlement restart and character slots`() = runBlocking {
+        val repository = repository()
+        val stats = engine.rollStats(77L).stats
+        repository.createCharacter("기존 영웅", HeroClass.WARRIOR, stats, 88L, 1_000L)
+        promoteActiveHero(repository, level = 20L, now = 1_001L)
+        val first = repository.snapshots.value.state!!
+        first.correspondence.baselineEstablished = true
+        CorrespondenceStatus.entries.forEach { status ->
+            first.correspondence.records += CorrespondenceRecord(
+                id = "archived-${status.name}",
+                sourceEventKey = "archived-${status.name}",
+                occurredAt = 1_001L,
+                topic = CorrespondenceTopic.SKILL_LEARNED,
+                status = status,
+                replyIntent = CorrespondenceReplyIntent.EXPERIMENT,
+                decisionDueActionSequence = 1L,
+                decisionRulesVersion = 1,
+                decisionSeed = 123L,
+            )
+        }
+        first.correspondence.disposition.curiosity.score = 7
+        first.actionSequence = 500L
+        val archived = Json.encodeToString(first.correspondence)
+        database.stateDao().save(SimpleStateEntity(payload = Json.encodeToString(first), updatedAt = 1_001L))
+        val reopened = repository()
+        reopened.initialize(now = 1_002L)
+        reopened.onAppForegrounded(now = 1_003L, elapsedRealtime = 1_003L)
+        val persisted = Json.decodeFromString<SimpleGameState>(database.stateDao().load()!!.payload)
+        assertEquals(archived, Json.encodeToString(persisted.correspondence))
+
+        reopened.createCharacter("새 영웅", HeroClass.RANGER, stats, 89L, 1_004L)
+        val second = reopened.snapshots.value.state!!
+        assertTrue(second.correspondence.records.isEmpty())
+        assertFalse(second.correspondence.baselineEstablished)
+        val restarted = repository()
+        restarted.initialize(now = 1_005L)
+        restarted.selectCharacter(slotId = 1, now = 1_006L)
+        val restored = restarted.snapshots.value.state!!
+        assertEquals("기존 영웅", restored.hero.name)
+        assertEquals(20L, restored.hero.level)
+        assertEquals(archived, Json.encodeToString(restored.correspondence))
+    }
+
+    @Test
     fun `foreground settlement persists each generated mastery event`() = runBlocking {
         val repository = repository()
         repository.createCharacter(
@@ -132,6 +597,7 @@ class SimpleGameRepositoryTest {
         repository.onAppForegrounded(now = 0L, elapsedRealtime = 0L)
 
         val opening = repository.snapshots.value.state!!
+        opening.correspondence.baselineEstablished = true
         repository.tick(now = opening.actionEndsAt, elapsedRealtime = opening.actionEndsAt)
         val combat = repository.snapshots.value.state!!
         combat.skills[0] = combat.skills.single().copy(usageCount = 99L)
@@ -143,6 +609,7 @@ class SimpleGameRepositoryTest {
         assertEquals(RecentAdventureEventType.SKILL_MASTERY, event.type)
         assertEquals(1L, event.previousValue)
         assertEquals(2L, event.currentValue)
+        assertTrue(repository.snapshots.value.state!!.correspondence.records.isEmpty())
     }
 
     @Test
@@ -176,7 +643,7 @@ class SimpleGameRepositoryTest {
         backupStore[1] = SimpleStateEntity(payload = "{broken-backup", updatedAt = 2_999L)
         val repository = repository()
 
-        repository.initialize(now = 3_001L)
+        assertFalse(repository.initialize(now = 3_001L))
 
         val snapshot = repository.snapshots.value
         assertFalse(snapshot.ready)
@@ -320,6 +787,30 @@ class SimpleGameRepositoryTest {
             assertEquals(11_000L, persisted.lastSettledAt)
             assertEquals(11_000L, entity.updatedAt)
         }
+    }
+
+    @Test
+    fun `failed multi-slot foreground catch-up never enables unlimited ticking`() = runBlocking {
+        val repository = repository()
+        val stats = engine.rollStats(177L).stats
+        repository.createCharacter("첫 번째", HeroClass.WARRIOR, stats, 178L, 10_000L)
+        repository.snapshots.value.state!!.hero.level = 50L
+        repository.onAppForegrounded(now = 10_001L, elapsedRealtime = 10_001L)
+        repository.onAppBackgrounded(now = 10_002L, elapsedRealtime = 10_002L)
+        repository.createCharacter("둘째", HeroClass.ROGUE, stats, 179L, 10_100L)
+        repository.createCharacter("셋째", HeroClass.MAGE, stats, 180L, 10_200L)
+        val activeBefore = requireNotNull(repository.snapshots.value.state).lastSettledAt
+        backupStore.failSaveForSlotId = 2
+
+        assertTrue(
+            runCatching {
+                repository.onAppForegrounded(now = 1_000_000L, elapsedRealtime = 20_000L)
+            }.isFailure,
+        )
+        assertFalse(repository.isAppInForeground())
+
+        repository.tick(now = 2_000_000L, elapsedRealtime = 20_001L)
+        assertEquals(activeBefore, repository.snapshots.value.state!!.lastSettledAt)
     }
 
     @Test
@@ -538,6 +1029,175 @@ class SimpleGameRepositoryTest {
     }
 
     @Test
+    fun `hero path allocation rejects a stale revision without memory or database mutation`() = runBlocking {
+        val repository = repository()
+        repository.createCharacter("스타일 검사", HeroClass.WARRIOR, engine.rollStats(201L).stats, 202L, 1_000L)
+        promoteActiveHero(repository, level = 100L, now = 2_000L)
+        val beforeState = repository.snapshots.value.state!!.heroPath
+        val beforeEntity = database.stateDao().load()!!
+        val branch = HeroPathCatalog.branchesFor(beforeState.heroClass).first().branch
+        val target = HeroPathAllocationTarget(
+            expectedRevision = beforeState.revision - 1L,
+            nodeRanks = branchRanks(branch, points = 1),
+        )
+
+        val status = repository.applyHeroPathAllocation(target, now = 2_001L)
+
+        assertEquals(HeroPathMutationStatus.STALE_REVISION, status)
+        assertEquals(beforeState, repository.snapshots.value.state!!.heroPath)
+        assertEquals(beforeEntity, database.stateDao().load())
+    }
+
+    @Test
+    fun `hero path A-B replacement is one atomic persisted allocation`() = runBlocking {
+        val repository = repository()
+        repository.createCharacter("선택 교체", HeroClass.WARRIOR, engine.rollStats(211L).stats, 212L, 3_000L)
+        promoteActiveHero(repository, level = 100L, now = 3_100L)
+        val initial = repository.snapshots.value.state!!.heroPath
+        val branch = HeroPathCatalog.branchesFor(initial.heroClass).first().branch
+        val choiceA = HeroPathCatalog.nodesFor(branch).first { it.slot == HeroPathNodeSlot.CHOICE_A }.nodeId
+        val choiceB = HeroPathCatalog.nodesFor(branch).first { it.slot == HeroPathNodeSlot.CHOICE_B }.nodeId
+
+        assertEquals(
+            HeroPathMutationStatus.APPLIED,
+            repository.applyHeroPathAllocation(
+                HeroPathAllocationTarget(initial.revision, branchRanks(branch, 5, choiceB = false)),
+                now = 3_101L,
+            ),
+        )
+        val withA = repository.snapshots.value.state!!.heroPath
+        assertTrue(withA.traits.any { it.traitId == choiceA })
+        assertFalse(withA.traits.any { it.traitId == choiceB })
+
+        assertEquals(
+            HeroPathMutationStatus.APPLIED,
+            repository.applyHeroPathAllocation(
+                HeroPathAllocationTarget(withA.revision, branchRanks(branch, 5, choiceB = true)),
+                now = 3_102L,
+            ),
+        )
+        val withB = repository.snapshots.value.state!!.heroPath
+        assertEquals(withA.revision + 1L, withB.revision)
+        assertFalse(withB.traits.any { it.traitId == choiceA })
+        assertTrue(withB.traits.any { it.traitId == choiceB })
+        assertEquals(withB, Json.decodeFromString<SimpleGameState>(database.stateDao().load()!!.payload).heroPath)
+    }
+
+    @Test
+    fun `hero path core replacement removes the old core in the same persist`() = runBlocking {
+        val repository = repository()
+        repository.createCharacter("핵심 교체", HeroClass.WARRIOR, engine.rollStats(221L).stats, 222L, 4_000L)
+        promoteActiveHero(repository, level = 100L, now = 4_100L)
+        val initial = repository.snapshots.value.state!!.heroPath
+        val branches = HeroPathCatalog.branchesFor(initial.heroClass).map { it.branch }
+        val firstRanks = branchRanks(branches[0], 10)
+        val firstCore = coreId(firstRanks)
+
+        assertEquals(
+            HeroPathMutationStatus.APPLIED,
+            repository.applyHeroPathAllocation(
+                HeroPathAllocationTarget(initial.revision, firstRanks, activeCoreNodeId = firstCore),
+                now = 4_101L,
+            ),
+        )
+        val first = repository.snapshots.value.state!!.heroPath
+        val secondRanks = branchRanks(branches[1], 10)
+        val secondCore = coreId(secondRanks)
+        assertEquals(
+            HeroPathMutationStatus.APPLIED,
+            repository.applyHeroPathAllocation(
+                HeroPathAllocationTarget(first.revision, secondRanks, activeCoreNodeId = secondCore),
+                now = 4_102L,
+            ),
+        )
+
+        val replaced = repository.snapshots.value.state!!.heroPath
+        assertEquals(secondCore, replaced.activeCoreTraitId)
+        assertFalse(replaced.traits.any { it.traitId == firstCore })
+        assertEquals(10L, replaced.spentPoints)
+        assertEquals(replaced, Json.decodeFromString<SimpleGameState>(database.stateDao().load()!!.payload).heroPath)
+    }
+
+    @Test
+    fun `invalid hero path target rolls back memory database and revision`() = runBlocking {
+        val repository = repository()
+        repository.createCharacter("롤백 검사", HeroClass.ROGUE, engine.rollStats(231L).stats, 232L, 5_000L)
+        promoteActiveHero(repository, level = 100L, now = 5_100L)
+        val initial = repository.snapshots.value.state!!.heroPath
+        val branch = HeroPathCatalog.branchesFor(initial.heroClass).first().branch
+        val valid = branchRanks(branch, 5)
+        assertEquals(
+            HeroPathMutationStatus.APPLIED,
+            repository.applyHeroPathAllocation(HeroPathAllocationTarget(initial.revision, valid), now = 5_101L),
+        )
+        val beforeState = repository.snapshots.value.state!!.heroPath
+        val beforeEntity = database.stateDao().load()!!
+        val choiceB = HeroPathCatalog.nodesFor(branch).first { it.slot == HeroPathNodeSlot.CHOICE_B }
+        val bothChoices = valid + (choiceB.nodeId to 1)
+
+        val status = repository.applyHeroPathAllocation(
+            HeroPathAllocationTarget(beforeState.revision, bothChoices),
+            now = 5_102L,
+        )
+
+        assertEquals(HeroPathMutationStatus.CHOICE_CONFLICT, status)
+        assertEquals(beforeState, repository.snapshots.value.state!!.heroPath)
+        assertEquals(beforeEntity, database.stateDao().load())
+    }
+
+    @Test
+    fun `hero path allocation survives repository restart exactly`() = runBlocking {
+        val repository = repository()
+        repository.createCharacter("재시작 검사", HeroClass.MAGE, engine.rollStats(241L).stats, 242L, 6_000L)
+        promoteActiveHero(repository, level = 100L, now = 6_100L)
+        val initial = repository.snapshots.value.state!!.heroPath
+        val branch = HeroPathCatalog.branchesFor(initial.heroClass).first().branch
+        val ranks = branchRanks(branch, 10)
+        assertEquals(
+            HeroPathMutationStatus.APPLIED,
+            repository.applyHeroPathAllocation(
+                HeroPathAllocationTarget(initial.revision, ranks, activeCoreNodeId = coreId(ranks)),
+                now = 6_101L,
+            ),
+        )
+        val committed = repository.snapshots.value.state!!.heroPath
+
+        val restarted = repository()
+        restarted.initialize(now = 6_102L)
+
+        assertEquals(committed, restarted.snapshots.value.state!!.heroPath)
+        assertEquals(committed, Json.decodeFromString<SimpleGameState>(database.stateDao().load()!!.payload).heroPath)
+    }
+
+    @Test
+    fun `allocation and reset racing on one revision yield one commit and one stale rejection`() = runBlocking {
+        val repository = repository()
+        repository.createCharacter("경쟁 검사", HeroClass.PALADIN, engine.rollStats(251L).stats, 252L, 7_000L)
+        promoteActiveHero(repository, level = 100L, now = 7_100L)
+        val initial = repository.snapshots.value.state!!.heroPath
+        val branch = HeroPathCatalog.branchesFor(initial.heroClass).first().branch
+        val choiceA = branchRanks(branch, 5, choiceB = false)
+        assertEquals(
+            HeroPathMutationStatus.APPLIED,
+            repository.applyHeroPathAllocation(HeroPathAllocationTarget(initial.revision, choiceA), now = 7_101L),
+        )
+        val revision = repository.snapshots.value.state!!.heroPath.revision
+        val choiceB = branchRanks(branch, 5, choiceB = true)
+
+        val allocation = async {
+            repository.applyHeroPathAllocation(HeroPathAllocationTarget(revision, choiceB), now = 7_102L)
+        }
+        val reset = async { repository.resetHeroPath(expectedRevision = revision, now = 7_103L) }
+        val outcomes = listOf(allocation.await(), reset.await())
+
+        assertEquals(1, outcomes.count { it == HeroPathMutationStatus.APPLIED })
+        assertEquals(1, outcomes.count { it == HeroPathMutationStatus.STALE_REVISION })
+        val finalState = repository.snapshots.value.state!!.heroPath
+        assertEquals(revision + 1L, finalState.revision)
+        assertEquals(finalState, Json.decodeFromString<SimpleGameState>(database.stateDao().load()!!.payload).heroPath)
+    }
+
+    @Test
     fun `file backup store atomically round trips a save`() = runBlocking {
         val directory = temporaryFolder.newFolder("valid-backup")
         val store = FileSimpleStateBackupStore(directory)
@@ -630,15 +1290,46 @@ class SimpleGameRepositoryTest {
         )
     }
 
+    private fun branchRanks(
+        branch: HeroPathBranch,
+        points: Int,
+        choiceB: Boolean = false,
+    ): Map<String, Int> {
+        require(points in 0..10)
+        val nodes = HeroPathCatalog.nodesFor(branch).associateBy { it.slot }
+        val pointOrder = listOf(
+            HeroPathNodeSlot.FOUNDATION_A,
+            HeroPathNodeSlot.FOUNDATION_B,
+            HeroPathNodeSlot.FOUNDATION_A,
+            if (choiceB) HeroPathNodeSlot.CHOICE_B else HeroPathNodeSlot.CHOICE_A,
+            HeroPathNodeSlot.FOUNDATION_B,
+            HeroPathNodeSlot.SPECIAL_A,
+            HeroPathNodeSlot.SPECIAL_B,
+            HeroPathNodeSlot.ADVANCED_TACTIC,
+            HeroPathNodeSlot.ADVANCED_TACTIC,
+            HeroPathNodeSlot.CORE,
+        )
+        return pointOrder.take(points)
+            .map { nodes.getValue(it).nodeId }
+            .groupingBy { it }
+            .eachCount()
+    }
+
+    private fun coreId(ranks: Map<String, Int>): String = ranks.keys.single {
+        HeroPathCatalog.byNodeId.getValue(it).slot == HeroPathNodeSlot.CORE
+    }
+
     private fun repository(
         progressEventSink: GameProgressEventSink = NoOpGameProgressEventSink,
         accountProgressDao: SimpleAccountProgressDao = database.accountProgressDao(),
+        gameClock: TrustedGameClock? = null,
     ) = SimpleGameRepository(
         database = database,
         engine = engine,
         backupStore = backupStore,
         progressEventSink = progressEventSink,
         accountProgressDao = accountProgressDao,
+        gameClock = gameClock,
     )
 
     private suspend fun promoteActiveHero(
@@ -652,6 +1343,7 @@ class SimpleGameRepositoryTest {
 
     private class MemoryBackupStore : SimpleStateBackupStore {
         private val entities = mutableMapOf<Int, SimpleStateEntity>()
+        var failSaveForSlotId: Int? = null
         var accountProgress: SimpleAccountProgressEntity? = null
             private set
 
@@ -664,6 +1356,7 @@ class SimpleGameRepositoryTest {
         override suspend fun load(slotId: Int): SimpleStateEntity? = entities[slotId]?.copy()
 
         override suspend fun save(entity: SimpleStateEntity) {
+            if (entity.id == failSaveForSlotId) error("simulated character backup failure")
             entities[entity.id] = entity.copy()
         }
 
@@ -676,6 +1369,17 @@ class SimpleGameRepositoryTest {
 
         override suspend fun saveAccountProgress(entity: SimpleAccountProgressEntity) {
             accountProgress = entity.copy()
+        }
+    }
+
+    private class MemoryTrustedTimeAnchorStore : TrustedTimeAnchorStore {
+        private var anchor: TrustedTimeAnchor? = null
+
+        override fun read(): TrustedTimeAnchor? = anchor
+
+        override fun write(anchor: TrustedTimeAnchor): Boolean {
+            this.anchor = anchor
+            return true
         }
     }
 }

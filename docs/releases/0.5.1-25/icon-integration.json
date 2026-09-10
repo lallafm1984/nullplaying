@@ -1,0 +1,12 @@
+{
+  "task_id": "01a08a69-2f05-7473-8f17-3c29074ece89",
+  "file": "app/src/simple/java/com/nullplaying/ui/ArenaSkillTreeUi.kt",
+  "mage_attack_tile_overrides": {
+    "1": 20,
+    "6": 21
+  },
+  "atlas_sha256": "f74a8eac3615e7c3abcfc47b36c319005697d2ac7e1b24ef3baf83a53a7e4d7e",
+  "atlas_changed": false,
+  "other_attack_icons_changed": false,
+  "notice_copy_and_layout_unchanged": true
+}

@@ -46,3 +46,7 @@ tools/vfx-lab/data/android-export.checkpoint-*/
 tools/vfx-lab/data/android-export.failed-*/
 tools/vfx-lab/data/android-export-current/
 tools/vfx-lab/data/android-export-final/
+tools/ai-pvp-eval/.battle-qa-session
+
+# Local integration backups, release artifacts, device and database QA evidence
+/output/

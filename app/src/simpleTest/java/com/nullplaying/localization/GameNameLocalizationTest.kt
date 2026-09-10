@@ -81,6 +81,26 @@ class GameNameLocalizationTest {
                 AppLanguage.JAPANESE,
             ),
         )
+        assertEquals(
+            "傭兵の鉄製メイス +3",
+            GameNameLocalization.equipmentName("Mercenary's Iron Mace +3", AppLanguage.JAPANESE),
+        )
+        assertEquals(
+            "Finely Crafted Transcendent Tier 999 Priest's Silk Shoes +99",
+            GameNameLocalization.equipmentName("精巧な超越999段神官の絹靴 +99", AppLanguage.ENGLISH),
+        )
+        assertEquals(
+            "용병의 철제 철퇴 +3",
+            GameNameLocalization.equipmentName("Mercenary's Iron Mace +3", AppLanguage.KOREAN),
+        )
+        assertEquals(
+            "傭兵の鉄製メイス +3",
+            GameNameLocalization.itemName("Mercenary's Iron Mace +3", AppLanguage.JAPANESE),
+        )
+        assertEquals(
+            "용병의 철제 철퇴 +3",
+            GameNameLocalization.itemName("Mercenary's Iron Mace +3", AppLanguage.KOREAN),
+        )
     }
 
     @Test

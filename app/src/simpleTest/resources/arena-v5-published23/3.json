@@ -1,0 +1,739 @@
+[
+    {
+        "fighter": {
+            "id": "profile-MAGE-15-4-defensive_ward",
+            "heroClass": "MAGE",
+            "level": 15,
+            "stats": {
+                "strength": 12.0,
+                "constitution": 13.0,
+                "dexterity": 11.0,
+                "intelligence": 26.0,
+                "wisdom": 17.0,
+                "charisma": 15.0,
+                "rawMaxHealth": 88.0,
+                "rawMaxMana": 123.0
+            },
+            "attacks": [
+                {
+                    "id": "mage_t01_c01",
+                    "name": "불씨 화살",
+                    "tier": 1,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 6,
+                        "prepareTurns": 0,
+                        "mpCost": 13,
+                        "cooldownTurns": 1,
+                        "damagePercent": 157,
+                        "effectKey": "ACCURATE",
+                        "effectValues": {
+                            "accuracy": 14.666666666666668
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A01",
+                            "ACCURATE"
+                        ]
+                    }
+                },
+                {
+                    "id": "mage_t02_c02",
+                    "name": "얼음 창",
+                    "tier": 2,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 3,
+                        "prepareTurns": 0,
+                        "mpCost": 12,
+                        "cooldownTurns": 2,
+                        "damagePercent": 136,
+                        "effectKey": "PREPARATION_PUNISH",
+                        "effectValues": {
+                            "bonus": 21.666666666666668,
+                            "masterBleedTick": 0.0,
+                            "masterBleedTurns": 0.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A02",
+                            "PREPARATION_PUNISH"
+                        ]
+                    }
+                },
+                {
+                    "id": "mage_t03_c03",
+                    "name": "삼중 낙뢰",
+                    "tier": 3,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 4,
+                        "prepareTurns": 1,
+                        "mpCost": 17,
+                        "cooldownTurns": 2,
+                        "damagePercent": 267,
+                        "effectKey": "SHIELD_SHATTER",
+                        "effectValues": {
+                            "masterRupture": 0.0,
+                            "masterRuptureTurns": 0.0,
+                            "shatter": 83.33333333333334
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 35.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A03",
+                            "SHIELD_SHATTER"
+                        ]
+                    }
+                },
+                {
+                    "id": "mage_t04_c04",
+                    "name": "비전 충격",
+                    "tier": 4,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 1,
+                        "prepareTurns": 0,
+                        "mpCost": 11,
+                        "cooldownTurns": 2,
+                        "damagePercent": 85,
+                        "effectKey": "MISS_RECOVERY",
+                        "effectValues": {
+                            "bonus": 15.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A04",
+                            "MISS_RECOVERY"
+                        ]
+                    }
+                }
+            ]
+        },
+        "supportIds": [
+            "ARENA_SUP_MAGE_01"
+        ],
+        "traits": [],
+        "arenaLevel": 15,
+        "arenaClassBalanceEnabled": true,
+        "supportRanks": {
+            "ARENA_SUP_MAGE_01": 1
+        },
+        "resolvedSupports": {
+            "ARENA_SUP_MAGE_01": {
+                "schemaVersion": 1,
+                "id": "ARENA_SUP_MAGE_01",
+                "heroClass": "MAGE",
+                "rank": 1,
+                "kind": "SHIELD",
+                "mp": 29,
+                "castTurns": 1,
+                "durationTurns": 5,
+                "cooldownTurns": 6,
+                "charges": 0,
+                "magnitude": 11.0,
+                "secondary": 0.0,
+                "threshold": 0.0,
+                "oncePerBattle": false,
+                "conditionKey": "UTILITY"
+            }
+        },
+        "identity": {
+            "version": "arena-stat-identity-v5",
+            "stats": {
+                "hp": 454.0,
+                "mp": 100,
+                "attack": 31.400148680317773,
+                "weightedAttack": 21.799999999999997,
+                "aim": 20.6,
+                "evade": 13.1,
+                "dexterity": 11.0,
+                "physicalGuard": 13.400000000000002,
+                "magicGuard": 18.450000000000003,
+                "resistance": 15.7,
+                "baseHit": 0.93,
+                "baseEvade": 0.03
+            },
+            "skills": [
+                {
+                    "id": "ARENA_SUP_MAGE_01",
+                    "slot": "S01",
+                    "kind": "SHIELD",
+                    "rank": 1,
+                    "support": true,
+                    "actionTurns": 1,
+                    "cooldown": 6,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 4,
+                    "charges": 0,
+                    "mp": 19,
+                    "damagePercent": 0,
+                    "magnitude": 6.0,
+                    "statFactor": 1.15,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "charges": 0.0,
+                        "cooldown_turns": 6.0,
+                        "duration_turns": 4.0,
+                        "magnitude_r1": 6.0,
+                        "magnitude_r10": 10.0,
+                        "mp_r1": 16.0,
+                        "mp_r10": 20.0,
+                        "stat_factor_max": 1.15,
+                        "stat_factor_min": 0.85
+                    },
+                    "options": {
+                        "effect_kind": "SHIELD",
+                        "role": "마력 보호막",
+                        "stacking": "replace_if_stronger",
+                        "stat_scaled": "true",
+                        "status": "numeric_design_individual_effect_defined_not_runtime_verified",
+                        "unit": "percent_max_hp"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "mage_t01_c01",
+                    "slot": "A01",
+                    "kind": "burn_tick",
+                    "rank": 6,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 2,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 12,
+                    "damagePercent": 137,
+                    "magnitude": 8.667,
+                    "statFactor": 1.0027485164067627,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_max_per_action": 1.0,
+                        "capstone_value": 1.0,
+                        "cooldown_turns": 2.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 4.0,
+                        "effect_r10": 7.0,
+                        "max_stacks": 3.0
+                    },
+                    "options": {
+                        "damage_type": "magic",
+                        "effect_kind": "burn_tick",
+                        "effect_stacking": "independent_expiry_no_whole_stack_refresh",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent_skill_attack_per_tick",
+                        "once_per_battle": "false",
+                        "role": "작은 화상",
+                        "stat_scaled": "false",
+                        "tick_starts": "next_turn"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "mage_t02_c02",
+                    "slot": "A02",
+                    "kind": "slow_accuracy",
+                    "rank": 3,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 9,
+                    "damagePercent": 123,
+                    "magnitude": 4.889,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 4.0,
+                        "effect_r10": 8.0
+                    },
+                    "options": {
+                        "damage_type": "magic",
+                        "effect_kind": "slow_accuracy",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percentage_points",
+                        "once_per_battle": "false",
+                        "role": "서리 둔화",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "mage_t03_c03",
+                    "slot": "A03",
+                    "kind": "mp_drain",
+                    "rank": 4,
+                    "support": false,
+                    "actionTurns": 2,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 0,
+                    "charges": 0,
+                    "mp": 17,
+                    "damagePercent": 283,
+                    "magnitude": 2.667,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 2.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 35.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 0.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 2.0,
+                        "effect_r10": 4.0
+                    },
+                    "options": {
+                        "damage_type": "magic",
+                        "effect_kind": "mp_drain",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "mp",
+                        "mp_refund_to_attacker": "false",
+                        "once_per_battle": "false",
+                        "role": "낙뢰 압박",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "mage_t04_c04",
+                    "slot": "A04",
+                    "kind": "after_miss_bonus",
+                    "rank": 1,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 7,
+                    "damagePercent": 110,
+                    "magnitude": 10.0,
+                    "statFactor": 0.9930954295082078,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_value": 8.0,
+                        "condition_window_turns": 2.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 10.0,
+                        "effect_r10": 20.0
+                    },
+                    "options": {
+                        "consumes_last_miss_record": "true",
+                        "damage_type": "magic",
+                        "effect_kind": "after_miss_bonus",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent",
+                        "once_per_battle": "false",
+                        "role": "비전 반격",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                }
+            ]
+        }
+    },
+    {
+        "fighter": {
+            "id": "profile-CLERIC-15-5-swift_assault",
+            "heroClass": "CLERIC",
+            "level": 15,
+            "stats": {
+                "strength": 14.0,
+                "constitution": 6.0,
+                "dexterity": 17.0,
+                "intelligence": 14.0,
+                "wisdom": 18.0,
+                "charisma": 22.0,
+                "rawMaxHealth": 58.0,
+                "rawMaxMana": 103.0
+            },
+            "attacks": [
+                {
+                    "id": "cleric_t01_c01",
+                    "name": "빛의 화살",
+                    "tier": 1,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 7,
+                        "prepareTurns": 0,
+                        "mpCost": 14,
+                        "cooldownTurns": 1,
+                        "damagePercent": 168,
+                        "effectKey": "ACCURATE",
+                        "effectValues": {
+                            "accuracy": 16.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A01",
+                            "ACCURATE"
+                        ]
+                    }
+                },
+                {
+                    "id": "cleric_t02_c02",
+                    "name": "심판의 망치",
+                    "tier": 2,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 4,
+                        "prepareTurns": 0,
+                        "mpCost": 13,
+                        "cooldownTurns": 2,
+                        "damagePercent": 148,
+                        "effectKey": "PREPARATION_PUNISH",
+                        "effectValues": {
+                            "bonus": 25.0,
+                            "masterBleedTick": 0.0,
+                            "masterBleedTurns": 0.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A02",
+                            "PREPARATION_PUNISH"
+                        ]
+                    }
+                },
+                {
+                    "id": "cleric_t03_c03",
+                    "name": "퇴마 연타",
+                    "tier": 3,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 3,
+                        "prepareTurns": 1,
+                        "mpCost": 15,
+                        "cooldownTurns": 2,
+                        "damagePercent": 247,
+                        "effectKey": "SHIELD_SHATTER",
+                        "effectValues": {
+                            "masterRupture": 0.0,
+                            "masterRuptureTurns": 0.0,
+                            "shatter": 72.22222222222223
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 35.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A03",
+                            "SHIELD_SHATTER"
+                        ]
+                    }
+                },
+                {
+                    "id": "cleric_t04_c04",
+                    "name": "성화 폭발",
+                    "tier": 4,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 1,
+                        "prepareTurns": 0,
+                        "mpCost": 11,
+                        "cooldownTurns": 2,
+                        "damagePercent": 85,
+                        "effectKey": "MISS_RECOVERY",
+                        "effectValues": {
+                            "bonus": 15.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A04",
+                            "MISS_RECOVERY"
+                        ]
+                    }
+                }
+            ]
+        },
+        "supportIds": [],
+        "traits": [],
+        "arenaLevel": 15,
+        "arenaClassBalanceEnabled": true,
+        "supportRanks": {},
+        "resolvedSupports": {},
+        "identity": {
+            "version": "arena-stat-identity-v5",
+            "stats": {
+                "hp": 440.0,
+                "mp": 92,
+                "attack": 29.998369079505935,
+                "weightedAttack": 19.0,
+                "aim": 19.4,
+                "evade": 17.35,
+                "dexterity": 17.0,
+                "physicalGuard": 9.4,
+                "magicGuard": 14.600000000000001,
+                "resistance": 15.599999999999998,
+                "baseHit": 0.95,
+                "baseEvade": 0.03
+            },
+            "skills": [
+                {
+                    "id": "cleric_t01_c01",
+                    "slot": "A01",
+                    "kind": "accuracy",
+                    "rank": 7,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 2,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 0,
+                    "charges": 0,
+                    "mp": 11,
+                    "damagePercent": 145,
+                    "magnitude": 6.667,
+                    "statFactor": 1.0026281254257416,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_internal_cooldown_turns": 3.0,
+                        "capstone_value": 1.5,
+                        "cooldown_turns": 2.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 0.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 4.0,
+                        "effect_r10": 8.0,
+                        "recent_heal_damage": 8.0
+                    },
+                    "options": {
+                        "damage_type": "magic",
+                        "effect_kind": "accuracy",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "before_current_accuracy_roll",
+                        "effect_unit": "percentage_points",
+                        "once_per_battle": "false",
+                        "role": "빛의 명중",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "cleric_t02_c02",
+                    "slot": "A02",
+                    "kind": "followup_damage",
+                    "rank": 4,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 1,
+                    "mp": 8,
+                    "damagePercent": 127,
+                    "magnitude": 10.333,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_value": 8.0,
+                        "charges": 1.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 8.0,
+                        "effect_r10": 15.0
+                    },
+                    "options": {
+                        "affects": "next_direct_attack_excluding_triggering_action",
+                        "damage_type": "magic",
+                        "effect_kind": "followup_damage",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent",
+                        "once_per_battle": "false",
+                        "role": "심판 후속타",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "cleric_t03_c03",
+                    "slot": "A03",
+                    "kind": "buffed_target_bonus",
+                    "rank": 3,
+                    "support": false,
+                    "actionTurns": 2,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 13,
+                    "damagePercent": 269,
+                    "magnitude": 12.222,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 2.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 35.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 10.0,
+                        "effect_r10": 20.0
+                    },
+                    "options": {
+                        "damage_type": "magic",
+                        "effect_kind": "buffed_target_bonus",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent",
+                        "once_per_battle": "false",
+                        "requires": "target_has_positive_status",
+                        "role": "퇴마 타격",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "cleric_t04_c04",
+                    "slot": "A04",
+                    "kind": "burn_tick",
+                    "rank": 1,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 7,
+                    "damagePercent": 110,
+                    "magnitude": 4.0,
+                    "statFactor": 1.0031529242711126,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 4.0,
+                        "effect_r10": 8.0,
+                        "max_stacks": 3.0
+                    },
+                    "options": {
+                        "damage_type": "magic",
+                        "effect_kind": "burn_tick",
+                        "effect_stacking": "independent_expiry_no_whole_stack_refresh",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent_skill_attack_per_tick",
+                        "once_per_battle": "false",
+                        "role": "성화",
+                        "stat_scaled": "false",
+                        "tick_starts": "next_turn"
+                    },
+                    "capstone": ""
+                }
+            ]
+        }
+    }
+]

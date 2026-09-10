@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.ACCESS_NETWORK_STATE"
+        tools:node="remove" />
+    <uses-permission
+        android:name="com.google.android.gms.permission.AD_ID"
+        tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_BASIC_PHONE_STATE"
+        tools:node="remove" />
+    <queries tools:node="remove" />
+
+    <application>
+        <activity
+            android:name="com.nullplaying.ui.ArenaProgressionQaActivity"
+            android:screenOrientation="portrait"
+            android:exported="true" />
+        <activity
+            android:name="com.nullplaying.ui.ArenaSupportQaActivity"
+            android:screenOrientation="portrait"
+            android:exported="true" />
+        <!-- The battle narrative is bundled locally. All remote entry points and permissions
+             are removed from this QA variant before application startup. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            tools:node="remove" />
+        <provider
+            android:name="com.google.firebase.provider.FirebaseInitProvider"
+            tools:node="remove" />
+        <service
+            android:name="com.google.firebase.components.ComponentDiscoveryService"
+            tools:node="remove" />
+        <activity
+            android:name="com.google.android.libraries.ads.mobile.sdk.common.AdActivity"
+            tools:node="remove" />
+        <activity
+            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+            tools:node="remove" />
+    </application>
+</manifest>

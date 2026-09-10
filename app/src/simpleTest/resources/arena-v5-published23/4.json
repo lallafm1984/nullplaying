@@ -1,0 +1,738 @@
+[
+    {
+        "fighter": {
+            "id": "profile-CLERIC-15-4-defensive_ward",
+            "heroClass": "CLERIC",
+            "level": 15,
+            "stats": {
+                "strength": 13.0,
+                "constitution": 10.0,
+                "dexterity": 14.0,
+                "intelligence": 16.0,
+                "wisdom": 23.0,
+                "charisma": 18.0,
+                "rawMaxHealth": 90.0,
+                "rawMaxMana": 111.0
+            },
+            "attacks": [
+                {
+                    "id": "cleric_t01_c01",
+                    "name": "빛의 화살",
+                    "tier": 1,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 6,
+                        "prepareTurns": 0,
+                        "mpCost": 13,
+                        "cooldownTurns": 1,
+                        "damagePercent": 157,
+                        "effectKey": "ACCURATE",
+                        "effectValues": {
+                            "accuracy": 14.666666666666668
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A01",
+                            "ACCURATE"
+                        ]
+                    }
+                },
+                {
+                    "id": "cleric_t02_c02",
+                    "name": "심판의 망치",
+                    "tier": 2,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 3,
+                        "prepareTurns": 0,
+                        "mpCost": 12,
+                        "cooldownTurns": 2,
+                        "damagePercent": 136,
+                        "effectKey": "PREPARATION_PUNISH",
+                        "effectValues": {
+                            "bonus": 21.666666666666668,
+                            "masterBleedTick": 0.0,
+                            "masterBleedTurns": 0.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A02",
+                            "PREPARATION_PUNISH"
+                        ]
+                    }
+                },
+                {
+                    "id": "cleric_t03_c03",
+                    "name": "퇴마 연타",
+                    "tier": 3,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 4,
+                        "prepareTurns": 1,
+                        "mpCost": 17,
+                        "cooldownTurns": 2,
+                        "damagePercent": 267,
+                        "effectKey": "SHIELD_SHATTER",
+                        "effectValues": {
+                            "masterRupture": 0.0,
+                            "masterRuptureTurns": 0.0,
+                            "shatter": 83.33333333333334
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 35.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A03",
+                            "SHIELD_SHATTER"
+                        ]
+                    }
+                },
+                {
+                    "id": "cleric_t04_c04",
+                    "name": "성화 폭발",
+                    "tier": 4,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 1,
+                        "prepareTurns": 0,
+                        "mpCost": 11,
+                        "cooldownTurns": 2,
+                        "damagePercent": 85,
+                        "effectKey": "MISS_RECOVERY",
+                        "effectValues": {
+                            "bonus": 15.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A04",
+                            "MISS_RECOVERY"
+                        ]
+                    }
+                }
+            ]
+        },
+        "supportIds": [
+            "ARENA_SUP_CLERIC_01"
+        ],
+        "traits": [],
+        "arenaLevel": 15,
+        "arenaClassBalanceEnabled": true,
+        "supportRanks": {
+            "ARENA_SUP_CLERIC_01": 1
+        },
+        "resolvedSupports": {
+            "ARENA_SUP_CLERIC_01": {
+                "schemaVersion": 1,
+                "id": "ARENA_SUP_CLERIC_01",
+                "heroClass": "CLERIC",
+                "rank": 1,
+                "kind": "HEAL",
+                "mp": 29,
+                "castTurns": 2,
+                "durationTurns": 0,
+                "cooldownTurns": 4,
+                "charges": 0,
+                "magnitude": 11.0,
+                "secondary": 0.0,
+                "threshold": 0.0,
+                "oncePerBattle": false,
+                "conditionKey": "MISSING_HP"
+            }
+        },
+        "identity": {
+            "version": "arena-stat-identity-v5",
+            "stats": {
+                "hp": 449.0,
+                "mp": 96,
+                "attack": 30.738486893566865,
+                "weightedAttack": 20.55,
+                "aim": 21.25,
+                "evade": 17.15,
+                "dexterity": 14.0,
+                "physicalGuard": 12.549999999999999,
+                "magicGuard": 18.65,
+                "resistance": 18.999999999999996,
+                "baseHit": 0.95,
+                "baseEvade": 0.03
+            },
+            "skills": [
+                {
+                    "id": "ARENA_SUP_CLERIC_01",
+                    "slot": "S01",
+                    "kind": "HEAL",
+                    "rank": 1,
+                    "support": true,
+                    "actionTurns": 1,
+                    "cooldown": 6,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 0,
+                    "charges": 0,
+                    "mp": 19,
+                    "damagePercent": 0,
+                    "magnitude": 6.0,
+                    "statFactor": 1.15,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "cast_hp_threshold_percent": 65.0,
+                        "charges": 0.0,
+                        "cooldown_turns": 6.0,
+                        "duration_turns": 0.0,
+                        "magnitude_r1": 6.0,
+                        "magnitude_r10": 10.0,
+                        "mp_r1": 18.0,
+                        "mp_r10": 23.0,
+                        "stat_factor_max": 1.15,
+                        "stat_factor_min": 0.85
+                    },
+                    "options": {
+                        "effect_kind": "HEAL",
+                        "role": "지속 가능한 회복",
+                        "stat_scaled": "true",
+                        "status": "numeric_design_individual_effect_defined_not_runtime_verified",
+                        "unit": "percent_max_hp"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "cleric_t01_c01",
+                    "slot": "A01",
+                    "kind": "accuracy",
+                    "rank": 6,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 2,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 0,
+                    "charges": 0,
+                    "mp": 10,
+                    "damagePercent": 139,
+                    "magnitude": 6.222,
+                    "statFactor": 1.0042488810475012,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_internal_cooldown_turns": 3.0,
+                        "capstone_value": 1.5,
+                        "cooldown_turns": 2.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 0.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 4.0,
+                        "effect_r10": 8.0,
+                        "recent_heal_damage": 8.0
+                    },
+                    "options": {
+                        "damage_type": "magic",
+                        "effect_kind": "accuracy",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "before_current_accuracy_roll",
+                        "effect_unit": "percentage_points",
+                        "once_per_battle": "false",
+                        "role": "빛의 명중",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "cleric_t02_c02",
+                    "slot": "A02",
+                    "kind": "followup_damage",
+                    "rank": 3,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 1,
+                    "mp": 7,
+                    "damagePercent": 121,
+                    "magnitude": 9.556,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_value": 8.0,
+                        "charges": 1.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 8.0,
+                        "effect_r10": 15.0
+                    },
+                    "options": {
+                        "affects": "next_direct_attack_excluding_triggering_action",
+                        "damage_type": "magic",
+                        "effect_kind": "followup_damage",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent",
+                        "once_per_battle": "false",
+                        "role": "심판 후속타",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "cleric_t03_c03",
+                    "slot": "A03",
+                    "kind": "buffed_target_bonus",
+                    "rank": 4,
+                    "support": false,
+                    "actionTurns": 2,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 14,
+                    "damagePercent": 283,
+                    "magnitude": 13.333,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 2.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 35.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 10.0,
+                        "effect_r10": 20.0
+                    },
+                    "options": {
+                        "damage_type": "magic",
+                        "effect_kind": "buffed_target_bonus",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent",
+                        "once_per_battle": "false",
+                        "requires": "target_has_positive_status",
+                        "role": "퇴마 타격",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "cleric_t04_c04",
+                    "slot": "A04",
+                    "kind": "burn_tick",
+                    "rank": 1,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 7,
+                    "damagePercent": 110,
+                    "magnitude": 4.0,
+                    "statFactor": 1.0021873886872632,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 4.0,
+                        "effect_r10": 8.0,
+                        "max_stacks": 3.0
+                    },
+                    "options": {
+                        "damage_type": "magic",
+                        "effect_kind": "burn_tick",
+                        "effect_stacking": "independent_expiry_no_whole_stack_refresh",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent_skill_attack_per_tick",
+                        "once_per_battle": "false",
+                        "role": "성화",
+                        "stat_scaled": "false",
+                        "tick_starts": "next_turn"
+                    },
+                    "capstone": ""
+                }
+            ]
+        }
+    },
+    {
+        "fighter": {
+            "id": "profile-PALADIN-15-5-swift_assault",
+            "heroClass": "PALADIN",
+            "level": 15,
+            "stats": {
+                "strength": 15.0,
+                "constitution": 7.0,
+                "dexterity": 17.0,
+                "intelligence": 16.0,
+                "wisdom": 12.0,
+                "charisma": 24.0,
+                "rawMaxHealth": 64.0,
+                "rawMaxMana": 99.0
+            },
+            "attacks": [
+                {
+                    "id": "paladin_t01_c01",
+                    "name": "빛의 베기",
+                    "tier": 1,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 7,
+                        "prepareTurns": 0,
+                        "mpCost": 14,
+                        "cooldownTurns": 1,
+                        "damagePercent": 168,
+                        "effectKey": "ACCURATE",
+                        "effectValues": {
+                            "accuracy": 16.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A01",
+                            "ACCURATE"
+                        ]
+                    }
+                },
+                {
+                    "id": "paladin_t02_c02",
+                    "name": "철벽 밀치기",
+                    "tier": 2,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 4,
+                        "prepareTurns": 0,
+                        "mpCost": 13,
+                        "cooldownTurns": 2,
+                        "damagePercent": 148,
+                        "effectKey": "PREPARATION_PUNISH",
+                        "effectValues": {
+                            "bonus": 25.0,
+                            "masterBleedTick": 0.0,
+                            "masterBleedTurns": 0.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A02",
+                            "PREPARATION_PUNISH"
+                        ]
+                    }
+                },
+                {
+                    "id": "paladin_t03_c03",
+                    "name": "기사의 망치 강타",
+                    "tier": 3,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 3,
+                        "prepareTurns": 1,
+                        "mpCost": 15,
+                        "cooldownTurns": 2,
+                        "damagePercent": 247,
+                        "effectKey": "SHIELD_SHATTER",
+                        "effectValues": {
+                            "masterRupture": 0.0,
+                            "masterRuptureTurns": 0.0,
+                            "shatter": 72.22222222222223
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 35.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A03",
+                            "SHIELD_SHATTER"
+                        ]
+                    }
+                },
+                {
+                    "id": "paladin_t04_c01",
+                    "name": "십자 베기",
+                    "tier": 4,
+                    "masteryBonusPercent": 0,
+                    "sourceDamagePercentMin": 0,
+                    "sourceDamagePercentMax": 0,
+                    "arena": {
+                        "rank": 1,
+                        "prepareTurns": 0,
+                        "mpCost": 11,
+                        "cooldownTurns": 2,
+                        "damagePercent": 85,
+                        "effectKey": "MISS_RECOVERY",
+                        "effectValues": {
+                            "bonus": 15.0
+                        },
+                        "primaryValue": 0.0,
+                        "secondaryValue": 0.0,
+                        "thresholdPercent": 0.0,
+                        "durationTurns": 0,
+                        "maxApplications": 0,
+                        "oncePerBattle": false,
+                        "earliestTurn": 1,
+                        "hpDamageCapPercent": 25.0,
+                        "targetHpFloor": 0,
+                        "tags": [
+                            "A04",
+                            "MISS_RECOVERY"
+                        ]
+                    }
+                }
+            ]
+        },
+        "supportIds": [],
+        "traits": [],
+        "arenaLevel": 15,
+        "arenaClassBalanceEnabled": true,
+        "supportRanks": {},
+        "resolvedSupports": {},
+        "identity": {
+            "version": "arena-stat-identity-v5",
+            "stats": {
+                "hp": 441.0,
+                "mp": 91,
+                "attack": 29.924919740095984,
+                "weightedAttack": 16.95,
+                "aim": 17.349999999999998,
+                "evade": 15.25,
+                "dexterity": 17.0,
+                "physicalGuard": 9.35,
+                "magicGuard": 12.000000000000002,
+                "resistance": 12.549999999999999,
+                "baseHit": 0.94,
+                "baseEvade": 0.02
+            },
+            "skills": [
+                {
+                    "id": "paladin_t01_c01",
+                    "slot": "A01",
+                    "kind": "accuracy",
+                    "rank": 7,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 2,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 0,
+                    "charges": 0,
+                    "mp": 11,
+                    "damagePercent": 145,
+                    "magnitude": 6.667,
+                    "statFactor": 1.0029455144796,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_duration_turns": 2.0,
+                        "capstone_value": 2.0,
+                        "cooldown_turns": 2.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 0.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 4.0,
+                        "effect_r10": 8.0,
+                        "guarded_damage": 8.0
+                    },
+                    "options": {
+                        "damage_type": "physical",
+                        "effect_kind": "accuracy",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "before_current_accuracy_roll",
+                        "effect_unit": "percentage_points",
+                        "once_per_battle": "false",
+                        "role": "빛의 명중",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "paladin_t02_c02",
+                    "slot": "A02",
+                    "kind": "weaken_damage",
+                    "rank": 4,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 8,
+                    "damagePercent": 120,
+                    "magnitude": 10.0,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 8.0,
+                        "effect_r10": 14.0
+                    },
+                    "options": {
+                        "damage_type": "physical",
+                        "effect_kind": "weaken_damage",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent",
+                        "once_per_battle": "false",
+                        "role": "철벽 밀치기",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "paladin_t03_c03",
+                    "slot": "A03",
+                    "kind": "shield_extra",
+                    "rank": 3,
+                    "support": false,
+                    "actionTurns": 2,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 0,
+                    "mp": 13,
+                    "damagePercent": 269,
+                    "magnitude": 36.667,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 2.0,
+                        "capstone_value": 8.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 35.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 30.0,
+                        "effect_r10": 60.0
+                    },
+                    "options": {
+                        "damage_type": "physical",
+                        "effect_kind": "shield_extra",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent",
+                        "once_per_battle": "false",
+                        "overflow_bonus_to_hp": "false",
+                        "role": "망치 파쇄",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                },
+                {
+                    "id": "paladin_t04_c01",
+                    "slot": "A04",
+                    "kind": "followup_damage",
+                    "rank": 1,
+                    "support": false,
+                    "actionTurns": 1,
+                    "cooldown": 3,
+                    "once": false,
+                    "earliestTurn": 1,
+                    "duration": 2,
+                    "charges": 1,
+                    "mp": 6,
+                    "damagePercent": 110,
+                    "magnitude": 8.0,
+                    "statFactor": 1.0,
+                    "numbers": {
+                        "action_turns": 1.0,
+                        "capstone_value": 8.0,
+                        "charges": 1.0,
+                        "cooldown_turns": 3.0,
+                        "damage_hp_cap_percent": 25.0,
+                        "earliest_turn": 1.0,
+                        "effect_duration_turns": 2.0,
+                        "effect_max_applications_per_action": 1.0,
+                        "effect_r1": 8.0,
+                        "effect_r10": 15.0
+                    },
+                    "options": {
+                        "affects": "next_direct_attack_excluding_triggering_action",
+                        "damage_type": "physical",
+                        "effect_kind": "followup_damage",
+                        "effect_stacking": "strongest_only_refresh_duration_no_addition",
+                        "effect_trigger": "successful_direct_hit",
+                        "effect_unit": "percent",
+                        "once_per_battle": "false",
+                        "role": "십자 연계",
+                        "stat_scaled": "false"
+                    },
+                    "capstone": ""
+                }
+            ]
+        }
+    }
+]
