@@ -1,0 +1,16 @@
+{
+  "build": "PASS",
+  "version_code": 27,
+  "version_name": "0.5.2",
+  "production_inputs_preserved": true,
+  "firebase_input_preserved": true,
+  "source_files": 758,
+  "tests": {
+    "tests": 317,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": 45
+  },
+  "completed_utc": "2026-09-13T23:18:02.029305+00:00"
+}

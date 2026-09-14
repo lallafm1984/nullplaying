@@ -182,11 +182,15 @@ class AdventureRewardDistributionTest {
         assertEquals(5, rarityRank(engine.equipmentLootRarityForRoll(0)))
         assertEquals(5, rarityRank(engine.cappedEquipmentLootRarityForRoll(0, 5)))
         assertEquals(4, rarityRank(engine.cappedEquipmentLootRarityForRoll(0, 4)))
-        assertEquals(4, rarityRank(engine.cappedEquipmentLootRarityForRoll(49, 4)))
-        assertEquals(4, rarityRank(engine.cappedEquipmentLootRarityForRoll(50, 4)))
-        assertTrue((0 until 1_000_000 step 997).all {
-            rarityRank(engine.cappedEquipmentLootRarityForRoll(it, 4)) <= 4
-        })
+        assertEquals(5, rarityRank(engine.equipmentLootRarityForRoll(499)))
+        assertEquals(4, rarityRank(engine.equipmentLootRarityForRoll(500)))
+        assertEquals(4, rarityRank(engine.cappedEquipmentLootRarityForRoll(499, 4)))
+        assertEquals(4, rarityRank(engine.cappedEquipmentLootRarityForRoll(1_499, 4)))
+        assertEquals(3, rarityRank(engine.cappedEquipmentLootRarityForRoll(1_500, 4)))
+        val cappedCounts = (0 until 1_000_000)
+            .groupingBy { engine.cappedEquipmentLootRarityForRoll(it, 4) }.eachCount()
+        assertEquals(1_500, cappedCounts.getValue("전설"))
+        assertTrue("Partial/failure equipment must never be mythic", "신화" !in cappedCounts)
     }
 
     @Test

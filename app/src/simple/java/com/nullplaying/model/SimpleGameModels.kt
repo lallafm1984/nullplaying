@@ -293,6 +293,7 @@ data class SimpleGameState(
     var totalTales: Long = 0L,
     var classGuidedLevelGrowths: Long = 0L,
     var totalItemsFound: Long = 0L,
+    var mythicDiscoveries: List<MythicDiscovery> = emptyList(),
     var actionSequence: Long = 0L,
     var actionStartedAt: Long,
     var actionEndsAt: Long,

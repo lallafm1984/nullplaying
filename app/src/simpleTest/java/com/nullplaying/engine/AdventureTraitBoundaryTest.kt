@@ -172,6 +172,7 @@ class AdventureTraitBoundaryTest {
             adventureTraits = AdventureTraitState(initialized = true,
                 seed = seedPassing("FORMATION:$source", 2_500),
                 owned = listOf(AdventureOwnedTrait("C03", 1L, 1L, shaky = true)),
+                retentionStartedAtByTrait = mapOf("C03" to -AdventureTraitEngine.MIN_RETENTION_ACTIVE_MILLIS),
                 formationStartedAtByTrait = mapOf("C04" to 0L),
                 stableStartedAtByTrait = mapOf("C03" to 0L),
                 oppositionStartedAtByTrait = mapOf("C03" to 0L),

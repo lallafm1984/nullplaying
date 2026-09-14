@@ -75,6 +75,18 @@ internal object AdventureQaFixtures {
 
     fun stagingQaDirectory(): Path {
         val cwd = Paths.get(System.getProperty("user.dir")).toRealPath()
+        val root = generateSequence(cwd) { it.parent }.firstOrNull {
+            Files.isRegularFile(it.resolve("docs/SESSION_HANDOFF.md")) &&
+                Files.isRegularFile(it.resolve("app/build.gradle.kts"))
+        }
+        if (root != null) {
+            // Current-root regression also writes synthetic backup evidence. Keep it local,
+            // separate from both historical audits and the archived preintegration source.
+            val qa = root.resolve("output/current-root-qa")
+            Files.createDirectories(qa)
+            require(qa.toRealPath().startsWith(root.resolve("output").toRealPath()))
+            return qa
+        }
         val project = generateSequence(cwd) { it.parent }.firstOrNull {
             it.fileName?.toString() == "project" && it.parent?.fileName?.toString() == "adventure-20260906" &&
                 it.parent?.parent?.fileName?.toString() == "preintegration" && Files.isRegularFile(it.resolve("app/build.gradle.kts"))

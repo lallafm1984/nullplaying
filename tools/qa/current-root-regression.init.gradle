@@ -1,0 +1,15 @@
+// Run current adventure/app regression without the archived output-writing analyses
+// or the independent, multi-million-battle arena laboratories.
+// Usage: ./gradlew -I tools/qa/current-root-regression.init.gradle :app:testDebugUnitTest
+gradle.projectsEvaluated {
+    gradle.rootProject.project(':app').tasks.withType(Test).configureEach {
+        filter {
+            excludeTestsMatching 'com.nullplaying.engine.Adventure*ProbeTest'
+            excludeTestsMatching 'com.nullplaying.engine.arena.*Balance*'
+            excludeTestsMatching 'com.nullplaying.engine.arena.*ProbeTest'
+            // Run the action-by-action equipment study separately; it writes a full cohort CSV.
+            excludeTestsMatching 'com.nullplaying.engine.HighTierEquipmentAuditTest'
+        }
+        beforeSuite { suite -> if (suite.className != null) logger.lifecycle("VERIFY_SUITE ${suite.className}") }
+    }
+}

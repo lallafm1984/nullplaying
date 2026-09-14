@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parent
 RAW_LOCALIZED = ROOT / "raw" / "localized"
 SELECTED_KO = ROOT / "final" / "selected-ko-relic-v3"
 FEATURE_BG = ROOT / "raw" / "feature-bg-gate-imagegen.png"
-LOGO = ROOT.parents[2] / "app/src/simple/res/drawable-nodpi/title_logo_null_playing_v2.png"
+LOGO = ROOT.parents[2] / "app/src/simple/res/drawable-nodpi/title_logo_null_playing_v2.webp"
 AUDIT = ROOT / "audit"
 
 FEATURE_SIZE = (1024, 500)

@@ -181,8 +181,8 @@ android {
         applicationId = "com.nullplaying"
         minSdk = 26
         targetSdk = 36
-        versionCode = 25
-        versionName = "0.5.1"
+        versionCode = 27
+        versionName = "0.5.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField(
             "String",
@@ -481,6 +481,10 @@ android {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
+            ndk {
+                // Keep native symbol tables in the bundle metadata for Play crash/ANR analysis.
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
     }

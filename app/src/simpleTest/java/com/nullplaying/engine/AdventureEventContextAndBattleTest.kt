@@ -365,12 +365,12 @@ class AdventureEventContextAndBattleTest {
 
     private fun expectedEquipmentSaleValue(level: Long, maximumRarityRank: Int): Double {
         val rarityCounts = listOf(
-            50 to 5,
-            500 to 4,
+            500 to 5,
+            1_000 to 4,
             50_000 to 3,
             140_000 to 2,
             300_000 to 1,
-            509_450 to 0,
+            508_500 to 0,
         )
         return rarityCounts.sumOf { (count, rank) ->
             count.toDouble() * (minOf(rank, maximumRarityRank) + 1) * 10.0 * level

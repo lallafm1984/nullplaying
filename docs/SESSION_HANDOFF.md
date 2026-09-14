@@ -1,6 +1,19 @@
-# Current project handoff — 2026-09-10
+# Current project handoff — 2026-09-15
 
-## Source of truth
+## Current source and release boundary
+
+The repository root is **0.5.2 / code 27**, including trait rules v3, the Mythic Hall,
+and WebP resource optimization. The latest source additionally contains the approved equipment
+odds (+4: 0.1%, +5: 0.05%, conditional on an equipment drop) and a correction that rebases the
+v2/v3 trait evidence, formation-check and retention clocks together with trusted time.
+These later source changes are **not in the previously built 0.5.2-27 AAB**. Version metadata was
+not advanced and this verification does not publish a new Play release or change the live database.
+
+Current validation and level-by-level equipment evidence are recorded in
+`releases/2026-09-15-source-verification/README.md`. Use that report for current source verification;
+the dated build, device and server records below describe their respective historical actions.
+
+## Root integration background — 2026-09-10
 
 The repository root is now the current implementation and release build source. Version **0.5.1 (25)**
 includes the reviewed v24 MP change plus the mage ice icon mapping from task
@@ -98,3 +111,48 @@ Never commit actual developer identifiers, tokens or database backups.
 3. If another session changes source after this build, increment/rebuild as requested and regenerate
    source hashes; do not label an older bundle as containing later changes.
 4. Main-branch handoff should preserve the separate dirty VFX/AI work. Check Git status before edits.
+
+## Local trait acquisition update — 2026-09-14
+
+The root now implements adventure trait acquisition rules v2. Existing owned traits remain intact;
+mandatory combat grade/XP evidence no longer forms universal traits. Acquisition compares the full
+eligible pool with bounded evidence, active-time checks and deterministic weighted selection.
+See `design/ADVENTURE_TRAIT_ACQUISITION_V2_20260914.md` for all 40 conditions and offline validation.
+This is a source change only: no release bundle, device install, Play publication or live DB change.
+The older release/device readbacks above are historical and do not describe deployment of this fix.
+
+## Local retention and capacity update — 2026-09-14
+
+Adventure trait rules v3 supersede v2 ownership limits: retain each acquired trait for at least
+72 active-adventure hours before loss or opposite replacement; cap new ownership at 7 traits.
+Legacy overflow is not forcibly deleted; further formation is blocked until natural losses free capacity.
+The arena guide no longer mentions local challenger difficulty in Korean, English or Japanese.
+See `design/ADVENTURE_TRAIT_RETENTION_CAP_V3_20260914.md`. This source change is not deployed.
+
+## Mythic Hall — 2026-09-14
+
+Implemented Items → equipped-gear right-aligned **신화의 전당** entry with title only, the shared
+ranking transition/top bar, and no top/my-rank jumps. Automatic +5 acquisition history covers equipped
+and bag drops, survives gear sale/replacement, and retries from persisted character records. The server
+publishes the newest 100 eligible discoveries by hourly admission cutoff with no extra pages.
+Migration `202609140001_mythic_discoveries` was applied through the PC SQL Editor and read back;
+CLI status confirms the new local/remote version. Historical missing migration receipts were untouched.
+KO/EN/JA entry and populated popup QA, acquisition/isolation tests, local SQL contracts and offline APK
+build passed. No production test records or Play/device release. Details: `design/MYTHIC_HALL_20260914.md`.
+
+## 0.5.2 (27) production AAB build — 2026-09-14
+
+Current root version is 0.5.2 / code 27. Signed AAB generated and independently verified at
+`output/releases/0.5.2-27/NULL-PLAYING-0.5.2-27.aab`. Release tests: 317 passed; lint, signature,
+bundle validation, production configuration, QA exclusion and 16-KiB alignment passed.
+No Play upload/rollout or device installation. See `releases/0.5.2-27/README.md`.
+
+## 0.5.2 (27) mandatory update — 2026-09-14
+
+User confirmed production deployment. Android update policy was advanced through the PC Supabase
+SQL Editor using `202609140002_force_android_version_27_update.sql`; independent readback confirmed
+latest 27 / 0.5.2, minimum supported 27, force_update=true and enabled=true, with one migration receipt.
+Server updated_at: 2026-09-13 23:52:22.245896+00 (2026-09-14 08:52:22 KST).
+Existing update copy and Play URL were preserved; historical missing migration receipts were untouched.
+Clients at code 26 or below require updating at their next policy check; code 27+ is excluded.
+Play deployment is user-reported; no physical-device update-popup verification was performed.

@@ -322,15 +322,15 @@ class SimpleGameEngineTest {
     }
 
     @Test
-    fun `stat bonuses bring the reference warrior to level one hundred near day one hundred sixty two`() {
+    fun `stat bonuses bring the reference warrior to level one hundred near day one hundred sixty one`() {
         val game = newGame(now = 0L)
         val dayMillis = 24L * 60L * 60L * 1_000L
 
-        engine.settleOffline(game, 161L * dayMillis)
-        assertTrue("day 161 level=${game.hero.level}", game.hero.level < 100L)
+        engine.settleOffline(game, 160L * dayMillis)
+        assertTrue("day 160 level=${game.hero.level}", game.hero.level < 100L)
 
-        engine.settleOffline(game, 162L * dayMillis)
-        assertEquals("day 162 level", 100L, game.hero.level)
+        engine.settleOffline(game, 161L * dayMillis)
+        assertEquals("day 161 level", 100L, game.hero.level)
         assertTrue(game.skills.all { it.level <= LearnedSkill.MAX_LEVEL })
         assertEquals(LearnedSkill.MAX_LEVEL, game.skills.first().level)
         val firstTierAverage = SkillCatalog.damagePercentRange(1).average() +
@@ -1863,17 +1863,17 @@ class SimpleGameEngineTest {
     }
 
     @Test
-    fun `equipment loot uses approved rare odds while trophy and shop stop at plus three`() {
+    fun `equipment loot uses approved plus four and plus five odds while trophy and shop stop at plus three`() {
         val equipmentCounts = (0 until 1_000_000)
             .groupingBy(engine::equipmentLootRarityForRoll)
             .eachCount()
 
-        assertEquals(50, equipmentCounts.getValue("신화"))
-        assertEquals(500, equipmentCounts.getValue("전설"))
+        assertEquals(500, equipmentCounts.getValue("신화"))
+        assertEquals(1_000, equipmentCounts.getValue("전설"))
         assertEquals(50_000, equipmentCounts.getValue("영웅"))
         assertEquals(140_000, equipmentCounts.getValue("희귀"))
         assertEquals(300_000, equipmentCounts.getValue("고급"))
-        assertEquals(509_450, equipmentCounts.getValue("일반"))
+        assertEquals(508_500, equipmentCounts.getValue("일반"))
 
         val trophyCounts = (0 until 100)
             .groupingBy(engine::trophyRarityForRoll)

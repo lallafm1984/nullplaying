@@ -68,6 +68,7 @@ class AdventureTraitActiveTimeLifecycleTest {
         assertEquals(AdventureTraitChangeKind.RECOVERED, recovery.adventureTraits.recentChanges.single().kind)
 
         val loss = owned("G01", shaky = true).also { game ->
+            game.adventureTraits.retentionStartedAtByTrait = mapOf("G01" to -AdventureTraitEngine.MIN_RETENTION_ACTIVE_MILLIS)
             game.adventureTraits.weakenedStartedAtByTrait = mapOf("G01" to 0L)
             game.adventureTraits.evidence = mapOf(
                 "G01" to List(9) { index -> evidence("loss:$index", "opposition:${index % 3}", false) },

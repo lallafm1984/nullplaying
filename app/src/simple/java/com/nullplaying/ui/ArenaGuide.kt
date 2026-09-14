@@ -35,7 +35,7 @@ internal fun arenaGuideContent(language: AppLanguage): ArenaGuideContent = when 
         title = "결투장 안내",
         lines = listOf(
             "결투장은 다른 플레이어의 캐릭터와 자동으로 결투하는 곳입니다.",
-            "캐릭터의 레벨과 능력치를 사용합니다. 로컬 도전자는 같은 레벨이며 최근 전적에 따라 강도가 조절됩니다.",
+            "캐릭터의 레벨과 능력치를 사용합니다.",
             "캐릭터 10레벨에 스킬 포인트 10개를 받고, 이후 레벨마다 1개씩 늘어납니다. 최대 100개입니다.",
             "결투장 스킬 설정에서 포인트를 배분해 스킬 성능을 강화합니다.",
             "전투에는 출전권 1장을 사용하며, 결과는 시즌 점수와 랭킹에 반영됩니다.",
@@ -46,7 +46,7 @@ internal fun arenaGuideContent(language: AppLanguage): ArenaGuideContent = when 
         title = "Arena Guide",
         lines = listOf(
             "The Arena is where your hero automatically duels other players’ characters.",
-            "Your hero’s level and stats are used. Local challengers match your level, with strength adjusted to recent results.",
+            "Your hero’s level and stats are used.",
             "At hero level 10, you receive 10 skill points, then 1 per level, up to 100 in total.",
             "Spend points in Skill Setup to strengthen skills for Arena battles.",
             "Each duel uses one entry, and the result affects your season score and ranking.",
@@ -57,7 +57,7 @@ internal fun arenaGuideContent(language: AppLanguage): ArenaGuideContent = when 
         title = "闘技場案内",
         lines = listOf(
             "闘技場では、ほかのプレイヤーのキャラクターと自動で対戦します。",
-            "キャラクターのレベルと能力値を使います。ローカルの挑戦者は同じレベルで、最近の戦績に応じて強さが調整されます。",
+            "キャラクターのレベルと能力値を使います。",
             "キャラクターがレベル10になるとスキルポイントを10獲得し、以降は1レベルごとに1増えます。上限は100です。",
             "「スキル設定」でポイントを割り振ると、闘技場でのスキル性能を強化できます。",
             "対戦には出場券を1枚使い、結果はシーズンスコアとランキングに反映されます。",

@@ -15,6 +15,7 @@
         tools:node="remove" />
 
     <application>
+        <activity android:name="com.nullplaying.ui.MythicHallQaActivity" android:exported="true" />
         <activity android:name="com.nullplaying.ui.AdventurePreviewQaActivity" android:exported="true" />
         <activity
             android:name="com.nullplaying.ui.DailyRankingQaActivity"

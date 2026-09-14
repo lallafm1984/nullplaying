@@ -15,8 +15,22 @@ class ReleaseCandidateBuildContractTest {
             end = "buildFeatures {",
         )
 
-        assertTrue(defaultConfig.contains(Regex("""versionCode\s*=\s*25\b""")))
-        assertTrue(defaultConfig.contains(Regex("versionName\\s*=\\s*\\\"0\\.5\\.1\\\"")))
+        assertTrue(defaultConfig.contains(Regex("""versionCode\s*=\s*27\b""")))
+        assertTrue(defaultConfig.contains(Regex("versionName\\s*=\\s*\\\"0\\.5\\.2\\\"")))
+    }
+
+    @Test
+    fun `release keeps integrated resource shrinking and native crash metadata`() {
+        val release = buildScript.section(
+            start = "getByName(\"release\") {",
+            end = "testBuildType = \"migrationTest\"",
+        )
+        val gradleProperties = projectFile("gradle.properties").readText()
+
+        assertTrue(release.contains("isMinifyEnabled = true"))
+        assertTrue(release.contains("isShrinkResources = true"))
+        assertTrue(release.contains("debugSymbolLevel = \"SYMBOL_TABLE\""))
+        assertTrue(gradleProperties.contains("android.r8.optimizedResourceShrinking=true"))
     }
 
     @Test

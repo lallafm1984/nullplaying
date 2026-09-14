@@ -38,6 +38,8 @@ class AdventureTraitSemanticSignalTest {
         val safetySamples = diverseSamples(AdventureBehaviorSignal.CHECK_SAFETY, AdventureBehaviorSignal.TAKE_RISK)
         val seed = seedWhere { candidate ->
             AdventureTraitEngine.random(candidate, "FORMATION:event:8") < 2_500 &&
+                // E01 and E05 both have eight supported signs across three contexts.
+                AdventureTraitEngine.random(candidate, "event:8:formation-choice", 240) < 120 &&
                 (9..18).all { sequence ->
                     AdventureTraitEngine.random(candidate, "FORMATION:event:$sequence") >= 2_500 &&
                         AdventureTraitEngine.random(candidate, "E01:event:$sequence:approach") >= 100
@@ -59,7 +61,7 @@ class AdventureTraitSemanticSignalTest {
             it.traitId == "E01" && it.kind == AdventureTraitChangeKind.ACQUIRED
         })
 
-        val safetyHours = listOf(16L, 20L, 24L, 28L, 32L, 40L, 41L, 42L, 43L, 64L)
+        val safetyHours = listOf(16L, 20L, 24L, 28L, 32L, 40L, 41L, 42L, 43L, 88L)
         repeat(10) { index ->
             recordEventEvidence(
                 game,
@@ -145,8 +147,8 @@ class AdventureTraitSemanticSignalTest {
         assertEquals(105L, AdventureTraitEngine.experience(repeated, 100L, "known-family", 1L))
         assertEquals(1_100L, AdventureTraitEngine.resultMillis(repeated, 1_000L))
         AdventureTraitEngine.finalizeEvidence(repeated, 1L)
-        assertTrue(repeated.adventureTraits.evidence.getValue("G02").single().positive)
-        assertFalse(repeated.adventureTraits.evidence.getValue("G01").single().positive)
+        assertTrue(repeated.adventureTraits.evidence["G02"].orEmpty().isEmpty())
+        assertTrue(repeated.adventureTraits.evidence["G01"].orEmpty().isEmpty())
     }
 
     @Test fun `town and wilderness comfort traits adjust event time in both directions`() {

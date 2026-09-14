@@ -4,6 +4,13 @@ import com.nullplaying.model.*
 
 /** Main-adventure only. Stable source/domain rolls never advance combat, loot or arena RNG. */
 object AdventureTraitEngine {
+    const val ACQUISITION_RULES_VERSION = 3
+    const val MAX_OWNED_TRAITS = 7
+    const val MIN_RETENTION_ACTIVE_MILLIS = 72L * 60L * 60L * 1_000L
+    const val FORMATION_CHECK_INTERVAL_MILLIS = 30L * 60L * 1_000L
+    const val EVIDENCE_MAX_ACTIVE_AGE_MILLIS = 48L * 60L * 60L * 1_000L
+    private const val MAX_SUPPORT_PER_CONTEXT = 4
+    private val AUTOMATIC_EQUIPMENT_REASONS = setOf("equipment:compare", "equipment:used", "equipment:familiar")
     const val EXTRA_ITEM_BASIS_POINTS = 10
     const val EVIDENCE_WINDOW = 12
     const val FORMATION_MIN_ACTIVE_MILLIS = 8L * 60L * 60L * 1_000L
@@ -65,6 +72,19 @@ object AdventureTraitEngine {
             traits.initialized = true
             traits.seed = mix(state.skillCatalogSeed xor state.rngState xor 0x273B_0196_56A4_87CDL)
         }
+        if (traits.acquisitionRulesVersion < 2) {
+            // Retire automatic grade evidence, including a source pending at update time.
+            // Owned traits and their actual effects are preserved.
+            traits.evidence = traits.evidence.mapValues { (_, entries) ->
+                entries.filterNot { (!it.positive && isAutomaticEquipmentEvidence(it)) || it.reasonKey == "combat:grade" ||
+                    (it.reasonKey == "adventure:variety" && it.sourceKey.startsWith("combat:")) }
+                    .map { it.copy(observedAt = it.observedAt ?: state.actionStartedAt) }
+            }
+            traits.pendingEvidence = traits.pendingEvidence.filterNot { it.reasonKey == "combat:grade" ||
+                (it.reasonKey == "adventure:variety" && it.sourceKey.startsWith("combat:")) }
+            traits.formationStartedAtByTrait = traits.formationStartedAtByTrait - "C01" - "C02"
+        }
+        traits.acquisitionRulesVersion = ACQUISITION_RULES_VERSION
         val normalized = mutableListOf<AdventureOwnedTrait>()
         traits.owned.sortedWith(compareByDescending<AdventureOwnedTrait> { it.acquisitionSequence }
             .thenBy { it.traitId }).forEach { owned ->
@@ -72,6 +92,7 @@ object AdventureTraitEngine {
             if (normalized.none { it.traitId == owned.traitId || it.traitId == definition.oppositeId }) normalized += owned
         }
         traits.owned = normalized
+        ensureRetentionAnchors(traits, state.actionStartedAt)
         val ownedIds = normalized.mapTo(mutableSetOf()) { it.traitId }
         traits.formationStartedAtByTrait = traits.formationStartedAtByTrait.filterKeys { id ->
             AdventureTraitCatalog.find(id) != null && id !in ownedIds
@@ -168,14 +189,23 @@ object AdventureTraitEngine {
         val traits = state.adventureTraits
         if (traits.pendingEvidence.any { it.sourceKey == key }) return
         if ("S01" in positive && reason == "trade:purchase") traits.prerequisites += "considered"
-        traits.pendingEvidence = traits.pendingEvidence + AdventureTraitEvidenceUpdate(key, context, positive, negative, at, reason)
+        val opposing = if (reason in AUTOMATIC_EQUIPMENT_REASONS) emptySet() else negative
+        traits.pendingEvidence = traits.pendingEvidence + AdventureTraitEvidenceUpdate(key, context, positive, opposing, at, reason)
     }
 
     fun finalizeEvidence(state: SimpleGameState, at: Long) {
         val traits = state.adventureTraits
-        val updates = traits.pendingEvidence
-        if (updates.isEmpty()) return
+        val pending = traits.pendingEvidence.filterNot { it.reasonKey == "combat:grade" ||
+            (it.reasonKey == "adventure:variety" && it.sourceKey.startsWith("combat:")) }
+        val deliberateIds = pending.filterNot { it.reasonKey in AUTOMATIC_EQUIPMENT_REASONS }
+            .flatMap { it.positive + it.negative }.toSet()
+        val updates = pending.map {
+            if (it.reasonKey in AUTOMATIC_EQUIPMENT_REASONS)
+                it.copy(positive = it.positive - deliberateIds, negative = emptySet())
+            else it
+        }.filter { it.positive.isNotEmpty() || it.negative.isNotEmpty() }
         traits.pendingEvidence = emptyList()
+        if (updates.isEmpty()) return
         val key = traits.source?.key ?: updates.first().sourceKey
         if (key in traits.observedSourceKeys) return
         traits.observedSourceKeys = (traits.observedSourceKeys + key).takeLast(512)
@@ -183,14 +213,23 @@ object AdventureTraitEngine {
         val negative = updates.flatMap { it.negative }.toSet() - positive
         val freshPositive = mutableSetOf<String>()
         val ids = (positive + negative).filter { AdventureTraitCatalog.find(it) != null }
+        traits.formationStartedAtByTrait = traits.formationStartedAtByTrait.filterKeys { id ->
+            recentFormationEvidence(traits, id, at).any { it.positive }
+        }
         ids.forEach { id ->
             if (traits.evidence[id].orEmpty().any { it.sourceKey == key }) return@forEach
             val update = updates.first { if (id in positive) id in it.positive else id in it.negative }
-            val entry = AdventureTraitEvidence(key, update.contextKey, id in positive, update.reasonKey)
-            traits.evidence = traits.evidence + (id to (traits.evidence[id].orEmpty() + entry).takeLast(EVIDENCE_WINDOW))
+            val entry = AdventureTraitEvidence(key, update.contextKey, id in positive, update.reasonKey, at)
+            val prior = traits.evidence[id].orEmpty()
+            val retained = if (isAutomaticEquipmentEvidence(entry)) {
+                val automatic = prior.filter(::isAutomaticEquipmentEvidence).takeLast(3)
+                prior.filter { !isAutomaticEquipmentEvidence(it) || it in automatic }
+            } else prior
+            traits.evidence = traits.evidence + (id to (retained + entry).takeLast(EVIDENCE_WINDOW))
             if (id in positive) freshPositive += id
         }
         val beforeOwned = traits.owned
+        ensureRetentionAnchors(traits, at)
         beforeOwned.forEach { owned ->
             if (owned.traitId !in traits.stableStartedAtByTrait) {
                 // A save created before active-time pacing starts a fresh protection window.
@@ -208,30 +247,30 @@ object AdventureTraitEngine {
         ids.forEach { id ->
             val owned = beforeOwned.firstOrNull { it.traitId == id }
             val opposition = traits.evidence[id].orEmpty().count { !it.positive }
-            if (owned == null && opposition > 3) {
-                // Formation requires one sustained, currently coherent tendency.
-                traits.formationStartedAtByTrait = traits.formationStartedAtByTrait - id
-            } else if (owned != null && id in negative && id !in traits.oppositionStartedAtByTrait) {
+            if (owned != null && id in negative && id !in traits.oppositionStartedAtByTrait) {
                 traits.oppositionStartedAtByTrait = traits.oppositionStartedAtByTrait + (id to at)
             } else if (owned != null && id !in negative && !owned.shaky && opposition <= 3) {
                 traits.oppositionStartedAtByTrait = traits.oppositionStartedAtByTrait - id
             }
         }
-        val eligible = freshPositive.filter { id ->
-            val evidence = traits.evidence[id].orEmpty()
+        val eligible = traits.evidence.keys.filter { id ->
+            if (AdventureTraitCatalog.find(id) == null) return@filter false
+            val evidence = recentFormationEvidence(traits, id, at)
             val support = evidence.filter { it.positive }
             val opposite = AdventureTraitCatalog.definition(id).oppositeId
             val oppositeOwned = beforeOwned.firstOrNull { it.traitId == opposite }
             val replacementReady = oppositeOwned == null || (
-                oppositeOwned.shaky && elapsedAtLeast(
+                retentionComplete(traits, oppositeOwned.traitId, at) && oppositeOwned.shaky && elapsedAtLeast(
                     at,
                     traits.weakenedStartedAtByTrait[opposite],
                     SHAKY_LOSS_MIN_ACTIVE_MILLIS,
                 )
             )
-            beforeOwned.none { it.traitId == id } && replacementReady &&
-                elapsedAtLeast(at, traits.formationStartedAtByTrait[id], FORMATION_MIN_ACTIVE_MILLIS) && support.size >= 8 &&
-                support.map { it.contextKey }.distinct().size >= 3 && evidence.count { !it.positive } <= 3 &&
+            val capacityReady = beforeOwned.size < MAX_OWNED_TRAITS ||
+                (beforeOwned.size == MAX_OWNED_TRAITS && oppositeOwned != null)
+            beforeOwned.none { it.traitId == id } && capacityReady && replacementReady &&
+                elapsedAtLeast(at, traits.formationStartedAtByTrait[id], FORMATION_MIN_ACTIVE_MILLIS) && normalizedSupport(support) >= 8 &&
+                support.map { formationContext(it) }.distinct().size >= 3 && evidence.count { !it.positive } <= 3 &&
                 when (id) {
                     "L01" -> "exploration" in traits.prerequisites
                     "L04" -> "packing" in traits.prerequisites && "carried" in traits.prerequisites
@@ -242,10 +281,14 @@ object AdventureTraitEngine {
         }
         val formationCooldownReady = traits.lastFormationAt == null ||
             elapsedAtLeast(at, traits.lastFormationAt, FORMATION_COOLDOWN_ACTIVE_MILLIS)
-        val acquired = if (eligible.isNotEmpty() && formationCooldownReady && roll(state, "FORMATION", key, 2_500))
-            eligible.sortedWith(compareByDescending<String> { candidate ->
-                traits.evidence[candidate].orEmpty().fold(0) { score, item -> score + if (item.positive) 1 else -1 }
-            }.thenBy { random(traits.seed, "$key:choice:$it", Int.MAX_VALUE) }).first() else null
+        val checkReady = traits.lastFormationCheckAt == null ||
+            elapsedAtLeast(at, traits.lastFormationCheckAt, FORMATION_CHECK_INTERVAL_MILLIS)
+        if (eligible.isNotEmpty() && formationCooldownReady && checkReady) traits.lastFormationCheckAt = at
+        val acquired = if (eligible.isNotEmpty() && formationCooldownReady && checkReady && roll(state, "FORMATION", key, 2_500)) {
+            val weighted = eligible.sorted().map { it to formationScore(traits, it, at) }
+            var choice = random(traits.seed, "$key:formation-choice", weighted.sumOf { it.second })
+            weighted.first { (_, weight) -> choice -= weight; choice < 0 }.first
+        } else null
         val replacedId = acquired?.let { AdventureTraitCatalog.definition(it).oppositeId }.orEmpty()
         traits.owned = beforeOwned.mapNotNull { owned ->
             if (owned.traitId == replacedId) {
@@ -256,7 +299,7 @@ object AdventureTraitEngine {
             val opposition = traits.evidence[owned.traitId].orEmpty().filterNot { it.positive }
             val diversified = opposition.map { it.contextKey }.distinct().size >= 3
             val reason = updates.firstOrNull { owned.traitId in it.negative || owned.traitId in it.positive }?.reasonKey ?: "adventure:experience"
-            val canLose = owned.shaky && opposition.size >= LOSS_OPPOSITION_COUNT && diversified && elapsedAtLeast(
+            val canLose = retentionComplete(traits, owned.traitId, at) && owned.shaky && opposition.size >= LOSS_OPPOSITION_COUNT && diversified && elapsedAtLeast(
                 at,
                 traits.weakenedStartedAtByTrait[owned.traitId],
                 SHAKY_LOSS_MIN_ACTIVE_MILLIS,
@@ -294,28 +337,64 @@ object AdventureTraitEngine {
         }
         if (acquired != null) {
             val id = acquired
-            val reason = updates.first { id in it.positive }.reasonKey
+            val reason = recentFormationEvidence(traits, id, at).last { it.positive }.reasonKey
             val opposite = AdventureTraitCatalog.definition(id).oppositeId
             val replaced = beforeOwned.firstOrNull { it.traitId == opposite }
             val record = change(state, id, if (replaced == null) AdventureTraitChangeKind.ACQUIRED else AdventureTraitChangeKind.REPLACED,
                 key, at, reason, replaced?.traitId.orEmpty())
             traits.lastFormationAt = at
             traits.owned = traits.owned.filterNot { it.traitId == opposite || it.traitId == id } +
-                AdventureOwnedTrait(id, at, record.sequence, false, record)
+                AdventureOwnedTrait(id, at, record.sequence, false, record, ACQUISITION_RULES_VERSION)
             traits.evidence = traits.evidence + (id to emptyList())
             traits.formationStartedAtByTrait = traits.formationStartedAtByTrait - id - opposite
             traits.stableStartedAtByTrait = traits.stableStartedAtByTrait + (id to at)
+            traits.retentionStartedAtByTrait = traits.retentionStartedAtByTrait + (id to at)
             traits.oppositionStartedAtByTrait = traits.oppositionStartedAtByTrait - id
             traits.weakenedStartedAtByTrait = traits.weakenedStartedAtByTrait - id
         }
         traits.owned = traits.owned.sortedWith(compareByDescending<AdventureOwnedTrait> { it.acquisitionSequence }.thenBy { it.traitId })
     }
 
+    /** Sequence counters are not distinct situations (every empty shop used to count as new). */
+    private fun formationContext(entry: AdventureTraitEvidence): String = when (entry.reasonKey) {
+        "trade:empty" -> if (entry.contextKey.startsWith("trade:empty:weakest:")) entry.contextKey else "trade:empty"
+        "trade:return-style" -> if (entry.contextKey.startsWith("return-style:weakest:")) entry.contextKey else "trade:return-style"
+        else -> entry.contextKey
+    }
+
+    private fun recentFormationEvidence(traits: AdventureTraitState, id: String, at: Long) =
+        traits.evidence[id].orEmpty().filter { entry ->
+            entry.reasonKey != "combat:grade" &&
+                (entry.observedAt == null || (at >= entry.observedAt && at - entry.observedAt <= EVIDENCE_MAX_ACTIVE_AGE_MILLIS))
+        }
+
+    private fun isAutomaticEquipmentEvidence(entry: AdventureTraitEvidence) =
+        entry.reasonKey in AUTOMATIC_EQUIPMENT_REASONS
+
+    private fun normalizedSupport(support: List<AdventureTraitEvidence>): Int =
+        support.groupBy { entry ->
+            // Routine auto-comparison/use is corroboration, never enough to define a personality.
+            if (isAutomaticEquipmentEvidence(entry))
+                "equipment:automatic"
+            else formationContext(entry)
+        }.values.sumOf { minOf(MAX_SUPPORT_PER_CONTEXT, it.size) }
+
+    private fun formationScore(traits: AdventureTraitState, id: String, at: Long): Int {
+        val evidence = recentFormationEvidence(traits, id, at)
+        val support = evidence.filter { it.positive }
+        val positive = normalizedSupport(support)
+        val opposing = normalizedSupport(evidence.filterNot { it.positive })
+        val contexts = support.map { formationContext(it) }.distinct().size.coerceAtMost(4)
+        val families = support.map { it.reasonKey.substringBefore(':') }.distinct().size.coerceAtMost(3)
+        // Ratios keep a high-frequency source from winning simply by filling twelve slots.
+        return positive * 100 / (positive + opposing).coerceAtLeast(1) + contexts * 5 + families * 5
+    }
+
     private fun change(state: SimpleGameState, id: String, kind: AdventureTraitChangeKind,
         key: String, at: Long, reason: String, replaced: String = ""): AdventureTraitChange {
         val traits = state.adventureTraits
         traits.changeSequence++
-        val record = AdventureTraitChange(traits.changeSequence, id, kind, key, at, reason, replaced)
+        val record = AdventureTraitChange(traits.changeSequence, id, kind, key, at, reason, replaced, ACQUISITION_RULES_VERSION)
         traits.recentChanges = (traits.recentChanges + record).takeLast(32)
         return record
     }
@@ -363,16 +442,7 @@ object AdventureTraitEngine {
                     setOf(id), setOf(if (id == "C03") "C04" else "C03"), at, "combat:style")
             }
         }
-        val mightyFoe = state.monster.grade == MonsterGrade.ELITE || state.monster.grade == MonsterGrade.BOSS
-        observe(
-            state,
-            source.key + ":grade",
-            "combat-grade:${state.monster.grade.name}:${source.contextKey}",
-            setOf(if (mightyFoe) "C01" else "C02"),
-            setOf(if (mightyFoe) "C02" else "C01"),
-            at,
-            "combat:grade",
-        )
+        // Mandatory encounters are activation conditions, not a preference for hunting a grade.
         when {
             source.finishingRawPercent >= 55 -> observe(
                 state, source.key + ":finisher", "combat-finisher:strong:${source.contextKey}",
@@ -444,7 +514,9 @@ object AdventureTraitEngine {
         }
         val positive = mutableSetOf(learningTrait, if (largeReward) "G03" else "G04")
         val negative = mutableSetOf(if (novel) "G02" else "G01", if (largeReward) "G04" else "G03")
-        observe(state, source.key + ":experience", family, positive, negative, at, "adventure:variety")
+        if (source.kind != "combat") {
+            observe(state, source.key + ":experience", family, positive, negative, at, "adventure:variety")
+        }
         return changed
     }
 
@@ -618,6 +690,14 @@ object AdventureTraitEngine {
             signalTraits[signal]?.let { (supportingTrait, opposingTrait) ->
                 positive += supportingTrait
                 negative += opposingTrait
+            }
+        }
+        if (run.context == AdventureEventContext.PRE_COMBAT) {
+            val risk = AdventureBehaviorSignal.TAKE_RISK in signals
+            val safety = AdventureBehaviorSignal.CHECK_SAFETY in signals
+            if (risk != safety) {
+                positive += if (risk) "C01" else "C02"
+                negative += if (risk) "C02" else "C01"
             }
         }
         val outcomeSuccess = run.outcome == AdventureEventOutcome.SUCCESS
@@ -855,15 +935,17 @@ object AdventureTraitEngine {
     fun depart(state: SimpleGameState, at: Long, baseMillis: Long): Long {
         val traits = state.adventureTraits
         traits.shopVisit?.let { visit ->
+            val weakestSlot = state.equipment.minWithOrNull(compareBy<EquippedItem> { it.power }.thenBy { it.slot.ordinal })
+                ?.slot?.name ?: "NONE"
             if (visit.basePurchases == 0L) {
                 traits.prerequisites += "empty_visit"
-                observe(state, visit.sourceKey + ":complete", "trade:empty:${state.totalReturns}", setOf("S02"), setOf("S01"), at, "trade:empty")
+                observe(state, visit.sourceKey + ":complete", "trade:empty:weakest:$weakestSlot", setOf("S02"), setOf("S01"), at, "trade:empty")
             }
             val methodical = visit.basePurchases > 0L
             observe(
                 state,
                 visit.sourceKey + ":returnStyle",
-                "return-style:${state.totalReturns}",
+                "return-style:weakest:$weakestSlot",
                 setOf(if (methodical) "T05" else "T06"),
                 setOf(if (methodical) "T06" else "T05"),
                 at,
@@ -909,12 +991,34 @@ object AdventureTraitEngine {
             baseRelationship = traits.source!!.baseRelationship?.let { it.copy(startedAt = plus(it.startedAt, millis)) })
         traits.formationStartedAtByTrait = shiftAnchors(traits.formationStartedAtByTrait, millis)
         traits.lastFormationAt = traits.lastFormationAt?.let { plus(it, millis) }
+        traits.lastFormationCheckAt = traits.lastFormationCheckAt?.let { plus(it, millis) }
+        if (millis > 0L) traits.evidence = traits.evidence.mapValues { (_, entries) ->
+            entries.map { it.copy(observedAt = it.observedAt?.let { at -> plus(at, millis) }) }
+        }
+        traits.retentionStartedAtByTrait = shiftAnchors(traits.retentionStartedAtByTrait, millis)
         traits.stableStartedAtByTrait = shiftAnchors(traits.stableStartedAtByTrait, millis)
         traits.oppositionStartedAtByTrait = shiftAnchors(traits.oppositionStartedAtByTrait, millis)
         traits.weakenedStartedAtByTrait = shiftAnchors(traits.weakenedStartedAtByTrait, millis)
     }
 
+    private fun ensureRetentionAnchors(traits: AdventureTraitState, at: Long) {
+        val ownedIds = traits.owned.mapTo(mutableSetOf()) { it.traitId }
+        traits.retentionStartedAtByTrait = traits.retentionStartedAtByTrait.filterKeys { it in ownedIds }
+        traits.owned.forEach { owned ->
+            if (owned.traitId !in traits.retentionStartedAtByTrait) {
+                // Legacy stable anchors already exclude uncovered pauses. They can be later than
+                // acquisition after recovery; conservatively retain longer rather than remove early.
+                val startedAt = traits.stableStartedAtByTrait[owned.traitId] ?: at
+                traits.retentionStartedAtByTrait = traits.retentionStartedAtByTrait + (owned.traitId to startedAt)
+            }
+        }
+    }
+
+    private fun retentionComplete(traits: AdventureTraitState, id: String, at: Long) =
+        elapsedAtLeast(at, traits.retentionStartedAtByTrait[id], MIN_RETENTION_ACTIVE_MILLIS)
+
     private fun clearOwnedLifecycleAnchors(traits: AdventureTraitState, id: String) {
+        traits.retentionStartedAtByTrait = traits.retentionStartedAtByTrait - id
         traits.stableStartedAtByTrait = traits.stableStartedAtByTrait - id
         traits.oppositionStartedAtByTrait = traits.oppositionStartedAtByTrait - id
         traits.weakenedStartedAtByTrait = traits.weakenedStartedAtByTrait - id

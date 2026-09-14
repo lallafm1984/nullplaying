@@ -279,6 +279,75 @@ class SupabaseGameService(
     private val isSessionLoggingAllowed: Boolean
         get() = SessionLogRemotePolicy.allowed(isConfigured, sessionLoggingEnabled())
 
+    private val mythicMutex = Mutex()
+    private val _mythicSnapshot = MutableStateFlow<MythicDiscoverySnapshot?>(null)
+    internal val mythicSnapshot = _mythicSnapshot.asStateFlow()
+    private val _mythicError = MutableStateFlow(false)
+    internal val mythicError = _mythicError.asStateFlow()
+    private var mythicNextFetchElapsed = 0L
+
+    /** The game save itself is the durable outbox, including inactive character slots. */
+    suspend fun syncMythicDiscoveries(snapshot: GameSnapshot) {
+        if (!isConfigured || !snapshot.ready) return
+        mythicMutex.withLock {
+            try {
+                val session = ensureSession(forceValidation = true)
+                for (character in snapshot.characters) {
+                    val records = character.state.mythicDiscoveries.takeLast(100)
+                    if (records.isEmpty()) continue
+                    val payload = json.encodeToString(records)
+                    val key = "mythic_receipt_${session.userId}_${character.state.rankingCharacterId}"
+                    val hash = sha256Hex(payload)
+                    if (preferences.getString(key, null) == hash) continue
+                    val response = json.parseToJsonElement(request(
+                        path = "/rest/v1/rpc/sync_mythic_discoveries", method = "POST",
+                        accessToken = session.accessToken,
+                        body = "{\"p_records\":$payload}",
+                    )).jsonObject
+                    check(response["accepted"]?.jsonPrimitive?.content?.toIntOrNull() == records.size)
+                    check(readSession()?.userId == session.userId)
+                    preferences.edit().putString(key, hash).commit()
+                }
+            } catch (cancelled: CancellationException) { throw cancelled
+            } catch (error: Exception) { Log.w(TAG, "Mythic discovery upload deferred", error) }
+        }
+    }
+
+    internal suspend fun fetchMythicDiscoveries() {
+        if (!isConfigured) { _mythicSnapshot.value = MythicDiscoverySnapshot(); return }
+        mythicMutex.withLock {
+            val elapsed = SystemClock.elapsedRealtime()
+            if (elapsed < mythicNextFetchElapsed) return
+            mythicNextFetchElapsed = elapsed + 30_000L
+            try {
+                val session = ensureSession(forceValidation = true)
+                val cacheKey = "mythic_cache_${session.userId}"
+                val cached = preferences.getString(cacheKey, null)?.let {
+                    runCatching { json.decodeFromString<MythicDiscoverySnapshot>(it) }.getOrNull()
+                }
+                if (_mythicSnapshot.value == null) _mythicSnapshot.value = cached
+                val validUntil = preferences.getLong(cacheKey + "_until", 0L)
+                val remaining = validUntil - System.currentTimeMillis()
+                if (cached != null && remaining in 1L..3_600_000L) {
+                    mythicNextFetchElapsed = elapsed + remaining
+                    return
+                }
+                val response = request(path = "/rest/v1/rpc/get_mythic_discoveries",
+                    method = "POST", accessToken = session.accessToken, body = "{}")
+                val received = json.decodeFromString<MythicDiscoverySnapshot>(response)
+                check(received.entries.size <= 100 && received.nextSettlementAt > received.serverNow)
+                check(readSession()?.userId == session.userId)
+                val delay = (received.nextSettlementAt - received.serverNow).coerceIn(1_000L, 3_600_000L)
+                preferences.edit().putString(cacheKey, response)
+                    .putLong(cacheKey + "_until", System.currentTimeMillis() + delay).commit()
+                mythicNextFetchElapsed = SystemClock.elapsedRealtime() + delay
+                _mythicSnapshot.value = received
+                _mythicError.value = false
+            } catch (cancelled: CancellationException) { throw cancelled
+            } catch (error: Exception) { _mythicError.value = true }
+        }
+    }
+
     suspend fun initialize() {
         if (!isConfigured) return
         recoverLegacyBackgroundSession()
@@ -1790,6 +1859,9 @@ class SupabaseGameService(
     }
 
     private suspend fun clearRemoteStateForReplacedIdentity() {
+        _mythicSnapshot.value = null
+        _mythicError.value = false
+        mythicNextFetchElapsed = 0L
         rankingResponseGate.invalidate {
             preferences.edit()
                 .remove(PENDING_RANKING_SYNC_KEY)

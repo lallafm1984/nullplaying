@@ -235,6 +235,7 @@ internal enum class MenuTab(
 }
 
 private enum class RankingPageKind {
+    MYTHIC,
     ADVENTURER,
     ARENA,
 }
@@ -1855,6 +1856,8 @@ private fun GameScreen(
 
     val combatPower = repository.displayCombatPower(state)
     val supabaseConnection by supabaseGameService.connectionState.collectAsState()
+    val mythicSnapshot by supabaseGameService.mythicSnapshot.collectAsState()
+    val mythicError by supabaseGameService.mythicError.collectAsState()
     val remoteRanking by supabaseGameService.rankingSnapshot.collectAsState()
     val rankingError by supabaseGameService.rankingError.collectAsState()
     val remoteArenaRanking by supabaseGameService.arenaRankingSnapshot.collectAsState()
@@ -1897,6 +1900,12 @@ private fun GameScreen(
     }
     LaunchedEffect(rankingPage, state.rankingCharacterId) {
         when (rankingPage) {
+            RankingPageKind.MYTHIC -> {
+                while (true) {
+                    supabaseGameService.fetchMythicDiscoveries()
+                    kotlinx.coroutines.delay(30_000L)
+                }
+            }
             RankingPageKind.ADVENTURER -> supabaseGameService.fetchRanking(state.rankingCharacterId)
             RankingPageKind.ARENA -> supabaseGameService.fetchArenaRanking(state.rankingCharacterId)
             null -> Unit
@@ -2267,6 +2276,11 @@ private fun GameScreen(
                 },
             ) { visibleRankingPage ->
                 when (visibleRankingPage) {
+                RankingPageKind.MYTHIC -> MythicHallScreen(
+                    snapshot = mythicSnapshot, error = mythicError,
+                    onBack = { rankingPage = null },
+                    onRetry = { scope.launch { supabaseGameService.fetchMythicDiscoveries() } },
+                )
                 RankingPageKind.ADVENTURER -> Column(
                     modifier = Modifier.fillMaxSize().background(AqBackground),
                 ) {
@@ -2386,8 +2400,8 @@ private fun GameScreen(
                                             state = state,
                                         )
                                         MenuTab.CORRESPONDENCE, MenuTab.BATTLE -> Unit
-                                        MenuTab.ITEMS -> ItemsPanel(state)
-                                        MenuTab.EQUIPMENT -> EquipmentPanel(state)
+                                        MenuTab.ITEMS -> ItemsPanel(state) { rankingPage = RankingPageKind.MYTHIC }
+                                        MenuTab.EQUIPMENT -> EquipmentPanel(state) { rankingPage = RankingPageKind.MYTHIC }
                                         MenuTab.BAG -> BagPanel(state)
                                         MenuTab.QUEST -> QuestPanel(state)
                                     }
@@ -5462,7 +5476,7 @@ private enum class ItemSection(val label: String) {
 }
 
 @Composable
-private fun ItemsPanel(state: SimpleGameState) {
+internal fun ItemsPanel(state: SimpleGameState, onOpenMythicHall: () -> Unit) {
     var selectedSection by rememberSaveable(state.hero.name) {
         mutableStateOf(ItemSection.EQUIPMENT)
     }
@@ -5504,7 +5518,7 @@ private fun ItemsPanel(state: SimpleGameState) {
         Spacer(Modifier.height(8.dp))
         Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
             when (selectedSection) {
-                ItemSection.EQUIPMENT -> EquipmentPanel(state)
+                ItemSection.EQUIPMENT -> EquipmentPanel(state, onOpenMythicHall)
                 ItemSection.BAG -> BagPanel(state)
             }
         }
@@ -5598,10 +5612,13 @@ private fun CharacterStatCell(
 }
 
 @Composable
-private fun EquipmentPanel(state: SimpleGameState) {
+private fun EquipmentPanel(state: SimpleGameState, onOpenMythicHall: () -> Unit) {
     val language = LocalAppLanguage.current
     PanelCard {
-        Text("장착 장비", color = AqText, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Text("장착 장비", color = AqText, fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+            MythicHallEntryButton(onClick = onOpenMythicHall)
+        }
         Spacer(Modifier.height(7.dp))
         state.equipment.forEach { item ->
             val displayName = localizedEquipmentName(item.name, language)

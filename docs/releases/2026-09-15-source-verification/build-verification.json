@@ -1,0 +1,20 @@
+{
+  "offline_apk": {
+    "application_id": "com.nullplaying.adventurepreview",
+    "version_code": 27,
+    "version_name": "0.5.2-offline-qa",
+    "bytes": 80179795,
+    "sha256": "ec77f7282079227bfab354ee9bcfc4c0ce7404465709a4f2cef74da028caa8cc",
+    "internet_permission": false,
+    "remote_services": false,
+    "credentials_empty": true
+  },
+  "lint": {
+    "Warning": 93,
+    "Hint": 7
+  },
+  "source_hashes_checked": 56,
+  "play_publication": false,
+  "device_installation": false,
+  "live_database_mutation": false
+}

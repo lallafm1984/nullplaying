@@ -3263,6 +3263,8 @@ class SimpleGameEngine(
             (originalCandidate.power == current.power && rarityRank(originalCandidate.rarity) > rarityRank(current.rarity))
         val baseSelectedPower = if (baseUpgrade) originalCandidate.power else current.power
         val droppedItemId = safeIncrement(state.totalItemsFound)
+        com.nullplaying.model.recordMythicDiscovery(state, droppedItemId, candidate.name, candidate.rarity,
+            slot, candidate.power, eventAt)
         val candidateIsUpgrade = candidate.power > current.power ||
             (candidate.power == current.power && rarityRank(candidate.rarity) > rarityRank(current.rarity))
         val keptFamiliar = enableAdventureTraits && origin != "TRAIT_EXTRA" && candidate.power > current.power &&
@@ -3544,11 +3546,11 @@ class SimpleGameEngine(
     internal fun equipmentLootRarityForRoll(roll: Int): String {
         val bounded = roll.coerceIn(0, LOOT_RARITY_ROLL_BOUND - 1)
         return when {
-            bounded < 50 -> "신화"
-            bounded < 550 -> "전설"
-            bounded < 50_550 -> "영웅"
-            bounded < 190_550 -> "희귀"
-            bounded < 490_550 -> "고급"
+            bounded < 500 -> "신화"
+            bounded < 1_500 -> "전설"
+            bounded < 51_500 -> "영웅"
+            bounded < 191_500 -> "희귀"
+            bounded < 491_500 -> "고급"
             else -> "일반"
         }
     }

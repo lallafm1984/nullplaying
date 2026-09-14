@@ -439,12 +439,25 @@ internal fun CompactRankingEntryMenu(
     }
     val detail = rankingEntryMenuDetail(myEntry)
     val localizedDetail = localized(detail, language)
+    CompactRecordEntryMenu(
+        title = compactAdventurerRankingTitle(language), detail = localizedDetail,
+        detailHighlighted = myEntry != null,
+        accessibilityLabel = compactAdventurerRankingAccessibilityLabel(localizedDetail, language),
+        onClick = onClick, modifier = modifier,
+    )
+}
+
+@Composable
+internal fun CompactRecordEntryMenu(
+    title: String, detail: String?, detailHighlighted: Boolean,
+    accessibilityLabel: String, onClick: () -> Unit, modifier: Modifier = Modifier,
+) {
     Button(
         onClick = onClick,
         modifier = modifier
             .height(COMPACT_RANKING_ENTRY_MENU_HEIGHT_DP.dp)
             .semantics(mergeDescendants = true) {
-                contentDescription = compactAdventurerRankingAccessibilityLabel(localizedDetail, language)
+                contentDescription = accessibilityLabel
             },
         shape = RoundedCornerShape(14.dp),
         colors = ButtonDefaults.buttonColors(
@@ -463,16 +476,16 @@ internal fun CompactRankingEntryMenu(
         Spacer(Modifier.width(5.dp))
         Column {
             UnlocalizedText(
-                text = compactAdventurerRankingTitle(language),
+                text = title,
                 color = AqText,
                 fontSize = COMPACT_RANKING_ENTRY_MENU_TITLE_FONT_SIZE_SP.sp,
                 lineHeight = 14.sp,
                 fontWeight = FontWeight.Black,
                 maxLines = 1,
             )
-            UnlocalizedText(
-                text = localizedDetail,
-                color = if (myEntry != null) AqGold else AqMuted,
+            if (detail != null) UnlocalizedText(
+                text = detail,
+                color = if (detailHighlighted) AqGold else AqMuted,
                 fontSize = COMPACT_RANKING_ENTRY_MENU_DETAIL_FONT_SIZE_SP.sp,
                 lineHeight = 10.sp,
                 maxLines = 1,

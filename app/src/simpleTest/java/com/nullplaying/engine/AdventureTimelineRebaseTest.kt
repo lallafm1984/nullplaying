@@ -19,6 +19,7 @@ import com.nullplaying.model.AdventureTraitActivation
 import com.nullplaying.model.AdventureTraitChange
 import com.nullplaying.model.AdventureTraitChangeKind
 import com.nullplaying.model.AdventureTraitEffectKind
+import com.nullplaying.model.AdventureTraitEvidence
 import com.nullplaying.model.AdventureTraitEvidenceUpdate
 import com.nullplaying.model.AdventureTraitSource
 import com.nullplaying.model.HeroClass
@@ -153,6 +154,12 @@ class AdventureTimelineRebaseTest {
             owned = listOf(AdventureOwnedTrait("G01", 920_000L, 1L, lastChange = change))
             formationStartedAtByTrait = mapOf("G02" to 930_000L)
             lastFormationAt = 940_000L
+            lastFormationCheckAt = 945_000L
+            retentionStartedAtByTrait = mapOf("G01" to 920_000L)
+            evidence = mapOf("G02" to listOf(
+                AdventureTraitEvidence("event:1", "road", true, "test", 935_000L),
+                AdventureTraitEvidence("legacy", "road", true, "test"),
+            ))
             stableStartedAtByTrait = mapOf("G01" to 950_000L)
             oppositionStartedAtByTrait = mapOf("G01" to 960_000L)
             weakenedStartedAtByTrait = mapOf("G01" to 970_000L)
@@ -217,6 +224,10 @@ class AdventureTimelineRebaseTest {
         assertEquals(90_000L, traits.owned.single().lastChange!!.occurredAt)
         assertEquals(30_000L, traits.formationStartedAtByTrait.getValue("G02"))
         assertEquals(40_000L, traits.lastFormationAt)
+        assertEquals(45_000L, traits.lastFormationCheckAt)
+        assertEquals(20_000L, traits.retentionStartedAtByTrait.getValue("G01"))
+        assertEquals(35_000L, traits.evidence.getValue("G02").first().observedAt)
+        assertEquals(null, traits.evidence.getValue("G02").last().observedAt)
         assertEquals(50_000L, traits.stableStartedAtByTrait.getValue("G01"))
         assertEquals(60_000L, traits.oppositionStartedAtByTrait.getValue("G01"))
         assertEquals(70_000L, traits.weakenedStartedAtByTrait.getValue("G01"))
@@ -285,6 +296,9 @@ class AdventureTimelineRebaseTest {
             initialized = true
             owned = listOf(AdventureOwnedTrait("G01", acquiredAt = 20_000L))
             lastFormationAt = 40_000L
+            lastFormationCheckAt = 45_000L
+            retentionStartedAtByTrait = mapOf("G01" to 20_000L)
+            evidence = mapOf("G02" to listOf(AdventureTraitEvidence("event:1", "road", true, "test", 35_000L)))
             stableStartedAtByTrait = mapOf("G01" to 50_000L)
         }
 
@@ -301,6 +315,9 @@ class AdventureTimelineRebaseTest {
         assertTrue(AdventureRelationshipEngine.eligibleCandidates(game, trustedNow).isNotEmpty())
         assertEquals(920_000L, game.adventureTraits.owned.single().acquiredAt)
         assertEquals(940_000L, game.adventureTraits.lastFormationAt)
+        assertEquals(945_000L, game.adventureTraits.lastFormationCheckAt)
+        assertEquals(920_000L, game.adventureTraits.retentionStartedAtByTrait.getValue("G01"))
+        assertEquals(935_000L, game.adventureTraits.evidence.getValue("G02").single().observedAt)
         assertEquals(950_000L, game.adventureTraits.stableStartedAtByTrait.getValue("G01"))
     }
 

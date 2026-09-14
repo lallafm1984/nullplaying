@@ -1,0 +1,13 @@
+{
+  "tests": 1420,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 10,
+  "suites": 181,
+  "excluded_patterns": [
+    "com.nullplaying.engine.Adventure*ProbeTest",
+    "com.nullplaying.engine.arena.*Balance*",
+    "com.nullplaying.engine.arena.*ProbeTest",
+    "com.nullplaying.engine.HighTierEquipmentAuditTest"
+  ]
+}

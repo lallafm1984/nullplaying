@@ -94,7 +94,7 @@ def paste_card(
 
 
 def paste_logo(canvas: Image.Image, xy: tuple[int, int], width: int) -> None:
-    logo = Image.open(ROOT.parents[2] / "app/src/simple/res/drawable-nodpi/title_logo_null_playing_v2.png").convert("RGBA")
+    logo = Image.open(ROOT.parents[2] / "app/src/simple/res/drawable-nodpi/title_logo_null_playing_v2.webp").convert("RGBA")
     logo = fit_width(logo, width)
     canvas.alpha_composite(logo, xy)
 

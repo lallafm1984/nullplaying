@@ -27,6 +27,9 @@ internal object AdventureTimelineRebase {
         rebaseJourney(state.adventureJourney, shift)
         rebaseRelationships(state.adventureRelationships, shift)
         rebaseTraits(state.adventureTraits, shift)
+        state.mythicDiscoveries = state.mythicDiscoveries.map {
+            it.copy(discoveredAt = shift.settled(it.discoveredAt).coerceAtLeast(1L))
+        }
     }
 
     private fun rebaseJourney(journey: AdventureJourneyState, shift: TimestampShift) {
@@ -64,6 +67,13 @@ internal object AdventureTimelineRebase {
             shift.settled(it.value)
         }
         traits.lastFormationAt = traits.lastFormationAt?.let(shift::settled)
+        traits.lastFormationCheckAt = traits.lastFormationCheckAt?.let(shift::settled)
+        traits.retentionStartedAtByTrait = traits.retentionStartedAtByTrait.mapValues {
+            shift.settled(it.value)
+        }
+        traits.evidence = traits.evidence.mapValues { (_, entries) ->
+            entries.map { it.copy(observedAt = it.observedAt?.let(shift::settled)) }
+        }
         traits.stableStartedAtByTrait = traits.stableStartedAtByTrait.mapValues {
             shift.settled(it.value)
         }

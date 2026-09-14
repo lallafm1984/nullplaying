@@ -1,0 +1,44 @@
+// Local PostgreSQL only; no production endpoint or credential is loaded.
+import {createRequire} from 'node:module';
+import {readFile} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const require = createRequire(import.meta.url);
+const {PGlite} = require(process.env.PGLITE_MODULE_PATH || '@electric-sql/pglite');
+const db = new PGlite();
+try {
+ await db.exec(`create role anon; create role authenticated; create role service_role;
+ create schema auth; create table auth.users(id uuid primary key);
+ create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;
+ create schema shared_player_private; create table shared_player_private.snapshots(user_id uuid, character_id uuid);
+ create schema ranking_private;
+ create table ranking_private.public_ranking_moderation(user_id uuid,character_id uuid,is_active boolean,hidden_from_public_rankings boolean,replacement_display_name text);
+ insert into auth.users values('10000000-0000-4000-8000-000000000001'),('10000000-0000-4000-8000-000000000002');`);
+ await db.exec(await readFile(new URL('../supabase/migrations/202609140001_mythic_discoveries.sql',import.meta.url),'utf8'));
+ const query = (q,p=[])=>db.query(q,p);
+ await query("select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000000001',false)");
+ const now = Date.now()-7200000;
+ const records = Array.from({length:100},(_,i)=>({eventId:`20000000-0000-4000-8000-${String(i).padStart(12,'0')}`,characterId:'30000000-0000-4000-8000-000000000001',displayName:'별빛',heroClass:'WARRIOR',level:20,itemName:'검 +5',slot:'WEAPON',power:200,discoveredAt:now+i}));
+ await query('select public.sync_mythic_discoveries($1::jsonb)',[JSON.stringify(records)]);
+ await query('select public.sync_mythic_discoveries($1::jsonb)',[JSON.stringify(records)]);
+ assert.equal((await query('select count(*)::int n from mythic_private.discoveries')).rows[0].n,100);
+ const feed=async()=> (await query('select public.get_mythic_discoveries() d')).rows[0].d;
+ assert.equal((await feed()).entries.length,0,'current-hour records must wait');
+ await db.exec("update mythic_private.discoveries set received_at = date_trunc('hour',now())-interval '1 minute'");
+ const extra={...records[0],eventId:'20000000-0000-4000-8000-000000000100',discoveredAt:now+100};
+ await query('select public.sync_mythic_discoveries($1::jsonb)',[JSON.stringify([extra])]);
+ assert.equal((await feed()).entries[0].eventId,records[99].eventId,'late upload cannot enter same hour');
+ await db.exec("update mythic_private.discoveries set received_at = date_trunc('hour',now())-interval '1 minute'");
+ const f=await feed(); assert.equal(f.entries.length,100); assert.equal(f.entries[0].eventId,extra.eventId);
+ assert.equal(f.entries.at(-1).eventId,records[1].eventId); assert.equal(f.nextSettlementAt-f.settledAt,3600000);
+ await db.exec("insert into ranking_private.public_ranking_moderation values('10000000-0000-4000-8000-000000000001',null,true,false,'모험가')");
+ assert.equal((await feed()).entries[0].displayName,'모험가');
+ await db.exec('update ranking_private.public_ranking_moderation set hidden_from_public_rankings=true');
+ assert.equal((await feed()).entries.length,0);
+ await query("select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000000002',false)");
+ await assert.rejects(query('select public.sync_mythic_discoveries($1::jsonb)',[JSON.stringify([extra])]));
+ await query("select set_config('request.jwt.claim.sub','',false)");
+ await assert.rejects(feed());
+ const perms=(await query("select has_function_privilege('anon','public.get_mythic_discoveries()','execute') anon,has_table_privilege('authenticated','mythic_private.discoveries','select') direct")).rows[0];
+ assert.equal(perms.anon,false); assert.equal(perms.direct,false);
+ console.log('PASS: idempotency, hourly admission, immutable order, latest 100 cap, moderation, ownership rejection, authentication and table/RPC privileges');
+} finally { await db.close(); }

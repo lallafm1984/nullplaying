@@ -9,11 +9,13 @@ import kotlinx.serialization.Serializable
     val sequence: Long, val traitId: String, val kind: AdventureTraitChangeKind,
     val sourceKey: String, val occurredAt: Long, val reasonKey: String,
     val replacedTraitId: String = "",
+    val acquisitionRulesVersion: Int = 1,
 )
 
 @Serializable data class AdventureOwnedTrait(
     val traitId: String, val acquiredAt: Long = 0L, val acquisitionSequence: Long = 0L,
     val shaky: Boolean = false, val lastChange: AdventureTraitChange? = null,
+    val acquisitionRulesVersion: Int = 1,
 )
 
 @Serializable data class AdventureTraitActivation(
@@ -25,6 +27,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable data class AdventureTraitEvidence(
     val sourceKey: String, val contextKey: String, val positive: Boolean, val reasonKey: String,
+    val observedAt: Long? = null,
 )
 
 @Serializable data class AdventureTraitDecision(val key: String, val roll: Int, val threshold: Int, val passed: Boolean)
@@ -81,6 +84,8 @@ import kotlinx.serialization.Serializable
 
 /** Separate from arena BattleTraitState. Decisions and evidence belong to original source records. */
 @Serializable data class AdventureTraitState(
+    var acquisitionRulesVersion: Int = 1,
+    var lastFormationCheckAt: Long? = null,
     var initialized: Boolean = false, var seed: Long = 0L, var sourceSequence: Long = 0L,
     var changeSequence: Long = 0L, var activationSequence: Long = 0L,
     var owned: List<AdventureOwnedTrait> = emptyList(),
@@ -93,6 +98,8 @@ import kotlinx.serialization.Serializable
     var formationStartedAtByTrait: Map<String, Long> = emptyMap(),
     /** Last successful formation on the active-adventure clock; null keeps legacy saves compatible. */
     var lastFormationAt: Long? = null,
+    /** Acquisition protection on the active-adventure clock; recovery never restarts this clock. */
+    var retentionStartedAtByTrait: Map<String, Long> = emptyMap(),
     var stableStartedAtByTrait: Map<String, Long> = emptyMap(),
     var oppositionStartedAtByTrait: Map<String, Long> = emptyMap(),
     var weakenedStartedAtByTrait: Map<String, Long> = emptyMap(),

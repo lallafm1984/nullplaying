@@ -1,0 +1,38 @@
+{
+  "natural": {
+    "characters": 24,
+    "actions": 336191487,
+    "kills": 35445570,
+    "max_high_slots": 6,
+    "characters_full_ever": 3,
+    "levels_with_full_sets": [
+      117,
+      118,
+      119,
+      120,
+      132,
+      133,
+      134,
+      135,
+      136,
+      142,
+      143
+    ],
+    "full_set_time_percent": 0.27018111186859056
+  },
+  "synthetic_high": {
+    "characters": 12,
+    "actions": 67840942,
+    "kills": 3794884,
+    "max_high_slots": 6,
+    "characters_full_ever": 2,
+    "levels_with_full_sets": [
+      1003,
+      1004,
+      1005
+    ],
+    "full_set_time_percent": 9.681499523893713
+  },
+  "examples_all_plus4": 1,
+  "examples_all_plus5": 0
+}

@@ -396,7 +396,7 @@ class AdventureTraitEngineTest {
             applyTraitEvidence(game, hour * HOUR, false, "opposite:${index % 3}")
         }
         assertTrue(game.adventureTraits.owned.single().shaky)
-        applyTraitEvidence(game, 56L * HOUR, false, "opposite:0")
+        applyTraitEvidence(game, 72L * HOUR, false, "opposite:0")
         assertTrue(game.adventureTraits.owned.isEmpty())
         assertEquals(AdventureTraitChangeKind.LOST, game.adventureTraits.recentChanges.last().kind)
     }

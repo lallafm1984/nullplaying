@@ -201,6 +201,18 @@ class AlarmQuestApplication : Application(), Configuration.Provider {
                 if (awaitGameInitialization()) supabaseGameService.initialize()
             }
             applicationScope.launch {
+                combine(
+                    gameRepository.snapshots.filter { it.ready }.map { snapshot ->
+                        snapshot.characters.flatMap { it.state.mythicDiscoveries }
+                    }.distinctUntilChanged(),
+                    foregroundForConfig,
+                ) { records, foreground -> if (foreground) records else emptyList() }
+                    .distinctUntilChanged()
+                    .collect { records ->
+                        if (records.isNotEmpty()) supabaseGameService.syncMythicDiscoveries(gameRepository.snapshots.value)
+                    }
+            }
+            applicationScope.launch {
                 offlineAdventureRemoteConfig.sessionLogsEnabled.collect { enabled ->
                     if (enabled) supabaseGameService.flushPendingSessionLogs()
                 }
@@ -542,6 +554,7 @@ class AlarmQuestApplication : Application(), Configuration.Provider {
                 supabaseGameService.flushPendingArenaRanking()
                 supabaseGameService.queueRankingSync(gameRepository.snapshots.value)
                 supabaseGameService.flushPendingRanking()
+                supabaseGameService.syncMythicDiscoveries(gameRepository.snapshots.value)
                 gameRepository.snapshots.value.state
                     ?.rankingCharacterId
                     ?.takeIf(String::isNotBlank)
@@ -559,6 +572,7 @@ class AlarmQuestApplication : Application(), Configuration.Provider {
                     supabaseGameService.flushPendingArenaRanking()
                     supabaseGameService.queueRankingSync(gameRepository.snapshots.value)
                     supabaseGameService.flushPendingRanking()
+                    supabaseGameService.syncMythicDiscoveries(gameRepository.snapshots.value)
                     // Cache-aware: a long foreground session receives the next daily edition.
                     gameRepository.snapshots.value.state?.rankingCharacterId
                         ?.takeIf(String::isNotBlank)

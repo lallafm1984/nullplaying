@@ -74,7 +74,7 @@ class AdventureTraitExpansionTest {
     }
 
     @Test
-    fun `empty shop evidence uses distinct return contexts so quick trader can form`() {
+    fun `empty shop evidence uses actual equipment needs rather than return counters`() {
         val game = newGame()
         repeat(3) { index ->
             game.totalReturns = index + 1L
@@ -84,7 +84,7 @@ class AdventureTraitExpansionTest {
         }
         val evidence = game.adventureTraits.evidence.getValue("S02")
         assertEquals(3, evidence.size)
-        assertEquals(3, evidence.map { it.contextKey }.distinct().size)
+        assertEquals(1, evidence.map { it.contextKey }.distinct().size)
         assertTrue(evidence.all { it.positive && it.contextKey.startsWith("trade:empty:") })
     }
 

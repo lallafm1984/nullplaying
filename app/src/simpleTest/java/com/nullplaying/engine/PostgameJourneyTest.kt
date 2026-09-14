@@ -16,12 +16,12 @@ class PostgameJourneyTest {
     @Test
     fun `level twenty guidance unlock stays inside the intended early progression window`() {
         val expectedUnlockMinutes = mapOf(
-            HeroClass.WARRIOR to 10_050L,
-            HeroClass.ROGUE to 10_259L,
-            HeroClass.RANGER to 10_462L,
-            HeroClass.MAGE to 10_106L,
-            HeroClass.CLERIC to 10_419L,
-            HeroClass.PALADIN to 10_083L,
+            HeroClass.WARRIOR to 10_052L,
+            HeroClass.ROGUE to 10_269L,
+            HeroClass.RANGER to 10_475L,
+            HeroClass.MAGE to 10_060L,
+            HeroClass.CLERIC to 10_298L,
+            HeroClass.PALADIN to 10_061L,
         )
         HeroClass.entries.forEach { heroClass ->
             val game = newGame(heroClass)
@@ -47,10 +47,10 @@ class PostgameJourneyTest {
     @Test
     fun `stat bonus classes preserve authored milestones and reach level one hundred around depth eighty seven`() {
         // Fixed-seed production replay, with the approved skill/search/sale bonuses enabled.
-        val labyrinthQuarters = mapOf(HeroClass.WARRIOR to 216, HeroClass.ROGUE to 215,
-            HeroClass.RANGER to 218, HeroClass.MAGE to 215, HeroClass.CLERIC to 221, HeroClass.PALADIN to 215)
-        val level100Quarters = mapOf(HeroClass.WARRIOR to 646, HeroClass.ROGUE to 626,
-            HeroClass.RANGER to 621, HeroClass.MAGE to 624, HeroClass.CLERIC to 640, HeroClass.PALADIN to 644)
+        val labyrinthQuarters = mapOf(HeroClass.WARRIOR to 216, HeroClass.ROGUE to 214,
+            HeroClass.RANGER to 215, HeroClass.MAGE to 212, HeroClass.CLERIC to 215, HeroClass.PALADIN to 215)
+        val level100Quarters = mapOf(HeroClass.WARRIOR to 644, HeroClass.ROGUE to 626,
+            HeroClass.RANGER to 620, HeroClass.MAGE to 620, HeroClass.CLERIC to 634, HeroClass.PALADIN to 643)
         HeroClass.entries.forEach { heroClass ->
             val game = newGame(heroClass)
             var firstLabyrinthQuarter: Int? = null
@@ -87,7 +87,7 @@ class PostgameJourneyTest {
     }
 
     @Test
-    fun `reference warrior reaches the labyrinth near day fifty four and level one hundred near day one hundred sixty two`() {
+    fun `reference warrior reaches the labyrinth near day fifty four and level one hundred near day one hundred sixty one`() {
         val game = newGame()
 
         engine.settleOffline(game, 52L * DAY_MILLIS)
@@ -102,10 +102,10 @@ class PostgameJourneyTest {
             game.adventureTale.labyrinthDepth,
         )
 
-        engine.settleOffline(game, 161L * DAY_MILLIS)
+        engine.settleOffline(game, 160L * DAY_MILLIS)
         assertTrue(game.hero.level < 100L)
 
-        engine.settleOffline(game, 162L * DAY_MILLIS)
+        engine.settleOffline(game, 161L * DAY_MILLIS)
 
         assertEquals(100L, game.hero.level)
         assertTrue(game.labyrinthDepthCompleted in 85L..87L)
