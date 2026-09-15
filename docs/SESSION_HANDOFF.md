@@ -2,12 +2,12 @@
 
 ## Current source and release boundary
 
-The repository root is **0.5.2 / code 27**, including trait rules v3, the Mythic Hall,
+The repository root is **0.5.3 / code 28**, including trait rules v3, the Mythic Hall,
 and WebP resource optimization. The latest source additionally contains the approved equipment
 odds (+4: 0.1%, +5: 0.05%, conditional on an equipment drop) and a correction that rebases the
 v2/v3 trait evidence, formation-check and retention clocks together with trusted time.
-These later source changes are **not in the previously built 0.5.2-27 AAB**. Version metadata was
-not advanced and this verification does not publish a new Play release or change the live database.
+These changes are included in the locally verified 0.5.3-28 AAB. This build does not publish a new
+Play release, install on a device or change the live database.
 
 Current validation and level-by-level equipment evidence are recorded in
 `releases/2026-09-15-source-verification/README.md`. Use that report for current source verification;
@@ -156,3 +156,20 @@ Server updated_at: 2026-09-13 23:52:22.245896+00 (2026-09-14 08:52:22 KST).
 Existing update copy and Play URL were preserved; historical missing migration receipts were untouched.
 Clients at code 26 or below require updating at their next policy check; code 27+ is excluded.
 Play deployment is user-reported; no physical-device update-popup verification was performed.
+
+## 0.5.3 (28) production AAB build — 2026-09-15
+
+Current root version is 0.5.3 / code 28. Signed AAB generated and independently verified at
+`output/releases/0.5.3-28/NULL-PLAYING-0.5.3-28.aab`. Release tests: 452 passed; lint, signature,
+bundle validation, production configuration, QA exclusion, source freshness and 16-KiB alignment passed.
+No Git commit, Play upload/rollout, device installation or server mutation. See
+`releases/0.5.3-28/README.md`.
+
+## 0.5.3 (28) mandatory update — 2026-09-15
+
+Production deployment was confirmed by the user. Android update policy was advanced through the PC
+Supabase SQL Editor using `202609150001_force_android_version_28_update.sql`. SQL Editor and public
+PostgREST readbacks confirmed latest 28 / 0.5.3, minimum supported 28, `force_update=true` and
+`enabled=true`; CLI status confirms the exact migration receipt. Existing localized copy and Play URL
+were preserved. Codes 27 and below are now blocked at their next policy check. Unrelated historical
+local-only migrations `202609040001` and `202609050001` were not applied.

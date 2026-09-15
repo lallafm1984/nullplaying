@@ -181,8 +181,8 @@ android {
         applicationId = "com.nullplaying"
         minSdk = 26
         targetSdk = 36
-        versionCode = 27
-        versionName = "0.5.2"
+        versionCode = 28
+        versionName = "0.5.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField(
             "String",

@@ -1,0 +1,12 @@
+<ko-KR>
+장비 획득 밸런스를 개선하였습니다.
+미반영되었던 특성 일부를 수정하였습니다.
+</ko-KR>
+<en-US>
+Improved equipment acquisition balance.
+Fixed some traits that were not being applied correctly.
+</en-US>
+<ja-JP>
+装備獲得のバランスを改善しました。
+一部の特性が正しく反映されない問題を修正しました。
+</ja-JP>

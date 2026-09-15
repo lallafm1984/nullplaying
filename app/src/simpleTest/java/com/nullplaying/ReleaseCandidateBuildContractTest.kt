@@ -15,8 +15,8 @@ class ReleaseCandidateBuildContractTest {
             end = "buildFeatures {",
         )
 
-        assertTrue(defaultConfig.contains(Regex("""versionCode\s*=\s*27\b""")))
-        assertTrue(defaultConfig.contains(Regex("versionName\\s*=\\s*\\\"0\\.5\\.2\\\"")))
+        assertTrue(defaultConfig.contains(Regex("""versionCode\s*=\s*28\b""")))
+        assertTrue(defaultConfig.contains(Regex("versionName\\s*=\\s*\\\"0\\.5\\.3\\\"")))
     }
 
     @Test

@@ -1,0 +1,14 @@
+{
+  "platform": "android",
+  "latest_version_code": 28,
+  "latest_version_name": "0.5.3",
+  "minimum_supported_version_code": 28,
+  "force_update": true,
+  "enabled": true,
+  "updated_at": "2026-09-15T00:47:52.735164+00:00",
+  "migration": "202609150001_force_android_version_28_update",
+  "migration_recorded": true,
+  "applied_via": "Supabase SQL Editor",
+  "independent_readback": "public PostgREST",
+  "existing_copy_and_play_url_preserved": true
+}

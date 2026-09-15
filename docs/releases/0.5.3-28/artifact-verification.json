@@ -1,0 +1,67 @@
+{
+  "result": "PASS",
+  "identity": {
+    "package": "com.nullplaying",
+    "version_code": 28,
+    "version_name": "0.5.3",
+    "min_sdk": 26,
+    "target_sdk": 36,
+    "debuggable": "false",
+    "allow_backup": "false"
+  },
+  "aab": {
+    "path": "/Users/lim/Desktop/\u1111\u1173\u1105\u1169\u110c\u1166\u11a8\u1110\u1173/AlarmQuest/app/build/outputs/bundle/release/app-release.aab",
+    "bytes": 58530913,
+    "sha256": "d1db72b6687b4100ef597c0293582e71447b8d1c0ea7a4cfffadcf699af324c7"
+  },
+  "apk": {
+    "path": "/Users/lim/Desktop/\u1111\u1173\u1105\u1169\u110c\u1166\u11a8\u1110\u1173/AlarmQuest/app/build/outputs/apk/release/app-release.apk",
+    "bytes": 52749563,
+    "sha256": "9a8a40bfb474016cf4b1fe461218791c7bfd91aee061a9b41a32f9e3e0f8e871"
+  },
+  "bundletool_validate": "PASS",
+  "bundletool_version": "1.18.1",
+  "certificate_sha256": "45:EE:A2:23:C8:3F:2A:C6:F7:98:F2:AC:54:1B:FE:A2:70:E0:DD:74:70:AE:95:D9:FC:2C:4E:AD:4A:73:FD:D2",
+  "signature": "PASS",
+  "native_alignment": {
+    "base/lib/arm64-v8a/libandroidx.graphics.path.so": 16384,
+    "base/lib/arm64-v8a/libdatastore_shared_counter.so": 16384,
+    "base/lib/x86_64/libandroidx.graphics.path.so": 16384,
+    "base/lib/x86_64/libdatastore_shared_counter.so": 16384
+  },
+  "optimized_images": {
+    "files": 22,
+    "original_bytes": 41669762,
+    "webp_bytes": 6101532,
+    "saved_percent": 85.36
+  },
+  "native_symbol_entries": [],
+  "feature_flags": {
+    "REMOTE_SERVICES_ENABLED": true,
+    "SHARED_PLAYER_SYNC_ENABLED": true,
+    "ARENA_SERVER_MATCHING_ENABLED": true,
+    "ADVENTURE_SYSTEM_ENABLED": true
+  },
+  "qa_flags": {
+    "DEBUG": false,
+    "IS_EEA_QA": false,
+    "SHARED_PLAYER_QA_TRANSPORT_ENABLED": false,
+    "ADVENTURE_PREVIEW_ENABLED": false,
+    "BATTLE_QA_BRIDGE_ENABLED": false,
+    "BATTLE_UNLIMITED_ENTRIES": false,
+    "BATTLE_SKILL_TREE_REVIEW_ENABLED": false,
+    "BATTLE_IGNORE_HERO_LEVEL_GATE": false
+  },
+  "production_config_present_in_artifact": true,
+  "multilingual_notice_0_5_1": true,
+  "arena_rules": "arena-stat-identity-v5",
+  "lint": {
+    "Warning": 93,
+    "Hint": 7
+  },
+  "source_files": 759,
+  "source_freshness": "PASS",
+  "firebase_input_preserved": true,
+  "upload_performed": false,
+  "verified_utc": "2026-09-14T23:49:01.719357+00:00"
+}
